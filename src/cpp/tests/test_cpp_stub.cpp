@@ -31,7 +31,7 @@ int testSayHello(std::ofstream &results){
     cppStub::sayHello(message);
 
     std::string result = buffer.str();
-    std::string answer = "\nHello World!\n";
+    std::string answer = "Hello World!\n";
 
     if (result.compare(answer) != 0){
         std::cout << "result.compare( answer ) " << result.compare( answer ) << "\n";
