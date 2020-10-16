@@ -163,8 +163,8 @@ W-13 DevOps documentation.
 
 ### Update the remote url in your local repository
 
-The final step is to update the remote url of the local clone of ``my_project``.
-We will return to the terminal session.
+The final repo setup step is to update the remote url of the local clone of
+``my_project``.  We will return to the terminal session.
 
 1. Copy the url of your "remote" repository from the Bitbucket webpage. It
 should look like:
@@ -260,9 +260,9 @@ $ pwd
 $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
 0
 $ grep -ri cpp_stub . --exclude-dir={build,.git}
-# no stdout to terminal because no files found>
+# no stdout to terminal because no files found
 $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-# no stdout to terminal because no files found>
+# no stdout to terminal because no files found
 ```
 
 5. Commit and push your changes to your "remote" or "fork" repository
