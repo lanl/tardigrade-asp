@@ -101,10 +101,6 @@ Non-admin Eigen install
    $ cmake3 .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
    $ make install
 
----
-
----
-
 **************
 Build and Test
 **************
@@ -225,10 +221,6 @@ To build just the documentation pick up the steps here:
       $ pwd
       /path/to/cpp_stub/build/
       $ firefox docs/doxygen/html/index.html &
-
----
-
----
 
 ***********************
 Contribution Guidelines
