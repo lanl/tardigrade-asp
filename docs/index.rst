@@ -9,6 +9,7 @@ Welcome to |project|'s documentation!
    user
    theory
    api
+   devops
    zreferences
 
 ==================
