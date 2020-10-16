@@ -4,5 +4,5 @@
    References
    ##########
 
-.. bibliography:: bibliography.bib
+.. bibliography:: software.bib
    :style: unsrt
