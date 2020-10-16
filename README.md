@@ -276,11 +276,6 @@ $ git push origin feature/project-name-updates
 ```
 
 You can also perform some cleanup in ``README.md`` to remove this walk-through.
-For example:
-
-```
-sed -i 
-```
 
 From here, the W-13 best practice workflow would return to the Bitbucket webpage
 and submit a Pull-Request from the ``feature/project-name-updates`` branch of
