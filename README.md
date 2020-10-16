@@ -12,6 +12,17 @@ in
 repositories for use with the
 [ECMF](https://simulia.lanl.gov/ECMF-D/index.html).
 
+> Note: you can use this repo as a stub for fortran projects as well! A
+> step-by-step may never happen because c++ is the future of W-13 subroutines.
+> For now, refer to the following references:
+>
+> * [CMake for Fortran example
+>   ``CMakeLists.txt``](https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample)
+> * [CMake documentation starting
+>   point](https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html)
+> * [Stack Overflow
+>   thread](https://stackoverflow.com/questions/12705562/using-cmake-with-fortran)
+
 ## Setting up a new project from this stub repo
 
 ### Prerequisites
