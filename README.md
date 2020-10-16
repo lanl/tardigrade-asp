@@ -147,7 +147,7 @@ $ ./new_build.sh g++
 $ ./new_build.sh icpc
 
 # Perform tests from PWD
-$ ./build/src/cpp/tests/cpp_stub/test_cpp_stub
+$ ./build/src/cpp/tests/test_cpp_stub
 
 # Build and perform tests
 $ ./jenkins_build.sh
@@ -159,7 +159,7 @@ $ ./jenkins_build.sh
 $ cat results.tex
 
 # As built by jenkins_build.sh
-$ cat build/src/cpp/tests/cpp_stub/*_results.tex
+$ cat build/src/cpp/tests/*_results.tex
 $ cat *results.tex
 ```
 
