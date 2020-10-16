@@ -22,6 +22,8 @@ repositories for use with the
 >   point](https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html)
 > * [Stack Overflow
 >   thread](https://stackoverflow.com/questions/12705562/using-cmake-with-fortran)
+> * [Doxygen comments for
+>   Fortran](https://www.doxygen.nl/manual/docblocks.html#fortranblocks)
 
 ## Setting up a new project from this stub repo
 
