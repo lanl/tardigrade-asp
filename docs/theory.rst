@@ -2,7 +2,7 @@
 Theory Manual
 =============
 
-You can read more about Sphinx ReST formatting in the style guide
+You can read more about Sphinx ReST formatting in this `Sphinx style guide`_
 :cite:`sphinx-style`.
 
 Placeholder for a theory manual with equations and figures and references.

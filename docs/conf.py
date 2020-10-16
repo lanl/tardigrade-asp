@@ -45,7 +45,7 @@ if release != git_describe:
 version = release
 
 # -- Project Variables -------------------------------------------------------
-rst_prolog = f'.. |project| replace:: {project}'
+rst_prolog = f'.. |project| replace:: {project}\n.. include:: targets.txt'
 
 # -- General configuration ---------------------------------------------------
 # Add custom style sheet to make the html docs wider
