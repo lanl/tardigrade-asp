@@ -27,10 +27,8 @@ fi
 # Debugging
 whoami
 groups
-ls -l ~/include || true
-ls -l ~/include/eigen3 || true
-ls -l ~/include/eigen3/Eigen || true
-ls -l ~/include/eigen3/Eigen/Dense || true
+ls -l $HOME/include || true
+ls -l $HOME/.local/include || true
 
 # Find cmake3 executable
 if [ -x "$(command -v cmake3)" ]; then
