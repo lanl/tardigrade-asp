@@ -1,0 +1,5 @@
+*.swp
+*.o
+*.nfs*
+build*/
+*_results.tex
