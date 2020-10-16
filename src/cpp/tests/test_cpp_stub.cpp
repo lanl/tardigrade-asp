@@ -35,11 +35,11 @@ int testSayHello(std::ofstream &results){
 
     if (result.compare(answer) != 0){
         std::cout << "result.compare( answer ) " << result.compare( answer ) << "\n";
-        results << "testFoo & False\n";
+        results << "testSayHello & False\n";
         return 1;
     }
 
-    results << "testFoo & True\n";
+    results << "testSayHello & True\n";
     return 0;
 }
 
