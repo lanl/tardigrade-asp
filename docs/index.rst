@@ -6,6 +6,7 @@ Welcome to |project|'s documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   user
    theory
    api
    zreferences
