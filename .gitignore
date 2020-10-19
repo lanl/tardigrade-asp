@@ -3,3 +3,4 @@
 *.nfs*
 build*/
 *_results.tex
+*results.tex
