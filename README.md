@@ -313,9 +313,17 @@ Happy hacking!
 
 ## Setting up a Jenkins CI job
 
+This section has a corresponding section in the formatted and hyperlinked html
+documentation. Build and view instructions are included in following sections,
+separated from project setup by horizontal bars.
+
 See ``jenkins_job_creation.md`` in this repo.
 
 ## Version control for a Jenkins job
+
+This section has a corresponding section in the formatted and hyperlinked html
+documentation. Build and view instructions are included in following sections,
+separated from project setup by horizontal bars.
 
 See ``jenkins_job_xml.md`` in this repo.
 
