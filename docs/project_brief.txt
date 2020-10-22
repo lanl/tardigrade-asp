@@ -5,20 +5,15 @@ strings, CMake, Doxygen, Sphinx, and Breathe for a complete build system with
 integrated documentation. It will also include the necessary hooks to commonly
 used C++ libraries for constitutive modeling. Eventually, this stub repository
 will include template hooks for integrating C++ code as Abaqus subroutines and
-in
-[EABM](https://xcp-confluence.lanl.gov/display/EABM/EABM+Requirements+Document)
-repositories for use with the
-[ECMF](https://simulia.lanl.gov/ECMF-D/index.html).
+in `EABM`_ repositories for use with the `ECMF`_.
 
-> Note: you can use this repo as a stub for fortran projects as well! A
-> step-by-step may never happen because c++ is the future of W-13 subroutines.
-> For now, refer to the following references:
->
-> * [CMake for Fortran example
->   ``CMakeLists.txt``](https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample)
-> * [CMake documentation starting
->   point](https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html)
-> * [Stack Overflow
->   thread](https://stackoverflow.com/questions/12705562/using-cmake-with-fortran)
-> * [Doxygen comments for
->   Fortran](https://www.doxygen.nl/manual/docblocks.html#fortranblocks)
+.. note::
+
+   You can use this repo as a stub for fortran projects as well! A
+   step-by-step may never happen because c++ is the future of W-13 subroutines.
+   For now, refer to the following references:
+
+   * `CMake for Fortran example CMakeLists.txt`_
+   * `CMake documentation starting point`_
+   * `Stack Overflow thread`_
+   * `Doxygen comments for Fortran`_
