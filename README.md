@@ -27,6 +27,11 @@ repositories for use with the
 
 ## Setting up a new project from this stub repo
 
+This section has a corresponding section in the formatted and hyperlinked html
+documentation. The html documentation also includes setup instructions for
+Jenkins Continuous Integration (CI) setup. Build and view instructions are
+included below.
+
 ### Prerequisites
 
 Set up your profile on Bitbucket with ssh keys. You can follow the instructions
@@ -305,6 +310,14 @@ fork/remote repo and frequently commit changes and push from the local feature
 branch back to the fork/remote repo.
 
 Happy hacking!
+
+## Setting up a Jenkins CI job
+
+See ``jenkins_job_creation.md`` in this repo.
+
+## Version control for a Jenkins job
+
+See ``jenkins_job_xml.md`` in this repo.
 
 ---
 
