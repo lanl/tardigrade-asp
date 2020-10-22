@@ -1,4 +1,4 @@
-Next, create a new job.
+# Create a new Jenkins job from template
 
 From the main page: https://toolbox-jenkins.lanl.gov/
 
@@ -6,7 +6,7 @@ From the main page: https://toolbox-jenkins.lanl.gov/
     2. Give the project a name following the current convention: "<project name>_Pull_Request_Builder" or "cpp_stub_Pull_Request_Builder"
     3. We want to copy another job as a template file. Enter "vipor_Pull_Request_Builder" in the "Copy from" text field.
     4. Click ok
-    5. Update the project information
+    5. Update the project information from the template job
 
        1. "General: Description" can stay, or you can add project details
        2. "General: This project is parameterized" provides quasi-protection
