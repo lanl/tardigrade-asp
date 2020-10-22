@@ -1,0 +1,47 @@
+***********************
+Contribution Guidelines
+***********************
+
+.. note::
+
+   This is a duplicate of the content found in the README with a manual
+   conversion to ReST syntax.
+
+Git Commit Message
+==================
+
+Begin Git commit messages with one of the following headings:
+
+* BUG: bug fix
+* DOC: documentation
+* FEAT: feature
+* MAINT: maintenance
+* TST: tests
+* REL: release
+* WIP: work-in-progress
+
+For example:
+
+.. code:: bash
+
+   git commit -m "FEAT: short intent of new feature"
+   git commit -m "BUG: fixes nasty bug"
+   git commit -m "DOC: adds documentation for feature"
+
+Git Branch Names
+================
+
+When creating branches use one of the following naming conventions. When in
+doubt use ``feature/<description>``.
+
+* bugfix/\<description>
+* feature/\<description>
+* release/\<description>
+
+reStructured Text
+=================
+
+Sphinx reads in docstrings and other special portions of the code as
+reStructured text. Developers should follow styles in this [Sphinx style
+guide](https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#).
+
