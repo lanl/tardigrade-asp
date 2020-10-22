@@ -70,10 +70,10 @@ Clone cpp\_stub into a local repository
 Create a new repository on Bitbucket
 ====================================
 
-> Note: These notes are a text copy of a variation on the [New Bitbucket Repo
-> Guide](https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide)
-> which can also be found in the [W-13 DevOps
-> Manual](https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps)
+.. note::
+
+   These notes are a text copy of a variation on the `New Bitbucket Repo Guide`_
+   which can also be found in the `W-13 DevOps Manual`_
 
 1. Navigate to the W-13 `Material Models Bitbucket project`_.
 

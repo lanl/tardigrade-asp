@@ -13,6 +13,7 @@
 .. _`ECMF`: https://simulia.lanl.gov/ECMF-D/index.html
 .. _`ECMF Development Documentation`: https://simulia.lanl.gov/ECMF-D/index.html
 .. _`ECMF contribution guide`: https://simulia.lanl.gov/ECMF-D/contribution_guide.html
+.. _`New Bitbucket Repo Guide`: https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide
 .. _`ECMF Release Documentation`: https://int.lanl.gov/projects/W13docs/ecmf/
 .. _`ECMF Repository`: https://xcp-stash.lanl.gov/projects/ECMF/repos/ecmf/browse
 .. _`ECMF Jira`: https://xcp-jira.lanl.gov/issues/?jql=project%20%3D%20EABM%20AND%20component%20%3D%20ECMF
