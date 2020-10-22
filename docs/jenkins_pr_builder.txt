@@ -32,13 +32,14 @@ From the main page: https://toolbox-jenkins.lanl.gov/
              the "Source Code Management" section, then you are way out of scope for a stub
              repo tutorial or need to seek help from a project owner for out-of-W-13 setup
              guides/templates.
+
        5. "Build Triggers: Stash pull request builder"
 
-          1. Update "project" with the project key of the Bitbucket project, e.g.
-             the material models key is MM. You can find the key on the list of Bitbucket
-             projects, https://xcp-stash.lanl.gov/projects, or in the project settings if you
-             have access. For W-13 subroutine projects, you should be using the Material
-             Model project and won't need to change this.
+           1. Update "project" with the project key of the Bitbucket project, e.g.
+              the material models key is MM. You can find the key on the list of Bitbucket
+              projects, https://xcp-stash.lanl.gov/projects, or in the project settings if you
+              have access. For W-13 subroutine projects, you should be using the Material
+              Model project and won't need to change this.
            2. Update "repository name" to your projects name. This is case
               insensitive. In this case, "cpp_stub".
            3. You can make changes to the cron schedule if you like, this project
