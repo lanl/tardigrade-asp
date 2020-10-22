@@ -14,7 +14,9 @@ Dependencies
 Compilers
 =========
 
-* c++11 compiler
+* c++11 compiler (listed version number has been tested at some point)
+  * g++ >= GNU 4.8.5
+  * icpc >= 2016
 
 Executables
 ===========
