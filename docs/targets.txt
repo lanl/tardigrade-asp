@@ -3,12 +3,14 @@
 .. _`DevOps`: https://en.wikipedia.org/wiki/DevOps
 .. _`W-13`: https://int.lanl.gov/org/ddw/aldw/weapon-systems-engineering/advanced-engineering-analysis/index.shtml
 .. _`W-13 Managed UNIX Groups`: https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=150929410
+.. _`W-13 DevOps Manual`: https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps
 .. _`EABM Search`: https://xcp-jira.lanl.gov/browse/EABM-153?jql=project%20%3D%20EABM%20AND%20resolution%20%3D%20Unresolved%20ORDER%20BY%20priority%20DESC%2C%20updated%20DESC
 .. _`EABM Backlog`: https://xcp-jira.lanl.gov/secure/RapidBoard.jspa?projectKey=EABM&rapidView=103&view=planning
 .. _`EABM Jira Project`: https://xcp-jira.lanl.gov/secure/RapidBoard.jspa?projectKey=EABM&rapidView=103&view=planning
 .. _`EABM Bitbucket Project`: https://xcp-stash.lanl.gov/projects/EABM
 .. _`EABM Repository`: https://xcp-stash.lanl.gov/projects/EABM/repos/eabm/browse
 .. _`ECMF Development Documentation`: https://simulia.lanl.gov/ECMF-D/index.html
+.. _`ECMF contribution guide`: https://simulia.lanl.gov/ECMF-D/contribution_guide.html
 .. _`ECMF Release Documentation`: https://int.lanl.gov/projects/W13docs/ecmf/
 .. _`ECMF Repository`: https://xcp-stash.lanl.gov/projects/ECMF/repos/ecmf/browse
 .. _`ECMF Jira`: https://xcp-jira.lanl.gov/issues/?jql=project%20%3D%20EABM%20AND%20component%20%3D%20ECMF
@@ -16,9 +18,11 @@
 .. _`Engineering Analysis Baseline Models`: https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=129106839
 .. _`Forking Workflow`: https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow
 .. _`Gitflow Workflow`: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+.. _`Gitting started with W-13 Bitbucket`: https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+Git+Server
 .. _`Granta STK`: https://int.lanl.gov/projects/W13docs/GrantaSTK/#t=streamlined%2Fwelcome_to_v2.htm
 .. _`Jenkins`: https://jenkins.io/
 .. _`Jira`: https://www.atlassian.com/software/jira
+.. _`Material Models Bitbucket project`: https://xcp-stash.lanl.gov/projects/MM
 .. _`Official ECMF Repo`: https://xcp-stash.lanl.gov/projects/ECMF/repos/ecmf/browse
 .. _`Python`: https://www.python.org/
 .. _`Python 3`: https://docs.python.org/3.6/
@@ -37,6 +41,9 @@
 .. _`Create a Jira Issue`: https://xcp-jira.lanl.gov/secure/CreateIssue!default.jspa
 .. _`Existing Jira Issues`: https://xcp-jira.lanl.gov/projects/EABM/issue
 .. _`Sphinx style guide`: https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#
+
+.. Project specific links
+.. _`upstream cpp\_stub repo`: https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/browse
 
 .. Abaqus reference links
 .. _`Abaqus Solid Continuum Elements`: http://simulia.lanl.gov:8080/EstProdDocs2019/English/DSSIMULIA_Established.htm?show=SIMACAEELMRefMap/simaelm-c-solidcont.htm

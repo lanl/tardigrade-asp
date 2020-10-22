@@ -12,13 +12,12 @@ Prerequisites
 =============
 
 Set up your profile on Bitbucket with ssh keys. You can follow the instructions
-on the W-13 Confluence page [Gitting started with W-13
-Bitbucket](https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+Git+Server)
+on the W-13 Confluence page `Gitting started with W-13 Bitbucket`_.
 
 Clone cpp\_stub into a local repository
 =======================================
 
-1. Navigate to the [upstream cpp\_stub repo](https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/browse)
+1. Navigate to the `upstream cpp\_stub repo`_.
 
 2. Copy the ssh url from the Bitbucket "Clone" button on the Bitbucket
    repository web page. It should look like the following:
@@ -80,7 +79,7 @@ Create a new repository on Bitbucket
 > which can also be found in the [W-13 DevOps
 > Manual](https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps)
 
-1. Navigate to the W-13 [Material Models](https://xcp-stash.lanl.gov/projects/MM) Bitbucket project.
+1. Navigate to the W-13 `Material Models Bitbucket project`_.
 
 2. Create a new repository by clicking on the "+" sign in the upper left corner.
 
@@ -187,16 +186,16 @@ should look like:
 Update project name throughout repository
 =========================================
 
-> Note: the remaining steps are a truncated version of the W-13 Git project
-> [contribution guide](https://simulia.lanl.gov/ECMF-D/contribution_guide.html)
-> which can also be found in the [W-13 DevOps
-> Manual](https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps). Critically,
-> these steps will omit the Jira task creation and Bitbucket Pull-Request (PR)
-> steps. The Bitbucket PR steps may be reproduced using the contribution guide,
-> but your project will have to create a Jira project prior to integrating the
-> Jira workflow. Contact the xcp devops team <devops-help@lanl.gov> to create a
-> Jira project. You can email the W-13 DevOps team <w13devops@lanl.gov> for
-> notes about setup.
+.. note::
+
+   Note: the remaining steps are a truncated version of the W-13 Git project
+   `ECMF contribution guide`_.  which can also be found in the `W-13 DevOps Manual`_.
+   Critically, these steps will omit the Jira task creation and
+   Bitbucket Pull-Request (PR) steps. The Bitbucket PR steps may be reproduced
+   using the contribution guide, but your project will have to create a Jira
+   project prior to integrating the Jira workflow. Contact the xcp devops team
+   <devops-help@lanl.gov> to create a Jira project. You can email the W-13 DevOps
+   team <w13devops@lanl.gov> for notes about setup.
 
 1. Create a feature branch for your project name updates
 
@@ -218,15 +217,15 @@ Update project name throughout repository
 
    $ pwd
    /projects/<moniker>/w13repos/my_project
-   
+
    # Recursive, case-insensitive search and count occurrences
    $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
    57
-   
+
    # Recursive, case-insensitive search and display
    $ grep -ri cpp_stub . --exclude-dir={build,.git}
    ...
-   
+
    # Clean list of files with project name
    $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
    ./CMakeLists.txt
@@ -244,12 +243,12 @@ Update project name throughout repository
 
    $ pwd
    /projects/<moniker>/w13repos/my_project
-   
+
    # Replace lower case occurrences in place
    $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
    $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
    ./src/cpp/cpp_stub.h
-   
+
    # Replace upper case occurrences in place
    $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
 
