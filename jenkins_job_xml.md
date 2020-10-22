@@ -24,7 +24,12 @@ team.
      * File name template: ``bakup_@date@.@extension@``
      * Custom exclusions: ``archive``
      * Verbose mode: checked
-     * Configuration files (.xml) only: unchecked
+     * Configuration files (.xml) only: checked
+
+       * Note: when this option is unchecked, the Jenkins plugins, general
+         server configuration, and home space is also backed up. This includes
+         ssh keys for the instutional account which should not be shared.
+
      * No shutdown: checked
 
    * Backup content
@@ -42,10 +47,10 @@ team.
 
 4. Press the "Backup Hudson Configuration" and wait
 
-   * If you uncheck "backup configuration file only" the backup can take several
-     hours because it will save build, configuration, and artifacts for
-     EVERY build of EVERY job. With that option unchecked, the backup often
-     still requires 40 minutes.
+   * If you uncheck "backup configuration file only" the backup can take nearly
+     an hour because it will backup all of the Jenkins configuration and plugin
+     files in addition to job configuration files. With that option unchecked, the
+     backup often requires 40 minutes.
    * If you click away from the "Backup manager log" webpage, you won't be able
      to get back to it. You'll be waiting blind for the job to finish. You can
      check progress by watching the backup file build and change size at
@@ -72,3 +77,31 @@ toolbox-jenkins@ninetails:~/backups$ watch ls -lh bakup_20201022_1119.tar.bz2
 ```
 When it stops changing size for several minutes, the backup is probably
 complete.
+
+5. Copy the tar backup file off of ninetails. For example:
+
+```
+toolbox-jenkins@ninetails:~/backups$ scp bakup_20201022_1119.tar.bz2 kbrindley@sstelmo.lanl.gov:/projects/kbrindley
+```
+
+6. Remove permissions from group and other
+
+```
+[kbrindley@sstelmo kbrindley]$ chmod go-r bakup_20201022_1119.tar.bz2
+
+```
+
+7. Extract the tarball to a specific directory
+
+```
+[kbrindley@sstelmo kbrindley]$ mkdir bakup_20201022_1119/
+[kbrindley@sstelmo kbrindley]$ chmod go-rx bakup_20201022_1119
+[kbrindley@sstelmo kbrindley]$ tar -xf bakup_20201022_1119.tar.bz2 --directory bakup_20201022_1119/
+```
+
+8. Find the job that you want to backup/version control/examine/copy.
+
+```
+[kbrindley@sstelmo kbrindley]$ find bakup_20201022_1119/ -type f -name config.xml | grep cpp_stub
+bakup_20201022_1119/jobs/cpp_stub_Pull_Request_Builder/config.xml
+```
