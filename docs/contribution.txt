@@ -39,6 +39,5 @@ reStructured Text
 =================
 
 Sphinx reads in docstrings and other special portions of the code as
-reStructured text. Developers should follow styles in this [Sphinx style
-guide](https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#).
-
+reStructured text. Developers should follow styles in this `Sphinx style
+guide`_.
