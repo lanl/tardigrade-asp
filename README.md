@@ -30,7 +30,7 @@ repositories for use with the
 This section has a corresponding section in the formatted and hyperlinked html
 documentation. The html documentation also includes setup instructions for
 Jenkins Continuous Integration (CI) setup. Build and view instructions are
-included below.
+included in following sections, separated from project setup by horizontal bars.
 
 ### Prerequisites
 
