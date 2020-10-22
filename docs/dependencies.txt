@@ -37,8 +37,7 @@ following commands.
    $ conda env create --file environment.yaml
 
 You can learn more about Anaconda Python environment creation and management in
-the [Anaconda
-Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+the `Anaconda Documentation`_.
 
 C++ Libraries
 =============
@@ -71,7 +70,7 @@ insall Eigen to your home directory in ``$HOME/.local/include`` or
 Non-admin Eigen install
 -----------------------
 
-[Reference](https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed)
+* Reference: https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed
 
 .. code:: bash
 

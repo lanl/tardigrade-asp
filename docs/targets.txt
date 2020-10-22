@@ -1,3 +1,4 @@
+.. _`Anaconda Documentation`: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
 .. _`Bitbucket`: https://bitbucket.org/product
 .. _`Confluence`: https://www.atlassian.com/software/confluence
 .. _`DevOps`: https://en.wikipedia.org/wiki/DevOps
