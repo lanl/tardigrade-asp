@@ -2,10 +2,7 @@
 Build and Test
 **************
 
-.. note::
-
-   This is a duplicate of the content found in the README with a manual
-   conversion to ReST syntax.
+.. include:: md2rst.txt
 
 This repository is built with CMake and uses Doxygen + Sphinx + Breathe to build
 the documentation.
