@@ -1,20 +1,22 @@
-###############
-Stub Repo Setup
-###############
+#############
+Project setup
+#############
+
+************************
+Bitbucket and repo setup
+************************
 
 .. include:: md2rst.txt
 
-*************
 Prerequisites
-*************
+=============
 
 Set up your profile on Bitbucket with ssh keys. You can follow the instructions
 on the W-13 Confluence page [Gitting started with W-13
 Bitbucket](https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+Git+Server)
 
-***************************************
 Clone cpp\_stub into a local repository
-***************************************
+=======================================
 
 1. Navigate to the [upstream cpp\_stub repo](https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/browse)
 
@@ -70,9 +72,8 @@ Clone cpp\_stub into a local repository
    $ pwd
    /projects/<moniker>/w13repos/my_project
 
-************************************
 Create a new repository on Bitbucket
-************************************
+====================================
 
 > Note: These notes are a text copy of a variation on the [New Bitbucket Repo
 > Guide](https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide)
@@ -100,9 +101,8 @@ Create a new repository on Bitbucket
    ``README.md`` displayed. You can also select the drop down branch menu to
    view a "master" and "dev" branch.
 
-**********************************
 Update settings for you repository
-**********************************
+==================================
 
 Bitbucket repositories in the [Material
 Models](https://xcp-stash.lanl.gov/projects/MM) project inherit permissions and
@@ -123,9 +123,8 @@ only a small number of settings must be updated.
 4. From the "Default reviewers" tab you can add yourself and any project
    co-owners as default reviewers.
 
-****************************
 Fork the upstream repository
-****************************
+============================
 
 In the [Forking
 Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
@@ -161,9 +160,8 @@ branches exist on this repository, no one will be able to push directly to
 This repository is referred to as the "fork" or "remote" repository throughout
 W-13 DevOps documentation.
 
-**********************************************
 Update the remote url in your local repository
-**********************************************
+==============================================
 
 The final repo setup step is to update the remote url of the local clone of
 ``my_project``.  We will return to the terminal session.
@@ -186,9 +184,8 @@ should look like:
    $ git push -u origin --all
    $ git push origin --tags
 
-*****************************************
 Update project name throughout repository
-*****************************************
+=========================================
 
 > Note: the remaining steps are a truncated version of the W-13 Git project
 > [contribution guide](https://simulia.lanl.gov/ECMF-D/contribution_guide.html)
