@@ -7,8 +7,10 @@ Build and Test
 This repository is built with CMake and uses Doxygen + Sphinx + Breathe to build
 the documentation.
 
-> **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
-> API is much more useful.
+.. note::
+
+   **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
+   API is much more useful.
 
 Two build scripts have been created for convenience, ``new_build.sh`` and
 ``build_docs.sh``. The first will build everything including the library binary,
