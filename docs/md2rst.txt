@@ -1,0 +1,7 @@
+.. note::
+
+   This is a duplicate of the content found in the README with a manual
+   conversion to ReST syntax. Markdown files can be included in ReST documents
+   pending a conda python environment module addition ``m2r`` planned in EABM-303.
+   Reference: https://stackoverflow.com/questions/46278683/include-my-markdown-readme-into-sphinx
+
