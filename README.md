@@ -27,6 +27,11 @@ repositories for use with the
 
 ## Setting up a new project from this stub repo
 
+This section has a corresponding section in the formatted and hyperlinked html
+documentation. The html documentation also includes setup instructions for
+Jenkins Continuous Integration (CI) setup. Build and view instructions are
+included in following sections, separated from project setup by horizontal bars.
+
 ### Prerequisites
 
 Set up your profile on Bitbucket with ssh keys. You can follow the instructions
@@ -306,6 +311,22 @@ branch back to the fork/remote repo.
 
 Happy hacking!
 
+## Setting up a Jenkins CI job
+
+This section has a corresponding section in the formatted and hyperlinked html
+documentation. Build and view instructions are included in following sections,
+separated from project setup by horizontal bars.
+
+See ``jenkins_job_creation.md`` in this repo.
+
+## Version control for a Jenkins job
+
+This section has a corresponding section in the formatted and hyperlinked html
+documentation. Build and view instructions are included in following sections,
+separated from project setup by horizontal bars.
+
+See ``jenkins_job_xml.md`` in this repo.
+
 ---
 
 ---
@@ -314,7 +335,10 @@ Happy hacking!
 
 ### Compilers
 
-* c++11 compiler
+* c++11 compiler (listed version number has been tested at some point)
+
+  * g++ >= GNU 4.8.5
+  * icpc >= 2016
 
 ### Executables
 
