@@ -55,8 +55,8 @@ esac
 ./new_build.sh ${compiler}
 
 # Perform repo tests
-cd "build/${tests}"
-./test_${repo}
+cd "build"
+ctest --verbose --output-log results.tex
 
 # Append the path of the compiler
 echo "$(command -v ${compiler})" >> results.tex
@@ -66,7 +66,7 @@ mv results.tex "${compiler}_results.tex"
 
 # Return to working directory
 cd ${workdir}
-cp "build/${tests}/${compiler}_results.tex" .
+cp "build/${compiler}_results.tex" .
 
 #================================================= TEST AGAINST icpc COMPILER ===
 case $(hostname) in
@@ -79,8 +79,8 @@ case $(hostname) in
         ./new_build.sh ${compiler}
 
         # Perform repo tests
-        cd "build/${tests}"
-        ./test_${repo}
+        cd "build"
+        ctest --verbose --output-log results.tex
 
         # Append the path of the compiler
         echo "$(command -v ${compiler})" >> results.tex
@@ -90,7 +90,7 @@ case $(hostname) in
 
         # Return to working directory
         cd ${workdir}
-        cp "build/${tests}/${compiler}_results.tex" .
+        cp "build/${compiler}_results.tex" .
         ;;
 esac
 
@@ -107,18 +107,4 @@ if [ ${#result_files[@]} -lt 1 ]; then
     echo "Found the wrong number of result files: ${#result_files[@]}"
     echo "result files found: ${result_files[@]}"
     exit 2
-fi
-
-# Check for failures in result files
-# TODO: update to a failure as default and confirm success
-# TODO: fix the expected compiler names by OSTYPE or HOSTNAME
-fail='false'
-for result in ${result_files[@]}; do
-    if grep -i false ${result}; then
-        fail='true'
-        echo "Found failure in file: ${result}"
-    fi
-done
-if [ ${fail} == 'true' ]; then
-    exit 3
 fi
