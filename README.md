@@ -369,6 +369,7 @@ Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/m
 ### C++ Libraries
 
 * eigen >= 3.3.7
+* BOOST >= 1.53.0
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 * stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools
