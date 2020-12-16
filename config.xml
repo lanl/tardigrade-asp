@@ -34,7 +34,7 @@
       <hudson.plugins.git.extensions.impl.PreBuildMerge>
         <options>
           <mergeRemote>origin</mergeRemote>
-          <mergeTarget>dev</mergeTarget>
+          <mergeTarget>${targetBranch}</mergeTarget>
           <mergeStrategy>default</mergeStrategy>
           <fastForwardMode>FF</fastForwardMode>
         </options>
@@ -77,7 +77,7 @@
   </builders>
   <publishers>
     <hudson.tasks.ArtifactArchiver>
-      <artifacts>*++_results.tex,icpc_results.tex</artifacts> 
+      <artifacts>*++_results.tex,icpc_results.tex</artifacts>
       <allowEmptyArchive>false</allowEmptyArchive>
       <onlyIfSuccessful>false</onlyIfSuccessful>
       <fingerprint>false</fingerprint>
