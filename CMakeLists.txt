@@ -2,6 +2,9 @@ cmake_minimum_required (VERSION 3.14)
 project (cpp_stub VERSION 0.0.1)
 enable_testing()
 
+# Make the code position independent
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Configure version
 configure_file("src/cpp/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
