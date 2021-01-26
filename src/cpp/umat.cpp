@@ -6,7 +6,6 @@
   ******************************************************************************
   */
 
-//#include<cpp_stub.h>
 #include<umat.h>
 
 extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
@@ -62,7 +61,11 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
      * \param &KINC: Increment number.
      */
 
-    std::cout << "Sign of life" << std::endl;
+    if (KINC == 1 && NOEL == 1 && NPT == 1){
+        std::cout << "\nSign of life" << std::endl;
+        std::cout << std::endl;
+//        cppStub::sayHello("Sign of life");
+    }
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
@@ -85,8 +88,26 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 //    const DFGRD0
 //    const DFGRD1
 
-    //Call c++ subroutine specific interface(s)
-//    cppStub::sayHello("World!");
+    //Print Fortran multidimensional array
+//    printTwoDimensionalArray( DFGRD0, 3, 3);
 
     return;
 }
+
+//template<typename T>
+//void printTwoDimensionalArray( const T myPointer, const int &row_count, const int &column_count ){
+//    /*!
+//     * Print a two dimensional array using the pointer and dimensions.
+//     *
+//     * \param &myPointer: The pointer to the start of the array
+//     * \param row_count: The number of rows
+//     * \param column_count: The number of columns
+//     */
+//    for (int row = 0; row < row_count; row++){
+//        for (int col = 0; col < column_count; col++){
+//            std::cout << myPointer[col][row] << " ";
+//        }
+//        std::cout << "\n";
+//    }
+//    return;
+//}
