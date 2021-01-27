@@ -6,6 +6,7 @@ target_compile_options(${PROJECT_NAME} PUBLIC)
 
 # Abaqus UMAT interface
 add_library (umat "umat.cpp" "umat.h")
+target_include_directories(umat PUBLIC .)
 set_target_properties(umat PROPERTIES CXX_STANDARD 11)
 target_compile_options(umat PUBLIC)
 
