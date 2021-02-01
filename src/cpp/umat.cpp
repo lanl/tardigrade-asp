@@ -61,10 +61,25 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
      * \param &KINC: Increment number.
      */
 
-    if (KINC == 1 && NOEL == 1 && NPT == 1){
-        std::cout << "\nSign of life" << std::endl;
+    if (NOEL == 1 && NPT == 1){
+        if (KINC == 1){
+            std::cout << std::endl << "Sign of life" << std::endl;
+            std::cout << std::endl;
+        }
+
+        //Print Fortran multidimensional array
+        std::cout << "KINC: " << KINC << "; DFGRD0" << std::endl;
+        int height = 3;
+        int width = 3;
+        int index;
+        for (int row = 0; row < height; row++){
+            for (int col = 0; col < width; col++){
+                index = row*width + col;
+                std::cout << DFGRD0[index] << " ";
+            } 
+            std::cout << std::endl;
+        }
         std::cout << std::endl;
-//        cppStub::sayHello("Sign of life");
     }
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
@@ -88,26 +103,5 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 //    const DFGRD0
 //    const DFGRD1
 
-    //Print Fortran multidimensional array
-    printTwoDimensionalArray( DFGRD0, 3, 3 );
-
-    return;
-}
-
-template<typename T>
-void printTwoDimensionalArray( const T myPointer, const int &row_count, const int &column_count ){
-    /*!
-     * Print a two dimensional array using the pointer and dimensions.
-     *
-     * \param &myPointer: The pointer to the start of the array
-     * \param &row_count: The number of rows
-     * \param &column_count: The number of columns
-     */
-    for (int row = 0; row < row_count; row++){
-        for (int col = 0; col < column_count; col++){
-            std::cout << myPointer[col][row] << " ";
-        }
-        std::cout << "\n";
-    }
     return;
 }

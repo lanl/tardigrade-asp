@@ -17,6 +17,3 @@ extern "C" void UMAT(double *STRESS,       double *STATEV,       double *DDSDDE,
                      const double *COORDS, const double *DROT,   double &PNEWDT,       const double &CELENT, const double *DFGRD0,
                      const double *DFGRD1, const int &NOEL,      const int &NPT,       const int &LAYER,     const int &KSPT,
                      const int *JSTEP,     const int &KINC);
-
-template<typename T>
-void printTwoDimensionalArray( const T myPointer, const int &row_count, const int &column_count );
