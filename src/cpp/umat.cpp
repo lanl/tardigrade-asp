@@ -95,13 +95,13 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 }
 
 template<typename T>
-void printTwoDimensionalArray( const T myPointer, const int &row_count, const int &column_count ){
+void printTwoDimensionalArray( const T &myPointer, const int &row_count, const int &column_count ){
     /*!
      * Print a two dimensional array using the pointer and dimensions.
      *
      * \param &myPointer: The pointer to the start of the array
-     * \param row_count: The number of rows
-     * \param column_count: The number of columns
+     * \param &row_count: The number of rows
+     * \param &column_count: The number of columns
      */
     for (int row = 0; row < row_count; row++){
         for (int col = 0; col < column_count; col++){
