@@ -61,6 +61,11 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
      * \param &KINC: Increment number.
      */
 
+    if (KINC ==1 && NOEL == 1 && NPT == 1){
+        std::cout << std::endl << "Sign of life" << std::endl;
+        std::cout << std::endl;
+    }
+
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
     //Vectors are straight forward
@@ -78,29 +83,51 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     const std::vector<int> jstep( JSTEP, JSTEP + 4 );
     //Matrices require careful row/column major conversions
     std::vector< std::vector< double > > ddsdde;
-    const std::vector< std::vector< double > > drot;
-    const std::vector< std::vector< double > > dfgrd0;
-    const std::vector< std::vector< double > > dfgrd1;
+          std::vector< std::vector< double > > drot;
+          std::vector< std::vector< double > > dfgrd0;
+          std::vector< std::vector< double > > dfgrd1;
 
     // Perform a column to row major conversion to populate c++ two dimensional arrays
-    if (NOEL == 1 && NPT == 1){
-        if (KINC == 1){
-            std::cout << std::endl << "Sign of life" << std::endl;
-            std::cout << std::endl;
+    int height = 3;
+    int width = 3;
+    int column_major_index;
+    for (int row = 0; row < height; row++){
+        std::vector< double > drot_row;
+        std::vector< double > dfgrd0_row;
+        std::vector< double > dfgrd1_row;
+        for (int col = 0; col < width; col++){
+            column_major_index = row*width + col;
+            drot_row.push_back(*(DROT + column_major_index));
+            dfgrd0_row.push_back(*(DFGRD0 + column_major_index));
+            dfgrd1_row.push_back(*(DFGRD1 + column_major_index));
         }
+        drot.push_back(drot_row);
+        dfgrd0.push_back(dfgrd0_row);
+        dfgrd1.push_back(dfgrd1_row);
+    }
 
-        //Print Fortran multidimensional array
+    // Print two dimensional array(s) to check work
+    if (NOEL == 1 && NPT == 1){
         std::cout << "KINC: " << KINC << "; DFGRD0" << std::endl;
         int height = 3;
         int width = 3;
         int column_major_index;
         for (int row = 0; row < height; row++){
+            std::vector< double > vector_row;
             for (int col = 0; col < width; col++){
                 column_major_index = row*width + col;
                 std::cout << DFGRD0[column_major_index] << " ";
-//                dfgrd0[row][col] = DFGRD0[column_major_index];
-//                std::cout << "dfgrd0: " << dfgrd0[row][col] << " ";
-            } 
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        std::cout << "KINC: " << KINC << "; dfgrd0" << std::endl;
+        for (int row = 0; row < height; row++){
+            std::vector< double > vector_row;
+            for (int col = 0; col < width; col++){
+                column_major_index = row*width + col;
+                std::cout << dfgrd0[row][col] << " ";
+            }
             std::cout << std::endl;
         }
         std::cout << std::endl;
