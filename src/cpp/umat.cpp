@@ -61,6 +61,28 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
      * \param &KINC: Increment number.
      */
 
+    //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
+    //TODO: Decide if case sensitive variable names is a terrible idea or not
+    //Vectors are straight forward
+    std::vector<double> stress( STRESS, STRESS + NTENS );
+    std::vector<double> statev( STATEV, STATEV + NSTATV );
+    std::vector<double> ddsddt( DDSDDT, DDSDDT + NTENS );
+    const std::vector<double> strain( STRAN, STRAN + NTENS );
+    const std::vector<double> dstrain( DSTRAN, DSTRAN + NTENS );
+    const std::vector<double> time( TIME, TIME + 2 );
+    const std::vector<double> predef( PREDEF, PREDEF + 1 );
+    const std::vector<double> dpred( DPRED, DPRED + 1 );
+    //TODO: cmname?
+    const std::vector<double> props( PROPS, PROPS + NPROPS );
+    const std::vector<double> coords( COORDS, COORDS + 3 );
+    const std::vector<int> jstep( JSTEP, JSTEP + 4 );
+    //Matrices require careful row/column major conversions
+    std::vector< std::vector< double > > ddsdde;
+    const std::vector< std::vector< double > > drot;
+    const std::vector< std::vector< double > > dfgrd0;
+    const std::vector< std::vector< double > > dfgrd1;
+
+    // Perform a column to row major conversion to populate c++ two dimensional arrays
     if (NOEL == 1 && NPT == 1){
         if (KINC == 1){
             std::cout << std::endl << "Sign of life" << std::endl;
@@ -71,37 +93,18 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
         std::cout << "KINC: " << KINC << "; DFGRD0" << std::endl;
         int height = 3;
         int width = 3;
-        int index;
+        int column_major_index;
         for (int row = 0; row < height; row++){
             for (int col = 0; col < width; col++){
-                index = row*width + col;
-                std::cout << DFGRD0[index] << " ";
+                column_major_index = row*width + col;
+                std::cout << DFGRD0[column_major_index] << " ";
+//                dfgrd0[row][col] = DFGRD0[column_major_index];
+//                std::cout << "dfgrd0: " << dfgrd0[row][col] << " ";
             } 
             std::cout << std::endl;
         }
         std::cout << std::endl;
     }
-
-    //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
-    //TODO: Decide if case sensitive variable names is a terrible idea or not
-    //Vectors are straight forward
-//    std::vector<double> stress( STRESS, STRESS + NTENS );
-//    std::vector<double> statev( STATEV, STATEV + NSTATV );
-//    std::vector<double> ddsddt( DDSDDT, DDSDDT + NTENS );
-//    const std::vector<double> strain( STRAN, STRAN + NTENS );
-//    const std::vector<double> dstrain( DSTRAN, DSTRAN + NTENS );
-//    const std::vector<double> time( TIME, TIME + 2 );
-//    const std::vector<double> predef( PREDEF, PREDEF + 1 );
-//    const std::vector<double> dpred( DPRED, DPRED + 1 );
-//    //TODO: cmname?
-//    const std::vector<double> props( PROPS, PROPS + NPROPS );
-//    const std::vector<double> coords( COORDS, COORDS + 3 );
-//    const std::vector<int> jstep( JSTEP, JSTEP + 4 );
-//    //Matrices require careful row/column major conversions
-//    DDSDDE
-//    const DROT
-//    const DFGRD0
-//    const DFGRD1
 
     return;
 }

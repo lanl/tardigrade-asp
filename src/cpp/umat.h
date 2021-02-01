@@ -7,6 +7,7 @@
   */
 
 #include<iostream>
+#include<vector>
 #include<cpp_stub.h>
 
 extern "C" void UMAT(double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
