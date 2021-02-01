@@ -19,4 +19,4 @@ extern "C" void UMAT(double *STRESS,       double *STATEV,       double *DDSDDE,
                      const int *JSTEP,     const int &KINC);
 
 template<typename T>
-void printTwoDimensionalArray( const T &myPointer, const int &row_count, const int &column_count );
+void printTwoDimensionalArray( const T myPointer, const int &row_count, const int &column_count );

@@ -89,13 +89,13 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 //    const DFGRD1
 
     //Print Fortran multidimensional array
-    printTwoDimensionalArray( DFGRD0, 3, 3);
+    printTwoDimensionalArray( DFGRD0, 3, 3 );
 
     return;
 }
 
 template<typename T>
-void printTwoDimensionalArray( const T &myPointer, const int &row_count, const int &column_count ){
+void printTwoDimensionalArray( const T myPointer, const int &row_count, const int &column_count ){
     /*!
      * Print a two dimensional array using the pointer and dimensions.
      *
