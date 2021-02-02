@@ -8,6 +8,8 @@
 
 #include<iostream>
 #include<vector>
+#include<string.h>
+#include<stdio.h>
 #include<cpp_stub.h>
 
 extern "C" void UMAT(double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
@@ -21,3 +23,5 @@ extern "C" void UMAT(double *STRESS,       double *STATEV,       double *DDSDDE,
 
 template<typename T>
 std::vector< std::vector< double > > columnToRowMajor(T *myPointer, const int &width, const int &height);
+
+char *FtoCString(int stringLength, const char* fString);

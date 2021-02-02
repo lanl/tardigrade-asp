@@ -22,6 +22,10 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
      * The variables defined in this interface are described more completely in the Abaqus User Subroutines
      * manual entry for UMAT user subroutines.
      *
+     * The 80 character assumption for string conversion is based on the data line limits on character strings as
+     * described in the Abaqus User's Manual > Introduction & Spatial Modeling > Input Syntax Rules and the sample
+     * Fortran UMAT in the Abaqus User's Manual > User Subroutines > Abaqus/Standard User Subroutines > UMAT.
+     *
      * \param *STRESS: Cauchy stress tensor at beginning of time increment stored in vector form, \f$ \sigma \f$.
      * \param *STATEV: State variable vector.
      * \param *DDSDDE: Jacobian matrix \f$ \frac{\delta \Delta \sigma}{\delta \Delta \epsilon} \f$.
@@ -77,7 +81,7 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     const std::vector<double> time( TIME, TIME + 2 );
     const std::vector<double> predef( PREDEF, PREDEF + 1 );
     const std::vector<double> dpred( DPRED, DPRED + 1 );
-    //TODO: cmname?
+    const std::string cmname(FtoCString(80, CMNAME));
     const std::vector<double> props( PROPS, PROPS + NPROPS );
     const std::vector<double> coords( COORDS, COORDS + 3 );
     const std::vector<int> jstep( JSTEP, JSTEP + 4 );
@@ -112,4 +116,28 @@ std::vector< std::vector< double > > columnToRowMajor(T *column_major, const int
         row_major.push_back(row_vector);
     }
     return row_major;
+}
+
+char *FtoCString(int stringLength, const char* fString){
+    /*!
+     * Converts a Fortran string to C-string. Trims trailing white space during processing.
+     *
+     * Code excerpt from a c++ Abaqus FILM subroutine in the Abaqus Knowledge Base:
+     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B 
+     *
+     * TODO: update coding style to match project.
+     *
+     * \param stringLength: The length of the Fortran string.
+     * \param *fString: The pointer to the start of the Fortran string.
+     */
+    int stringLen = stringLength;
+    for (int k1=stringLength-1; k1>=0; k1--)
+	{
+	    if (fString[k1] != ' ') break;
+	    stringLen = k1;
+	}
+    char* cString  = new char [stringLen+1];
+    memcpy (cString, fString, stringLen);
+    cString[stringLen] = '\0';
+    return cString;
 }
