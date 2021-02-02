@@ -152,5 +152,14 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 
 std::vector< std::vector< double > > columnToRowMajor(double *myPointer, const int &width, const int &height){
     std::vector< std::vector< double > > row_major;
+    int column_major_index;
+    for (int row = 0; row < height; row++){
+        std::vector< double > row_vector;
+        for (int col = 0; col < width; col++){
+            column_major_index = row*width + col;
+            row_vector.push_back(*(myPointer + column_major_index));
+        }
+        row_major.push_back(row_vector);
+    }
     return row_major;
 }
