@@ -94,7 +94,6 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
         int width = 3;
         int column_major_index;
         for (int row = 0; row < height; row++){
-            std::vector< double > vector_row;
             for (int col = 0; col < width; col++){
                 column_major_index = row*width + col;
                 std::cout << DFGRD0[column_major_index] << " ";
@@ -104,7 +103,6 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
         std::cout << std::endl;
         std::cout << "KINC: " << KINC << "; dfgrd0" << std::endl;
         for (int row = 0; row < height; row++){
-            std::vector< double > vector_row;
             for (int col = 0; col < width; col++){
                 std::cout << dfgrd0[row][col] << " ";
             }
