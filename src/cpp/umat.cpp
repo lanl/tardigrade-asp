@@ -65,11 +65,6 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
-    if ( KINC ==1 && NOEL == 1 && NPT == 1 ){
-        std::cout << std::endl << "Sign of life" << std::endl;
-        std::cout << std::endl;
-    }
-
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
     //Vectors are straight forward
