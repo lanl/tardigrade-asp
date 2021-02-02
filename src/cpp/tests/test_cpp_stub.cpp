@@ -28,8 +28,6 @@ struct cout_redirect{
 BOOST_AUTO_TEST_CASE( testSayHello ){
     /*!
      * Test message printed to stdout in sayHello function
-     *
-     * :param std::ofstream &results: The output file
      */
 
     std::stringbuf buffer;
