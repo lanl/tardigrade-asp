@@ -87,6 +87,8 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
           std::vector< std::vector< double > > dfgrd0;
           std::vector< std::vector< double > > dfgrd1;
 
+    std::vector< std::vector< double > > dummy = columnToRowMajor(DDSDDE);
+
     // Perform a column to row major conversion to populate c++ ddsdde
     int height = NTENS;
     int width = NTENS;
@@ -146,4 +148,9 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     }
 
     return;
+}
+
+std::vector< std::vector< double > > columnToRowMajor(double *myPointer){
+    std::vector< std::vector< double > > row_major;
+    return row_major;
 }
