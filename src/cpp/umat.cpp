@@ -81,7 +81,7 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     const std::vector<double> props( PROPS, PROPS + NPROPS );
     const std::vector<double> coords( COORDS, COORDS + 3 );
     const std::vector<int> jstep( JSTEP, JSTEP + 4 );
-    //Matrices require careful row/column major conversions
+    //Matrices require careful row/column major conversions to c++ types
     std::vector< std::vector< double > > ddsdde = columnToRowMajor(DDSDDE, NTENS, NTENS);
     const std::vector< std::vector< double > > drot = columnToRowMajor(DROT, 3, 3);
     const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
@@ -118,6 +118,15 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 
 template<typename T>
 std::vector< std::vector< double > > columnToRowMajor(T *myPointer, const int &width, const int &height){
+    /*!
+     * Convert column major two dimensional arrays to row major.
+     *
+     * Specifically, convert pointers to Fortran column major arrays to c++ row major arrays.
+     *
+     * \param *myPointer: The pointer to the start of a column major array
+     * \param &width: The width of the array, e.g. number of columns
+     * \param &height: The height of the array, e.e.g number of rows
+     */
     std::vector< std::vector< double > > row_major;
     int column_major_index;
     for (int row = 0; row < height; row++){
