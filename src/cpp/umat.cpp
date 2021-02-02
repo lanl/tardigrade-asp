@@ -87,8 +87,6 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
           std::vector< std::vector< double > > dfgrd0;
           std::vector< std::vector< double > > dfgrd1;
 
-    std::vector< std::vector< double > > dummy = columnToRowMajor(DDSDDE, NTENS, NTENS);
-
     // Perform a column to row major conversion to populate c++ ddsdde
     int height = NTENS;
     int width = NTENS;
@@ -103,21 +101,20 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     }
 
     // Perform a column to row major conversion to populate c++ two dimensional arrays of 3x3
+    dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
+
     height = 3;
     width = 3;
     column_major_index;
     for (int row = 0; row < height; row++){
         std::vector< double > drot_row;
-        std::vector< double > dfgrd0_row;
         std::vector< double > dfgrd1_row;
         for (int col = 0; col < width; col++){
             column_major_index = row*width + col;
             drot_row.push_back(*(DROT + column_major_index));
-            dfgrd0_row.push_back(*(DFGRD0 + column_major_index));
             dfgrd1_row.push_back(*(DFGRD1 + column_major_index));
         }
         drot.push_back(drot_row);
-        dfgrd0.push_back(dfgrd0_row);
         dfgrd1.push_back(dfgrd1_row);
     }
 
@@ -150,7 +147,8 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     return;
 }
 
-std::vector< std::vector< double > > columnToRowMajor(double *myPointer, const int &width, const int &height){
+template<typename T>
+std::vector< std::vector< double > > columnToRowMajor(T *myPointer, const int &width, const int &height){
     std::vector< std::vector< double > > row_major;
     int column_major_index;
     for (int row = 0; row < height; row++){
