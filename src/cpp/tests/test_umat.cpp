@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
     std::vector< std::vector< double > > answer = { { 1, 2, 3 },
                                                     { 4, 5, 6 } };
 
-    //DEBUGGING
+    // DEBUGGING: Print two dimensional array(s) to check work
     int column_major_index;
     std::cout << "column_major_pointer" << std::endl;
     for (int row = 0; row < height; row++){
