@@ -14,9 +14,10 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
      * Test column to row major conversion function.
      * Uses c++ arrays to avoid adding fortran code to project.
      */
-//    std::vector < double > column_major = { 1, 4,
-//                                            2, 5, 
-//                                            3, 6 };
+
+    //Note that a c++ vector is stored as row major and the column to row major function accesses by pointer.
+    //This means that the c++ test is really testing the pointer access of a row-major vector and conversion to a two
+    //dimensional array. To test a column major memory access, we must add a fortran executable to the project.
     std::vector < double > column_major = { 1, 2,
                                             3, 4, 
                                             5, 6 };
@@ -27,26 +28,6 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
     row_major = columnToRowMajor( column_major_pointer, width, height); 
     std::vector< std::vector< double > > answer = { { 1, 2, 3 },
                                                     { 4, 5, 6 } };
-
-    // DEBUGGING: Print two dimensional array(s) to check work
-    int column_major_index;
-    std::cout << "column_major_pointer" << std::endl;
-    for (int row = 0; row < height; row++){
-        for (int col = 0; col < width; col++){
-            column_major_index = row*width + col;
-            std::cout << column_major_pointer[column_major_index] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << "row_major" << std::endl;
-    for (int row = 0; row < height; row++){
-        for (int col = 0; col < width; col++){
-            std::cout << row_major[row][col] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
 
     BOOST_CHECK( row_major == answer );
 }

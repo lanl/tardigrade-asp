@@ -87,30 +87,6 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
     const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor(DFGRD1, 3, 3);
 
-    // DEBUGGING: Print two dimensional array(s) to check work
-    if (NOEL == 1 && NPT == 1){
-        std::cout << "KINC: " << KINC << "; DFGRD0" << std::endl;
-        int height = 3;
-        int width = 3;
-        int column_major_index;
-        for (int row = 0; row < height; row++){
-            for (int col = 0; col < width; col++){
-                column_major_index = row*width + col;
-                std::cout << DFGRD0[column_major_index] << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-        std::cout << "KINC: " << KINC << "; dfgrd0" << std::endl;
-        for (int row = 0; row < height; row++){
-            for (int col = 0; col < width; col++){
-                std::cout << dfgrd0[row][col] << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-    }
-
     return;
 }
 
