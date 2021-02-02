@@ -117,13 +117,13 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
 }
 
 template<typename T>
-std::vector< std::vector< double > > columnToRowMajor(T *myPointer, const int &width, const int &height){
+std::vector< std::vector< double > > columnToRowMajor(T *column_major, const int &width, const int &height){
     /*!
      * Convert column major two dimensional arrays to row major.
      *
      * Specifically, convert pointers to Fortran column major arrays to c++ row major arrays.
      *
-     * \param *myPointer: The pointer to the start of a column major array
+     * \param *column_major: The pointer to the start of a column major array
      * \param &width: The width of the array, e.g. number of columns
      * \param &height: The height of the array, e.e.g number of rows
      */
@@ -133,7 +133,7 @@ std::vector< std::vector< double > > columnToRowMajor(T *myPointer, const int &w
         std::vector< double > row_vector;
         for (int col = 0; col < width; col++){
             column_major_index = row*width + col;
-            row_vector.push_back(*(myPointer + column_major_index));
+            row_vector.push_back(*(column_major + column_major_index));
         }
         row_major.push_back(row_vector);
     }
