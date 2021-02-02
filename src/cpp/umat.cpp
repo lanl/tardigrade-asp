@@ -82,16 +82,10 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     const std::vector<double> coords( COORDS, COORDS + 3 );
     const std::vector<int> jstep( JSTEP, JSTEP + 4 );
     //Matrices require careful row/column major conversions
-    std::vector< std::vector< double > > ddsdde;
-          std::vector< std::vector< double > > drot;
-          std::vector< std::vector< double > > dfgrd0;
-          std::vector< std::vector< double > > dfgrd1;
-
-    // Perform a column to row major conversion to populate c++ two dimensional arrays
-    ddsdde = columnToRowMajor(DDSDDE, NTENS, NTENS);
-    drot = columnToRowMajor(DROT, 3, 3);
-    dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
-    dfgrd1 = columnToRowMajor(DFGRD1, 3, 3);
+    std::vector< std::vector< double > > ddsdde = columnToRowMajor(DDSDDE, NTENS, NTENS);
+    const std::vector< std::vector< double > > drot = columnToRowMajor(DROT, 3, 3);
+    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
+    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor(DFGRD1, 3, 3);
 
     // Print two dimensional array(s) to check work
     if (NOEL == 1 && NPT == 1){
