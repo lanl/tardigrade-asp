@@ -19,4 +19,4 @@ extern "C" void UMAT(double *STRESS,       double *STATEV,       double *DDSDDE,
                      const double *DFGRD1, const int &NOEL,      const int &NPT,       const int &LAYER,     const int &KSPT,
                      const int *JSTEP,     const int &KINC);
 
-std::vector< std::vector< double > > columnToRowMajor(double *myPointer);
+std::vector< std::vector< double > > columnToRowMajor(double *myPointer, const int &width, const int &height);
