@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
     std::vector < double > column_major = { 1, 2,
                                             3, 4, 
                                             5, 6 };
-    double *column_major_pointer = &column_major[0];
+    double *column_major_pointer = column_major.data();
     const int width = 3;
     const int height = 2;
     std::vector< std::vector< double > > row_major;
