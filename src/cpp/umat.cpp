@@ -87,43 +87,18 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
           std::vector< std::vector< double > > dfgrd0;
           std::vector< std::vector< double > > dfgrd1;
 
-    // Perform a column to row major conversion to populate c++ ddsdde
-    int height = NTENS;
-    int width = NTENS;
-    int column_major_index;
-    for (int row = 0; row < height; row++){
-        std::vector< double > ddsdde_row;
-        for (int col = 0; col < width; col++){
-            column_major_index = row*width + col;
-            ddsdde_row.push_back(*(DDSDDE + column_major_index));
-        }
-        ddsdde.push_back(ddsdde_row);
-    }
-
-    // Perform a column to row major conversion to populate c++ two dimensional arrays of 3x3
+    // Perform a column to row major conversion to populate c++ two dimensional arrays
+    ddsdde = columnToRowMajor(DDSDDE, NTENS, NTENS);
+    drot = columnToRowMajor(DROT, 3, 3);
     dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
-
-    height = 3;
-    width = 3;
-    column_major_index;
-    for (int row = 0; row < height; row++){
-        std::vector< double > drot_row;
-        std::vector< double > dfgrd1_row;
-        for (int col = 0; col < width; col++){
-            column_major_index = row*width + col;
-            drot_row.push_back(*(DROT + column_major_index));
-            dfgrd1_row.push_back(*(DFGRD1 + column_major_index));
-        }
-        drot.push_back(drot_row);
-        dfgrd1.push_back(dfgrd1_row);
-    }
+    dfgrd1 = columnToRowMajor(DFGRD1, 3, 3);
 
     // Print two dimensional array(s) to check work
     if (NOEL == 1 && NPT == 1){
         std::cout << "KINC: " << KINC << "; DFGRD0" << std::endl;
-        height = 3;
-        width = 3;
-        column_major_index;
+        int height = 3;
+        int width = 3;
+        int column_major_index;
         for (int row = 0; row < height; row++){
             std::vector< double > vector_row;
             for (int col = 0; col < width; col++){
