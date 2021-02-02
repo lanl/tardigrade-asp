@@ -8,14 +8,14 @@
 
 #include<umat.h>
 
-extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
-                      double &SCD,          double &RPL,          double *DDSDDT,       double *DRPLDE,       double &DRPLDT,
-                      const double *STRAN,  const double *DSTRAN, const double *TIME,   const double &DTIME,  const double &TEMP,
-                      const double &DTEMP,  const double *PREDEF, const double *DPRED,  const char *CMNAME,   const int &NDI,
-                      const int &NSHR,      const int &NTENS,     const int &NSTATV,    const double *PROPS,  const int &NPROPS,
-                      const double *COORDS, const double *DROT,   double &PNEWDT,       const double &CELENT, const double *DFGRD0,
-                      const double *DFGRD1, const int &NOEL,      const int &NPT,       const int &LAYER,     const int &KSPT,
-                      const int *JSTEP,     const int &KINC){
+extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
+                       double &SCD,          double &RPL,          double *DDSDDT,       double *DRPLDE,       double &DRPLDT,
+                       const double *STRAN,  const double *DSTRAN, const double *TIME,   const double &DTIME,  const double &TEMP,
+                       const double &DTEMP,  const double *PREDEF, const double *DPRED,  const char *CMNAME,   const int &NDI,
+                       const int &NSHR,      const int &NTENS,     const int &NSTATV,    const double *PROPS,  const int &NPROPS,
+                       const double *COORDS, const double *DROT,   double &PNEWDT,       const double &CELENT, const double *DFGRD0,
+                       const double *DFGRD1, const int &NOEL,      const int &NPT,       const int &LAYER,     const int &KSPT,
+                       const int *JSTEP,     const int &KINC ){
     /*!
      * The Abaqus UMAT c++ interface for the (V)iscous (I)sotropic (Por)osity based model.
      *
@@ -65,7 +65,7 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
      * \param &KINC: Increment number.
      */
 
-    if (KINC ==1 && NOEL == 1 && NPT == 1){
+    if ( KINC ==1 && NOEL == 1 && NPT == 1 ){
         std::cout << std::endl << "Sign of life" << std::endl;
         std::cout << std::endl;
     }
@@ -73,29 +73,29 @@ extern "C" void umat_(double *STRESS,       double *STATEV,       double *DDSDDE
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
     //Vectors are straight forward
-    std::vector<double> stress( STRESS, STRESS + NTENS );
-    std::vector<double> statev( STATEV, STATEV + NSTATV );
-    std::vector<double> ddsddt( DDSDDT, DDSDDT + NTENS );
-    const std::vector<double> strain( STRAN, STRAN + NTENS );
-    const std::vector<double> dstrain( DSTRAN, DSTRAN + NTENS );
-    const std::vector<double> time( TIME, TIME + 2 );
-    const std::vector<double> predef( PREDEF, PREDEF + 1 );
-    const std::vector<double> dpred( DPRED, DPRED + 1 );
-    const std::string cmname(FtoCString(80, CMNAME));
-    const std::vector<double> props( PROPS, PROPS + NPROPS );
-    const std::vector<double> coords( COORDS, COORDS + 3 );
-    const std::vector<int> jstep( JSTEP, JSTEP + 4 );
+    std::vector< double > stress( STRESS, STRESS + NTENS );
+    std::vector< double > statev( STATEV, STATEV + NSTATV );
+    std::vector< double > ddsddt( DDSDDT, DDSDDT + NTENS );
+    const std::vector< double > strain( STRAN, STRAN + NTENS );
+    const std::vector< double > dstrain( DSTRAN, DSTRAN + NTENS );
+    const std::vector< double > time( TIME, TIME + 2 );
+    const std::vector< double > predef( PREDEF, PREDEF + 1 );
+    const std::vector< double > dpred( DPRED, DPRED + 1 );
+    const std::string cmname( FtoCString( 80, CMNAME ) );
+    const std::vector< double > props( PROPS, PROPS + NPROPS );
+    const std::vector< double > coords( COORDS, COORDS + 3 );
+    const std::vector< int > jstep( JSTEP, JSTEP + 4 );
     //Matrices require careful row/column major conversions to c++ types
-    std::vector< std::vector< double > > ddsdde = columnToRowMajor(DDSDDE, NTENS, NTENS);
-    const std::vector< std::vector< double > > drot = columnToRowMajor(DROT, 3, 3);
-    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor(DFGRD0, 3, 3);
-    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor(DFGRD1, 3, 3);
+    std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
+    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, 3, 3 );
+    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, 3, 3 );
+    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, 3, 3 );
 
     return;
 }
 
 template<typename T>
-std::vector< std::vector< double > > columnToRowMajor(T *column_major, const int &width, const int &height){
+std::vector< std::vector< double > > columnToRowMajor( T *column_major, const int &width, const int &height ){
     /*!
      * Convert column major two dimensional arrays to row major.
      *
@@ -107,18 +107,18 @@ std::vector< std::vector< double > > columnToRowMajor(T *column_major, const int
      */
     std::vector< std::vector< double > > row_major;
     int column_major_index;
-    for (int row = 0; row < height; row++){
+    for ( int row = 0; row < height; row++ ){
         std::vector< double > row_vector;
-        for (int col = 0; col < width; col++){
+        for ( int col = 0; col < width; col++ ){
             column_major_index = row*width + col;
-            row_vector.push_back(*(column_major + column_major_index));
+            row_vector.push_back( *( column_major + column_major_index ) );
         }
-        row_major.push_back(row_vector);
+        row_major.push_back( row_vector );
     }
     return row_major;
 }
 
-char *FtoCString(int stringLength, const char* fString){
+char *FtoCString( int stringLength, const char* fString ){
     /*!
      * Converts a Fortran string to C-string. Trims trailing white space during processing.
      *
@@ -131,13 +131,13 @@ char *FtoCString(int stringLength, const char* fString){
      * \param *fString: The pointer to the start of the Fortran string.
      */
     int stringLen = stringLength;
-    for (int k1=stringLength-1; k1>=0; k1--)
+    for ( int k1 = stringLength - 1; k1 >= 0; k1-- )
 	{
-	    if (fString[k1] != ' ') break;
+	    if ( fString[ k1 ] != ' ' ) break;
 	    stringLen = k1;
 	}
-    char* cString  = new char [stringLen+1];
-    memcpy (cString, fString, stringLen);
-    cString[stringLen] = '\0';
+    char* cString  = new char [ stringLen + 1 ];
+    memcpy ( cString, fString, stringLen );
+    cString[ stringLen ] = '\0';
     return cString;
 }
