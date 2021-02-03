@@ -17,7 +17,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
                        const double *DFGRD1, const int &NOEL,      const int &NPT,       const int &LAYER,     const int &KSPT,
                        const int *JSTEP,     const int &KINC ){
     /*!
-     * The Abaqus UMAT c++ interface for the (V)iscous (I)sotropic (Por)osity based model.
+     * A template Abaqus UMAT c++ interface.
      *
      * The variables defined in this interface are described more completely in the Abaqus User Subroutines
      * manual entry for UMAT user subroutines.
