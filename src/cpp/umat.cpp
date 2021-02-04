@@ -86,6 +86,8 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, 3, 3 );
     const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, 3, 3 );
 
+    cppStub::sayHello("Abaqus");
+
     return;
 }
 
