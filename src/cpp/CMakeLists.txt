@@ -16,7 +16,8 @@ target_link_libraries(${PROJECT_NAME} Eigen3::Eigen
 
 # Abaqus UMAT interface
 add_library (umat SHARED "umat.cpp" "umat.h")
-target_include_directories(umat PUBLIC .)
+target_include_directories(umat PUBLIC .
+                           "${vector_tools_SOURCE_DIR}/src/cpp")
 set_target_properties(umat PROPERTIES CXX_STANDARD 11
                                       PREFIX ""
                                       SUFFIX ".o")

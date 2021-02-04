@@ -580,3 +580,48 @@ doubt use ``feature/<description>``.
 Sphinx reads in docstrings and other special portions of the code as
 reStructured text. Developers should follow styles in this [Sphinx style
 guide](https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#).
+
+### Style Guide
+
+This project does not yet have a full style guide. Generally, wherever a style can't be
+inferred from surrounding code this project falls back to
+[PEP-8](https://www.python.org/dev/peps/pep-0008/)-like styles. There are two
+notable exceptions to the notional PEP-8 fall back:
+
+1. [Doxygen](https://www.doxygen.nl/manual/docblocks.html) style docstrings are
+   required for automated, API from source documentation.
+2. This project prefers expansive whitespace surrounding parentheses, braces, and
+   brackets.
+   * No leading space between a function and the argument list.
+   * One space following an open paranthesis ``(``, brace ``{``, or bracket
+     ``[``
+   * One space leading a close paranthesis ``)``, brace ``}``, or bracket ``]``
+
+An example of the whitespace style:
+
+```
+my_function( arg1, { arg2, arg3 }, arg4 );
+```
+
+The following ``sed`` commands may be useful for updating white space, but must
+be used with care. The developer is recommended to use a unique git commit
+between each command with a corresponding review of the changes and a unit test
+run.
+
+* Trailing space for open paren/brace/bracket
+
+```
+sed -i 's/\([({[]\)\([^ ]\)/\1 \2/g' <list of files to update>
+```
+
+* Leading space for close paren/brace/bracket
+
+```
+sed -i 's/\([^ ]\)\([)}\]]\)/\1 \2/g' <list of files to update>
+```
+
+* White space between adjacent paren/brace/bracket
+
+```
+sed -i 's/\([)}\]]\)\([)}\]]\)/\1 \2/g' <list of files to update>
+```
