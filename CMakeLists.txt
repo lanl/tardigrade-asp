@@ -2,6 +2,9 @@ cmake_minimum_required (VERSION 3.14)
 project (cpp_stub VERSION 0.0.1)
 enable_testing()
 
+# Set some Abaqus integration variables
+set(UMAT "umat")
+
 # Make the code position independent
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
