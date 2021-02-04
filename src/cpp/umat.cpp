@@ -105,7 +105,7 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
     for ( int row = 0; row < height; row++ ){
         std::vector< double > row_vector;
         for ( int col = 0; col < width; col++ ){
-            column_major_index = row*width + col;
+            column_major_index = col*height + row;
             row_vector.push_back( *( column_major + column_major_index ) );
         }
         row_major.push_back( row_vector );
