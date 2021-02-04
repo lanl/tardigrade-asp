@@ -8,8 +8,8 @@ target_link_libraries(${TEST_NAME} PUBLIC ${PROJECT_NAME}
                       stress_tools
                       solver_tools)
 
-set(TEST_UMAT "test_umat")
+set(TEST_UMAT "test_${UMAT}")
 add_executable (${TEST_UMAT} "${TEST_UMAT}.cpp")
 add_test(NAME ${TEST_UMAT} COMMAND ${TEST_UMAT})
 set_target_properties(${TEST_UMAT} PROPERTIES CXX_STANDARD 11)
-target_link_libraries(${TEST_UMAT} PUBLIC "umat")
+target_link_libraries(${TEST_UMAT} PUBLIC "${UMAT}")

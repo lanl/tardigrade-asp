@@ -15,10 +15,11 @@ target_link_libraries(${PROJECT_NAME} Eigen3::Eigen
                                       solver_tools)
 
 # Abaqus UMAT interface
-add_library (umat SHARED "umat.cpp" "umat.h")
-target_include_directories(umat PUBLIC .
-                           "${vector_tools_SOURCE_DIR}/src/cpp")
-set_target_properties(umat PROPERTIES CXX_STANDARD 11
+add_library (${UMAT} SHARED "${UMAT}.cpp" "${UMAT}.h")
+set_target_properties(${UMAT} PROPERTIES CXX_STANDARD 11
                                       PREFIX ""
                                       SUFFIX ".o")
-target_compile_options(umat PUBLIC)
+target_compile_options(${UMAT} PUBLIC)
+target_include_directories(${UMAT} PUBLIC .
+                           "${vector_tools_SOURCE_DIR}/src/cpp")
+target_link_libraries(${UMAT} PUBLIC ${PROJECT_NAME})
