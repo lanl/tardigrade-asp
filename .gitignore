@@ -4,3 +4,12 @@
 build*/
 *_results.tex
 *results.tex
+
+# Abaqus output files
+*.com
+*.dat
+*.msg
+*.odb
+*.prt
+*.sim
+*.sta

@@ -68,14 +68,14 @@ mv results.tex "${compiler}_results.tex"
 cd ${workdir}
 cp "build/${compiler}_results.tex" .
 
-#================================================= TEST AGAINST icpc COMPILER ===
+#================================================== TEST AGAINST g++ COMPILER ===
 case $(hostname) in
     hamming.lanl.gov|mayhem.lanl.gov|sstelmo.lanl.gov)
         set +ux
         source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
         set -Eeuxo pipefail
 
-        compiler='icpc'
+        compiler='g++'
         ./new_build.sh ${compiler}
 
         # Perform repo tests
