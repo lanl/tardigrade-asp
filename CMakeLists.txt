@@ -77,6 +77,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_tools solver_tools)
 
 #=============================================================================================== ADD PROJECT TARGETS ===
+# MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
 add_subdirectory ("${CPP_SRC_PATH}")
 
