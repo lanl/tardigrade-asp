@@ -1,4 +1,4 @@
-.. _whatsnew:
+.. _changelog:
 
 Changelog
 =========
