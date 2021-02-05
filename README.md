@@ -2,11 +2,11 @@
 
 A stub repository for C++ development projects in W-13.
 
-This repository will contain the necessary setup files to integrate C++ doc
-strings, CMake, Doxygen, Sphinx, and Breathe for a complete build system with
-integrated documentation. It will also include the necessary hooks to commonly
-used C++ libraries for constitutive modeling. This stub repository
-also includes template hooks for integrating C++ code as Abaqus subroutines.
+This repository will contain the necessary setup files to integrate C++ doc strings,
+[CMake](https://cmake.org/cmake/help/v3.14/), [Doxygen](https://www.doxygen.nl/manual/docblocks.html),
+[Sphinx](https://www.sphinx-doc.org/en/master/), and [Breathe](https://breathe.readthedocs.io/en/latest/) for a complete
+build system with integrated documentation. It will also include the necessary hooks to commonly used C++ libraries for
+constitutive modeling. This stub repository also includes template hooks for integrating C++ code as Abaqus subroutines.
 
 > Note: you can use this repo as a stub for fortran projects as well! A
 > step-by-step may never happen because c++ is the future of W-13 subroutines.
@@ -334,15 +334,15 @@ See ``jenkins_job_xml.md`` in this repo.
 
 ### Executables
 
-* CMake >= 3.14
-* Doxygen >= 1.8.5
+* [CMake](https://cmake.org/cmake/help/v3.14/) >= 3.14
+* [Doxygen](https://www.doxygen.nl/manual/docblocks.html) >= 1.8.5
 * LaTeX >= 2017
 
 ### Python Modules (for documentation)
 
-* Sphinx >= 3.0.4
-* Breathe >= 4.18.1
-* sphinx\_rtd\_theme >= 0.4.3
+* [Sphinx](https://www.sphinx-doc.org/en/master/) >= 3.0.4
+* [Breathe](https://breathe.readthedocs.io/en/latest/) >= 4.18.1
+* [sphinx\_rtd\_theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/) >= 0.4.3
 
 For convenience, the minimal Python environment requirements for the
 documentation build are included in ``environment.yaml`` and
@@ -360,8 +360,8 @@ Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/m
 
 ### C++ Libraries
 
-* eigen >= 3.3.7
-* BOOST >= 1.53.0
+* [Eigen](https://eigen.tuxfamily.org/dox/) >= 3.3.7
+* [BOOST](https://www.boost.org/doc/libs/1_53_0/) >= 1.53.0
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 * stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools
@@ -418,8 +418,9 @@ $ make install
 
 ## Build and Test
 
-This repository is built with CMake and uses Doxygen + Sphinx + Breathe to build
-the documentation.
+This repository is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
+[Doxygen](https://www.doxygen.nl/manual/docblocks.html) + [Sphinx](https://www.sphinx-doc.org/en/master/) +
+[Breathe](https://breathe.readthedocs.io/en/latest/) to build the documentation.
 
 > **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
 > API is much more useful.
@@ -569,7 +570,7 @@ doubt use ``feature/<description>``.
 
 ### reStructured Text
 
-Sphinx reads in docstrings and other special portions of the code as
+[Sphinx](https://www.sphinx-doc.org/en/master/) reads in docstrings and other special portions of the code as
 reStructured text. Developers should follow styles in this [Sphinx style
 guide](https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#).
 
