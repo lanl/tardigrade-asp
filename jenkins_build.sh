@@ -52,7 +52,7 @@ case $OSTYPE in
         compiler='g++'
         ;;
 esac
-./new_build.sh ${compiler}
+./new_build.sh ${compiler} 4
 
 # Perform repo tests
 cd "build"
