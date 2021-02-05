@@ -27,11 +27,13 @@ target_link_libraries(${UMAT} PUBLIC ${PROJECT_NAME})
 # Conditionally add abaqus integration test(s) only for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     if(BASH_PROGRAM AND ABAQUS_PROGRAM)
+        # Copy abaqus source directory to build directory
         add_custom_command(TARGET ${UMAT} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory
                                "${CMAKE_SOURCE_DIR}/${ABAQUS_SRC_PATH}" "${CMAKE_BINARY_DIR}/${ABAQUS_SRC_PATH}"
                           )
-        add_test(NAME test_abaqus
+        # Add abaqus umat integration tests that run abaqus against input files
+        add_test(NAME test_abaqus_umat_integration
                  COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 $<TARGET_FILE:${UMAT}>
                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${ABAQUS_SRC_PATH}/tests
                 )
