@@ -59,6 +59,14 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     add_subdirectory ("docs")
 endif()
 
+# Conditionally add abaqus integration test(s)
+find_program(BASH_PROGRAM bash)
+if(BASH_PROGRAM)
+    message(STATUS "Found bash: ${BASH_PROGRAM}")
+else()
+    message(STATUS "bash not found. Abaqus integration tests will be skipped")
+endif()
+
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
