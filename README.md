@@ -5,12 +5,8 @@ A stub repository for C++ development projects in W-13.
 This repository will contain the necessary setup files to integrate C++ doc
 strings, CMake, Doxygen, Sphinx, and Breathe for a complete build system with
 integrated documentation. It will also include the necessary hooks to commonly
-used C++ libraries for constitutive modeling. Eventually, this stub repository
-will include template hooks for integrating C++ code as Abaqus subroutines and
-in
-[EABM](https://xcp-confluence.lanl.gov/display/EABM/EABM+Requirements+Document)
-repositories for use with the
-[ECMF](https://simulia.lanl.gov/ECMF-D/index.html).
+used C++ libraries for constitutive modeling. This stub repository
+also includes template hooks for integrating C++ code as Abaqus subroutines.
 
 > Note: you can use this repo as a stub for fortran projects as well! A
 > step-by-step may never happen because c++ is the future of W-13 subroutines.
