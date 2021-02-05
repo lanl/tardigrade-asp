@@ -14,16 +14,16 @@ Compilers
 Executables
 ===========
 
-* CMake >= 3.14
-* Doxygen >= 1.8.5
-* LaTeX >= 2017
+* `CMake`_ >= 3.14
+* `Doxygen`_ >= 1.8.5
+* `LaTeX`_ >= 2017
 
 Python Modules (for documentation)
 ==================================
 
-* Sphinx >= 3.0.4
-* Breathe >= 4.18.1
-* sphinx\_rtd\_theme >= 0.4.3
+* `Sphinx`_ >= 3.0.4
+* `Breathe`_ >= 4.18.1
+* `sphinx\_rtd\_theme`_ >= 0.4.3
 
 For convenience, the minimal Python environment requirements for the
 documentation build are included in ``environment.yaml`` and
@@ -41,7 +41,8 @@ the `Anaconda Documentation`_.
 C++ Libraries
 =============
 
-* eigen >= 3.3.7
+* `Eigen`_ >= 3.3.7
+* `BOOST`_ >= 1.53.0
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 * stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools

@@ -38,7 +38,7 @@ doubt use ``feature/<description>``.
 reStructured Text
 =================
 
-Sphinx reads in docstrings and other special portions of the code as
+`Sphinx`_ reads in docstrings and other special portions of the code as
 reStructured text. Developers should follow styles in this `Sphinx style
 guide`_.
 
@@ -50,7 +50,7 @@ Style Guide
 This project does not yet have a full style guide. Generally, wherever a style can't be inferred from surrounding code
 this project falls back to `PEP-8`_-like styles. There are two notable exceptions to the notional PEP-8 fall back:
 
-1. `Doxygen`_ style docstrings are required for automated, API from source documentation.
+1. `Doxygen style docstrings`_ are required for automated, API from source documentation.
 2. This project prefers expansive whitespace surrounding parentheses, braces, and brackets.
 
    * No leading space between a function and the argument list.

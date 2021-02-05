@@ -336,7 +336,7 @@ See ``jenkins_job_xml.md`` in this repo.
 
 * [CMake](https://cmake.org/cmake/help/v3.14/) >= 3.14
 * [Doxygen](https://www.doxygen.nl/manual/docblocks.html) >= 1.8.5
-* LaTeX >= 2017
+* [LaTeX](https://www.latex-project.org/help/documentation/) >= 2017
 
 ### Python Modules (for documentation)
 

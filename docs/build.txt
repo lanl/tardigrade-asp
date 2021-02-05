@@ -4,7 +4,7 @@ Build and Test
 
 .. include:: md2rst.txt
 
-This repository is built with CMake and uses Doxygen + Sphinx + Breathe to build
+This repository is built with `CMake`_ and uses `Doxygen`_ + `Sphinx`_ + `Breathe`_ to build
 the documentation.
 
 .. note::
