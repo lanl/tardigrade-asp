@@ -47,6 +47,7 @@
 .. _`Sphinx style guide`: https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#
 
 .. C++/fortran/cmake links
+.. _`Doxygen`: https://www.doxygen.nl/manual/docblocks.html
 .. _`CMake for Fortran example CMakeLists.txt`: https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample
 .. _`CMake documentation starting point`: https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html
 .. _`Stack Overflow thread`: https://stackoverflow.com/questions/12705562/using-cmake-with-fortran
