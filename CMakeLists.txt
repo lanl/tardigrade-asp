@@ -3,11 +3,12 @@ cmake_minimum_required (VERSION 3.14)
 project (cpp_stub VERSION 0.0.1)
 enable_testing()
 
-# Set common project paths
+# Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
 
 # Set some Abaqus integration variables
 set(UMAT "umat")
+set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
 
 # Make the code position independent
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -31,7 +32,7 @@ find_program(BASH_PROGRAM bash)
 if(BASH_PROGRAM)
     message(STATUS "Found bash: ${BASH_PROGRAM}")
 else()
-    message(STATUS "bash not found. Abaqus integration tests will be skipped")
+    message(STATUS "bash not found. ${MISSING_INTEGRATION_DEPS_MESSAGE}")
 endif()
 
 # Find Abaqus (Required for abaqus integration tests)
@@ -42,7 +43,7 @@ find_program(ABAQUS_PROGRAM
 if(ABAQUS_PROGRAM)
     message(STATUS "Found Abaqus: ${ABAQUS_PROGRAM}")
 else()
-    message(STATUS "Abaqus not found. Abaqus integration tests will be skipped")
+    message(STATUS "Abaqus not found. ${MISSING_INTEGRATION_DEPS_MESSAGE}")
 endif()
 
 # Add the cmake folder to locate the FindSphinx module
