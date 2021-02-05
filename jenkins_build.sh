@@ -68,32 +68,6 @@ mv results.tex "${compiler}_results.tex"
 cd ${workdir}
 cp "build/${compiler}_results.tex" .
 
-#================================================== TEST AGAINST g++ COMPILER ===
-case $(hostname) in
-    hamming.lanl.gov|mayhem.lanl.gov|sstelmo.lanl.gov)
-        set +ux
-        source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
-        set -Eeuxo pipefail
-
-        compiler='g++'
-        ./new_build.sh ${compiler}
-
-        # Perform repo tests
-        cd "build"
-        ctest --verbose --output-log results.tex
-
-        # Append the path of the compiler
-        echo "$(command -v ${compiler})" >> results.tex
-        echo -e "$(${compiler} --version)" >> results.tex
-        # Rename results according to compiler
-        mv results.tex "${compiler}_results.tex"
-
-        # Return to working directory
-        cd ${workdir}
-        cp "build/${compiler}_results.tex" .
-        ;;
-esac
-
 #============================================================= CHECK RESULTS ===
 # Check for failed tests
 cd ${workdir}
