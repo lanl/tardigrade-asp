@@ -10,9 +10,6 @@ set(CPP_SRC_PATH "src/cpp")
 set(UMAT "umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
 
-# Make the code position independent
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 # Configure version
 configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
