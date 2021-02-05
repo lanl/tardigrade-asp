@@ -6,21 +6,8 @@ Build and Test
 
 .. include:: md2rst.txt
 
-This repository is built with `CMake`_ and uses `Doxygen`_ + `Sphinx`_ + `Breathe`_ to build
-the documentation.
-
-.. note::
-
-   **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
-   API is much more useful.
-
-Two build scripts have been created for convenience, ``new_build.sh`` and
-``build_docs.sh``. The first will build everything including the library binary,
-the test binary, and the documentation. This is the same build script used by
-``jenkins_build.sh`` for CI builds and testing. The ``build_docs.sh`` script
-only builds the documentation. Both build scripts clobber existing build
-directories, reset any bash environment variables, and run the cmake
-configuration from scratch.
+This project is built with `CMake`_ and uses `Sphinx`_ to build the documentation with `Doxygen`_ + `Breathe`_ for the
+c++ API.
 
 Build on sstelmo
 ================
@@ -31,6 +18,89 @@ Build on sstelmo
 
       $ module load python/2019.10-python-3.7
       $ sv3r
+
+2) Create a build directory
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/
+
+      $ mkdir build
+      $ cd build
+
+3) Configure ``cmake3``
+
+   .. note::
+
+      This step only needs to be performed once unless you need to specify a new CMake configuration for a re-build. Most
+      command line arguments and environment variables are stored in the CMake cache. Anything found in cache will not be
+      re-configured unless you remove the cache file or clobber the build directory.
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+      $ cmake3 ..
+
+4) Build various portions of the project
+
+   .. note::
+
+      Most of the project will re-build only as necessary after source updates. Some portions of the documentation
+      require a ``make clean`` after documentation source file updates to force a re-build.
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+
+      # Build everything
+      $ cmake3 --build .
+
+      # Build only the c++ primary libraries
+      $ cmake3 --build src/cpp
+
+5) Locate build files
+
+   .. note::
+
+      The build directory structure may change between version releases. Developers and users are encouraged to become
+      familiar with the bash ``find``, ``grep``, and ``tree`` commands to locate build files.
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+
+      # find c++ libraries and ignore intermediate files with similar extensions
+      $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\." 
+
+6) Clean build directory to force a re-build
+
+   .. warning::
+
+      The abaqus input files and bash scripts used for integration testing are not cleaned with this command. Changes to
+      those source files are also not handled by ``cmake3`` re-builds. Updates to these files must be manually cleaned between
+      changes.
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+
+      $ make clean
+
+Convenience build wrappers
+==========================
+
+Two build scripts have been created for convenience, ``new_build.sh`` and
+``build_docs.sh``. The first will build everything including the library binary,
+the test binary, and the documentation. This is the same build script used by
+``jenkins_build.sh`` for CI builds and testing. The ``build_docs.sh`` script
+only builds the documentation. Both build scripts clobber existing build
+directories, reset any bash environment variables, and run the cmake
+configuration from scratch.
 
 2) Build everything and run tests
 
@@ -74,6 +144,11 @@ Build on sstelmo
 
 Building the documentation
 ==========================
+
+.. note::
+
+   **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
+   API is much more useful.
 
 The documentation can be built with ``build_docs.sh``. The steps used in that
 shell script are repeated here.
