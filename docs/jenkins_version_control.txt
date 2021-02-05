@@ -33,7 +33,7 @@ replaced with the project's repository name.
 
    toolbox-jenkins@ninetails:~$ scp /local/jenkins-homes/toolbox-jenkins/jobs/cpp_stub_Pull_Request_Builder/config.xml sstelmo:/projects/toolbox-jenkins
 
-3. Copy or transfer the local configuration copy to their project
+3. Copy or transfer the local configuration copy to the developer's project
 
 Full Jenkins backup and retrieval
 =================================
@@ -58,7 +58,7 @@ Full Jenkins backup and retrieval
 
        .. note::
 
-          when this option is unchecked, the Jenkins plugins, general
+          When this option is unchecked, the Jenkins plugins, general
           server configuration, and home space is also backed up. This includes
           ssh keys for the instutional account which should not be shared.
 
@@ -66,15 +66,27 @@ Full Jenkins backup and retrieval
 
    * Backup content
 
-     * Backup job workspace: unchecked **NOTE: checking this box will vastly
-       increase the backup file's disk space requirements! Use with caution.**
-     * Backup builds history: checked **Note: these are relatively small build
-       meta data files about success/failure.**
-     * Backup maven artifacts archives: checked **Note: these file sizes depend
-       entirely on what a project owner decides to archive to ninetails after
-       the build. This option could be large if someone decided to copy anything
-       other than pytest results xml files or small text files. If everyone is
-       following good practices, these should be small.**
+     * Backup job workspace: unchecked 
+
+       .. warning::
+
+          Checking this box will vastly increase the backup file's disk space requirements! Use with caution.
+
+     * Backup builds history: checked 
+
+       .. note::
+
+          These are relatively small build meta data files about success/failure.
+
+     * Backup maven artifacts archives: checked
+
+       .. warning::
+
+          These file sizes depend entirely on what a project owner decides to
+          archive to ninetails after the build. This option could be large if someone
+          decided to copy anything other than pytest results xml files or small text
+          files. If everyone is following good practices, these should be small.
+
      * Backup fingerprints: checked
 
 4. Press the "Backup Hudson Configuration" and wait
