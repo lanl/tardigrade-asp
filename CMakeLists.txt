@@ -5,6 +5,7 @@ enable_testing()
 
 # Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
+set(ABAQUS_SRC_PATH "src/abaqus")
 
 # Set some Abaqus integration variables
 set(UMAT "umat")

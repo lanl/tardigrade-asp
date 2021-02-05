@@ -29,11 +29,11 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     if(BASH_PROGRAM AND ABAQUS_PROGRAM)
         add_custom_command(TARGET ${UMAT} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                               "${CMAKE_SOURCE_DIR}/src/abaqus" "${CMAKE_BINARY_DIR}/src/abaqus"
+                               "${CMAKE_SOURCE_DIR}/${ABAQUS_SRC_PATH}" "${CMAKE_BINARY_DIR}/${ABAQUS_SRC_PATH}"
                           )
         add_test(NAME test_abaqus
                  COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 $<TARGET_FILE:${UMAT}>
-                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/abaqus/tests
+                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${ABAQUS_SRC_PATH}/tests
                 )
     endif()
 endif()
