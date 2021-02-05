@@ -89,12 +89,4 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Add tests and docs
     add_subdirectory ("${CPP_SRC_PATH}/tests")
     add_subdirectory ("docs")
-    # Add Abaqus integration tests is bash and abaqus are available
-    if(BASH_PROGRAM AND ABAQUS_PROGRAM)
-        add_test(NAME test_abaqus
-                 COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 
-                     ${CMAKE_BINARY_DIR}/${CPP_SRC_PATH}/${UMAT}.o
-                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/abaqus/tests
-                )
-    endif()
 endif()
