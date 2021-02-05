@@ -53,11 +53,17 @@ def setup(app):
     app.add_css_file('custom.css')
 
 # Add any Sphinx extension module names here, as strings.
-extensions = ["breathe", 'sphinxcontrib.bibtex']
+extensions = ["breathe", 'sphinxcontrib.bibtex', 'sphinx.ext.extlinks']
 
 # Breathe Configuration
 breathe_projects = {project: "../build/docs/doxygen/xml"}
 breathe_default_project = project
+
+# Links to PRs, Jira issues.
+extlinks = {
+     "pull": ("https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/pull-requests/%s/overview", "PR"),
+     "jira": ("https://xcp-jira.lanl.gov/browse/VIP-%s", "VIP-"),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

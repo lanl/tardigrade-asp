@@ -12,6 +12,7 @@ Welcome to |project|'s documentation!
    user
    theory
    devops
+   changelog
    api
    zreferences
 
