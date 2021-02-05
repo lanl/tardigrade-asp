@@ -1,3 +1,4 @@
+t #===================================================================================================== PROJECT SETUP ===
 cmake_minimum_required (VERSION 3.14)
 project (cpp_stub VERSION 0.0.1)
 enable_testing()
@@ -14,6 +15,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Configure version
 configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
+# Set the c++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -fmax-errors=5 -ggdb")
+
+#================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} $ENV{HOME}/.local $ENV{HOME}/local/ $ENV{HOME})
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
@@ -71,6 +78,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_tools solver_tools)
 
+#=============================================================================================== ADD PROJECT TARGETS ===
 # Add project source directories
 add_subdirectory ("${CPP_SRC_PATH}")
 
@@ -90,8 +98,3 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
                 )
     endif()
 endif()
-
-# Set the c++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -fmax-errors=5 -ggdb")
