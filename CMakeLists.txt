@@ -66,6 +66,16 @@ if(BASH_PROGRAM)
 else()
     message(STATUS "bash not found. Abaqus integration tests will be skipped")
 endif()
+find_program(ABAQUS_PROGRAM 
+             NAMES abaqus abq2020 abq2019hf4 abq2019 abq2018hf11 abq2018 abq2017hf2 abq2017
+             HINTS /apps/abaqus/Commands
+            )
+if(ABAQUS_PROGRAM)
+    message(STATUS "Found Abaqus: ${ABAQUS_PROGRAM}")
+else()
+    message(STATUS "Abaqus not found. Abaqus integration tests will be skipped")
+endif()
+
 
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 11)
