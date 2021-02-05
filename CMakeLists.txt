@@ -16,6 +16,25 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} $ENV{HOME}/.local $ENV{HOME}/local/ $
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+# Find bash (Required for abaqus integration tests)
+find_program(BASH_PROGRAM bash)
+if(BASH_PROGRAM)
+    message(STATUS "Found bash: ${BASH_PROGRAM}")
+else()
+    message(STATUS "bash not found. Abaqus integration tests will be skipped")
+endif()
+
+# Find Abaqus (Required for abaqus integration tests)
+find_program(ABAQUS_PROGRAM 
+             NAMES abaqus abq2020 abq2019hf4 abq2019 abq2018hf11 abq2018 abq2017hf2 abq2017
+             HINTS /apps/abaqus/Commands
+            )
+if(ABAQUS_PROGRAM)
+    message(STATUS "Found Abaqus: ${ABAQUS_PROGRAM}")
+else()
+    message(STATUS "Abaqus not found. Abaqus integration tests will be skipped")
+endif()
+
 # Add the cmake folder to locate the FindSphinx module
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
@@ -51,31 +70,22 @@ FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_to
 
 # Add project source directories
 add_subdirectory ("src/cpp")
+
+# Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Find Boost. Required for tests
     find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
     # Add tests and docs
     add_subdirectory ("src/cpp/tests")
     add_subdirectory ("docs")
+    # Add Abaqus integration tests is bash and abaqus are available
+    if(BASH_PROGRAM AND ABAQUS_PROGRAM)
+        add_test(NAME test_abaqus
+                 COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 ${CMAKE_BINARY_DIR}/src/cpp/${UMAT}.o
+                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/abaqus/tests
+                )
+    endif()
 endif()
-
-# Conditionally add abaqus integration test(s)
-find_program(BASH_PROGRAM bash)
-if(BASH_PROGRAM)
-    message(STATUS "Found bash: ${BASH_PROGRAM}")
-else()
-    message(STATUS "bash not found. Abaqus integration tests will be skipped")
-endif()
-find_program(ABAQUS_PROGRAM 
-             NAMES abaqus abq2020 abq2019hf4 abq2019 abq2018hf11 abq2018 abq2017hf2 abq2017
-             HINTS /apps/abaqus/Commands
-            )
-if(ABAQUS_PROGRAM)
-    message(STATUS "Found Abaqus: ${ABAQUS_PROGRAM}")
-else()
-    message(STATUS "Abaqus not found. Abaqus integration tests will be skipped")
-endif()
-
 
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 11)

@@ -23,3 +23,13 @@ target_compile_options(${UMAT} PUBLIC)
 target_include_directories(${UMAT} PUBLIC .
                            "${vector_tools_SOURCE_DIR}/src/cpp")
 target_link_libraries(${UMAT} PUBLIC ${PROJECT_NAME})
+
+# Conditionally add abaqus integration test(s) only for current project builds. Protects downstream project builds.
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    if(BASH_PROGRAM AND ABAQUS_PROGRAM)
+        add_custom_command(TARGET umat POST_BUILD
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory 
+                               "${CMAKE_SOURCE_DIR}/src/abaqus" "${CMAKE_BINARY_DIR}/src/abaqus"
+                          )
+    endif()
+endif()
