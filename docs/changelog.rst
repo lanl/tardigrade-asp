@@ -20,6 +20,7 @@ Bug fixes
 
 Documentation
 ~~~~~~~~~~~~~
+- Add changelog to documentation (:jira:`450`, :pull:`11`). By `Kyle Brindley`_.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
