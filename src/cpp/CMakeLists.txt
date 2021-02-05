@@ -32,8 +32,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
                                "${CMAKE_SOURCE_DIR}/src/abaqus" "${CMAKE_BINARY_DIR}/src/abaqus"
                           )
         add_test(NAME test_abaqus
-                 COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8
-                     ${CMAKE_BINARY_DIR}/${CPP_SRC_PATH}/${UMAT}.o
+                 COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 $<TARGET_FILE:${UMAT}>
                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/abaqus/tests
                 )
     endif()
