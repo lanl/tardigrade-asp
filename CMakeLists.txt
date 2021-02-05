@@ -2,6 +2,9 @@ cmake_minimum_required (VERSION 3.14)
 project (cpp_stub VERSION 0.0.1)
 enable_testing()
 
+# Set common project paths
+set(CPP_SRC_PATH "src/cpp")
+
 # Set some Abaqus integration variables
 set(UMAT "umat")
 
@@ -9,7 +12,7 @@ set(UMAT "umat")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Configure version
-configure_file("src/cpp/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
+configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 
 # Find eigen
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} $ENV{HOME}/.local $ENV{HOME}/local/ $ENV{HOME})
@@ -69,19 +72,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_tools solver_tools)
 
 # Add project source directories
-add_subdirectory ("src/cpp")
+add_subdirectory ("${CPP_SRC_PATH}")
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Find Boost. Required for tests
     find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
     # Add tests and docs
-    add_subdirectory ("src/cpp/tests")
+    add_subdirectory ("${CPP_SRC_PATH}/tests")
     add_subdirectory ("docs")
     # Add Abaqus integration tests is bash and abaqus are available
     if(BASH_PROGRAM AND ABAQUS_PROGRAM)
         add_test(NAME test_abaqus
-                 COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 ${CMAKE_BINARY_DIR}/src/cpp/${UMAT}.o
+                 COMMAND ${BASH_PROGRAM} test_abaqus.sh ${ABAQUS_PROGRAM} single_element_c3d8 
+                     ${CMAKE_BINARY_DIR}/${CPP_SRC_PATH}/${UMAT}.o
                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src/abaqus/tests
                 )
     endif()
