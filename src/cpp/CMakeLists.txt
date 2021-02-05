@@ -30,7 +30,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         # Copy abaqus source directory to build directory
         add_custom_command(TARGET ${UMAT} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy_directory
-                               "${CMAKE_SOURCE_DIR}/${ABAQUS_SRC_PATH}" "${PROJECT_BINARY_DIR}/${ABAQUS_SRC_PATH}"
+                               "${PROJECT_SOURCE_DIR}/${ABAQUS_SRC_PATH}" "${PROJECT_BINARY_DIR}/${ABAQUS_SRC_PATH}"
                           )
         # Add abaqus umat integration tests that run abaqus against input files
         add_test(NAME test_abaqus_umat_integration
