@@ -508,13 +508,6 @@ only builds the documentation. Both build scripts clobber existing build
 directories, reset any bash environment variables, and run the cmake
 configuration from scratch.
 
-1) Activate the correct python environment
-
-```
-$ module load python/2019.10-python-3.7
-$ sv3r
-```
-
 2) Build everything and run tests
 
 ```
