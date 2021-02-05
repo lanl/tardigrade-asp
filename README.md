@@ -14,12 +14,9 @@ also includes template hooks for integrating C++ code as Abaqus subroutines.
 >
 > * [CMake for Fortran example
 >   ``CMakeLists.txt``](https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample)
-> * [CMake documentation starting
->   point](https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html)
-> * [Stack Overflow
->   thread](https://stackoverflow.com/questions/12705562/using-cmake-with-fortran)
-> * [Doxygen comments for
->   Fortran](https://www.doxygen.nl/manual/docblocks.html#fortranblocks)
+> * [CMake documentation starting point](https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html)
+> * [Stack Overflow thread](https://stackoverflow.com/questions/12705562/using-cmake-with-fortran)
+> * [Doxygen comments for Fortran](https://www.doxygen.nl/manual/docblocks.html#fortranblocks)
 
 ## Setting up a new project from this stub repo
 
