@@ -118,7 +118,7 @@ $ git push origin --tags
    ``README.md`` displayed. You can also select the drop down branch menu to
    view a "master" and "dev" branch.
 
-### Update settings for you repository
+### Update settings for your repository
 
 Bitbucket repositories in the [Material
 Models](https://xcp-stash.lanl.gov/projects/MM) project inherit permissions and

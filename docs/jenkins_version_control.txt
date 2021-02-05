@@ -10,6 +10,34 @@ To get a copy of a Jenkins job xml file for revision control or backup, contact
 a member of the W-13 DevOps team. What follows is the manual used by the DevOps
 team.
 
+Retrieve a single configuration file
+====================================
+
+If a developer only needs a single configuration file, it is relatively simple
+to copy that file off the Jenkins server without performing a full backup. Log
+into the Jenkins server ``ninetails`` as institutional user ``toolbox-jenkins``
+with an ssh session and perform the following, where ``cpp_stub`` should be
+replaced with the project's repository name.
+
+1. Log into ``ninetails.lanl.gov``.
+
+.. code:: bash
+
+   [roppenheimer@sstelmo ~]$ ssh toolbox-jenkins@ninetails.lanl.gov
+   ...
+   toolbox-jenkins@ninetails:~$
+
+2. Copy the relevant configuration file to an accessible location on a local server. 
+
+.. code:: bash
+
+   toolbox-jenkins@ninetails:~$ scp /local/jenkins-homes/toolbox-jenkins/jobs/cpp_stub_Pull_Request_Builder/config.xml sstelmo:/projects/toolbox-jenkins
+
+3. Copy or transfer the local configuration copy to their project
+
+Full Jenkins backup and retrieval
+=================================
+
 1. From the Jenkins landing/main page, `toolbox-jenkins`_.
    select "Manage Jenkins" in the left sidebar.
 
@@ -28,9 +56,11 @@ team.
      * Verbose mode: checked
      * Configuration files (.xml) only: checked
 
-       * Note: when this option is unchecked, the Jenkins plugins, general
-         server configuration, and home space is also backed up. This includes
-         ssh keys for the instutional account which should not be shared.
+       .. note::
+
+          when this option is unchecked, the Jenkins plugins, general
+          server configuration, and home space is also backed up. This includes
+          ssh keys for the instutional account which should not be shared.
 
      * No shutdown: checked
 
