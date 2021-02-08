@@ -33,7 +33,7 @@
 .. _`Python 2`: https://docs.python.org/2.7/
 .. _`PEP-8`: https://www.python.org/dev/peps/pep-0008/
 .. _`PEP-440`: https://www.python.org/dev/peps/pep-0440/
-.. _`sphinx`: https://www.sphinx-doc.org/en/2.0/
+.. _`sphinx`: https://www.sphinx-doc.org/en/master/
 .. _`toolbox-jenkins`: https://toolbox-jenkins.lanl.gov/
 .. _`xcp-confluence`: https://xcp-confluence.lanl.gov/
 .. _`xcp-jira`: https://xcp-jira.lanl.gov/secure/Dashboard.jspa
@@ -47,6 +47,14 @@
 .. _`Sphinx style guide`: https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#
 
 .. C++/fortran/cmake links
+.. _`CMake`: https://cmake.org/cmake/help/v3.14/
+.. _`Doxygen`: https://www.doxygen.nl/manual/docblocks.html
+.. _`Breathe`: https://breathe.readthedocs.io/en/latest/
+.. _`Eigen`: https://eigen.tuxfamily.org/dox/
+.. _`BOOST`: https://www.boost.org/doc/libs/1_53_0/
+.. _`LaTeX`: https://www.latex-project.org/help/documentation/
+.. _`sphinx\_rtd\_theme`: https://sphinx-rtd-theme.readthedocs.io/en/stable/
+.. _`Doxygen style docstrings`: https://www.doxygen.nl/manual/docblocks.html
 .. _`CMake for Fortran example CMakeLists.txt`: https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample
 .. _`CMake documentation starting point`: https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html
 .. _`Stack Overflow thread`: https://stackoverflow.com/questions/12705562/using-cmake-with-fortran

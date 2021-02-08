@@ -21,6 +21,7 @@ Bug fixes
 Documentation
 ~~~~~~~~~~~~~
 - Add changelog to documentation (:jira:`450`, :pull:`11`). By `Kyle Brindley`_.
+- Add direct CMake build instructions and minimal user manual (:jira:`519`, :pull:`12`. By `Kyle Brindley`_.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~

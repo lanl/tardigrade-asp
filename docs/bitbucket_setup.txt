@@ -111,16 +111,12 @@ Create a new repository on Bitbucket
    ``README.md`` displayed. You can also select the drop down branch menu to
    view a "master" and "dev" branch.
 
-Update settings for you repository
-==================================
+Update settings for your repository
+===================================
 
-Bitbucket repositories in the [Material
-Models](https://xcp-stash.lanl.gov/projects/MM) project inherit permissions and
-settings from that project. This included read permission for the
-``w13bitbucket`` [UNIX
-group](https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=150929410&searchId=Y1EVB37UN).
-For most developers, these inherited repository settings are appropriate and
-only a small number of settings must be updated.
+Bitbucket repositories in the `Material Models Bitbucket project`_ inherit permissions and settings from that project.
+This included read permission for the ``w13bitbucket`` UNIX group (`W-13 Managed UNIX Groups`_). For most developers,
+these inherited repository settings are appropriate and only a small number of settings must be updated.
 
 1. Click on the gear icon in the lower left sidebar.
 
@@ -136,19 +132,12 @@ only a small number of settings must be updated.
 Fork the upstream repository
 ============================
 
-In the [Forking
-Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
-the repository you just created in the [Material
-Models](https://xcp-stash.lanl.gov/projects/MM) project is called the "upstream"
-repository. Throughout older W-13 documentation this may also be called the
-"official" repository.
+In the `Forking Workflow`_ the repository you just created in the `Material Models Bitbucket project`_ project is called
+the "upstream" repository. Throughout older W-13 documentation this may also be called the "official" repository.
 
-Bitbucket repositories that inherit permissions from W-13 projects use the
-[Forking
-Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
-and limit permissions for pushing changes to the upstream repository. Now that
-branches exist on this repository, no one will be able to push directly to
-*existing branches* of the upstream respository.
+Bitbucket repositories that inherit permissions from W-13 projects use the `Forking Workflow`_ and limit permissions for
+pushing changes to the upstream repository. Now that branches exist on this repository, no one will be able to push
+directly to *existing branches* of the upstream respository.
 
 1. Click the fork button in the left hand sidebar just above the gear icon.
 
