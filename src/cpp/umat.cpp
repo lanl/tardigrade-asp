@@ -71,6 +71,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     std::vector< double > stress( STRESS, STRESS + NTENS );
     std::vector< double > statev( STATEV, STATEV + NSTATV );
     std::vector< double > ddsddt( DDSDDT, DDSDDT + NTENS );
+    std::vector< double > drplde( DRPLDE, DRPLDE + NTENS );
     const std::vector< double > strain( STRAN, STRAN + NTENS );
     const std::vector< double > dstrain( DSTRAN, DSTRAN + NTENS );
     const std::vector< double > time( TIME, TIME + 2 );
@@ -98,6 +99,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     for ( int row = 0; row < NTENS; row++ ){
         STRESS[row] = stress[row];
         DDSDDT[row] = ddsddt[row];
+        DRPLDE[row] = drplde[row];
     }
     for ( int row = 0; row < NSTATV; row++ ){
         STATEV[row] = statev[row];
