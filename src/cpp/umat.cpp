@@ -67,7 +67,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
-    //Vectors are straight forward
+    //Vectors can be created directly with pointer arithmetic
     std::vector< double > stress( STRESS, STRESS + NTENS );
     std::vector< double > statev( STATEV, STATEV + NSTATV );
     std::vector< double > ddsddt( DDSDDT, DDSDDT + NTENS );
@@ -80,15 +80,37 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     const std::vector< double > props( PROPS, PROPS + NPROPS );
     const std::vector< double > coords( COORDS, COORDS + 3 );
     const std::vector< int > jstep( JSTEP, JSTEP + 4 );
-    //Matrices require careful row/column major conversions to c++ types
+    //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
     std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
     const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, 3, 3 );
     const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, 3, 3 );
     const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, 3, 3 );
 
+    //Call the appropriate subroutine interface
     //Show example use of c++ library in UMAT
     if ( KINC == 1 && NOEL == 1 && NPT == 1 ){
         cppStub::sayHello( "Abaqus" );
+    }
+
+    //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
+    //Scalars were passed by reference and will update correctly
+    //Vectors don't require row/column major considerations
+    for ( int row = 0; row < NTENS; row++ ){
+        STRESS[row] = stress[row];
+        DDSDDT[row] = ddsddt[row];
+    }
+    for ( int row = 0; row < NSTATV; row++ ){
+        STATEV[row] = statev[row];
+    }
+    //Arrays require vector of vector to column major conversion
+    const int height = 3;
+    const int width = 3;
+    int column_major_index;
+    for ( int row = 0; row < height; row++ ){
+        for ( int col = 0; col < width; col++ ){
+            column_major_index = col*height + row;
+            DDSDDE[column_major_index] = ddsdde[row][col];
+        }
     }
 
     return;
@@ -103,7 +125,7 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
      *
      * \param *column_major: The pointer to the start of a column major array
      * \param &width: The width of the array, e.g. number of columns
-     * \param &height: The height of the array, e.e.g number of rows
+     * \param &height: The height of the array, e.g. number of rows
      */
     std::vector< std::vector< double > > row_major;
     int column_major_index;
