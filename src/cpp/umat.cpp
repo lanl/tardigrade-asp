@@ -65,6 +65,8 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
+    const int geometricSize = 3;
+
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
     //Vectors can be created directly with pointer arithmetic
@@ -79,13 +81,13 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     const std::vector< double > dpred( DPRED, DPRED + 1 );
     const std::string cmname( FtoCString( 80, CMNAME ) );
     const std::vector< double > props( PROPS, PROPS + NPROPS );
-    const std::vector< double > coords( COORDS, COORDS + 3 );
+    const std::vector< double > coords( COORDS, COORDS + geometricSize );
     const std::vector< int > jstep( JSTEP, JSTEP + 4 );
     //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
     std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
-    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, 3, 3 );
-    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, 3, 3 );
-    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, 3, 3 );
+    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, geometricSize, geometricSize );
+    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, geometricSize, geometricSize );
+    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, geometricSize, geometricSize );
 
     //Call the appropriate subroutine interface
     //Show example use of c++ library in UMAT
@@ -105,12 +107,10 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
         STATEV[row] = statev[row];
     }
     //Arrays require vector of vector to column major conversion
-    const int height = 3;
-    const int width = 3;
     int column_major_index;
-    for ( int row = 0; row < height; row++ ){
-        for ( int col = 0; col < width; col++ ){
-            column_major_index = col*height + row;
+    for ( int row = 0; row < geometricSize; row++ ){
+        for ( int col = 0; col < geometricSize; col++ ){
+            column_major_index = col*geometricSize + row;
             DDSDDE[column_major_index] = ddsdde[row][col];
         }
     }
