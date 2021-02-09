@@ -113,7 +113,8 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     return;
 }
 
-std::vector< std::vector< double > > columnToRowMajor( const double *column_major, const int &width, const int &height ){
+template< typename T >
+std::vector< std::vector< T > > columnToRowMajor( const T *column_major, const int &width, const int &height ){
     /*!
      * Convert column major two dimensional arrays to row major.
      *
@@ -124,10 +125,10 @@ std::vector< std::vector< double > > columnToRowMajor( const double *column_majo
      * \param &height: The height of the array, e.g. number of rows
      * \return row_major: A c++ row major vector of vectors
      */
-    std::vector< std::vector< double > > row_major;
+    std::vector< std::vector< T > > row_major;
     int column_major_index;
     for ( int row = 0; row < height; row++ ){
-        std::vector< double > row_vector;
+        std::vector< T > row_vector;
         for ( int col = 0; col < width; col++ ){
             column_major_index = col*height + row;
             row_vector.push_back( *( column_major + column_major_index ) );
