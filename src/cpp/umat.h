@@ -27,4 +27,8 @@ extern "C" void UMAT( double *STRESS,       double *STATEV,       double *DDSDDE
 template< typename T >
 std::vector< std::vector< double > > columnToRowMajor( T *myPointer, const int &width, const int &height );
 
+template< typename T >
+void rowToColumnMajor(  T *column_major, const std::vector< std::vector< T > > &row_major_array,
+                       const int &width, const int &height);
+
 char *FtoCString( int stringLength, const char* fString );

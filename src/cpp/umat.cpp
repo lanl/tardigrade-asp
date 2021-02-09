@@ -145,7 +145,8 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
 }
 
 template< typename T >
-void rowToColumnMajor( T *column_major, const T &row_major_array, const int &width, const int &height){
+void rowToColumnMajor(  T *column_major, const std::vector< std::vector< T > > &row_major_array,
+                       const int &width, const int &height){
     /*!
      * Convert row major two dimensional arrays to column major
      *
@@ -153,7 +154,7 @@ void rowToColumnMajor( T *column_major, const T &row_major_array, const int &wid
      * pointer.
      *
      * \param *column_major: The pointer to the start of a column major array
-     * \param &row_major_array: A c++ two dimensional, row major array like object
+     * \param &row_major_array: A c++ two dimensional, row major vector of vectors
      * \param &width: The width of the array, e.g. number of columns
      * \param &height: The height of the array, e.g. number of rows
      */
