@@ -124,7 +124,7 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
     /*!
      * Convert column major two dimensional arrays to row major.
      *
-     * Specifically, convert pointers to Fortran column major arrays to c++ row major arrays.
+     * Specifically, convert pointers to Fortran column major arrays to c++ row major vector of vectors.
      *
      * \param *column_major: The pointer to the start of a column major array
      * \param &width: The width of the array, e.g. number of columns
