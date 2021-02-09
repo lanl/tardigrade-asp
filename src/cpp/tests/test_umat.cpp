@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
      */
 
     //Fake a Fortran column major array in memory with a c++ row major vector
-    std::vector < double > column_major;
+    std::vector< double > column_major(6);
     double *column_major_pointer = column_major.data();
     const int width = 3;
     const int height = 2;
