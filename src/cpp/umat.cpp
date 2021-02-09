@@ -168,7 +168,6 @@ void rowToColumnMajor( T *column_major, const T &row_major_array, const int &wid
     return;
 }
 
-
 char *FtoCString( int stringLength, const char* fString ){
     /*!
      * Converts a Fortran string to C-string. Trims trailing white space during processing.
