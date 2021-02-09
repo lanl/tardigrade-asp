@@ -12,13 +12,13 @@
 BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
     /*!
      * Test column to row major conversion function.
-     * Uses c++ arrays to avoid adding fortran code to project.
+     * Uses c++ vectors and pointers to avoid adding fortran code to project.
      */
 
     //Fake a Fortran column major array in memory with a c++ row major vector
-    std::vector < double > column_major = { 1, 4,
-                                            2, 5,
-                                            3, 6 };
+    std::vector< double > column_major = { 1, 4,
+                                           2, 5,
+                                           3, 6 };
     double *column_major_pointer = column_major.data();
     const int width = 3;
     const int height = 2;
@@ -28,4 +28,25 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
                                                     { 4, 5, 6 } };
 
     BOOST_CHECK( vectorTools::fuzzyEquals( row_major, answer ) );
+}
+
+BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
+    /*!
+     * Test row to column major conversion function.
+     * Uses c++ vectors and pointers to avoid adding fortran code to project.
+     */
+
+    //Fake a Fortran column major array in memory with a c++ row major vector
+    std::vector < double > column_major;
+    double *column_major_pointer = column_major.data();
+    const int width = 3;
+    const int height = 2;
+    std::vector< std::vector< double > > row_major = { { 1, 2, 3 },
+                                                       { 4, 5, 6 } };
+    rowToColumnMajor( column_major_pointer, row_major, width, height );
+    std::vector< double > expected = { 1, 4,
+                                       2, 5,
+                                       3, 6 };
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( column_major, expected ) );
 }

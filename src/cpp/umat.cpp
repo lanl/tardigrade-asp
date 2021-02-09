@@ -144,8 +144,7 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
     return row_major;
 }
 
-template< typename T >
-void rowToColumnMajor(  T *column_major, const std::vector< std::vector< T > > &row_major_array,
+void rowToColumnMajor(  double *column_major, const std::vector< std::vector< double > > &row_major_array,
                        const int &width, const int &height){
     /*!
      * Convert row major two dimensional arrays to column major
