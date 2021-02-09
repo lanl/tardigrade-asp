@@ -113,8 +113,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     return;
 }
 
-template< typename T >
-std::vector< std::vector< double > > columnToRowMajor( T *column_major, const int &width, const int &height ){
+std::vector< std::vector< double > > columnToRowMajor( const double *column_major, const int &width, const int &height ){
     /*!
      * Convert column major two dimensional arrays to row major.
      *
@@ -138,7 +137,7 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
     return row_major;
 }
 
-void rowToColumnMajor(  double *column_major, const std::vector< std::vector< double > > &row_major_array,
+void rowToColumnMajor( double *column_major, const std::vector< std::vector< double > > &row_major_array,
                        const int &width, const int &height){
     /*!
      * Convert row major two dimensional arrays to column major
