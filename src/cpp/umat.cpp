@@ -108,13 +108,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
         STATEV[row] = statev[row];
     }
     //Arrays require vector of vector to column major conversion
-    int column_major_index;
-    for ( int row = 0; row < spatialDimensions; row++ ){
-        for ( int col = 0; col < spatialDimensions; col++ ){
-            column_major_index = col*spatialDimensions + row;
-            DDSDDE[column_major_index] = ddsdde[row][col];
-        }
-    }
+    rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
 
     return;
 }
