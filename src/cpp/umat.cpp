@@ -65,7 +65,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
-    //Define the size of geometry related tensor dimensions
+    //Define the tensor spatial dimensions 
     const int geometricSize = 3;
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
