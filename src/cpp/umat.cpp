@@ -129,6 +129,7 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
      * \param *column_major: The pointer to the start of a column major array
      * \param &width: The width of the array, e.g. number of columns
      * \param &height: The height of the array, e.g. number of rows
+     * \return row_major: A c++ row major vector of vectors
      */
     std::vector< std::vector< double > > row_major;
     int column_major_index;
