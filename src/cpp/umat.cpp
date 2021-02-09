@@ -66,7 +66,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      */
 
     //Define the tensor spatial dimensions
-    const int spatialDimension = 3;
+    const int spatialDimensions = 3;
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
@@ -82,13 +82,13 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     const std::vector< double > dpred( DPRED, DPRED + 1 );
     const std::string cmname( FtoCString( 80, CMNAME ) );
     const std::vector< double > props( PROPS, PROPS + NPROPS );
-    const std::vector< double > coords( COORDS, COORDS + spatialDimension );
+    const std::vector< double > coords( COORDS, COORDS + spatialDimensions );
     const std::vector< int > jstep( JSTEP, JSTEP + 4 );
     //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
     std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
-    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, spatialDimension, spatialDimension );
-    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, spatialDimension, spatialDimension );
-    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, spatialDimension, spatialDimension );
+    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
+    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
+    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
 
     //Call the appropriate subroutine interface
     //Show example use of c++ library in UMAT
@@ -109,9 +109,9 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     }
     //Arrays require vector of vector to column major conversion
     int column_major_index;
-    for ( int row = 0; row < spatialDimension; row++ ){
-        for ( int col = 0; col < spatialDimension; col++ ){
-            column_major_index = col*spatialDimension + row;
+    for ( int row = 0; row < spatialDimensions; row++ ){
+        for ( int col = 0; col < spatialDimensions; col++ ){
+            column_major_index = col*spatialDimensions + row;
             DDSDDE[column_major_index] = ddsdde[row][col];
         }
     }
