@@ -65,7 +65,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
-    //Define the tensor spatial dimensions 
+    //Define the tensor spatial dimensions
     const int spatialDimension = 3;
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
@@ -143,12 +143,37 @@ std::vector< std::vector< double > > columnToRowMajor( T *column_major, const in
     return row_major;
 }
 
+template< typename T >
+void rowToColumnMajor( T *column_major, const T &row_major_array, const int &width, const int &height){
+    /*!
+     * Convert row major two dimensional arrays to column major
+     *
+     * Specifically, c++ row major vector or vectors or arrays to Fortran column major arrays using the column major
+     * pointer.
+     *
+     * \param *column_major: The pointer to the start of a column major array
+     * \param &row_major_array: A c++ two dimensional, row major array like object
+     * \param &width: The width of the array, e.g. number of columns
+     * \param &height: The height of the array, e.g. number of rows
+     */
+    int column_major_index;
+    for ( int row = 0; row < height; row++ ){
+        for ( int col = 0; col < width; col++ ){
+            column_major_index = col*height + row;
+            column_major[column_major_index] = row_major_array[row][col];
+        }
+    }
+
+    return;
+}
+
+
 char *FtoCString( int stringLength, const char* fString ){
     /*!
      * Converts a Fortran string to C-string. Trims trailing white space during processing.
      *
      * Code excerpt from a c++ Abaqus FILM subroutine in the Abaqus Knowledge Base:
-     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B 
+     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B
      *
      * TODO: update coding style to match project.
      *
