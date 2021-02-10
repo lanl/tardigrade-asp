@@ -123,6 +123,16 @@ std::vector< T > expandAbaqusStandardStressVector( const std::vector< T > &abaqu
     //Initialize expanded vector with zero values
     std::vector< T > vector_expansion(6, 0);
 
+    //Unpack direct components of Abaqus/Standard stress-type vector
+    for ( int index = 0; index < NDI; index++ ){
+        vector_expansion[ index ] = abaqus_vector[ index ];
+    }
+
+    //Unpack shear components of Abaqus/Standard stress-type vector
+    for ( int index = 0; index < NSHR; index++ ){
+        vector_expansion[ 3 + index ] = abaqus_vector[ NDI + index ];
+    }
+
     return vector_expansion;
 }
 
