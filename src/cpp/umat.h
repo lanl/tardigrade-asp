@@ -84,7 +84,7 @@ void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const
      * \param *column_major: The pointer to the start of a column major array
      * \param &row_major_array: A c++ two dimensional array stored as row major vector
      * \param &height: The height of the array, e.g. number of rows. The c++ row count (1) for 1D arrays.
-     * \param &width: The width of the array, e.g. number of columns. The c++ column count (size) for 1D arrays. 
+     * \param &width: The width of the array, e.g. number of columns. The c++ column count (size) for 1D arrays.
      */
     int row_major_index;
     int column_major_index;
@@ -95,6 +95,35 @@ void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const
             column_major[column_major_index] = row_major[row_major_index];
         }
     }
+}
+
+template< typename T >
+std::vector< T > expandAbaqusStandardStressVector( const std::vector< T > &abaqus_vector,
+                                                   const int &NDI, const int &NSHR ){
+    /*!
+     * Expand stress and strain type components to full Abaqus vectors
+     *
+     * See the Abaqus documentation > Introduction & Spatial Modeling > Conventions chapter > Convention used for stress
+     * and strain components.
+     *
+     * The stress vector components for Abaqus/Standard (UMAT) are
+     *
+     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} } \f$
+     *
+     * and the strain vector components match as
+     *
+     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} } \f$
+     *
+     * where components that are zero-valued by definition, e.g. plane stress, are omitted. The shear strain is the
+     * engineering shear strain where
+     *
+     * \f$ \gamma_{ij} = \epsilon_{ij} + \epsilon_{ji} \f$
+     */
+
+    //Initialize expanded vector with zero values
+    std::vector< T > vector_expansion(6, 0);
+
+    return vector_expansion;
 }
 
 char *FtoCString( int stringLength, const char* fString );
