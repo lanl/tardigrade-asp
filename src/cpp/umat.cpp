@@ -99,14 +99,10 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
     //Scalars were passed by reference and will update correctly
     //Vectors don't require row/column major considerations
-    for ( int row = 0; row < NTENS; row++ ){
-        STRESS[row] = stress[row];
-        DDSDDT[row] = ddsddt[row];
-        DRPLDE[row] = drplde[row];
-    }
-    for ( int row = 0; row < NSTATV; row++ ){
-        STATEV[row] = statev[row];
-    }
+    rowToColumnMajor( STRESS, stress, 1, NTENS );
+    rowToColumnMajor( DDSDDT, ddsddt, 1, NTENS );
+    rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
+    rowToColumnMajor( STATEV, statev, 1, NSTATV );
     //Arrays require vector of vector to column major conversion
     rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
 
