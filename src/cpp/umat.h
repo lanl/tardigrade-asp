@@ -51,11 +51,11 @@ std::vector< std::vector< T > > columnToRowMajor( const T *column_major, const i
 
 template< typename T >
 void rowToColumnMajor( T *column_major, const std::vector< std::vector< T > > &row_major_array,
-                       const int &width, const int &height){
+                       const int &width, const int &height ){
     /*!
      * Convert row major two dimensional arrays to column major
      *
-     * Specifically, c++ row major vector or vectors or arrays to Fortran column major arrays using the column major
+     * Specifically, c++ row major vector of vectors or arrays to Fortran column major arrays using the column major
      * pointer.
      *
      * \param *column_major: The pointer to the start of a column major array
@@ -72,6 +72,29 @@ void rowToColumnMajor( T *column_major, const std::vector< std::vector< T > > &r
     }
 
     return;
+}
+
+template< typename T >
+void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const int &width, const int &height ){
+    /*!
+     * Convert row major two dimensional arrays stored as vector to column major array
+     *
+     * Specifically, c++ row major vector to Fortran column major arrays using the column major pointer.
+     *
+     * \param *column_major: The pointer to the start of a column major array
+     * \param &row_major_array: A c++ two dimensional array stored as row major vector
+     * \param &width: The width of the array, e.g. number of columns
+     * \param &height: The height of the array, e.g. number of rows
+     */
+    int row_major_index;
+    int column_major_index;
+    for ( int row = 0; row < height; row++ ){
+        for ( int col = 0; col < width; col++ ){
+            row_major_index = row*width + col;
+            column_major_index = col*height + row;
+            column_major[column_major_index] = row_major[row_major_index];
+        }
+    }
 }
 
 char *FtoCString( int stringLength, const char* fString );
