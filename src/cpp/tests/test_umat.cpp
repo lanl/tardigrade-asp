@@ -103,9 +103,9 @@ BOOST_AUTO_TEST_CASE( expandAbaqusStandardStressVector ){
      NDI = 3;
      NSHR = 3;
 
-     vector_expansion = expandAbaqusStandardStressVector( abaqus_full, &NDI, &NSHR );
+     vector_expansion = expandAbaqusStandardStressVector( abaqus_full, NDI, NSHR );
 
-     BOOST_CHECK( vectorTools::FuzzyEquals( vector_expansion, expected_full );
+     BOOST_CHECK( vectorTools::fuzzyEquals( vector_expansion, expected_full ) );
 
      //Test plane stress vector
      std::fill(vector_expansion.begin(), vector_expansion.end(), -666.);
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE( expandAbaqusStandardStressVector ){
      NDI = 2;
      NSHR = 1;
 
-     vector_expansion = expandAbaqusStandardStressVector( abaqus_full, NDI, NSHR );
+     vector_expansion = expandAbaqusStandardStressVector( abaqus_plane_stress, NDI, NSHR );
 
-     BOOST_CHECK( vectorTools::FuzzyEquals( vector_expansion, expected_full );
+     BOOST_CHECK( vectorTools::fuzzyEquals( vector_expansion, expected_plane_stress ) );
 }
