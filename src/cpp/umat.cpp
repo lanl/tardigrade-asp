@@ -65,12 +65,16 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
+    //Define the tensor spatial dimensions
+    const int spatialDimensions = 3;
+
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
-    //Vectors are straight forward
+    //Vectors can be created directly with pointer arithmetic
     std::vector< double > stress( STRESS, STRESS + NTENS );
     std::vector< double > statev( STATEV, STATEV + NSTATV );
     std::vector< double > ddsddt( DDSDDT, DDSDDT + NTENS );
+    std::vector< double > drplde( DRPLDE, DRPLDE + NTENS );
     const std::vector< double > strain( STRAN, STRAN + NTENS );
     const std::vector< double > dstrain( DSTRAN, DSTRAN + NTENS );
     const std::vector< double > time( TIME, TIME + 2 );
@@ -78,44 +82,31 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     const std::vector< double > dpred( DPRED, DPRED + 1 );
     const std::string cmname( FtoCString( 80, CMNAME ) );
     const std::vector< double > props( PROPS, PROPS + NPROPS );
-    const std::vector< double > coords( COORDS, COORDS + 3 );
+    const std::vector< double > coords( COORDS, COORDS + spatialDimensions );
     const std::vector< int > jstep( JSTEP, JSTEP + 4 );
-    //Matrices require careful row/column major conversions to c++ types
+    //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
     std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
-    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, 3, 3 );
-    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, 3, 3 );
-    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, 3, 3 );
+    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
+    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
+    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
 
+    //Call the appropriate subroutine interface
     //Show example use of c++ library in UMAT
     if ( KINC == 1 && NOEL == 1 && NPT == 1 ){
         cppStub::sayHello( "Abaqus" );
     }
 
-    return;
-}
+    //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
+    //Scalars were passed by reference and will update correctly
+    //Vectors don't require row/column major considerations, but do require re-packing to the Fortran pointer
+    rowToColumnMajor( STRESS, stress, 1, NTENS );
+    rowToColumnMajor( DDSDDT, ddsddt, 1, NTENS );
+    rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
+    rowToColumnMajor( STATEV, statev, 1, NSTATV );
+    //Arrays require vector of vector to column major conversion
+    rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
 
-template< typename T >
-std::vector< std::vector< double > > columnToRowMajor( T *column_major, const int &width, const int &height ){
-    /*!
-     * Convert column major two dimensional arrays to row major.
-     *
-     * Specifically, convert pointers to Fortran column major arrays to c++ row major arrays.
-     *
-     * \param *column_major: The pointer to the start of a column major array
-     * \param &width: The width of the array, e.g. number of columns
-     * \param &height: The height of the array, e.e.g number of rows
-     */
-    std::vector< std::vector< double > > row_major;
-    int column_major_index;
-    for ( int row = 0; row < height; row++ ){
-        std::vector< double > row_vector;
-        for ( int col = 0; col < width; col++ ){
-            column_major_index = col*height + row;
-            row_vector.push_back( *( column_major + column_major_index ) );
-        }
-        row_major.push_back( row_vector );
-    }
-    return row_major;
+    return;
 }
 
 char *FtoCString( int stringLength, const char* fString ){
@@ -123,7 +114,7 @@ char *FtoCString( int stringLength, const char* fString ){
      * Converts a Fortran string to C-string. Trims trailing white space during processing.
      *
      * Code excerpt from a c++ Abaqus FILM subroutine in the Abaqus Knowledge Base:
-     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B 
+     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B
      *
      * TODO: update coding style to match project.
      *
