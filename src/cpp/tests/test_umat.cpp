@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardStressVector ){
      NDI = 2;
      NSHR = 1;
 
-     vector_contraction_plane_stress = expandAbaqusStandardStressVector( abaqus_plane_stress, NDI, NSHR, NTENS );
+     vector_contraction_plane_stress = contractAbaqusStandardStressVector( expanded_plane_stress, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( vector_contraction_plane_stress, abaqus_plane_stress ) );
 
