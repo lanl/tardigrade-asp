@@ -25,15 +25,15 @@ extern "C" void UMAT( double *STRESS,       double *STATEV,       double *DDSDDE
                       const int *JSTEP,     const int &KINC );
 
 template< typename T >
-std::vector< std::vector< T > > columnToRowMajor( const T *column_major, const int &width, const int &height ){
+std::vector< std::vector< T > > columnToRowMajor( const T *column_major,  const int &height, const int &width ){
     /*!
      * Convert column major two dimensional arrays to row major.
      *
      * Specifically, convert pointers to Fortran column major arrays to c++ row major vector of vectors.
      *
      * \param *column_major: The pointer to the start of a column major array
-     * \param &width: The width of the array, e.g. number of columns
      * \param &height: The height of the array, e.g. number of rows
+     * \param &width: The width of the array, e.g. number of columns
      * \return row_major: A c++ row major vector of vectors
      */
     std::vector< std::vector< T > > row_major;
@@ -51,7 +51,7 @@ std::vector< std::vector< T > > columnToRowMajor( const T *column_major, const i
 
 template< typename T >
 void rowToColumnMajor( T *column_major, const std::vector< std::vector< T > > &row_major_array,
-                       const int &width, const int &height ){
+                       const int &height, const int &width ){
     /*!
      * Convert row major two dimensional arrays to column major
      *
@@ -60,8 +60,8 @@ void rowToColumnMajor( T *column_major, const std::vector< std::vector< T > > &r
      *
      * \param *column_major: The pointer to the start of a column major array
      * \param &row_major_array: A c++ two dimensional, row major vector of vectors
-     * \param &width: The width of the array, e.g. number of columns
      * \param &height: The height of the array, e.g. number of rows
+     * \param &width: The width of the array, e.g. number of columns
      */
     int column_major_index;
     for ( int row = 0; row < height; row++ ){
@@ -75,7 +75,7 @@ void rowToColumnMajor( T *column_major, const std::vector< std::vector< T > > &r
 }
 
 template< typename T >
-void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const int &width, const int &height ){
+void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const int &height, const int &width ){
     /*!
      * Convert row major two dimensional arrays stored as vector to column major array
      *
@@ -83,8 +83,8 @@ void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const
      *
      * \param *column_major: The pointer to the start of a column major array
      * \param &row_major_array: A c++ two dimensional array stored as row major vector
-     * \param &width: The width of the array, e.g. number of columns
      * \param &height: The height of the array, e.g. number of rows
+     * \param &width: The width of the array, e.g. number of columns
      */
     int row_major_index;
     int column_major_index;

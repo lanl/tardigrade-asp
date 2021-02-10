@@ -20,10 +20,10 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
                                            2, 5,
                                            3, 6 };
     double *column_major_pointer = column_major.data();
-    const int width = 3;
     const int height = 2;
+    const int width = 3;
     std::vector< std::vector< double > > row_major;
-    row_major = columnToRowMajor( column_major_pointer, width, height);
+    row_major = columnToRowMajor( column_major_pointer, height, width);
     std::vector< std::vector< double > > answer = { { 1, 2, 3 },
                                                     { 4, 5, 6 } };
 
@@ -43,11 +43,11 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
     std::vector< double > expected = { 1, 4,
                                        2, 5,
                                        3, 6 };
-    const int width = 3;
     const int height = 2;
+    const int width = 3;
     std::vector< std::vector< double > > row_major = { { 1, 2, 3 },
                                                        { 4, 5, 6 } };
-    rowToColumnMajor( column_major_pointer, row_major, width, height );
+    rowToColumnMajor( column_major_pointer, row_major, height, width );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( column_major, expected ) );
 
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
     column_major = { 0, 0, 0, 0, 0, 0 };
     std::vector< double > row_major_vector = { 1, 2, 3,
                                                4, 5, 6 };
-    rowToColumnMajor( column_major_pointer, row_major_vector, width, height );
+    rowToColumnMajor( column_major_pointer, row_major_vector, height, width );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( column_major, expected ) );
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
     double *fortran_vector_pointer = fortran_vector.data( );
     std::vector< double > expected_vector = { 1, 2, 3 };
     std::vector< double > cpp_vector = { 1, 2, 3 };
-    rowToColumnMajor( fortran_vector_pointer, cpp_vector, 3, 1 );
+    rowToColumnMajor( fortran_vector_pointer, cpp_vector, 1, 3 );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( fortran_vector, expected_vector ) );
 }
