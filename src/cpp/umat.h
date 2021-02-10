@@ -83,8 +83,8 @@ void rowToColumnMajor( T *column_major, const std::vector< T > &row_major, const
      *
      * \param *column_major: The pointer to the start of a column major array
      * \param &row_major_array: A c++ two dimensional array stored as row major vector
-     * \param &height: The height of the array, e.g. number of rows
-     * \param &width: The width of the array, e.g. number of columns
+     * \param &height: The height of the array, e.g. number of rows. The c++ row count (1) for 1D arrays.
+     * \param &width: The width of the array, e.g. number of columns. The c++ column count (size) for 1D arrays. 
      */
     int row_major_index;
     int column_major_index;
