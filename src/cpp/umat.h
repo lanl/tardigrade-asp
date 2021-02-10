@@ -118,10 +118,15 @@ std::vector< T > expandAbaqusStandardStressVector( const std::vector< T > &abaqu
      * engineering shear strain where
      *
      * \f$ \gamma_{ij} = \epsilon_{ij} + \epsilon_{ji} \f$
+     *
+     * \param &abaqus_vector: an abaqus stress-type vector with no by-definition-zero components. Length NDI + NSHR.
+     * \param &NDI: The number of direct components.
+     * \param &NSHR: The number of shear components.
+     * \returns vector_expansion: c++ type vector of length 6.
      */
 
     //Initialize expanded vector with zero values
-    std::vector< T > vector_expansion(6, 0);
+    std::vector< T > vector_expansion( 6, 0 );
 
     //Unpack direct components of Abaqus/Standard stress-type vector
     for ( int index = 0; index < NDI; index++ ){
@@ -134,6 +139,50 @@ std::vector< T > expandAbaqusStandardStressVector( const std::vector< T > &abaqu
     }
 
     return vector_expansion;
+}
+
+template< typename T >
+std::vector< T > contractAbaqusStandardStressVector( const std::vector< T > &full_abaqus_vector,
+                                                     const int &NDI, const int &NSHR ){
+    /*!
+     * Contract stress and strain type components from full Abaqus vectors
+     *
+     * See the Abaqus documentation > Introduction & Spatial Modeling > Conventions chapter > Convention used for stress
+     * and strain components.
+     *
+     * The stress vector components for Abaqus/Standard (UMAT) are
+     *
+     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} } \f$
+     *
+     * and the strain vector components match as
+     *
+     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} } \f$
+     *
+     * where components that are zero-valued by definition, e.g. plane stress, are omitted. The shear strain is the
+     * engineering shear strain where
+     *
+     * \f$ \gamma_{ij} = \epsilon_{ij} + \epsilon_{ji} \f$
+     *
+     * \param &full_abaqus_vector: a previously expanded abaqus stress-type vector. Length 6.
+     * \param &NDI: The number of direct components.
+     * \param &NSHR: The number of shear components.
+     * \returns vector_contraction: c++ type vector of length NDI + NSHR.
+     */
+
+    //Initialize contracted vector
+    std::vector< T > vector_contraction( NDI + NSHR );
+
+    //Pack non-zero direct components of Abaqus/Standard stress-type vector
+    for ( int index = 0; index < NDI; index++ ){
+        vector_contraction[ index ] = full_abaqus_vector[ index ];
+    }
+
+    //Pack non-zero shear components of Abaqus/Standard stress-type vector
+    for ( int index = 0; index < NSHR; index++ ){
+        vector_contraction[ NDI + index ] = full_abaqus_vector[ 3 + index ];
+    }
+
+    return vector_contraction;
 }
 
 char *FtoCString( int stringLength, const char* fString );
