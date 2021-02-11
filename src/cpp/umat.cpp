@@ -65,53 +65,16 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
-    //Define the tensor spatial dimensions
-    const int spatialDimensions = 3;
-
-    //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
-    //TODO: Decide if case sensitive variable names is a terrible idea or not
-    //Vectors can be created directly with pointer arithmetic
-    std::vector< double > stress( STRESS, STRESS + NTENS );
-    std::vector< double > statev( STATEV, STATEV + NSTATV );
-    std::vector< double > ddsddt( DDSDDT, DDSDDT + NTENS );
-    std::vector< double > drplde( DRPLDE, DRPLDE + NTENS );
-    const std::vector< double > strain( STRAN, STRAN + NTENS );
-    const std::vector< double > dstrain( DSTRAN, DSTRAN + NTENS );
-    const std::vector< double > time( TIME, TIME + 2 );
-    const std::vector< double > predef( PREDEF, PREDEF + 1 );
-    const std::vector< double > dpred( DPRED, DPRED + 1 );
-    const std::string cmname( abaqusTools::FtoCString( 80, CMNAME ) );
-    const std::vector< double > props( PROPS, PROPS + NPROPS );
-    const std::vector< double > coords( COORDS, COORDS + spatialDimensions );
-    const std::vector< int > jstep( JSTEP, JSTEP + 4 );
-    //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
-    std::vector< std::vector< double > > ddsdde = abaqusTools::columnToRowMajor( DDSDDE, NTENS, NTENS );
-    const std::vector< std::vector< double > > drot = abaqusTools::columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
-    const std::vector< std::vector< double > > dfgrd0 = abaqusTools::columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
-    const std::vector< std::vector< double > > dfgrd1 = abaqusTools::columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
-
-    //Call the appropriate subroutine interface
-    //Show example use of c++ library in UMAT
-    if ( KINC == 1 && NOEL == 1 && NPT == 1 ){
-        cppStub::abaqusInterface( stress, statev,  ddsdde, SSE,    SPD,
-                                  SCD,    RPL,     ddsddt, drplde, DRPLDT,
-                                  strain, dstrain, time,   DTIME,  TEMP,
-                                  DTEMP,  predef,  dpred,  cmname, NDI,
-                                  NSHR,   NTENS,   NSTATV, props,  NPROPS,
-                                  coords, drot,    PNEWDT, CELENT, dfgrd0,
-                                  dfgrd1, NOEL,    NPT,    LAYER,  KSPT,
-                                  jstep,  KINC );
-    }
-
-    //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
-    //Scalars were passed by reference and will update correctly
-    //Vectors don't require row/column major considerations, but do require re-packing to the Fortran pointer
-    abaqusTools::rowToColumnMajor( STRESS, stress, 1, NTENS );
-    abaqusTools::rowToColumnMajor( DDSDDT, ddsddt, 1, NTENS );
-    abaqusTools::rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
-    abaqusTools::rowToColumnMajor( STATEV, statev, 1, NSTATV );
-    //Arrays require vector of vector to column major conversion
-    abaqusTools::rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
+     //Add switching logic to handle more than one UMAT.
+     //Call the appropriate UMAT interface
+     cppStub::abaqusInterface( STRESS, STATEV, DDSDDE,    SSE,    SPD,
+                                  SCD,    RPL, DDSDDT, DRPLDE, DRPLDT,
+                                STRAN, DSTRAN,   TIME,  DTIME,   TEMP,
+                                DTEMP, PREDEF,  DPRED, CMNAME,    NDI,
+                                 NSHR,  NTENS, NSTATV,  PROPS, NPROPS,
+                               COORDS,   DROT, PNEWDT, CELENT, DFGRD0,
+                               DFGRD1,   NOEL,    NPT,  LAYER,   KSPT,
+                                JSTEP,   KINC );
 
      return;
 }
