@@ -80,15 +80,15 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     const std::vector< double > time( TIME, TIME + 2 );
     const std::vector< double > predef( PREDEF, PREDEF + 1 );
     const std::vector< double > dpred( DPRED, DPRED + 1 );
-    const std::string cmname( FtoCString( 80, CMNAME ) );
+    const std::string cmname( abaqusTools::FtoCString( 80, CMNAME ) );
     const std::vector< double > props( PROPS, PROPS + NPROPS );
     const std::vector< double > coords( COORDS, COORDS + spatialDimensions );
     const std::vector< int > jstep( JSTEP, JSTEP + 4 );
     //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
-    std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
-    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
-    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
-    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
+    std::vector< std::vector< double > > ddsdde = abaqusTools::columnToRowMajor( DDSDDE, NTENS, NTENS );
+    const std::vector< std::vector< double > > drot = abaqusTools::columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
+    const std::vector< std::vector< double > > dfgrd0 = abaqusTools::columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
+    const std::vector< std::vector< double > > dfgrd1 = abaqusTools::columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
 
     //Call the appropriate subroutine interface
     //Show example use of c++ library in UMAT
@@ -106,12 +106,12 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
     //Scalars were passed by reference and will update correctly
     //Vectors don't require row/column major considerations, but do require re-packing to the Fortran pointer
-    rowToColumnMajor( STRESS, stress, 1, NTENS );
-    rowToColumnMajor( DDSDDT, ddsddt, 1, NTENS );
-    rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
-    rowToColumnMajor( STATEV, statev, 1, NSTATV );
+    abaqusTools::rowToColumnMajor( STRESS, stress, 1, NTENS );
+    abaqusTools::rowToColumnMajor( DDSDDT, ddsddt, 1, NTENS );
+    abaqusTools::rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
+    abaqusTools::rowToColumnMajor( STATEV, statev, 1, NSTATV );
     //Arrays require vector of vector to column major conversion
-    rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
+    abaqusTools::rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
 
-    return;
+     return;
 }
