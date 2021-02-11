@@ -10,7 +10,7 @@
 
 #include<vector_tools.h>
 
-#include<umat.h>
+#include<abaqus_tools.h>
 
 BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
     /*!
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE( testColumnToRowMajor ){
     const int height = 2;
     const int width = 3;
     std::vector< std::vector< double > > row_major;
-    row_major = columnToRowMajor( column_major_pointer, height, width);
+    row_major = abaqusTools::columnToRowMajor( column_major_pointer, height, width);
     std::vector< std::vector< double > > answer = { { 1, 2, 3 },
                                                     { 4, 5, 6 } };
 
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
     const int width = 3;
     std::vector< std::vector< double > > row_major = { { 1, 2, 3 },
                                                        { 4, 5, 6 } };
-    rowToColumnMajor( column_major_pointer, row_major, height, width );
+    abaqusTools::rowToColumnMajor( column_major_pointer, row_major, height, width );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( column_major, expected ) );
 
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
     column_major = { 0, 0, 0, 0, 0, 0 };
     std::vector< double > row_major_vector = { 1, 2, 3,
                                                4, 5, 6 };
-    rowToColumnMajor( column_major_pointer, row_major_vector, height, width );
+    abaqusTools::rowToColumnMajor( column_major_pointer, row_major_vector, height, width );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( column_major, expected ) );
 
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE( testRowToColumnMajor ){
     double *fortran_vector_pointer = fortran_vector.data( );
     std::vector< double > expected_vector = { 1, 2, 3 };
     std::vector< double > cpp_vector = { 1, 2, 3 };
-    rowToColumnMajor( fortran_vector_pointer, cpp_vector, 1, 3 );
+    abaqusTools::rowToColumnMajor( fortran_vector_pointer, cpp_vector, 1, 3 );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( fortran_vector, expected_vector ) );
 }
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE( testExpandAbaqusStandardStressVector ){
      NDI = 3;
      NSHR = 3;
 
-     vector_expansion = expandAbaqusStandardStressVector( abaqus_full, NDI, NSHR );
+     vector_expansion = abaqusTools::expandAbaqusStandardStressVector( abaqus_full, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( vector_expansion, expected_full ) );
 
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE( testExpandAbaqusStandardStressVector ){
      NDI = 2;
      NSHR = 1;
 
-     vector_expansion = expandAbaqusStandardStressVector( abaqus_plane_stress, NDI, NSHR );
+     vector_expansion = abaqusTools::expandAbaqusStandardStressVector( abaqus_plane_stress, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( vector_expansion, expected_plane_stress ) );
 }
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardStressVector ){
      NDI = 3;
      NSHR = 3;
 
-     vector_contraction_full = contractAbaqusStandardStressVector( expanded_full, NDI, NSHR );
+     vector_contraction_full = abaqusTools::contractAbaqusStandardStressVector( expanded_full, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( vector_contraction_full, abaqus_full ) );
 
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardStressVector ){
      NDI = 2;
      NSHR = 1;
 
-     vector_contraction_plane_stress = contractAbaqusStandardStressVector( expanded_plane_stress, NDI, NSHR );
+     vector_contraction_plane_stress = abaqusTools::contractAbaqusStandardStressVector( expanded_plane_stress, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( vector_contraction_plane_stress, abaqus_plane_stress ) );
 
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardNTENSMatrix ){
      NDI = 3;
      NSHR = 3;
 
-     matrix_contraction_full = contractAbaqusStandardNTENSMatrix( expanded_full, NDI, NSHR );
+     matrix_contraction_full = abaqusTools::contractAbaqusStandardNTENSMatrix( expanded_full, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( matrix_contraction_full, abaqus_full ) );
 
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardNTENSMatrix ){
      NDI = 2;
      NSHR = 1;
 
-     matrix_contraction_plane_stress = contractAbaqusStandardNTENSMatrix( expanded_plane_stress, NDI, NSHR );
+     matrix_contraction_plane_stress = abaqusTools::contractAbaqusStandardNTENSMatrix( expanded_plane_stress, NDI, NSHR );
 
      BOOST_CHECK( vectorTools::fuzzyEquals( matrix_contraction_plane_stress, abaqus_plane_stress ) );
 
