@@ -16,6 +16,8 @@ New Features
 - Use example c++ library in Abaqus UMAT template (:jira:`505`, :pull:`8`). By `Kyle Brindley`_.
 - Add c++ to fortran variable conversion and Abaqus variable return template (:jira:`521`, :pull:`15`, :pull:`16`). By
   `Kyle Brindley`_.
+- Add common abaqus tensor handling tools and a c++ converted umat interface (:jira:`522`, :pull:`17`). By `Kyle
+  Brindley`_.
 
 Bug fixes
 ~~~~~~~~~
