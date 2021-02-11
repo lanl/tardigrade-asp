@@ -498,6 +498,32 @@ $ pwd
 $ make clean
 ```
 
+### Test on sstelmo
+
+4) Build tests of the project
+
+```
+$ pwd
+/path/to/cpp_stub/build
+
+# Build c++ tests
+$ cmake3 --build src/cpp/tests
+```
+
+5) Run the tests
+
+```
+$ pwd
+/path/to/cpp_stub/build
+
+# Run ctest
+$ ctest
+
+# Results print to screen
+# View details of most recent test execution including failure messages
+$ less Testing/Temporary/LastTest.log
+```
+
 ### Convenience build wrappers
 
 Two build scripts have been created for convenience, ``new_build.sh`` and

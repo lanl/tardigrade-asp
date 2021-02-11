@@ -65,77 +65,16 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &KINC: Increment number.
      */
 
-    //Define the tensor spatial dimensions
-    const int spatialDimensions = 3;
+     //Add switching logic to handle more than one UMAT.
+     //Call the appropriate UMAT interface
+     cppStub::abaqusInterface( STRESS, STATEV, DDSDDE,    SSE,    SPD,
+                                  SCD,    RPL, DDSDDT, DRPLDE, DRPLDT,
+                                STRAN, DSTRAN,   TIME,  DTIME,   TEMP,
+                                DTEMP, PREDEF,  DPRED, CMNAME,    NDI,
+                                 NSHR,  NTENS, NSTATV,  PROPS, NPROPS,
+                               COORDS,   DROT, PNEWDT, CELENT, DFGRD0,
+                               DFGRD1,   NOEL,    NPT,  LAYER,   KSPT,
+                                JSTEP,   KINC );
 
-    //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
-    //TODO: Decide if case sensitive variable names is a terrible idea or not
-    //Vectors can be created directly with pointer arithmetic
-    std::vector< double > stress( STRESS, STRESS + NTENS );
-    std::vector< double > statev( STATEV, STATEV + NSTATV );
-    std::vector< double > ddsddt( DDSDDT, DDSDDT + NTENS );
-    std::vector< double > drplde( DRPLDE, DRPLDE + NTENS );
-    const std::vector< double > strain( STRAN, STRAN + NTENS );
-    const std::vector< double > dstrain( DSTRAN, DSTRAN + NTENS );
-    const std::vector< double > time( TIME, TIME + 2 );
-    const std::vector< double > predef( PREDEF, PREDEF + 1 );
-    const std::vector< double > dpred( DPRED, DPRED + 1 );
-    const std::string cmname( FtoCString( 80, CMNAME ) );
-    const std::vector< double > props( PROPS, PROPS + NPROPS );
-    const std::vector< double > coords( COORDS, COORDS + spatialDimensions );
-    const std::vector< int > jstep( JSTEP, JSTEP + 4 );
-    //Fortran two-dimensional arrays require careful column to row major conversions to c++ types
-    std::vector< std::vector< double > > ddsdde = columnToRowMajor( DDSDDE, NTENS, NTENS );
-    const std::vector< std::vector< double > > drot = columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
-    const std::vector< std::vector< double > > dfgrd0 = columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
-    const std::vector< std::vector< double > > dfgrd1 = columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
-
-    //Call the appropriate subroutine interface
-    //Show example use of c++ library in UMAT
-    if ( KINC == 1 && NOEL == 1 && NPT == 1 ){
-        cppStub::abaqusInterface( stress, statev,  ddsdde, SSE,    SPD,
-                                  SCD,    RPL,     ddsddt, drplde, DRPLDT,
-                                  strain, dstrain, time,   DTIME,  TEMP,
-                                  DTEMP,  predef,  dpred,  cmname, NDI,
-                                  NSHR,   NTENS,   NSTATV, props,  NPROPS,
-                                  coords, drot,    PNEWDT, CELENT, dfgrd0,
-                                  dfgrd1, NOEL,    NPT,    LAYER,  KSPT,
-                                  jstep,  KINC );
-    }
-
-    //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
-    //Scalars were passed by reference and will update correctly
-    //Vectors don't require row/column major considerations, but do require re-packing to the Fortran pointer
-    rowToColumnMajor( STRESS, stress, 1, NTENS );
-    rowToColumnMajor( DDSDDT, ddsddt, 1, NTENS );
-    rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
-    rowToColumnMajor( STATEV, statev, 1, NSTATV );
-    //Arrays require vector of vector to column major conversion
-    rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
-
-    return;
-}
-
-char *FtoCString( int stringLength, const char* fString ){
-    /*!
-     * Converts a Fortran string to C-string. Trims trailing white space during processing.
-     *
-     * Code excerpt from a c++ Abaqus FILM subroutine in the Abaqus Knowledge Base:
-     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B
-     *
-     * TODO: update coding style to match project.
-     *
-     * \param stringLength: The length of the Fortran string.
-     * \param *fString: The pointer to the start of the Fortran string.
-     */
-    int stringLen = stringLength;
-    for ( int k1 = stringLength - 1; k1 >= 0; k1-- )
-	{
-	    if ( fString[ k1 ] != ' ' ) break;
-	    stringLen = k1;
-	}
-    char* cString  = new char [ stringLen + 1 ];
-    memcpy ( cString, fString, stringLen );
-    cString[ stringLen ] = '\0';
-    return cString;
+     return;
 }

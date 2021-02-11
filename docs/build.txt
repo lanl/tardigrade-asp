@@ -74,7 +74,7 @@ Build on sstelmo
       /path/to/cpp_stub/build
 
       # find c++ libraries and ignore intermediate files with similar extensions
-      $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\." 
+      $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 
 6) Clean build directory to force a re-build
 
@@ -90,6 +90,33 @@ Build on sstelmo
       /path/to/cpp_stub/build
 
       $ make clean
+
+Test on sstelmo
+===============
+
+4) Build tests of the project
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+
+      # Build c++ tests
+      $ cmake3 --build src/cpp/tests
+
+5) Run the tests
+
+   .. code:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+
+      # Run ctest
+      $ ctest
+
+      # Results print to screen
+      # View details of most recent test execution including failure messages
+      $ less Testing/Temporary/LastTest.log
 
 Convenience build wrappers
 ==========================

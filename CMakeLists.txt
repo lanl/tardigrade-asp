@@ -10,6 +10,8 @@ set(ABAQUS_SRC_PATH "src/abaqus")
 # Set some Abaqus integration variables
 set(UMAT "umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
+# TODO: Move abaqus tools to FetchContent after it is made a stand alone project
+set(ABAQUS_TOOLS "abaqus_tools")
 
 # Configure version
 configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
@@ -18,6 +20,9 @@ configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -fmax-errors=5 -ggdb")
+
+# Include project source code directory for use by all libraries and executables in this project
+include_directories(${CPP_SRC_PATH})
 
 #================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
