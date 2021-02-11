@@ -189,7 +189,7 @@ template< typename T >
 std::vector< std::vector < T > > contractAbaqusStandardNTENSMatrix( const std::vector< std::vector< T > > &full_abaqus_matrix, 
                                                                     const int &NDI, const int &NSHR ){
     /*!
-     * Contract NTENS type components from full Abaqus matrices (6x6).
+     * Contract NTENS type components from full Abaqus matrixes (6x6).
      *
      * See the Abaqus documentation > Introduction & Spatial Modeling > Conventions chapter > Convention used for stress
      * and strain components.
@@ -202,8 +202,10 @@ std::vector< std::vector < T > > contractAbaqusStandardNTENSMatrix( const std::v
      *
      * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} \right } \f$
      *
-     * where components that are zero-valued by definition, e.g. plane stress, are omitted. The related matrices are
+     * where components that are zero-valued by definition, e.g. plane stress, are omitted. The related matrixes are
      * then
+     *
+     * TODO: Update LaTeX formatting for a well aligned matrix
      *
      * \f$ \left { D_{1111}, D_{1122}, D_{1133}, D_{1112}, D_{1113}, D_{1123} \right } \f$
      * \f$ \left { D_{symm}, D_{2222}, D_{2233}, D_{2212}, D_{2213}, D_{2223} \right } \f$
@@ -215,11 +217,35 @@ std::vector< std::vector < T > > contractAbaqusStandardNTENSMatrix( const std::v
      * \param &full_abaqus_matrix: a previously expanded abaqus NTENS matrix. Dimensions 6x6.
      * \param &NDI: The number of direct components.
      * \param &NSHR: The number of shear components.
-     * \returns matric_contraction: c++ type vector of vectors with square shape of size NDI + NSHR.
+     * \returns matrix_contraction: c++ type vector of vectors with square shape of size NDI + NSHR.
      */
 
     //Initialize contracted matrix to the appropriate dimensions
     std::vector< std::vector< T > > matrix_contraction( NDI + NSHR, std::vector< T >( NDI + NSHR ) );
+
+    //Loop non-zero direct component rows
+    for ( int row = 0; row < NDI; row++ ){
+        //Loop non-zero direct component columns
+        for ( int col = 0; col < NDI; col++ ){
+            matrix_contraction[ row ][ col ] = full_abaqus_matrix[ row ][ col ];
+        }
+        //Loop non-zero shear component columns
+        for ( int col = 0; col < NSHR; col++ ){
+            matrix_contraction[ row ][ NDI + col ] = full_abaqus_matrix[ row ][ 3 + col ];
+        }
+    }
+
+    //Loop non-zero shear component rows
+    for ( int row = 0; row < NSHR; row++ ){
+        //Loop non-zero direct component columns
+        for ( int col = 0; col < NDI; col++ ){
+            matrix_contraction[ NDI + row ][ col ] = full_abaqus_matrix[ 3 + row ][ col ];
+        }
+        //Loop non-zero shear component columns
+        for ( int col = 0; col < NSHR; col++ ){
+            matrix_contraction[ NDI + row ][ NDI + col ] = full_abaqus_matrix[ 3 + row ][ 3 + col ];
+        }
+    }
 
     return matrix_contraction;
 }
