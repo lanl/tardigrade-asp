@@ -34,6 +34,8 @@ Internal Changes
 - Update Jenkins CI configuration and store with version controlled repository (:jira:`442`, :pull:`5`). By `Kyle Brindley`_.
 - Demonstrate c++ ``vector_tools`` library for unit testing (:jira:`506`, :pull:`7`). By `Kyle Brindley`_.
 - Add integration tests for Abaqus UMAT interface (:jira:`504`, :pull:`10`). By `Kyle Brindley`_.
+- Move project Abaqus interface into project files. Treat UMAT Fortran/c++ subroutine as a UMAT selection and pass
+  through subroutine (:jira:`523`, :pull:`18`). By `Kyle Brindley`_.
 
 Enhancements
 ~~~~~~~~~~~~
