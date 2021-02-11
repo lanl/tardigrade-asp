@@ -93,7 +93,14 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
     //Call the appropriate subroutine interface
     //Show example use of c++ library in UMAT
     if ( KINC == 1 && NOEL == 1 && NPT == 1 ){
-        cppStub::sayHello( "Abaqus" );
+        cppStub::abaqusInterface( stress, statev,  ddsdde, SSE,    SPD,
+                                  SCD,    RPL,     ddsddt, drplde, DRPLDT,
+                                  strain, dstrain, time,   DTIME,  TEMP,
+                                  DTEMP,  predef,  dpred,  cmname, NDI,
+                                  NSHR,   NTENS,   NSTATV, props,  NPROPS,
+                                  coords, drot,    PNEWDT, CELENT, dfgrd0,
+                                  dfgrd1, NOEL,    NPT,    LAYER,  KSPT,
+                                  jstep,  KINC );
     }
 
     //Re-pack C++ objects into FORTRAN memory to return values to Abaqus

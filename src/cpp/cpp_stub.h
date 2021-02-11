@@ -24,13 +24,13 @@ namespace cppStub{
     /// @param message The message to print
     void sayHello(std::string message);
 
-    void abaqusInterface( floatVector &stress,       floatVector &statev,        floatVector &ddsdde,       floatType &SSE,           floatType &SPD,
-                          floatType &SCD,            floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,      floatType &DRPLDT,
-                          const floatVector &strain, const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,   const floatType &TEMP,
-                          const floatType &DTEMP,    const floatVector &predef,  const floatVector &dpred,  const char &cmname,       const int &NDI,
-                          const int &NSHR,           const int &NTENS,           const int &NSTATV,         const floatVector &props, const int &NPROPS,
-                          const floatVector &coords, const floatVector &drot,    floatType &PNEWDT,         const floatType &CELENT,  const floatVector &dfgrd0,
-                          const floatVector &dfgrd1, const int &NOEL,            const int &NPT,            const int &LAYER,         const int &KSPT,
-                          const int &jstep,          const int &KINC );
+    void abaqusInterface( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
+                          floatType &SCD,                  floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,       floatType &DRPLDT,
+                          const floatVector &strain,       const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,    const floatType &TEMP,
+                          const floatType &DTEMP,          const floatVector &predef,  const floatVector &dpred,  const std::string &cmname, const int &NDI,
+                          const int &NSHR,                 const int &NTENS,           const int &NSTATV,         const floatVector &props,  const int &NPROPS,
+                          const floatVector &coords,       const floatMatrix &drot,    floatType &PNEWDT,         const floatType &CELENT,   const floatMatrix &dfgrd0,
+                          const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
+                          const std::vector< int > &jstep, const int &KINC );
 
 }
