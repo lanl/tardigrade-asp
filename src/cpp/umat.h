@@ -185,4 +185,11 @@ std::vector< T > contractAbaqusStandardStressVector( const std::vector< T > &ful
     return vector_contraction;
 }
 
+template< typename T >
+std::vector< std::vector < T > > contractAbaqusStandardNTENSMatrix( const std::vector< std::vector< T > > &full_abaqus_matrix, 
+                                                                    const int &NDI, const int &NSHR ){
+    std::vector< std::vector< T > > matrix_contraction( 6, std::vector< double >( 6, -666. ) );
+    return matrix_contraction;
+}
+
 char *FtoCString( int stringLength, const char* fString );

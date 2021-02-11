@@ -146,15 +146,15 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardNTENSMatrix ){
      int NSHR;
 
      //Test full size matrix
-     std::vector< std::vector< double > > matrix_contraction_full( 6, std::vector< double >( 6, -666. ) )
+     std::vector< std::vector< double > > matrix_contraction_full( 6, std::vector< double >( 6, -666. ) );
      std::vector< std::vector< double > > abaqus_full   = { { 1111, 1122, 1133, 1112, 1113, 1123 },
-                                                            { 1122  2222, 2233, 2212, 2213, 2223 },
+                                                            { 1122, 2222, 2233, 2212, 2213, 2223 },
                                                             { 1133, 2233, 3333, 3312, 3313, 3323 },
                                                             { 1112, 2212, 3312, 1212, 1213, 1223 },
                                                             { 1113, 2213, 3313, 1213, 1313, 1323 },
                                                             { 1123, 2223, 3323, 1223, 1323, 2323 } };
      std::vector< std::vector< double > > expanded_full = { { 1111, 1122, 1133, 1112, 1113, 1123 },
-                                                            { 1122  2222, 2233, 2212, 2213, 2223 },
+                                                            { 1122, 2222, 2233, 2212, 2213, 2223 },
                                                             { 1133, 2233, 3333, 3312, 3313, 3323 },
                                                             { 1112, 2212, 3312, 1212, 1213, 1223 },
                                                             { 1113, 2213, 3313, 1213, 1313, 1323 },
@@ -167,12 +167,12 @@ BOOST_AUTO_TEST_CASE( testContractAbaqusStandardNTENSMatrix ){
      BOOST_CHECK( vectorTools::fuzzyEquals( matrix_contraction_full, abaqus_full ) );
 
      //Test plane stress matrix
-     std::vector< std::vector< double > > matrix_contraction_plane_stress( 3, std::vector< double >( 3, -666. ) )
+     std::vector< std::vector< double > > matrix_contraction_plane_stress( 3, std::vector< double >( 3, -666. ) );
      std::vector< std::vector< double > > abaqus_plane_stress   = { { 1111, 1122, 1112 },
-                                                                    { 1122  2222, 2212 },
+                                                                    { 1122, 2222, 2212 },
                                                                     { 1112, 2212, 1212 } };
      std::vector< std::vector< double > > expanded_plane_stress = { { 1111, 1122, 0.00, 1112, 0.00, 0.00 },
-                                                                    { 1122  2222, 0.00, 2212, 0.00, 0.00 },
+                                                                    { 1122, 2222, 0.00, 2212, 0.00, 0.00 },
                                                                     { 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 },
                                                                     { 1112, 2212, 0.00, 1212, 0.00, 0.00 },
                                                                     { 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 },
