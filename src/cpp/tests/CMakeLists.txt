@@ -12,4 +12,6 @@ set(TEST_UMAT "test_${UMAT}")
 add_executable (${TEST_UMAT} "${TEST_UMAT}.cpp")
 add_test(NAME ${TEST_UMAT} COMMAND ${TEST_UMAT})
 set_target_properties(${TEST_UMAT} PROPERTIES CXX_STANDARD 11)
+target_include_directories(${TEST_UMAT} PUBLIC .
+                           "${vector_tools_SOURCE_DIR}/${CPP_SRC_PATH}")
 target_link_libraries(${TEST_UMAT} PUBLIC "${UMAT}")
