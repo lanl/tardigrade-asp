@@ -115,27 +115,3 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
 
     return;
 }
-
-char *FtoCString( int stringLength, const char* fString ){
-    /*!
-     * Converts a Fortran string to C-string. Trims trailing white space during processing.
-     *
-     * Code excerpt from a c++ Abaqus FILM subroutine in the Abaqus Knowledge Base:
-     * https://kb.dsxclient.3ds.com/mashup-ui/page/resultqa?from=search%3fq%3dwriting%2bsubroutine%2bc%252B%252B&id=QA00000008005e&q=writing%20subroutine%20c%2B%2B
-     *
-     * TODO: update coding style to match project.
-     *
-     * \param stringLength: The length of the Fortran string.
-     * \param *fString: The pointer to the start of the Fortran string.
-     */
-    int stringLen = stringLength;
-    for ( int k1 = stringLength - 1; k1 >= 0; k1-- )
-	{
-	    if ( fString[ k1 ] != ' ' ) break;
-	    stringLen = k1;
-	}
-    char* cString  = new char [ stringLen + 1 ];
-    memcpy ( cString, fString, stringLen );
-    cString[ stringLen ] = '\0';
-    return cString;
-}
