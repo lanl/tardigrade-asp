@@ -19,6 +19,11 @@ cpp_stub.h
 
 .. doxygenfile:: cpp_stub.h
 
+abaqus_tools.h
+==============
+
+.. doxygenfile:: abaqus_tools.h
+
 ****************
 Abaqus interface
 ****************
