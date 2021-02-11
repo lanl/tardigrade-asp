@@ -3,7 +3,10 @@
 Changelog
 =========
 
-0.0.2 (unreleased)
+0.0.3 (unreleased)
+------------------
+
+0.0.2 (2021-02-11)
 ------------------
 
 Breaking changes
@@ -36,6 +39,7 @@ Internal Changes
 - Add integration tests for Abaqus UMAT interface (:jira:`504`, :pull:`10`). By `Kyle Brindley`_.
 - Move project Abaqus interface into project files. Treat UMAT Fortran/c++ subroutine as a UMAT selection and pass
   through subroutine (:jira:`523`, :pull:`18`). By `Kyle Brindley`_.
+- Bump micro version number for release (:jira:`524`). By `Kyle Brindley`_.
 
 Enhancements
 ~~~~~~~~~~~~
