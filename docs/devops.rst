@@ -1,3 +1,5 @@
+.. _devops_manual:
+
 #############
 DevOps Manual
 #############

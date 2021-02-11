@@ -22,8 +22,8 @@ with open(meta_file) as config:
     contents = config.read()
 project_regex = f"project[\s]*\(([\S]*) VERSION [0-9]+\.[0-9]+\.[0-9]\)"
 project_search = re.search(project_regex, contents)
-version_regex = f"project[\s]*\([\S]* VERSION ([0-9]+\.[0-9]+\.[0-9])\)"
-version_search = re.search(version_regex, contents)
+release_regex = f"project[\s]*\([\S]* VERSION ([0-9]+\.[0-9]+\.[0-9])\)"
+release_search = re.search(release_regex, contents)
 
 # Hardcoded project information
 copyright = '2020, Nathan A. Miller and Kyle A. Brindley'
@@ -36,13 +36,11 @@ else:
     raise RuntimeError('Could not find project name in {meta_file} with "{project_regex}" regex pattern')
 
 # Scrape meta_file for version or fall back to git info
-if version_search:
-    release = version_search.group(1)
+version = f"{git_describe}".replace('-','.')
+if release_search:
+    release = release_search.group(1)
 else:
-    release = git_describe
-if release != git_describe:
-    release = release + f"+{git_describe}"
-version = release
+    release = version
 
 # -- Project Variables -------------------------------------------------------
 rst_prolog = f'.. |project| replace:: {project}\n.. include:: targets.txt'
@@ -53,11 +51,17 @@ def setup(app):
     app.add_css_file('custom.css')
 
 # Add any Sphinx extension module names here, as strings.
-extensions = ["breathe", 'sphinxcontrib.bibtex']
+extensions = ["breathe", 'sphinxcontrib.bibtex', 'sphinx.ext.extlinks']
 
 # Breathe Configuration
 breathe_projects = {project: "../build/docs/doxygen/xml"}
 breathe_default_project = project
+
+# Links to PRs, Jira issues.
+extlinks = {
+     "pull": ("https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/pull-requests/%s/overview", "PR"),
+     "jira": ("https://xcp-jira.lanl.gov/browse/VIP-%s", "VIP-"),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

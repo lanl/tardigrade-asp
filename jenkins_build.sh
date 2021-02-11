@@ -55,8 +55,8 @@ esac
 ./new_build.sh ${compiler}
 
 # Perform repo tests
-cd "build/${tests}"
-./test_${repo}
+cd "build"
+ctest --verbose --output-log results.tex
 
 # Append the path of the compiler
 echo "$(command -v ${compiler})" >> results.tex
@@ -66,33 +66,7 @@ mv results.tex "${compiler}_results.tex"
 
 # Return to working directory
 cd ${workdir}
-cp "build/${tests}/${compiler}_results.tex" .
-
-#================================================= TEST AGAINST icpc COMPILER ===
-case $(hostname) in
-    hamming.lanl.gov|mayhem.lanl.gov|sstelmo.lanl.gov)
-        set +ux
-        source /apps/intel2016/bin/ifortvars.sh -arch intel64 -platform linux
-        set -Eeuxo pipefail
-
-        compiler='icpc'
-        ./new_build.sh ${compiler}
-
-        # Perform repo tests
-        cd "build/${tests}"
-        ./test_${repo}
-
-        # Append the path of the compiler
-        echo "$(command -v ${compiler})" >> results.tex
-        echo -e "$(${compiler} --version)" >> results.tex
-        # Rename results according to compiler
-        mv results.tex "${compiler}_results.tex"
-
-        # Return to working directory
-        cd ${workdir}
-        cp "build/${tests}/${compiler}_results.tex" .
-        ;;
-esac
+cp "build/${compiler}_results.tex" .
 
 #============================================================= CHECK RESULTS ===
 # Check for failed tests
@@ -107,18 +81,4 @@ if [ ${#result_files[@]} -lt 1 ]; then
     echo "Found the wrong number of result files: ${#result_files[@]}"
     echo "result files found: ${result_files[@]}"
     exit 2
-fi
-
-# Check for failures in result files
-# TODO: update to a failure as default and confirm success
-# TODO: fix the expected compiler names by OSTYPE or HOSTNAME
-fail='false'
-for result in ${result_files[@]}; do
-    if grep -i false ${result}; then
-        fail='true'
-        echo "Found failure in file: ${result}"
-    fi
-done
-if [ ${fail} == 'true' ]; then
-    exit 3
 fi

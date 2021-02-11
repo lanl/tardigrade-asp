@@ -1,8 +1,16 @@
-//Tests for cpp_stub
+/**
+  * \file test_cpp_stub.cpp
+  *
+  * Tests for cpp_stub
+  */
 
 #include<cpp_stub.h>
 #include<sstream>
 #include<fstream>
+
+#define BOOST_TEST_MODULE test_cpp_stub
+#include <boost/test/included/unit_test.hpp>
+#include <boost/test/output_test_stream.hpp>
 
 struct cout_redirect{
     cout_redirect( std::streambuf * new_buffer)
@@ -17,49 +25,23 @@ struct cout_redirect{
         std::streambuf * old;
 };
 
-int testSayHello(std::ofstream &results){
+BOOST_AUTO_TEST_CASE( testSayHello ){
     /*!
      * Test message printed to stdout in sayHello function
-     *
-     * :param std::ofstream &results: The output file
      */
 
     std::stringbuf buffer;
     cout_redirect rd(&buffer);
 
     std::string message = "World!";
-    cppStub::sayHello(message);
-
-    std::string result = buffer.str();
-    std::string answer = "Hello World!\n";
-
-    if (result.compare(answer) != 0){
-        std::cout << "result.compare( answer ) " << result.compare( answer ) << "\n";
-        results << "testSayHello & False\n";
-        return 1;
+    boost::test_tools::output_test_stream result; 
+    {
+        cout_redirect guard( result.rdbuf() );
+        cppStub::sayHello(message);
     }
 
-    results << "testSayHello & True\n";
-    return 0;
-}
+    std::string answer = "Hello World!\n";
 
-int main(){
-    /*!
-    The main loop which runs the tests defined in the
-    accompanying functions. Each function should output
-    the function name followed by & followed by True or False
-    if the test passes or fails respectively.
-    */
+    BOOST_CHECK( result.is_equal( answer ) );
 
-    //Open the results file
-    std::ofstream results;
-    results.open("results.tex");
-
-    //Run the tests
-    testSayHello(results);
-
-    //Close the results file
-    results.close();
-
-    return 0;
 }
