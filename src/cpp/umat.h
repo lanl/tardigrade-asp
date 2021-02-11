@@ -108,11 +108,11 @@ std::vector< T > expandAbaqusStandardStressVector( const std::vector< T > &abaqu
      *
      * The stress vector components for Abaqus/Standard (UMAT) are
      *
-     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} } \f$
+     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} \right } \f$
      *
      * and the strain vector components match as
      *
-     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} } \f$
+     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} \right } \f$
      *
      * where components that are zero-valued by definition, e.g. plane stress, are omitted. The shear strain is the
      * engineering shear strain where
@@ -125,7 +125,7 @@ std::vector< T > expandAbaqusStandardStressVector( const std::vector< T > &abaqu
      * \returns vector_expansion: c++ type vector of length 6.
      */
 
-    //Initialize expanded vector with zero values
+    //Initialize expanded vector to the appropriate dimensions with zero values
     std::vector< T > vector_expansion( 6, 0 );
 
     //Unpack direct components of Abaqus/Standard stress-type vector
@@ -152,11 +152,11 @@ std::vector< T > contractAbaqusStandardStressVector( const std::vector< T > &ful
      *
      * The stress vector components for Abaqus/Standard (UMAT) are
      *
-     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} } \f$
+     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} \right } \f$
      *
      * and the strain vector components match as
      *
-     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} } \f$
+     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} \right } \f$
      *
      * where components that are zero-valued by definition, e.g. plane stress, are omitted. The shear strain is the
      * engineering shear strain where
@@ -169,7 +169,7 @@ std::vector< T > contractAbaqusStandardStressVector( const std::vector< T > &ful
      * \returns vector_contraction: c++ type vector of length NDI + NSHR.
      */
 
-    //Initialize contracted vector
+    //Initialize contracted vector to the appropriate dimensions
     std::vector< T > vector_contraction( NDI + NSHR );
 
     //Pack non-zero direct components of Abaqus/Standard stress-type vector
@@ -188,7 +188,39 @@ std::vector< T > contractAbaqusStandardStressVector( const std::vector< T > &ful
 template< typename T >
 std::vector< std::vector < T > > contractAbaqusStandardNTENSMatrix( const std::vector< std::vector< T > > &full_abaqus_matrix, 
                                                                     const int &NDI, const int &NSHR ){
-    std::vector< std::vector< T > > matrix_contraction( 6, std::vector< double >( 6, -666. ) );
+    /*!
+     * Contract NTENS type components from full Abaqus matrices (6x6).
+     *
+     * See the Abaqus documentation > Introduction & Spatial Modeling > Conventions chapter > Convention used for stress
+     * and strain components.
+     *
+     * The stress vector components for Abaqus/Standard (UMAT) are
+     *
+     * \f$ \left { \sigma_{11}, \sigma_{22}, \sigma_{33}, \tau_{12}, \tau_{13}, \tau_{23} \right } \f$
+     *
+     * and the strain vector components match as
+     *
+     * \f$ \left { \epsilon_{11}, \epsilon_{22}, \epsilon_{33}, \gamma_{12}, \gamma_{13}, \gamma_{23} \right } \f$
+     *
+     * where components that are zero-valued by definition, e.g. plane stress, are omitted. The related matrices are
+     * then
+     *
+     * \f$ \left { D_{1111}, D_{1122}, D_{1133}, D_{1112}, D_{1113}, D_{1123} \right } \f$
+     * \f$ \left { D_{symm}, D_{2222}, D_{2233}, D_{2212}, D_{2213}, D_{2223} \right } \f$
+     * \f$ \left { D_{symm}, D_{symm}, D_{3333}, D_{3312}, D_{3313}, D_{3323} \right } \f$
+     * \f$ \left { D_{symm}, D_{symm}, D_{symm}, D_{1212}, D_{1213}, D_{1223} \right } \f$
+     * \f$ \left { D_{symm}, D_{symm}, D_{symm}, D_{symm}, D_{1313}, D_{1323} \right } \f$
+     * \f$ \left { D_{symm}, D_{symm}, D_{symm}, D_{symm}, D_{symm}, D_{2323} \right } \f$
+     *
+     * \param &full_abaqus_matrix: a previously expanded abaqus NTENS matrix. Dimensions 6x6.
+     * \param &NDI: The number of direct components.
+     * \param &NSHR: The number of shear components.
+     * \returns matric_contraction: c++ type vector of vectors with square shape of size NDI + NSHR.
+     */
+
+    //Initialize contracted matrix to the appropriate dimensions
+    std::vector< std::vector< T > > matrix_contraction( NDI + NSHR, std::vector< T >( NDI + NSHR ) );
+
     return matrix_contraction;
 }
 
