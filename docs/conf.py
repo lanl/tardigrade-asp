@@ -52,6 +52,7 @@ def setup(app):
 
 # Add any Sphinx extension module names here, as strings.
 extensions = ["breathe", 'sphinxcontrib.bibtex', 'sphinx.ext.extlinks']
+bibtex_bibfiles = ['software.bib']
 
 # Breathe Configuration
 breathe_projects = {project: "../build/docs/doxygen/xml"}
