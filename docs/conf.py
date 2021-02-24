@@ -33,7 +33,7 @@ author = 'Nathan A. Miller and Kyle A. Brindley'
 if project_search:
     project = project_search.group(1)
 else:
-    raise RuntimeError('Could not find project name in {meta_file} with "{project_regex}" regex pattern')
+    raise RuntimeError(f'Could not find project name in {meta_file} with "{project_regex}" regex pattern')
 
 # Scrape meta_file for version or fall back to git info
 version = f"{git_describe}".replace('-','.')
