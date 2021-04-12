@@ -8,6 +8,7 @@ Changelog
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
+- Use ``abaqus_tools`` from a dedicated project (:jira:`535`, :pull:`23`). By `Kyle Brindley`_.
 - Add ``bibtex_bibfiles`` variable to Sphinx configuration for newer version of ``sphinxcontrib.bibtex`` extension in
   Anaconda 2020 (:jira:`526`, :pull:`21`). By `Kyle Brindley`_.
 - Add explicit list of documentation source files for better conditional CMake documentation re-builds (:jira:`526`,
