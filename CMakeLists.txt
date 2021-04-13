@@ -1,6 +1,6 @@
 #===================================================================================================== PROJECT SETUP ===
 cmake_minimum_required (VERSION 3.14)
-project (cpp_stub VERSION 0.0.2)
+project (cpp_stub VERSION 0.0.3)
 enable_testing()
 
 # Set common project paths relative to project root directory
@@ -10,8 +10,6 @@ set(ABAQUS_SRC_PATH "src/abaqus")
 # Set some Abaqus integration variables
 set(UMAT "umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
-# TODO: Move abaqus tools to FetchContent after it is made a stand alone project
-set(ABAQUS_TOOLS "abaqus_tools")
 
 # Configure version
 configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
@@ -54,6 +52,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 # Find related, but external, projects
 # TODO: Decide how to handle master/dev build differences. bash env variables for GIT TAG?
+# TODO: Transition to installed libraries in conda environment (TOOL-360) and use FetchContent as fall back option
 include(FetchContent)
 FetchContent_Declare(
     error_tools
@@ -80,7 +79,12 @@ FetchContent_Declare(
     GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/solver_tools.git
     GIT_TAG        origin/dev
 )
-FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_tools solver_tools)
+FetchContent_Declare(
+    abaqus_tools
+    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/abaqus_tools.git
+    GIT_TAG        origin/dev
+)
+FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_tools solver_tools abaqus_tools)
 
 #=============================================================================================== ADD PROJECT TARGETS ===
 # MUST COME AFTER DEPENDENCY LOCATING

@@ -7,7 +7,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC .
                            "${error_tools_SOURCE_DIR}/${CPP_SRC_PATH}"
                            "${constitutive_SOURCE_DIR}/${CPP_SRC_PATH}"
                            "${stress_tools_SOURCE_DIR}/${CPP_SRC_PATH}"
-                           "${solver_tools_SOURCE_DIR}/${CPP_SRC_PATH}")
+                           "${solver_tools_SOURCE_DIR}/${CPP_SRC_PATH}"
+                           "${abaqus_tools_SOURCE_DIR}/${CPP_SRC_PATH}")
 target_link_libraries(${PROJECT_NAME} Eigen3::Eigen
                                       error_tools
                                       constitutive_tools
