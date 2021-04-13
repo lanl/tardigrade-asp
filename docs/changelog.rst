@@ -3,7 +3,10 @@
 Changelog
 =========
 
-0.0.3 (unreleased)
+0.0.4 (unreleased)
+------------------
+
+0.0.3 (2021-04-13)
 ------------------
 
 Internal Changes
