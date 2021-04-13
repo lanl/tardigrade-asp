@@ -6,6 +6,13 @@ Changelog
 0.0.4 (unreleased)
 ------------------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+- Update Jenkins CI configuration to build and test for PRs to both ``master`` and ``dev`` branches (:jira:`544`,
+  :pull:`26`). By `Kyle Brindley`_.
+- Minor cleanup to root directory files. Move configuration and environment files to a subdirectory (:jira:`544`,
+  :pull:`26`). By `Kyle Brindley`_.
+
 0.0.3 (2021-04-13)
 ------------------
 

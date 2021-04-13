@@ -345,8 +345,8 @@ See ``jenkins_job_xml.md`` in this repo.
 * [sphinx\_rtd\_theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/) >= 0.4.3
 
 For convenience, the minimal Python environment requirements for the
-documentation build are included in ``environment.yaml`` and
-``requirements.txt``. A minimal anaconda environment for building the
+documentation build are included in ``configuration_files/environment.yaml`` and
+``configuration_files/requirements.txt``. A minimal anaconda environment for building the
 documentation can be created from an existing anaconda installation with the
 following commands.
 
