@@ -48,6 +48,7 @@
 
 .. C++/fortran/cmake links
 .. _`CMake`: https://cmake.org/cmake/help/v3.14/
+.. _`CMake add\_custom\_target`: https://cmake.org/cmake/help/latest/command/add_custom_target.html
 .. _`Doxygen`: https://www.doxygen.nl/manual/docblocks.html
 .. _`Breathe`: https://breathe.readthedocs.io/en/latest/
 .. _`Eigen`: https://eigen.tuxfamily.org/dox/

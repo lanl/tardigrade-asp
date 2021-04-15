@@ -1,6 +1,6 @@
 #===================================================================================================== PROJECT SETUP ===
-cmake_minimum_required (VERSION 3.14)
-project (cpp_stub VERSION 0.0.3)
+cmake_minimum_required(VERSION 3.14)
+project(cpp_stub VERSION 0.0.3)
 enable_testing()
 
 # Set common project paths relative to project root directory
@@ -25,7 +25,7 @@ include_directories(${CPP_SRC_PATH})
 #================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} $ENV{HOME}/.local $ENV{HOME}/local/ $ENV{HOME})
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 # Find bash (Required for abaqus integration tests)
@@ -37,7 +37,7 @@ else()
 endif()
 
 # Find Abaqus (Required for abaqus integration tests)
-find_program(ABAQUS_PROGRAM 
+find_program(ABAQUS_PROGRAM
              NAMES abaqus abq2020 abq2019hf4 abq2019 abq2018hf11 abq2018 abq2017hf2 abq2017
              HINTS /apps/abaqus/Commands
             )
@@ -89,13 +89,17 @@ FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_to
 #=============================================================================================== ADD PROJECT TARGETS ===
 # MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
-add_subdirectory ("${CPP_SRC_PATH}")
+add_subdirectory("${CPP_SRC_PATH}")
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Find Boost. Required for tests
     find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
-    # Add tests and docs
-    add_subdirectory ("${CPP_SRC_PATH}/tests")
-    add_subdirectory ("docs")
+    # Add c++ tests and docs
+    add_subdirectory("${CPP_SRC_PATH}/tests")
+    add_subdirectory("docs")
+    # Abaqus integration tests
+    if(BASH_PROGRAM AND ABAQUS_PROGRAM)
+        add_subdirectory("${ABAQUS_SRC_PATH}/tests")
+    endif()
 endif()

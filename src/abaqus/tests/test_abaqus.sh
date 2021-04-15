@@ -9,9 +9,9 @@ if [ "$#" -ne 3 ]; then
     echo "${script} USAGE:"
     echo "./${script} ABAQUS_PROGRAM USER_SUBROUTINE INPUT_FILE"
     echo "  REQUIRED POSITIONAL ARGUMENTS:"
-    echo "    ABAQUS_PROGRAM: absolute path to abaqus executable"
-    echo "    USER_SUBROUTINE: absolute path to user subroutine file"
-    echo "    INPUT_FILE: input file base name without extension"
+    echo "    ABAQUS_PROGRAM: abaqus executable on PATH or absolute path"
+    echo "    USER_SUBROUTINE: user subroutine file path, absolute or relative to script location"
+    echo "    INPUT_FILE: input file path, absolute or relative to script location"
     exit 1
 fi
 abaqus_program=$1
@@ -20,14 +20,22 @@ user=$3
 
 # Verify abaqus path 
 if [ ! "$(command -v ${abaqus_program})" ]; then
-    echo "command ${abaqus_program} not found"
+    echo "Command '${abaqus_program}' not found."
     exit 2
 fi
 
 # Verify expected input file path
-if [ ! -f "../${input}.inp" ]; then
-    echo "input file ../${input}.inp not found"
+if [ ! -f "${input}" ]; then
+    echo "Input file '${input}' not found."
     exit 3
+else
+    # Strip paths and extension for abaqus
+    basename="${input##*/}"
+    job="${basename%.*}"
+    # Clean up any abaqus output files in local directory
+    rm ${job}.{com,dat,log,msg,odb,prt,sim,sta,inp} || true
+    # Copy input file to local directory
+    cp ${input} .
 fi
 
 # Verify user subroutine file
@@ -36,14 +44,22 @@ if [ ! -f "${user}" ]; then
     exit 4
 fi
 
-# Clean up build directory and copy input file
-rm ${input}.{com,dat,log,msg,odb,prt,sim,sta} || true
-cp ../${input}.inp .
-
 # Run abaqus against the input file and redirect interactive output to log file
 # Use interactive to avoid sleep and wait statements
-${abaqus_program} -job ${input} -user ${user} -interactive >> ${input}.log 2>&1
+${abaqus_program} -job ${job} -user ${user} -interactive >> ${job}.log 2>&1
 
 # Test the output
-grep "Hello Abaqus" ${input}.log 
-grep "COMPLETED SUCCESSFULLY" ${input}.sta
+grep "Hello Abaqus" ${job}.log 
+grep "COMPLETED SUCCESSFULLY" ${job}.sta
+
+# Check commands with expected error codes
+set +e
+error_pattern='ERROR'
+error_matches=$(grep ${error_pattern} ${job}.log)
+if [ ! -z "${error_matches}" ]; then
+    echo "Found errors in ${job}.log"
+    echo "${error_matches}"
+    exit 5
+else
+    echo "No '${error_pattern}' error pattern found in ${job}.log"
+fi
