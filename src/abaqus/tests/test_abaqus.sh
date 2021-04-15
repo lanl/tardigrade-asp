@@ -47,3 +47,15 @@ ${abaqus_program} -job ${input} -user ${user} -interactive >> ${input}.log 2>&1
 # Test the output
 grep "Hello Abaqus" ${input}.log 
 grep "COMPLETED SUCCESSFULLY" ${input}.sta
+
+# Check commands with expected error codes
+set +e
+error_pattern='ERROR'
+error_matches=$(grep ${error_pattern} ${input}.log)
+if [ ! -z "${error_matches}" ]; then
+    echo "Found errors in ${input}.log"
+    echo "${error_matches}"
+    exit 5
+else
+    echo "No '${error_pattern}' error pattern found in ${input}.log"
+fi
