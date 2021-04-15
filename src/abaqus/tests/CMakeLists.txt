@@ -1,5 +1,6 @@
 set(ABAQUS_TEST_NAME "test_abaqus_integration")
-add_custom_target(NAME ${ABAQUS_TEST_NAME})
+add_custom_target(${ABAQUS_TEST_NAME} ALL
+                  DEPENDS ${UMAT})
 # Copy abaqus source directory to build directory
 add_custom_command(TARGET ${ABAQUS_TEST_NAME} PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
