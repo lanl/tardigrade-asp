@@ -1,4 +1,4 @@
-set(ABAQUS_TEST_NAME "test_abaqus_integration_${PROJECT_NAME}")
+set(ABAQUS_TEST_NAME "test_abaqus_integration")
 add_custom_target(NAME ${ABAQUS_TEST_NAME})
 # Copy abaqus source directory to build directory
 add_custom_command(TARGET ${ABAQUS_TEST_NAME} PRE_BUILD
