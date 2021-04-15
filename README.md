@@ -487,9 +487,11 @@ $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 
 > :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
 >
-> The abaqus input files and bash scripts used for integration testing are not cleaned with this command. Changes to
-> those source files are also not handled by ``cmake3`` re-builds. Updates to these files must be manually cleaned between
-> changes.
+> The abaqus input files and bash scripts used for integration testing are built with the [CMake
+> ``add_custom_target``](https://cmake.org/cmake/help/latest/command/add_custom_target.html) feature. Consequently, the
+> integration tests are _always considered out of date_. The target integration test target copies all registered input
+> files and the integration test bash script from source to build directory. Input files are registered in the
+> ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake variable.
 
 ```
 $ pwd
@@ -508,6 +510,9 @@ $ pwd
 
 # Build c++ tests
 $ cmake3 --build src/cpp/tests
+
+# Build Abaqus integration tests
+$ cmake3 --build src/abaqus/tests
 ```
 
 5) Run the tests
