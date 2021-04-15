@@ -12,6 +12,11 @@ Internal Changes
   :pull:`26`). By `Kyle Brindley`_.
 - Minor cleanup to root directory files. Move configuration and environment files to a subdirectory (:jira:`544`,
   :pull:`26`). By `Kyle Brindley`_.
+- Add integration test CMake target for conditional rebuilds and file copy (:jira:`551`, :pull:`27`). By `Kyle
+  Brindley`_.
+- Add one ctest per abaqus input file (:jira:`551`, :pull:`27`). By `Kyle Brindley`_.
+- Accept paths for input file in integration test shell script and check for errors in the abaqus stdout/stderr log
+  (:jira:`551`, :pull:`27`). By `Kyle Brindley`_.
 
 0.0.3 (2021-04-13)
 ------------------
