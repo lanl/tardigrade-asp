@@ -9,11 +9,17 @@ set -Eeuxo pipefail
 script=`basename "$0"`
 
 # Parse arguments
-if [ "$#" -ne 1 ]; then
+processes=1
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
     echo "${script} USAGE:"
-    echo "./${script} CXX_compiler"
+    echo "./${script} CXX_compiler [processes]"
+    echo "  REQUIRED POSITIONAL ARGUMENTS"
     echo "    CXX_compiler: desired c++ compiler"
+    echo "  OPTIONAL POSITIONAL ARGUMENTS"
+    echo "    processes: number of processes for cmake build [default: 1]" 
     exit 1
+elif [ "$#" -eq 2 ]; then
+    processes=$2
 fi
 cxx_path=$1 #  Path to CXX compiler
 
@@ -45,4 +51,4 @@ rm -rf build/
 mkdir build
 cd build
 ${cmake_exec} ..
-${cmake_exec} --build . --verbose
+${cmake_exec} --build . --verbose --parallel ${processes}

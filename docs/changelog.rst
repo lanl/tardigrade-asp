@@ -17,6 +17,7 @@ Internal Changes
 - Add one ctest per abaqus input file (:jira:`551`, :pull:`27`). By `Kyle Brindley`_.
 - Accept paths for input file in integration test shell script and check for errors in the abaqus stdout/stderr log
   (:jira:`551`, :pull:`27`). By `Kyle Brindley`_.
+- Enable parallel CMake builds for continuous integration (CI) tests (:jira:`518`, :pull:`28`). By `Kyle Brindley`_.
 
 0.0.3 (2021-04-13)
 ------------------
