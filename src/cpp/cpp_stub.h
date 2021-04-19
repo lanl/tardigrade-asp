@@ -11,6 +11,7 @@
 
 #include<string>
 #include<iostream>
+#include<sstream>
 #include<vector>
 
 #include<abaqus_tools.h>
