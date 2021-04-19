@@ -31,6 +31,33 @@ namespace cppStub{
         return NULL;
     }
 
+    errorOut dummyMaterialModel( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
+                                 floatType &SCD,                  floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,       floatType &DRPLDT,
+                                 const floatVector &strain,       const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,    const floatType &TEMP,
+                                 const floatType &DTEMP,          const floatVector &predef,  const floatVector &dpred,  const std::string &cmname, const int &NDI,
+                                 const int &NSHR,                 const int &NTENS,           const int &NSTATV,         const floatVector &props,  const int &NPROPS,
+                                 const floatVector &coords,       const floatMatrix &drot,    floatType &PNEWDT,         const floatType &CELENT,   const floatMatrix &dfgrd0,
+                                 const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
+                                 const std::vector< int > &jstep, const int &KINC ){
+        /*!
+         * A template Abaqus c++ UMAT using c++ STL types. Variables in all caps reference ABAQUS FORTRAN
+         * memory directly. Variables in lower case are native c++ type conversions stored separately from the original
+         * ABAQUS FORTRAN memory.
+         */
+
+        //Call functions of constitutive model to do things
+        errorOut error = sayHello( "Abaqus" );
+
+        //Error handling
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when calling sayHello" );
+            result->addNext( error );
+            return result;
+        }
+
+        return NULL;
+    }
+
     void abaqusInterface( double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
                           double &SCD,          double &RPL,          double *DDSDDT,       double *DRPLDE,       double &DRPLDT,
                           const double *STRAN,  const double *DSTRAN, const double *TIME,   const double &DTIME,  const double &TEMP,
@@ -120,33 +147,6 @@ namespace cppStub{
         //Arrays require vector of vector to column major conversion
         abaqusTools::rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
 
-    }
-
-    errorOut dummyMaterialModel( floatVector &stress,             floatVector &statev,        floatMatrix &ddsdde,       floatType &SSE,            floatType &SPD,
-                                 floatType &SCD,                  floatType &RPL,             floatVector &ddsddt,       floatVector &drplde,       floatType &DRPLDT,
-                                 const floatVector &strain,       const floatVector &dstrain, const floatVector &time,   const floatType &DTIME,    const floatType &TEMP,
-                                 const floatType &DTEMP,          const floatVector &predef,  const floatVector &dpred,  const std::string &cmname, const int &NDI,
-                                 const int &NSHR,                 const int &NTENS,           const int &NSTATV,         const floatVector &props,  const int &NPROPS,
-                                 const floatVector &coords,       const floatMatrix &drot,    floatType &PNEWDT,         const floatType &CELENT,   const floatMatrix &dfgrd0,
-                                 const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
-                                 const std::vector< int > &jstep, const int &KINC ){
-        /*!
-         * A template Abaqus c++ UMAT using c++ STL types. Variables in all caps reference ABAQUS FORTRAN
-         * memory directly. Variables in lower case are native c++ type conversions stored separately from the original
-         * ABAQUS FORTRAN memory.
-         */
-
-        //Call functions of constitutive model to do things
-        errorOut error = sayHello( "Abaqus" );
-
-        //Error handling
-        if ( error ){
-            errorOut result = new errorNode( __func__, "Error when calling sayHello" );
-            result->addNext( error );
-            return result;
-        }
-
-        return NULL;
     }
 
 }
