@@ -15,10 +15,10 @@ namespace cppStub{
     const int spatialDimensions = 3;
 
     /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
-    const int nStateVariables = 1;
+    const int nStateVariables = 2;
 
     /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
-    const int nMaterialParameters = 1;
+    const int nMaterialParameters = 2;
 
     /// Say hello
     /// @param message The message to print

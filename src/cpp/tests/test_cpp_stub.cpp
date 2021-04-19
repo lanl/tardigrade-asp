@@ -62,8 +62,8 @@ BOOST_AUTO_TEST_CASE( testAbaqusInterface ){
     int NDI = 3;
     int NSHR = 3;
     int NTENS = 6;
-    int NSTATV = 1;
-    int NPROPS = 1;
+    int NSTATV = 2;
+    int NPROPS = 2;
     int NOEL = int_scalar;
     int NPT = int_scalar;
     int LAYER = int_scalar;
