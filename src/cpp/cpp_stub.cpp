@@ -22,7 +22,7 @@ namespace cppStub{
 
     /// Say hello
     /// @param message The message to print
-    errorOut sayHello(std::string message) {
+    errorOut sayHello( std::string message ) {
         if ( message.compare( "George" ) == 0 ){
             errorOut result = new errorNode( __func__, "ERROR: George is a wolf in sheep's clothing!");
             return result;
