@@ -37,6 +37,12 @@ build directory, e.g. ``cpp_stub/build/_deps/{error,vector,stress,solver,constit
 Input File Material Definition
 ******************************
 
+.. warning::
+
+   Constitutive modeler health warning! The integration tests use a ``STATEV`` and ``PROPS`` length of one as the
+   "incorrect" lengths to check the thrown exceptions. If your real constitutive model actually using a length of one
+   for either vector, the integration test expectation must be updated.
+
 cpp_stub requires 2 material constants and 2 state variables. The c++ cpp_stub interface, material constants, and state
 variables are described in the :ref:`sphinx_api`. The fixed expectations for the abaqus interface are defined in the
 "Variables" section of the :ref:`sphinx_api` for :ref:`cpp_stub_source`. A complete discussion about the constants and their
