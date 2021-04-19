@@ -6,6 +6,10 @@ Changelog
 0.0.4 (unreleased)
 ------------------
 
+Documentation
+~~~~~~~~~~~~~
+- Clarify behavior for custom target for the integration tests (:jira:`557`, :pull:`29`). By `Kyle Brindley`_.
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 - Update Jenkins CI configuration to build and test for PRs to both ``master`` and ``dev`` branches (:jira:`544`,
