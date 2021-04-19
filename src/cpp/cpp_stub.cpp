@@ -39,8 +39,8 @@ namespace cppStub{
      * model's expected input, handles tensor shape changes, and calls a c++ material model.
      */
 
-    //Define the tensor spatial dimensions
-    const int spatialDimensions = 3;
+    //Provide a variable string message for error nodes
+    std::ostringstream message;
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
