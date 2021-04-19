@@ -4,6 +4,7 @@ find_package(Sphinx REQUIRED)
 # Find all the public headers
 set(PROJECT_PUBLIC_HEADER_DIR ${PROJECT_SOURCE_DIR}/${CPP_SRC_PATH})
 file(GLOB_RECURSE PROJECT_PUBLIC_HEADERS ${PROJECT_PUBLIC_HEADER_DIR}/*.h)
+file(GLOB_RECURSE PROJECT_SOURCE_FILES ${PROJECT_PUBLIC_HEADER_DIR}/*.cpp)
 
 # Set doxygen variables
 set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/${CPP_SRC_PATH})
@@ -18,14 +19,19 @@ configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
 # Create doxygen output and command
 file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
 add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
-                   DEPENDS ${PROJECT_PUBLIC_HEADERS}
+                   DEPENDS
+                       ${PROJECT_PUBLIC_HEADERS}
+                       ${PROJECT_SOURCE_FILES}
                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
                    MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
                    COMMENT "Generating ${PROJECT_NAME} docs"
                    VERBATIM)
 
 # Add doxygen target
-add_custom_target(Doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+add_custom_target(Doxygen ALL
+                  DEPENDS
+                      ${DOXYGEN_INDEX_FILE}
+                 )
 
 # Set sphinx variables
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
