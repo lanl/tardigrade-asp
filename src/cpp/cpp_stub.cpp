@@ -10,6 +10,16 @@
 
 namespace cppStub{
 
+    //Define cpp_stub global constants in a place that Doxygen can pick up for documentation
+    /** \brief Define the expected number of tensor spatial dimensions for the Abaqus interface. */
+    const int spatialDimensions = 3;
+
+    /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
+    const int nStateVariables = 2;
+
+    /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
+    const int nMaterialParameters = 2;
+
     /// Say hello
     /// @param message The message to print
     void sayHello(std::string message) {
@@ -29,8 +39,8 @@ namespace cppStub{
      * model's expected input, handles tensor shape changes, and calls a c++ material model.
      */
 
-    //Define the tensor spatial dimensions
-    const int spatialDimensions = 3;
+    //Provide a variable string message for error nodes
+    std::ostringstream message;
 
     //Map FORTRAN UMAT variables to C++ types as necessary. Use case sensitivity to distinguish.
     //TODO: Decide if case sensitive variable names is a terrible idea or not
@@ -53,6 +63,22 @@ namespace cppStub{
     const std::vector< std::vector< double > > drot = abaqusTools::columnToRowMajor( DROT, spatialDimensions, spatialDimensions );
     const std::vector< std::vector< double > > dfgrd0 = abaqusTools::columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
     const std::vector< std::vector< double > > dfgrd1 = abaqusTools::columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
+
+    //Verify number of state variables against cpp_stub expectations
+    if ( statev.size( ) != nStateVariables ){
+        message.clear();
+        message << "ERROR:" << __FILENAME__ << "." << __func__ << ": The cpp_stub Abaqus interface requires exactly "
+            << nStateVariables << " state variables. Found " << statev.size( ) << ".";
+        throw std::runtime_error( message.str( ) );
+    }
+
+    //Verify number of material parameters against cpp_stub expectations
+    if ( props.size( ) != nMaterialParameters ){
+        message.clear();
+        message << "ERROR:" << __FILENAME__ << "." << __func__ << ": The cpp_stub Abaqus interface requires exactly "
+            << nMaterialParameters << " material constants. Found " << props.size( ) << ".";
+        throw std::runtime_error( message.str( ) );
+    }
 
     //Call the constitutive model c++ interface
     if ( KINC == 1 && NOEL == 1 && NPT == 1 ){

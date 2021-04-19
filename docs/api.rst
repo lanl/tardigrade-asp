@@ -1,3 +1,5 @@
+.. _sphinx_api:
+
 #############
 |project| API
 #############
@@ -8,6 +10,8 @@
 
 .. toctree::
     :maxdepth: 2
+
+.. _cpp_stub_source:
 
 cpp_stub.cpp
 ============

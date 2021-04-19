@@ -24,9 +24,11 @@
 .. _`Gitflow Workflow`: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
 .. _`Gitting started with W-13 Bitbucket`: https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+Git+Server
 .. _`Granta STK`: https://int.lanl.gov/projects/W13docs/GrantaSTK/#t=streamlined%2Fwelcome_to_v2.htm
+.. _`Granta/MIMS`: http://grantami.lanl.gov/mi
 .. _`Jenkins`: https://jenkins.io/
 .. _`Jira`: https://www.atlassian.com/software/jira
 .. _`Material Models Bitbucket project`: https://xcp-stash.lanl.gov/projects/MM
+.. _`Material Database`: https://ddw-confluence.lanl.gov/display/MD/Material+Database
 .. _`Official ECMF Repo`: https://xcp-stash.lanl.gov/projects/ECMF/repos/ecmf/browse
 .. _`Python`: https://www.python.org/
 .. _`Python 3`: https://docs.python.org/3.6/

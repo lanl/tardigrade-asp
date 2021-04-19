@@ -44,6 +44,10 @@ Single element for debugging umats
 ***** USER SUBROUTINE(S) *****
 *USER MATERIAL, CONSTANTS=2, UNSYMM
 1., 1.
+*DEPVAR
+2
+1, "STATEV1_NAME", "STATEV1 DESCRIPTION"
+2, "STATEV2_NAME", "STATEV2 DESCRIPTION"
 **====================================================== BOUNDARY CONDITIONS ===
 *boundary,type=displacement
 INSTANCE-1.1, 1,3,0.0
