@@ -102,9 +102,12 @@ namespace cppStub{
 
         //Error handling
         if ( error ){
-            errorOut result = new errorNode( __func__, "Error when calling sayHello" );
+            message.clear();
+            message << "ERROR:" << __FILENAME__ << "." << __func__ << ": Error when calling dummyMaterialModel.";
+            errorOut result = new errorNode( __func__, message.str( ) );
             result->addNext( error );
-            error->print(true);
+            error->print( true );
+            throw std::runtime_error( message.str( ) );
         }
 
         //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
