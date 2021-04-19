@@ -29,6 +29,11 @@ Internal Changes
   function name to interrupt Abaqus execution on input errors (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
 - Add Abaqus interface unit tests for checking the ``STATEV`` and ``PROPS`` vector lengths (:jira:`575`, :pull:`31`). By
   `Kyle Brindley`_.
+- Add unit tests for error codes in ``cpp_stub::sayHello`` (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
+
+Enhancements
+~~~~~~~~~~~~
+- Add error reporting to the Abaqus interface from the ``error_tools`` package (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
 
 0.0.3 (2021-04-13)
 ------------------
