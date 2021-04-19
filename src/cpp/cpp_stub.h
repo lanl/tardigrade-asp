@@ -9,6 +9,8 @@
 #ifndef CPP_STUB_H
 #define CPP_STUB_H
 
+#include<sstream>
+
 #include<error_tools.h>
 #include<abaqus_tools.h>
 
