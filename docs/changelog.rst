@@ -9,6 +9,7 @@ Changelog
 Documentation
 ~~~~~~~~~~~~~
 - Clarify behavior for custom target for the integration tests (:jira:`557`, :pull:`29`). By `Kyle Brindley`_.
+- Add template documentation for the Abaqus material input definition (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -24,6 +25,10 @@ Internal Changes
 - Enable parallel CMake builds for continuous integration (CI) tests (:jira:`518`, :pull:`28`). By `Kyle Brindley`_.
 - Add c++ source files ``*.cpp`` as dependencies for the Doxygen CMake target (:jira:`569`, :pull:`30`). By `Kyle
   Brindley`_.
+- Add checks for ``STATEV`` and ``PROPS`` vector lengths to the abaqus interface. Throw exceptions with file and
+  function name to interrupt Abaqus execution on input errors (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
+- Add Abaqus interface unit tests for checking the ``STATEV`` and ``PROPS`` vector lengths (:jira:`575`, :pull:`31`). By
+  `Kyle Brindley`_.
 
 0.0.3 (2021-04-13)
 ------------------
