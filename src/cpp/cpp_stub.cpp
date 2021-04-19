@@ -10,6 +10,16 @@
 
 namespace cppStub{
 
+    //Define VIPor global constants in a place that Doxygen can pick up for documentation
+    /** \brief Define the expected number of tensor spatial dimensions for the Abaqus interface. */
+    const int spatialDimensions = 3;
+
+    /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
+    const int nStateVariables = 1;
+
+    /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
+    const int nMaterialParameters = 1;
+
     /// Say hello
     /// @param message The message to print
     void sayHello(std::string message) {
