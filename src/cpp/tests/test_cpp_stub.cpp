@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE( testAbaqusInterface ){
     double* DFGRD1 = dfgrd1.data( );
 
     //Sign of life test. Just run to see if any exceptions are thrown.
-    cpp_stub::abaqusInterface(
+    cppStub::abaqusInterface(
         STRESS, STATEV, DDSDDE, SSE,    SPD,
         SCD,    RPL,    DDSDDT, DRPLDE, DRPLDT,
         STRAN,  DSTRAN, TIME,   DTIME,  TEMP,
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE( testAbaqusInterface ){
     double* STATEV_incorrect = temp.data( );
     int NSTATV_incorrect = temp.size( );
     BOOST_CHECK_THROW(
-        cpp_stub::abaqusInterface(
+        cppStub::abaqusInterface(
            STRESS, STATEV_incorrect, DDSDDE,           SSE,    SPD,
            SCD,    RPL,              DDSDDT,           DRPLDE, DRPLDT,
            STRAN,  DSTRAN,           TIME,             DTIME,  TEMP,
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE( testAbaqusInterface ){
     int NPROPS_incorrect = temp.size( );
 
     BOOST_CHECK_THROW(
-        cpp_stub::abaqusInterface(
+        cppStub::abaqusInterface(
            STRESS, STATEV, DDSDDE, SSE,             SPD,
            SCD,    RPL,    DDSDDT, DRPLDE,          DRPLDT,
            STRAN,  DSTRAN, TIME,   DTIME,           TEMP,
