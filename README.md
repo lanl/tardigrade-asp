@@ -489,9 +489,15 @@ $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 >
 > The abaqus input files and bash scripts used for integration testing are built with the [CMake
 > ``add_custom_target``](https://cmake.org/cmake/help/latest/command/add_custom_target.html) feature. Consequently, the
-> integration tests are _always considered out of date_. The target integration test target copies all registered input
-> files and the integration test bash script from source to build directory. Input files are registered in the
-> ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake variable.
+> integration test target is _always considered out of date_. The integration test target copies all registered input
+> files and the integration test bash script from source to build directory. This means the file copy operation is
+> always performed when the integration test target is requested in the cmake build command, e.g. ``cmake --build .`` or
+> ``cmake --build src/abaqus/tests``. This operation is computationally inexpensive with respect to building the VIPor
+> source code.
+>
+> Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake
+> variable.
+
 
 ```
 $ pwd
