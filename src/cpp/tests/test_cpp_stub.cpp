@@ -12,6 +12,9 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/output_test_stream.hpp>
 
+typedef errorTools::Node errorNode; //!< Redefinition for the error node
+typedef errorNode* errorOut; //!< Redefinition for a pointer to the error node
+
 struct cout_redirect{
     cout_redirect( std::streambuf * new_buffer)
         : old( std::cout.rdbuf( new_buffer ) )
@@ -30,19 +33,32 @@ BOOST_AUTO_TEST_CASE( testSayHello ){
      * Test message printed to stdout in sayHello function
      */
 
+    //Setup redirect variables for stdout
     std::stringbuf buffer;
     cout_redirect rd(&buffer);
+    boost::test_tools::output_test_stream result;
 
-    std::string message = "World!";
-    boost::test_tools::output_test_stream result; 
-    {
-        cout_redirect guard( result.rdbuf() );
-        cppStub::sayHello(message);
-    }
+    //Initialize test variables
+    std::string message;
+    std::string answer;
+    errorOut error = NULL;
 
-    std::string answer = "Hello World!\n";
+    cout_redirect guard( result.rdbuf() );
 
+    //Check normal operation
+    message = "World!";
+    answer = "Hello World!\n";
+    error = cppStub::sayHello(message);
+    BOOST_CHECK( ! error );
     BOOST_CHECK( result.is_equal( answer ) );
+
+    //Reset error code between tests
+    error = NULL;
+
+    //Check for "George" error
+    message = "George";
+    error = cppStub::sayHello(message);
+    BOOST_CHECK( error );
 
 }
 
