@@ -134,7 +134,10 @@ namespace cppStub{
             errorOut result = new errorNode( __func__, message.str( ) );
             result->addNext( error );
             error->print( true );
-            throw std::runtime_error( message.str( ) );
+            //If an error was thrown, but the ratio of new/current time increment is not updated, it was a fatal error.
+            if ( vectorTools::fuzzyEquals( PNEWDT, 1. ) ){
+                throw std::runtime_error( message.str( ) );
+            }
         }
 
         //Re-pack C++ objects into FORTRAN memory to return values to Abaqus
@@ -145,7 +148,7 @@ namespace cppStub{
         abaqusTools::rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
         abaqusTools::rowToColumnMajor( STATEV, statev, 1, NSTATV );
         //Arrays require vector of vector to column major conversion
-        abaqusTools::rowToColumnMajor(DDSDDE, ddsdde, spatialDimensions, spatialDimensions);
+        abaqusTools::rowToColumnMajor( DDSDDE, ddsdde, spatialDimensions, spatialDimensions );
 
     }
 
