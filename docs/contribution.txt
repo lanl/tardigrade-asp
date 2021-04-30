@@ -2,7 +2,8 @@
 Contribution Guidelines
 ***********************
 
-.. include:: md2rst.txt
+W-13 python projects, including the |project| project, use the Atlassian `Forking
+Workflow`_ and `Gitflow Workflow`_ models.
 
 Git Commit Message
 ==================
@@ -86,3 +87,83 @@ run.
 .. code:: bash
 
    sed -i 's/\([)}\]]\)\([)}\]]\)/\1 \2/g' <list of files to update>
+
+Pull Request Review Criteria
+============================
+
+When adding a new feature (with moderate to high complexity), even before
+creating a pull request, the developer should:
+
+1. Decide on and document intended behavior before creating any branches used
+   for pull requests.  Depending upon complexity, `xcp-jira`_ or `xcp-confluence`_
+   can be used, where `xcp-confluence`_ is recommended for broader discussion
+   prior to implementation.
+2. Discuss challenging features with other developers before implementation in
+   a pull request.
+
+Pull request reviewers are advised to
+
+1. Schedule a Skype/WebEx meeting with |project| developers to discuss improvement
+   before negatively commenting on the online pull request.
+2. Use general guidelines (below) to help structure edifying criticisms.
+
+The following items are general topic recommendations for pull request reviews:
+
+* High-level needs
+
+   - Verify that PR is tied to correct Jira task
+   - User story assumptions make sense
+
+* Documentation
+
+   - The HTML documentation matches feature additions, changes, or updates
+   - New modules have doc strings
+   - Changes to methods, and especially classes, have updated doc strings that parse well
+     to html pages
+   - Comments applied for complex blocks
+   - Missing tutorials or tests in code are documented by a relevant `xcp-jira`_ issue
+
+* Regression and integration (unit) testing
+
+   - Pytests and/or BOOST tests implemented and updated for corresponding feature
+   - Mocker objects in tests where appropriate 
+   - Integration tests for new models acceptable
+
+* Platform independence
+
+   - Paths are OS agnostic
+   - No new warnings on release and beta environments
+
+* Code performance
+
+   - Check for appropriate algorithmic efficiency (e.g., O(N log N) vs O(N^3))
+   - Vectorization used instead of spurious loops
+   - Use of Python built-in functions or common packages as appropriate
+
+* Reasonable style
+
+   - C++ style matching existing code
+   - "Pythonic" code
+   - PEP8 formatting
+   - No executable code is commented out
+   - No hardcoded variables outside of settings/configuration
+
+* General questions to ask
+
+   - Is this minimal code?
+   - Are there additional Jira tasks needed for follow-on work?
+   - Are there enough tests to ensure the code does what is expected?
+
+* Making breaking changes
+
+   - Is the breaking change necessary?
+   - Is backwards compatibility maintained?
+   - Will the old behavior be deprecated? In what version?
+   - Is there a Jira issue with details on how to deprecate the old behavior?
+   - Is the deprecation Jira issue linked to the appropriate unreleased version?
+
+* Appropriate entry in :ref:`changelog`
+
+   - Is entry under correct heading?
+   - Does it include a short description?
+   - Is the pull request number and link included?

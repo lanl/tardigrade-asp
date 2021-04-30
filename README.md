@@ -310,7 +310,13 @@ This section has a corresponding section in the formatted and hyperlinked html
 documentation. Build and view instructions are included in following sections,
 separated from project setup by horizontal bars.
 
-See ``jenkins_job_creation.md`` in this repo.
+See ``docs/jenkins_job_creation.md`` in this repo.
+
+A quick build of just the jenkins markdown file can be performed with ``pandoc``
+
+    $ pwd
+    /path/to/local/cpp_stub
+    $ pandoc docs/jenkins_job_creation.md -o jenkins_job_creation.html
 
 ## Version control for a Jenkins job
 
@@ -318,7 +324,13 @@ This section has a corresponding section in the formatted and hyperlinked html
 documentation. Build and view instructions are included in following sections,
 separated from project setup by horizontal bars.
 
-See ``jenkins_job_xml.md`` in this repo.
+See ``docs/jenkins_job_xml.md`` in this repo.
+
+A quick build of just the jenkins markdown file can be performed with ``pandoc``
+
+    $ pwd
+    /path/to/local/cpp_stub
+    $ pandoc docs/jenkins_job_xml.md -o jenkins_job_xml.html
 
 ---
 
