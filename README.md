@@ -264,8 +264,8 @@ You can also perform some cleanup in ``README.md`` to remove this walk-through.
 
 From here, the W-13 best practice workflow would return to the Bitbucket webpage
 and submit a Pull-Request from the ``feature/project-name-updates`` branch of
-"\<moniker\>/my_project" repository (a.k.a. fork or remote) to the ``dev`` branch
-of "Material Models/my_project" repository (a.k.a. upstream or official).
+``\<moniker\>/my_project`` repository (a.k.a. fork or remote) to the ``dev`` branch
+of ``Material Models/my_project`` repository (a.k.a. upstream or official).
 
 After updating your project by merging to the upstream repository, the fork
 syncing feature of Bitbucket will automatically update any identically named
