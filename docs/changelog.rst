@@ -10,6 +10,9 @@ Documentation
 ~~~~~~~~~~~~~
 - Clarify behavior for custom target for the integration tests (:jira:`557`, :pull:`29`). By `Kyle Brindley`_.
 - Add template documentation for the Abaqus material input definition (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
+- Major overhaul of documentation organization to single source the Jenkins setup information from markdown files.  Adds
+  the ``myst-parser`` Python package dependency and a pull request reviewer guide (:jira:`601`, :pull:`33`). By `Kyle
+  Brindley`_.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
