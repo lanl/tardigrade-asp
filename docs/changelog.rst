@@ -6,6 +6,10 @@ Changelog
 0.0.5 (unreleased)
 ------------------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+- Update markdown syntax in README for wider compatibility (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
+
 0.0.4 (2021-04-30)
 ------------------
 
