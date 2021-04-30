@@ -5,10 +5,17 @@ Welcome to |project|'s documentation!
 .. include:: project_brief.txt
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :caption: Project Setup
+   :maxdepth: 1
 
-   stub
+   bitbucket_setup
+   jenkins_job_creation
+   jenkins_job_xml
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Project Documentation
+
    user
    theory
    devops
@@ -17,10 +24,12 @@ Welcome to |project|'s documentation!
    api
    zreferences
 
-==================
-Indices and tables
-==================
+.. only:: html
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   ##################
+   Indices and tables
+   ##################
+   
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`

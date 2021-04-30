@@ -43,18 +43,17 @@ set(DOCUMENTATION_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
     ${CMAKE_CURRENT_SOURCE_DIR}/api.rst
     ${CMAKE_CURRENT_SOURCE_DIR}/changelog.rst
-    ${CMAKE_CURRENT_SOURCE_DIR}/bitbucket_setup.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/bitbucket_setup.rst
     ${CMAKE_CURRENT_SOURCE_DIR}/build.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/contribution.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/devops.rst
-    ${CMAKE_CURRENT_SOURCE_DIR}/jenkins_pr_builder.txt
+    ${CMAKE_CURRENT_SOURCE_DIR}/jenkins_job_creation.md
     ${CMAKE_CURRENT_SOURCE_DIR}/jenkins_job_xml.md
     ${CMAKE_CURRENT_SOURCE_DIR}/md2rst.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/project_brief.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/release_philosophy.rst
-    ${CMAKE_CURRENT_SOURCE_DIR}/stub.rst
     ${CMAKE_CURRENT_SOURCE_DIR}/targets.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/theory.rst
     ${CMAKE_CURRENT_SOURCE_DIR}/user.rst
