@@ -1,6 +1,6 @@
-=====================================
-Welcome to |project|'s documentation!
-=====================================
+#########################
+|project|'s Documentation
+#########################
 
 .. include:: project_brief.txt
 
