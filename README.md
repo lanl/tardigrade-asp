@@ -38,54 +38,44 @@ Bitbucket](https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+
 2. Copy the ssh url from the Bitbucket "Clone" button on the Bitbucket
    repository web page. It should look like the following:
 
-```
-ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
-```
+       ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
 
 3. Navigate to your preferred repository directory in a terminal or use the
    example commands below
 
-```
-$ ssh -X sstelmo.lanl.gov
-$ pwd
-/home/<moniker>
-$ mkdir -p /projects/$USER/w13repos
-$ cd /projects/$USER/w13repos
-$ pwd
-/projects/<moniker>/w13repos
-```
+       $ ssh -X sstelmo.lanl.gov
+       $ pwd
+       /home/<moniker>
+       $ mkdir -p /projects/$USER/w13repos
+       $ cd /projects/$USER/w13repos
+       $ pwd
+       /projects/<moniker>/w13repos
 
 4. Clone the stub repository using the url copied in step 2.
 
-```
-$ pwd
-/projects/<moniker>/w13repos
-$ git clone ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
-```
+       $ pwd
+       /projects/<moniker>/w13repos
+       $ git clone ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
 
 5. Rename the local repository directory for your project.
 
-```
-$ pwd
-/projects/<moniker>/w13repos
-$ ls cpp_stub -d
-cpp_stub
-$ mv cpp_stub my_project
-$ ls cpp_stub -d
-ls: cannot access 'cpp_stub': No such file or directory
-$ mv cpp_stub my_project
-my_project
-```
+       $ pwd
+       /projects/<moniker>/w13repos
+       $ ls cpp_stub -d
+       cpp_stub
+       $ mv cpp_stub my_project
+       $ ls cpp_stub -d
+       ls: cannot access 'cpp_stub': No such file or directory
+       $ mv cpp_stub my_project
+       my_project
 
 6. Change to your project's repository directory
 
-```
-$ pwd
-/projects/<moniker>/w13repos
-$ cd my_project
-$ pwd
-/projects/<moniker>/w13repos/my_project
-```
+       $ pwd
+       /projects/<moniker>/w13repos
+       $ cd my_project
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
 
 ### Create a new repository on Bitbucket
 
@@ -102,13 +92,11 @@ $ pwd
 
 4. Follow the "My code is already tracked by Git" instructions.
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-$ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/mm/my_project.git
-$ git push -u origin --all
-$ git push origin --tags
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/mm/my_project.git
+       $ git push -u origin --all
+       $ git push origin --tags
 
 5. Refresh the Bitbucket webpage and verify that the repository code was pushed
    correctly. You should see a list of source files and this Bitbucket parsed
@@ -178,22 +166,18 @@ The final repo setup step is to update the remote url of the local clone of
 ``my_project``.  We will return to the terminal session.
 
 1. Copy the url of your "remote" repository from the Bitbucket webpage. It
-should look like:
+   should look like:
 
-```
-ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
-```
+       ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
 
 2. Return to your terminal session and update the remote repository for the
    final time.
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-$ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
-$ git push -u origin --all
-$ git push origin --tags
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
+       $ git push -u origin --all
+       $ git push origin --tags
 
 ### Update project name throughout repository
 
@@ -210,81 +194,71 @@ $ git push origin --tags
 
 1. Create a feature branch for your project name updates
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-$ git checkout -b feature/project-name-updates
-$ git branch
-  dev
-* feature/project-name-updates
-  master
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       $ git checkout -b feature/project-name-updates
+       $ git branch
+         dev
+       * feature/project-name-updates
+         master
 
 2. Search for all instances of ``cpp_stub``. The list of occurrences will look
    quite long, but we can search and replace with ``sed`` to avoid manual file
    edits.
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-
-# Recursive, case-insensitive search and count occurrences
-$ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
-57
-
-# Recursive, case-insensitive search and display
-$ grep -ri cpp_stub . --exclude-dir={build,.git}
-...
-
-# Clean list of files with project name
-$ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-./CMakeLists.txt
-./docs/api.rst
-./docs/devops.rst
-./README.md
-./set_vars.sh
-./src/cpp/cpp_stub.cpp
-./src/cpp/cpp_stub.h
-./src/cpp/tests/test_cpp_stub.cpp
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       
+       # Recursive, case-insensitive search and count occurrences
+       $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+       57
+       
+       # Recursive, case-insensitive search and display
+       $ grep -ri cpp_stub . --exclude-dir={build,.git}
+       ...
+       
+       # Clean list of files with project name
+       $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+       ./CMakeLists.txt
+       ./docs/api.rst
+       ./docs/devops.rst
+       ./README.md
+       ./set_vars.sh
+       ./src/cpp/cpp_stub.cpp
+       ./src/cpp/cpp_stub.h
+       ./src/cpp/tests/test_cpp_stub.cpp
 
 3. Search and replace from command line
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-
-# Replace lower case occurrences in place
-$ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
-$ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-./src/cpp/cpp_stub.h
-
-# Replace upper case occurrences in place
-$ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       
+       # Replace lower case occurrences in place
+       $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
+       $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+       ./src/cpp/cpp_stub.h
+       
+       # Replace upper case occurrences in place
+       $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
 
 4. Verify no more occurrences of project name ``cpp_stub``
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-$ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
-0
-$ grep -ri cpp_stub . --exclude-dir={build,.git}
-# no stdout to terminal because no files found
-$ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-# no stdout to terminal because no files found
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+       0
+       $ grep -ri cpp_stub . --exclude-dir={build,.git}
+       # no stdout to terminal because no files found
+       $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+       # no stdout to terminal because no files found
 
 5. Commit and push your changes to your "remote" or "fork" repository
 
-```
-$ pwd
-/projects/<moniker>/w13repos/my_project
-# Add tracked files and message
-$ git commit -a -m "FEAT: replace cpp_stub with my_project through repository"
-$ git push origin feature/project-name-updates
-```
+       $ pwd
+       /projects/<moniker>/w13repos/my_project
+       # Add tracked files and message
+       $ git commit -a -m "FEAT: replace cpp_stub with my_project through repository"
+       $ git push origin feature/project-name-updates
 
 You can also perform some cleanup in ``README.md`` to remove this walk-through.
 
@@ -362,9 +336,7 @@ documentation build are included in ``configuration_files/environment.yaml`` and
 documentation can be created from an existing anaconda installation with the
 following commands.
 
-```
-$ conda env create --file environment.yaml
-```
+    $ conda env create --file environment.yaml
 
 You can learn more about Anaconda Python environment creation and management in
 the [Anaconda
@@ -400,29 +372,27 @@ insall Eigen to your home directory in ``$HOME/.local/include`` or
 
 [Reference](https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed)
 
-```
-# Create personal include file directory
-$ pwd
-/home/$USER
-$ mkdir -p .local/include
-# Move to repository directory
-$ cd /preferred/path/to/repos
-# Example
-$ pwd
-/projects/$USER/w13repos
-# Clone eigen
-$ git clone https://gitlab.com/libeigen/eigen.git
-$ cd eigen
-$ git checkout 3.3.7
-# Create build directory
-$ mkdir build
-$ cd build
-# OPTIONAL. Set c++ compiler separate from system default
-$ export CXX=$(command -v g++)
-# Build eigen
-$ cmake3 .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
-$ make install
-```
+    # Create personal include file directory
+    $ pwd
+    /home/$USER
+    $ mkdir -p .local/include
+    # Move to repository directory
+    $ cd /preferred/path/to/repos
+    # Example
+    $ pwd
+    /projects/$USER/w13repos
+    # Clone eigen
+    $ git clone https://gitlab.com/libeigen/eigen.git
+    $ cd eigen
+    $ git checkout 3.3.7
+    # Create build directory
+    $ mkdir build
+    $ cd build
+    # OPTIONAL. Set c++ compiler separate from system default
+    $ export CXX=$(command -v g++)
+    # Build eigen
+    $ cmake3 .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
+    $ make install
 
 ---
 
@@ -439,113 +409,97 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
 1) Activate the correct python environment
 
-```
-$ module load python/2019.10-python-3.7
-$ sv3r
-```
+       $ module load python/2019.10-python-3.7
+       $ sv3r
 
 2) Create a build directory
 
-```
-$ pwd
-/path/to/cpp_stub/
-
-$ mkdir build
-$ cd build
-```
+       $ pwd
+       /path/to/cpp_stub/
+       
+       $ mkdir build
+       $ cd build
 
 3) Configure ``cmake3``
 
-> This step only needs to be performed once unless you need to specify a new CMake configuration for a re-build. Most
-> command line arguments and environment variables are stored in the CMake cache. Anything found in cache will not be
-> re-configured unless you remove the cache file or clobber the build directory.
+   > This step only needs to be performed once unless you need to specify a new CMake configuration for a re-build. Most
+   > command line arguments and environment variables are stored in the CMake cache. Anything found in cache will not be
+   > re-configured unless you remove the cache file or clobber the build directory.
 
-```
-$ pwd
-/path/to/cpp_stub/build
-$ cmake3 ..
-```
+       $ pwd
+       /path/to/cpp_stub/build
+       $ cmake3 ..
 
 4) Build various portions of the project
 
-> Most of the project will re-build only as necessary after source updates. Some portions of the documentation
-> require a ``make clean`` after documentation source file updates to force a re-build.
+   > Most of the project will re-build only as necessary after source updates. Some portions of the documentation
+   > require a ``make clean`` after documentation source file updates to force a re-build.
 
-```
-$ pwd
-/path/to/cpp_stub/build
-
-# Build everything
-$ cmake3 --build .
-
-# Build only the c++ primary libraries
-$ cmake3 --build src/cpp
-```
+       $ pwd
+       /path/to/cpp_stub/build
+       
+       # Build everything
+       $ cmake3 --build .
+       
+       # Build only the c++ primary libraries
+       $ cmake3 --build src/cpp
 
 5) Locate build files
 
-> The build directory structure may change between version releases. Developers and users are encouraged to become
-> familiar with the bash ``find``, ``grep``, and ``tree`` commands to locate build files.
+   > The build directory structure may change between version releases. Developers and users are encouraged to become
+   > familiar with the bash ``find``, ``grep``, and ``tree`` commands to locate build files.
 
-```
-$ pwd
-/path/to/cpp_stub/build
-
-# find c++ libraries and ignore intermediate files with similar extensions
-$ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
-```
+       $ pwd
+       /path/to/cpp_stub/build
+       
+       # find c++ libraries and ignore intermediate files with similar extensions
+       $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 
 6) Clean build directory to force a re-build
 
-> :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
->
-> The abaqus input files and bash scripts used for integration testing are built with the [CMake
-> ``add_custom_target``](https://cmake.org/cmake/help/latest/command/add_custom_target.html) feature. Consequently, the
-> integration test target is _always considered out of date_. The integration test target copies all registered input
-> files and the integration test bash script from source to build directory. This means the file copy operation is
-> always performed when the integration test target is requested in the cmake build command, e.g. ``cmake --build .`` or
-> ``cmake --build src/abaqus/tests``. This operation is computationally inexpensive with respect to building the VIPor
-> source code.
->
-> Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake
-> variable.
+   > :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
+   >
+   > The abaqus input files and bash scripts used for integration testing are built with the [CMake
+   > ``add_custom_target``](https://cmake.org/cmake/help/latest/command/add_custom_target.html) feature. Consequently, the
+   > integration test target is _always considered out of date_. The integration test target copies all registered input
+   > files and the integration test bash script from source to build directory. This means the file copy operation is
+   > always performed when the integration test target is requested in the cmake build command, e.g. ``cmake --build .`` or
+   > ``cmake --build src/abaqus/tests``. This operation is computationally inexpensive with respect to building the VIPor
+   > source code.
+   >
+   > Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake
+   > variable.
 
 
-```
-$ pwd
-/path/to/cpp_stub/build
-
-$ make clean
-```
+       $ pwd
+       /path/to/cpp_stub/build
+       
+       $ make clean
 
 ### Test on sstelmo
 
 4) Build tests of the project
 
-```
-$ pwd
-/path/to/cpp_stub/build
-
-# Build c++ tests
-$ cmake3 --build src/cpp/tests
-
-# Build Abaqus integration tests
-$ cmake3 --build src/abaqus/tests
-```
+       $ pwd
+       /path/to/cpp_stub/build
+       
+       # Build c++ tests
+       $ cmake3 --build src/cpp/tests
+       
+       # Build Abaqus integration tests
+       $ cmake3 --build src/abaqus/tests
 
 5) Run the tests
 
-```
-$ pwd
-/path/to/cpp_stub/build
-
-# Run ctest
-$ ctest
-
-# Results print to screen
-# View details of most recent test execution including failure messages
-$ less Testing/Temporary/LastTest.log
-```
+       $ pwd
+       /path/to/cpp_stub/build
+       
+       # Run ctest
+       $ ctest
+       
+       # Results print to screen
+       # View details of most recent test execution including failure messages
+       $ less Testing/Temporary/LastTest.log
 
 ### Convenience build wrappers
 
@@ -559,42 +513,37 @@ configuration from scratch.
 
 2) Build everything and run tests
 
-```
-$ pwd
-/path/to/cpp_stub/
-
-# Just perform the build (pick one)
-$ ./new_build.sh <cxx compiler>
-$ ./new_build.sh c++
-$ ./new_build.sh g++
-$ ./new_build.sh icpc
-
-# Perform tests from PWD
-$ ./build/src/cpp/tests/test_cpp_stub
-
-# Build and perform tests
-$ ./jenkins_build.sh
-```
+       $ pwd
+       /path/to/cpp_stub/
+       
+       # Just perform the build (pick one)
+       $ ./new_build.sh <cxx compiler>
+       $ ./new_build.sh c++
+       $ ./new_build.sh g++
+       $ ./new_build.sh icpc
+       
+       # Perform tests from PWD
+       $ ./build/src/cpp/tests/test_cpp_stub
+       
+       # Build and perform tests
+       $ ./jenkins_build.sh
 
 3) View test results
-```
-# As built directly to PWD
-$ cat results.tex
 
-# As built by jenkins_build.sh
-$ cat build/src/cpp/tests/*_results.tex
-$ cat *results.tex
-```
+       # As built directly to PWD
+       $ cat results.tex
+       
+       # As built by jenkins_build.sh
+       $ cat build/src/cpp/tests/*_results.tex
+       $ cat *results.tex
 
 4) Display docs
 
-```
-# Sphinx
-$ firefox build/docs/sphinx/index.html &
-
-# Doxygen
-$ firefox build/docs/doxygen/html/index.html &
-```
+       # Sphinx
+       $ firefox build/docs/sphinx/index.html &
+       
+       # Doxygen
+       $ firefox build/docs/doxygen/html/index.html &
 
 ### Building the documentation
 
@@ -610,48 +559,36 @@ To build just the documentation pick up the steps here:
 
 2) Create the build directory and move there
 
-```
-$ pwd
-/path/to/cpp_stub/
-$ mkdir build/
-$ cd build/
-```
+       $ pwd
+       /path/to/cpp_stub/
+       $ mkdir build/
+       $ cd build/
 
 3) Run cmake3 configuration
 
-```
-$ pwd
-/path/to/cpp_stub/build/
-$ cmake3 ..
-```
+       $ pwd
+       /path/to/cpp_stub/build/
+       $ cmake3 ..
 
 4) Build the docs
 
-```
-$ cmake3 --build docs
-```
+       $ cmake3 --build docs
 
 5) Documentation builds to:
 
-```
-cpp_stub/build/docs/sphinx/index.html
-```
+       cpp_stub/build/docs/sphinx/index.html
 
 6) Display docs
 
-```
-$ pwd
-/path/to/cpp_stub/build/
-$ firefox docs/sphinx/index.html &
-```
+       $ pwd
+       /path/to/cpp_stub/build/
+       $ firefox docs/sphinx/index.html &
 
 7) While the Sphinx API is still a WIP, try the doxygen API
 
-```
-$ pwd
-/path/to/cpp_stub/build/
-$ firefox docs/doxygen/html/index.html &
-```
+       $ pwd
+       /path/to/cpp_stub/build/
+       $ firefox docs/doxygen/html/index.html &
 
 ---
 
@@ -673,11 +610,9 @@ Begin Git commit messages with one of the following headings:
 
 For example:
 
-```
-git commit -m "FEAT: short intent of new feature"
-git commit -m "BUG: fixes nasty bug"
-git commit -m "DOC: adds documentation for feature"
-```
+    git commit -m "FEAT: short intent of new feature"
+    git commit -m "BUG: fixes nasty bug"
+    git commit -m "DOC: adds documentation for feature"
 
 ### Git Branch Names
 
@@ -705,6 +640,7 @@ notable exceptions to the notional PEP-8 fall back:
    required for automated, API from source documentation.
 2. This project prefers expansive whitespace surrounding parentheses, braces, and
    brackets.
+
    * No leading space between a function and the argument list.
    * One space following an open paranthesis ``(``, brace ``{``, or bracket
      ``[``
@@ -712,9 +648,7 @@ notable exceptions to the notional PEP-8 fall back:
 
 An example of the whitespace style:
 
-```
-my_function( arg1, { arg2, arg3 }, arg4 );
-```
+    my_function( arg1, { arg2, arg3 }, arg4 );
 
 The following ``sed`` commands may be useful for updating white space, but must
 be used with care. The developer is recommended to use a unique git commit
@@ -723,18 +657,12 @@ run.
 
 * Trailing space for open paren/brace/bracket
 
-```
-sed -i 's/\([({[]\)\([^ ]\)/\1 \2/g' <list of files to update>
-```
+      sed -i 's/\([({[]\)\([^ ]\)/\1 \2/g' <list of files to update>
 
 * Leading space for close paren/brace/bracket
 
-```
-sed -i 's/\([^ ]\)\([)}\]]\)/\1 \2/g' <list of files to update>
-```
+      sed -i 's/\([^ ]\)\([)}\]]\)/\1 \2/g' <list of files to update>
 
 * White space between adjacent paren/brace/bracket
 
-```
-sed -i 's/\([)}\]]\)\([)}\]]\)/\1 \2/g' <list of files to update>
-```
+      sed -i 's/\([)}\]]\)\([)}\]]\)/\1 \2/g' <list of files to update>
