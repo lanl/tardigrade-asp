@@ -51,7 +51,7 @@ def setup(app):
     app.add_css_file('custom.css')
 
 # Add any Sphinx extension module names here, as strings.
-extensions = ["breathe", 'sphinxcontrib.bibtex', 'sphinx.ext.extlinks']
+extensions = ["breathe", 'sphinxcontrib.bibtex', 'sphinx.ext.extlinks', 'myst_parser']
 bibtex_bibfiles = ['software.bib']
 
 # Breathe Configuration

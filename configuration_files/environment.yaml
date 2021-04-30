@@ -1,10 +1,11 @@
 name: environment
 channels:
   - defaults
+  - conda-forge
 dependencies:
+  - breathe>=4.18.1
+  - myst-parser
   - python>=3.7
   - sphinx>=3.0.4
   - sphinx_rtd_theme>=0.4.3
   - pip
-  - pip:
-    - --requirement requirements.txt

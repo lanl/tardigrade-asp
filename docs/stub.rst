@@ -6,4 +6,8 @@ Project setup
 
 .. include:: jenkins_pr_builder.txt
 
-.. include:: jenkins_version_control.txt
+.. toctree::
+   :caption: Jenkins Setup
+   :maxdepth: 1
+
+   jenkins_job_xml.md
