@@ -310,7 +310,13 @@ This section has a corresponding section in the formatted and hyperlinked html
 documentation. Build and view instructions are included in following sections,
 separated from project setup by horizontal bars.
 
-See ``jenkins_job_creation.md`` in this repo.
+See ``docs/jenkins_job_creation.md`` in this repo.
+
+A quick build of just the jenkins markdown file can be performed with ``pandoc``
+
+    $ pwd
+    /path/to/local/cpp_stub
+    $ pandoc docs/jenkins_job_creation.md -o jenkins_job_creation.html
 
 ## Version control for a Jenkins job
 
@@ -318,7 +324,13 @@ This section has a corresponding section in the formatted and hyperlinked html
 documentation. Build and view instructions are included in following sections,
 separated from project setup by horizontal bars.
 
-See ``jenkins_job_xml.md`` in this repo.
+See ``docs/jenkins_job_xml.md`` in this repo.
+
+A quick build of just the jenkins markdown file can be performed with ``pandoc``
+
+    $ pwd
+    /path/to/local/cpp_stub
+    $ pandoc docs/jenkins_job_xml.md -o jenkins_job_xml.html
 
 ---
 
@@ -345,8 +357,8 @@ See ``jenkins_job_xml.md`` in this repo.
 * [sphinx\_rtd\_theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/) >= 0.4.3
 
 For convenience, the minimal Python environment requirements for the
-documentation build are included in ``environment.yaml`` and
-``requirements.txt``. A minimal anaconda environment for building the
+documentation build are included in ``configuration_files/environment.yaml`` and
+``configuration_files/requirements.txt``. A minimal anaconda environment for building the
 documentation can be created from an existing anaconda installation with the
 following commands.
 
@@ -487,9 +499,17 @@ $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 
 > :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
 >
-> The abaqus input files and bash scripts used for integration testing are not cleaned with this command. Changes to
-> those source files are also not handled by ``cmake3`` re-builds. Updates to these files must be manually cleaned between
-> changes.
+> The abaqus input files and bash scripts used for integration testing are built with the [CMake
+> ``add_custom_target``](https://cmake.org/cmake/help/latest/command/add_custom_target.html) feature. Consequently, the
+> integration test target is _always considered out of date_. The integration test target copies all registered input
+> files and the integration test bash script from source to build directory. This means the file copy operation is
+> always performed when the integration test target is requested in the cmake build command, e.g. ``cmake --build .`` or
+> ``cmake --build src/abaqus/tests``. This operation is computationally inexpensive with respect to building the VIPor
+> source code.
+>
+> Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake
+> variable.
+
 
 ```
 $ pwd
@@ -508,6 +528,9 @@ $ pwd
 
 # Build c++ tests
 $ cmake3 --build src/cpp/tests
+
+# Build Abaqus integration tests
+$ cmake3 --build src/abaqus/tests
 ```
 
 5) Run the tests

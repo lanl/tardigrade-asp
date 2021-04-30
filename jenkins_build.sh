@@ -40,8 +40,8 @@ groups
 ls -l $HOME/include || true
 ls -l $HOME/.local/include || true
 
-# Source common shell script variables
-source set_vars.sh
+# Save working directory
+workdir=${PWD}
 
 #================================================= TEST AGAINST g++ or c++ COMPILER ===
 case $OSTYPE in
@@ -52,7 +52,7 @@ case $OSTYPE in
         compiler='g++'
         ;;
 esac
-./new_build.sh ${compiler}
+./new_build.sh ${compiler} 4
 
 # Perform repo tests
 cd "build"

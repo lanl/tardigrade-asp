@@ -55,53 +55,43 @@ team.
      to get back to it. You'll be waiting blind for the job to finish. You can
      check progress by watching the backup file build and change size at
 
-```
-toolbox-jenkins@ninetails:~/backups$ pwd
-/home/toolbox-jenkins/backups
-toolbox-jenkins@ninetails:~/backups$ ll -h
-total 1.3G
--rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 278M Apr  7  2020
-bakup_20200407_0939.tar.bz2
--rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 284M Apr 30 13:37
-bakup_20200430_1312.tar.bz2
--rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 284M Jun  8 14:16
-bakup_20200608_1352.tar.bz2
--rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 289M Jun 22 15:20
-bakup_20200622_1453.tar.bz2
--rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 183M Oct 22 11:32
-bakup_20201022_1119.tar.bz2
-```
-with a command like
-```
-toolbox-jenkins@ninetails:~/backups$ watch ls -lh bakup_20201022_1119.tar.bz2
-```
-When it stops changing size for several minutes, the backup is probably
-complete.
+         toolbox-jenkins@ninetails:~/backups$ pwd
+         /home/toolbox-jenkins/backups
+         toolbox-jenkins@ninetails:~/backups$ ll -h
+         total 1.3G
+         -rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 278M Apr  7  2020
+         bakup_20200407_0939.tar.bz2
+         -rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 284M Apr 30 13:37
+         bakup_20200430_1312.tar.bz2
+         -rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 284M Jun  8 14:16
+         bakup_20200608_1352.tar.bz2
+         -rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 289M Jun 22 15:20
+         bakup_20200622_1453.tar.bz2
+         -rw-r--r--. 1 toolbox-jenkins toolbox-jenkins 183M Oct 22 11:32
+         bakup_20201022_1119.tar.bz2
+
+     with a command like
+
+         toolbox-jenkins@ninetails:~/backups$ watch ls -lh bakup_20201022_1119.tar.bz2
+
+     When it stops changing size for several minutes, the backup is probably
+     complete.
 
 5. Copy the tar backup file off of ninetails. For example:
 
-```
-toolbox-jenkins@ninetails:~/backups$ scp bakup_20201022_1119.tar.bz2 kbrindley@sstelmo.lanl.gov:/projects/kbrindley
-```
+       toolbox-jenkins@ninetails:~/backups$ scp bakup_20201022_1119.tar.bz2 roppenheimer@sstelmo.lanl.gov:/projects/roppenheimer
 
 6. Remove permissions from group and other
 
-```
-[kbrindley@sstelmo kbrindley]$ chmod go-r bakup_20201022_1119.tar.bz2
-
-```
+       [roppenheimer@sstelmo roppenheimer]$ chmod go-r bakup_20201022_1119.tar.bz2
 
 7. Extract the tarball to a specific directory
 
-```
-[kbrindley@sstelmo kbrindley]$ mkdir bakup_20201022_1119/
-[kbrindley@sstelmo kbrindley]$ chmod go-rx bakup_20201022_1119
-[kbrindley@sstelmo kbrindley]$ tar -xf bakup_20201022_1119.tar.bz2 --directory bakup_20201022_1119/
-```
+       [roppenheimer@sstelmo roppenheimer]$ mkdir bakup_20201022_1119/
+       [roppenheimer@sstelmo roppenheimer]$ chmod go-rx bakup_20201022_1119
+       [roppenheimer@sstelmo roppenheimer]$ tar -xf bakup_20201022_1119.tar.bz2 --directory bakup_20201022_1119/
 
 8. Find the job that you want to backup/version control/examine/copy.
 
-```
-[kbrindley@sstelmo kbrindley]$ find bakup_20201022_1119/ -type f -name config.xml | grep cpp_stub
-bakup_20201022_1119/jobs/cpp_stub_Pull_Request_Builder/config.xml
-```
+       [roppenheimer@sstelmo roppenheimer]$ find bakup_20201022_1119/ -type f -name config.xml | grep cpp_stub
+       bakup_20201022_1119/jobs/cpp_stub_Pull_Request_Builder/config.xml

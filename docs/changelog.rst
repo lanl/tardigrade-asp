@@ -3,8 +3,43 @@
 Changelog
 =========
 
-0.0.4 (unreleased)
+0.0.5 (unreleased)
 ------------------
+
+0.0.4 (2021-04-30)
+------------------
+
+Documentation
+~~~~~~~~~~~~~
+- Clarify behavior for custom target for the integration tests (:jira:`557`, :pull:`29`). By `Kyle Brindley`_.
+- Add template documentation for the Abaqus material input definition (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
+- Major overhaul of documentation organization to single source the Jenkins setup information from markdown files.  Adds
+  the ``myst-parser`` Python package dependency and a pull request reviewer guide (:jira:`601`, :pull:`33`). By `Kyle
+  Brindley`_.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+- Update Jenkins CI configuration to build and test for PRs to both ``master`` and ``dev`` branches (:jira:`544`,
+  :pull:`26`). By `Kyle Brindley`_.
+- Minor cleanup to root directory files. Move configuration and environment files to a subdirectory (:jira:`544`,
+  :pull:`26`). By `Kyle Brindley`_.
+- Add integration test CMake target for conditional rebuilds and file copy (:jira:`551`, :pull:`27`). By `Kyle
+  Brindley`_.
+- Add one ctest per abaqus input file (:jira:`551`, :pull:`27`). By `Kyle Brindley`_.
+- Accept paths for input file in integration test shell script and check for errors in the abaqus stdout/stderr log
+  (:jira:`551`, :pull:`27`). By `Kyle Brindley`_.
+- Enable parallel CMake builds for continuous integration (CI) tests (:jira:`518`, :pull:`28`). By `Kyle Brindley`_.
+- Add c++ source files ``*.cpp`` as dependencies for the Doxygen CMake target (:jira:`569`, :pull:`30`). By `Kyle
+  Brindley`_.
+- Add checks for ``STATEV`` and ``PROPS`` vector lengths to the abaqus interface. Throw exceptions with file and
+  function name to interrupt Abaqus execution on input errors (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
+- Add Abaqus interface unit tests for checking the ``STATEV`` and ``PROPS`` vector lengths (:jira:`575`, :pull:`31`). By
+  `Kyle Brindley`_.
+- Add unit tests for error codes in ``cpp_stub::sayHello`` (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
+
+Enhancements
+~~~~~~~~~~~~
+- Add error reporting to the Abaqus interface from the ``error_tools`` package (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
 
 0.0.3 (2021-04-13)
 ------------------
