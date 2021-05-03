@@ -1,17 +1,19 @@
-************************
+########################
 Bitbucket and repo setup
-************************
+########################
 
 .. include:: md2rst.txt
 
+*************
 Prerequisites
-=============
+*************
 
 Set up your profile on Bitbucket with ssh keys. You can follow the instructions
 on the W-13 Confluence page `Gitting started with W-13 Bitbucket`_.
 
+***************************************
 Clone cpp\_stub into a local repository
-=======================================
+***************************************
 
 1. Navigate to the `upstream cpp\_stub repo`_.
 
@@ -82,8 +84,9 @@ Clone cpp\_stub into a local repository
    $ pwd
    /projects/<moniker>/w13repos/my_project
 
+************************************
 Create a new repository on Bitbucket
-====================================
+************************************
 
 .. note::
 
@@ -111,8 +114,9 @@ Create a new repository on Bitbucket
    ``README.md`` displayed. You can also select the drop down branch menu to
    view a "master" and "dev" branch.
 
+***********************************
 Update settings for your repository
-===================================
+***********************************
 
 Bitbucket repositories in the `Material Models Bitbucket project`_ inherit permissions and settings from that project.
 This included read permission for the ``w13bitbucket`` UNIX group (`W-13 Managed UNIX Groups`_). For most developers,
@@ -129,8 +133,9 @@ these inherited repository settings are appropriate and only a small number of s
 4. From the "Default reviewers" tab you can add yourself and any project
    co-owners as default reviewers.
 
+****************************
 Fork the upstream repository
-============================
+****************************
 
 In the `Forking Workflow`_ the repository you just created in the `Material Models Bitbucket project`_ project is called
 the "upstream" repository. Throughout older W-13 documentation this may also be called the "official" repository.
@@ -159,8 +164,9 @@ directly to *existing branches* of the upstream respository.
 This repository is referred to as the "fork" or "remote" repository throughout
 W-13 DevOps documentation.
 
+**********************************************
 Update the remote url in your local repository
-==============================================
+**********************************************
 
 The final repo setup step is to update the remote url of the local clone of
 ``my_project``.  We will return to the terminal session.
@@ -183,8 +189,9 @@ should look like:
    $ git push -u origin --all
    $ git push origin --tags
 
+*****************************************
 Update project name throughout repository
-=========================================
+*****************************************
 
 .. note::
 

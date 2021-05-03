@@ -1,12 +1,14 @@
 .. _releasephilosophy:
 
+##################
 Release Philosophy
-==================
+##################
 
 This section discusses topics related to |project| releases and version numbering.
 
+**********************
 Release and Deployment
-++++++++++++++++++++++
+**********************
 
 .. warning::
 
@@ -29,7 +31,7 @@ include updated or new Python modules that result in less stable behavior. The b
 software projects against an updated Python environment before releasing the new environment.
 
 Version Numbers
-+++++++++++++++
+===============
 
 The |project| project follows the `PEP-440`_ standard for version numbering. The
 final release version number uses the three component ("major.minor.micro")
@@ -89,7 +91,7 @@ with the user community.
 .. _releasebranchreq:
 
 Release Branch Requirements
----------------------------
+===========================
 
 .. warning::
 
