@@ -21,15 +21,19 @@ Executables
 Python Modules (for documentation)
 ==================================
 
-* `Sphinx`_ >= 3.0.4
-* `Breathe`_ >= 4.18.1
-* `sphinx\_rtd\_theme`_ >= 0.4.3
-
 For convenience, the minimal Python environment requirements for the
-documentation build are included in ``configuration_files/environment.yaml`` and
-``configuration_files/requirements.txt``. A minimal anaconda environment for building the
-documentation can be created from an existing anaconda installation with the
-following commands.
+documentation build are included in ``configuration_files/environment.yaml``.
+This file was created from the `pipreqs`_ command line tool and Sphinx
+configuration inspection, e.g. the extension packages.
+
+.. code:: bash
+
+   $ pwd
+   path/to/cpp_stub/
+   $ pipreqs --use-local --print --no-pin .
+
+A minimal anaconda environment for building the documentation can be created
+from an existing anaconda installation with the following commands.
 
 .. code:: bash
 
