@@ -8,6 +8,11 @@ Changelog
 0.0.5 (unreleased)
 ******************
 
+Documentation
+=============
+- Update the Python package dependencies and add an example approach to future updates to the documentation
+  (:jira:`636`, :pull:`37`). By `Kyle Brindley`_.
+
 Internal Changes
 ================
 - Update markdown syntax in README for wider compatibility (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
