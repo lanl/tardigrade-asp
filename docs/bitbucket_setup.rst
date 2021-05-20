@@ -272,7 +272,24 @@ Update project name throughout repository
    $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
    # no stdout to terminal because no files found
 
-5. Commit and push your changes to your "remote" or "fork" repository
+5. Find files containing the project in their file name
+
+.. code:: bash
+
+   $ pwd
+   /projects/<moniker>/w13repos/my_project
+   $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
+   ./src/cpp/cpp_stub.cpp
+   ./src/cpp/cpp_stub.h
+   ./src/cpp/tests/test_cpp_stub.cpp 
+
+6. Rename files after current project
+
+.. code:: bash
+
+   $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
+
+7. Commit and push your changes to your "remote" or "fork" repository
 
 .. code:: bash
 
