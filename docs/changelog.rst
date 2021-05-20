@@ -19,6 +19,10 @@ Internal Changes
 - Update markdown syntax in README for wider compatibility (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
 - Maintenance on ReST style guide updates (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
 
+Enhancements
+============
+- Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`) . By `Kyle Brindley`_.
+
 ******************
 0.0.4 (2021-04-30)
 ******************
