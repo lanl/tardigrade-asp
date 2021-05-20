@@ -45,16 +45,22 @@ the `Anaconda Documentation`_.
 C++ Libraries
 =============
 
+.. note:: 
+
+   **Non-admin installations for Eigen and Boost are no longer required.** This project is built and deployed against C++
+   libraries managed in Conda. See the Conda environment file and discussion for non-admin environment management.
+
 * `Eigen`_ >= 3.3.7
 * `BOOST`_ >= 1.53.0
+
+Constitutive Tools
+------------------
+
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 * stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools
 * solver\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/solver_tools
 * constitutive\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/consitutive_tools
-
-Constitutive Tools
-------------------
 
 All of the ``{error,vector,stress,solver,constitutive}_tools`` libraries are
 pulled from their git repos by branch name and built with their respective cmake
