@@ -4,8 +4,12 @@ channels:
   - conda-forge
 dependencies:
   - breathe>=4.18.1
+  - cython
   - myst-parser
+  - numpy
+  - pytest
   - python>=3.7
   - sphinx>=3.0.4
+  - sphinxcontrib-bibtex 
   - sphinx_rtd_theme>=0.4.3
   - pip

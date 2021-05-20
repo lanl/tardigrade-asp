@@ -208,15 +208,15 @@ The final repo setup step is to update the remote url of the local clone of
 
        $ pwd
        /projects/<moniker>/w13repos/my_project
-       
+
        # Recursive, case-insensitive search and count occurrences
        $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
        57
-       
+
        # Recursive, case-insensitive search and display
        $ grep -ri cpp_stub . --exclude-dir={build,.git}
        ...
-       
+
        # Clean list of files with project name
        $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
        ./CMakeLists.txt
@@ -232,12 +232,12 @@ The final repo setup step is to update the remote url of the local clone of
 
        $ pwd
        /projects/<moniker>/w13repos/my_project
-       
+
        # Replace lower case occurrences in place
        $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
        $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
        ./src/cpp/cpp_stub.h
-       
+
        # Replace upper case occurrences in place
        $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
 
@@ -326,15 +326,18 @@ A quick build of just the jenkins markdown file can be performed with ``pandoc``
 
 ### Python Modules (for documentation)
 
-* [Sphinx](https://www.sphinx-doc.org/en/master/) >= 3.0.4
-* [Breathe](https://breathe.readthedocs.io/en/latest/) >= 4.18.1
-* [sphinx\_rtd\_theme](https://sphinx-rtd-theme.readthedocs.io/en/stable/) >= 0.4.3
-
 For convenience, the minimal Python environment requirements for the
-documentation build are included in ``configuration_files/environment.yaml`` and
-``configuration_files/requirements.txt``. A minimal anaconda environment for building the
-documentation can be created from an existing anaconda installation with the
-following commands.
+documentation build are included in ``configuration_files/environment.yaml``.
+This file was created from the [pipreqs](https://github.com/bndr/pipreqs)
+command line tool and Sphinx configuration inspection, e.g. the extension
+packages.
+
+    $ pwd
+    path/to/cpp_stub/
+    $ pipreqs --use-local --print --no-pin .
+
+A minimal anaconda environment for building the documentation can be created
+from an existing anaconda installation with the following commands.
 
     $ conda env create --file environment.yaml
 
@@ -416,7 +419,7 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
        $ pwd
        /path/to/cpp_stub/
-       
+
        $ mkdir build
        $ cd build
 
@@ -437,10 +440,10 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
        $ pwd
        /path/to/cpp_stub/build
-       
+
        # Build everything
        $ cmake3 --build .
-       
+
        # Build only the c++ primary libraries
        $ cmake3 --build src/cpp
 
@@ -451,7 +454,7 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
        $ pwd
        /path/to/cpp_stub/build
-       
+
        # find c++ libraries and ignore intermediate files with similar extensions
        $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 
@@ -473,7 +476,7 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
        $ pwd
        /path/to/cpp_stub/build
-       
+
        $ make clean
 
 ### Test on sstelmo
@@ -482,10 +485,10 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
        $ pwd
        /path/to/cpp_stub/build
-       
+
        # Build c++ tests
        $ cmake3 --build src/cpp/tests
-       
+
        # Build Abaqus integration tests
        $ cmake3 --build src/abaqus/tests
 
@@ -493,10 +496,10 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
        $ pwd
        /path/to/cpp_stub/build
-       
+
        # Run ctest
        $ ctest
-       
+
        # Results print to screen
        # View details of most recent test execution including failure messages
        $ less Testing/Temporary/LastTest.log
@@ -515,16 +518,16 @@ configuration from scratch.
 
        $ pwd
        /path/to/cpp_stub/
-       
+
        # Just perform the build (pick one)
        $ ./new_build.sh <cxx compiler>
        $ ./new_build.sh c++
        $ ./new_build.sh g++
        $ ./new_build.sh icpc
-       
+
        # Perform tests from PWD
        $ ./build/src/cpp/tests/test_cpp_stub
-       
+
        # Build and perform tests
        $ ./jenkins_build.sh
 
@@ -532,7 +535,7 @@ configuration from scratch.
 
        # As built directly to PWD
        $ cat results.tex
-       
+
        # As built by jenkins_build.sh
        $ cat build/src/cpp/tests/*_results.tex
        $ cat *results.tex
@@ -541,7 +544,7 @@ configuration from scratch.
 
        # Sphinx
        $ firefox build/docs/sphinx/index.html &
-       
+
        # Doxygen
        $ firefox build/docs/doxygen/html/index.html &
 
