@@ -3,11 +3,11 @@
 From the main page: https://toolbox-jenkins.lanl.gov/
 
 1. Select "New Item" in the left hand sidebar.
-2. Give the project a name following the current convention: ``<project name>_Pull_Request_Builder`` or
-   ``cpp_stub_Pull_Request_Builder``
-3. We want to copy another job as a template file. Enter ``cpp_stub_Pull_Request_Builder`` in the "Copy from" text field.
+2. Give the project a name following the current convention: ``<project name>_MultiAgent_Pull_Request_Builder``, e.g.
+   ``cpp_stub_MultiAgent_Pull_Request_Builder``
+3. We want to copy another job as a template file. Enter ``cpp_stub_MultiAgent_Pull_Request_Builder`` in the "Copy from" text field.
 
-   * NOTE: the job configuration can also be found as ``config.xml`` in this
+   * NOTE: the job configuration can also be found as ``configuration_files/config.xml*`` in this
      repository.
 
 4. Click ok
