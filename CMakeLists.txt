@@ -24,9 +24,11 @@ include_directories(${CPP_SRC_PATH})
 
 #================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} $ENV{HOME}/.local $ENV{HOME}/local/ $ENV{HOME})
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 include_directories(${EIGEN3_INCLUDE_DIR})
+if(EIGEN3_FOUND)
+    message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIR}")
+endif()
 
 # Find bash (Required for abaqus integration tests)
 find_program(BASH_PROGRAM bash)
