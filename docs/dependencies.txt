@@ -53,8 +53,8 @@ C++ Libraries
 * `Eigen`_ >= 3.3.7
 * `BOOST`_ >= 1.53.0
 
-Constitutive Tools
-------------------
+"Internal" project libraries
+============================
 
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools

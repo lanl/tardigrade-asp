@@ -365,7 +365,7 @@ Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/m
 * [Eigen](https://eigen.tuxfamily.org/dox/) >= 3.3.7
 * [BOOST](https://www.boost.org/doc/libs/1_53_0/) >= 1.53.0
 
-#### Constitutive Tools
+### "Internal" project libraries
 
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
