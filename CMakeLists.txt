@@ -111,9 +111,12 @@ foreach(package ${PROJECT_NAME} ${UMAT})
       INSTALL_DESTINATION
       ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
 
-    install(EXPORT ${package}_Targets
-            FILE ${package}Targets.cmake
-            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+    # CMake won't build the targets for local builds of upstream projects
+    if(cmake_build_type_lower STREQUAL release)
+        install(EXPORT ${package}_Targets
+                FILE ${package}Targets.cmake
+                DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+    endif()
 
     install(FILES "${PROJECT_BINARY_DIR}/${package}Config.cmake"
                   "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
