@@ -100,20 +100,22 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 #==================================================================================== SETUP INSTALLATION CMAKE FILES ===
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file("${PROJECT_NAME}ConfigVersion.cmake"
-                                 VERSION ${PROJECT_VERSION}
-                                 COMPATIBILITY SameMajorVersion)
-configure_package_config_file(
-  "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}/Config.cmake.in"
-  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-  INSTALL_DESTINATION
-  ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+foreach(package ${PROJECT_NAME} ${UMAT})
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file("${package}ConfigVersion.cmake"
+                                     VERSION ${PROJECT_VERSION}
+                                     COMPATIBILITY SameMajorVersion)
+    configure_package_config_file(
+      "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}/Config.cmake.in"
+      "${PROJECT_BINARY_DIR}/${package}Config.cmake"
+      INSTALL_DESTINATION
+      ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
 
-install(EXPORT ${PROJECT_NAME}_Targets
-        FILE ${PROJECT_NAME}Targets.cmake
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+    install(EXPORT ${package}_Targets
+            FILE ${package}Targets.cmake
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
 
-install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-              "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+    install(FILES "${PROJECT_BINARY_DIR}/${package}Config.cmake"
+                  "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+endforeach(package)

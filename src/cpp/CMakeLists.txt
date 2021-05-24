@@ -23,3 +23,12 @@ if(NOT cmake_build_type_lower STREQUAL "release")
     target_include_directories(${UMAT} PUBLIC
                                "${vector_tools_SOURCE_DIR}/${CPP_SRC_PATH}")
 endif()
+
+foreach(package ${PROJECT_NAME} ${UMAT})
+    install(TARGETS ${package}
+            EXPORT ${package}_Targets
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endforeach(package)
