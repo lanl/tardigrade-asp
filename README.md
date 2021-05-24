@@ -259,7 +259,7 @@ The final repo setup step is to update the remote url of the local clone of
        $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
        ./src/cpp/cpp_stub.cpp
        ./src/cpp/cpp_stub.h
-       ./src/cpp/tests/test_cpp_stub.cpp 
+       ./src/cpp/tests/test_cpp_stub.cpp
 
 6. Rename files after current project
 
@@ -498,10 +498,10 @@ configuration from scratch.
        /path/to/cpp_stub/
 
        # Just perform the build (pick one)
-       $ ./new_build.sh <cxx compiler>
-       $ ./new_build.sh c++
-       $ ./new_build.sh g++
-       $ ./new_build.sh icpc
+       $ ./new_build.sh <cxx compiler> <cmake build type>
+       $ ./new_build.sh c++ None
+       $ ./new_build.sh g++ None
+       $ ./new_build.sh icpc None
 
        # Perform tests from PWD
        $ ./build/src/cpp/tests/test_cpp_stub
