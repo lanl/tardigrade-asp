@@ -12,8 +12,39 @@ This stub repo contains hooks for writing Abaqus :cite:`ABAQUS2019` subroutines,
 documentation`_, and a template UMAT c++ interface. However, this template repository does not yet have a meaningful c++
 constitutive model to be the subject of a user manual.
 
-Until this template repository includes a `CMake`_ ``--install`` definition, user's are referred to the :ref:`build`
-section of the :ref:`devops_manual` for build instructions.
+This project is built and deployed to the `W-13 Python Environments`_ with continuous integration (CI) and continuous
+deployment (CD). Most users will not need to build and install this project from source. Outside of the `W-13 Python
+Environments`_, users may need to build and install directly from source. In that case, users are directed to the
+:ref:`build` instructions.
+
+With the `W-13 Python Environments`_, this project is installed in the Conda environment ``lib`` and ``include``
+directories, e.g. ``/path/to/my/conda/environment/{lib,include}``. The template UMAT can be used with the following
+Abaqus options
+
+.. code:: bash
+
+   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib/umat.o
+
+For instance, with the W-13 "release" environment on ``sstelmo``
+
+.. code:: bash
+
+   $ abaqus -job <my_input_file> -user /projects/python/release/lib/umat.o
+
+As a convenience, the following code may be used to determine the correct, active Conda environment at Abaqus execution.
+The following bash code is provided as an example for end users and not supported by this project. End users who wish to
+learn more about bash scripting are directed to the online Bash documentation.
+
+.. code:: bash
+
+   # Get current conda environment information
+   conda_env_path=$(conda info | grep "active env location" | cut -f 2 -d :)
+   # Execute Abaqus with current Conda environment's installation of this project
+   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib/umat.o
+
+***************************
+Use after build from source
+***************************
 
 The template UMAT can be used after build with the following Abaqus options
 
@@ -21,10 +52,15 @@ The template UMAT can be used after build with the following Abaqus options
 
    $ abaqus -job <my_input_file> -user relative/path/to/cpp_stub/build/src/cpp/umat.o
 
-Until the template repository and all upstream c++ libraries are built as shared library objects it is recommended that
-the subroutines are left in the project build directory. However, it is possible to copy the shared library files to any
-other directory provided the upstream projects ``{error,vector,stress,solver,constitutive}_tools`` are present in the
-build directory, e.g. ``cpp_stub/build/_deps/{error,vector,stress,solver,constitutive}_tools-build/``.
+It is strongly recommended that anyone building from source make use of the CMake ``--install`` options in a local Conda
+environment. It is also possible to install to more traditional system paths, but this may require significantly more
+background reading in relevant system administration.
+
+Unless the template repository and all upstream c++ libraries are built and installed to a common system path it is
+recommended that the subroutines are left in the project build directory. However, it is possible to copy the shared
+library files to any other directory provided the upstream projects ``{error,vector,stress,solver,constitutive}_tools``
+are present in the build directory, e.g.
+``cpp_stub/build/_deps/{error,vector,stress,solver,constitutive}_tools-build/``.
 
 .. code:: bash
 
