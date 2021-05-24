@@ -11,9 +11,6 @@ set(ABAQUS_SRC_PATH "src/abaqus")
 set(UMAT "umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
 
-# Configure version
-configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
-
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
