@@ -61,6 +61,7 @@ if(cmake_build_type_lower STREQUAL "release")
 endif()
 
 # Find related, but external, projects in installed environment
+include(FetchContent)
 set(upstream_packages "error_tools" "vector_tools" "abaqus_tools")
 foreach(package ${upstream_packages})
     find_package(${package} ${upstream_required} CONFIG)
@@ -75,7 +76,6 @@ foreach(package ${upstream_packages})
             GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/${package}.git
             GIT_TAG        origin/dev
         )
-        endif()
         FetchContent_MakeAvailable(${package})
     endif()
 endforeach(package)

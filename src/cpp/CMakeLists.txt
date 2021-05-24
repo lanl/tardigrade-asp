@@ -8,7 +8,7 @@ target_compile_options(${PROJECT_NAME} PUBLIC)
 # Abaqus UMAT interface
 add_library(${UMAT} SHARED "${UMAT}.cpp" "${UMAT}.h")
 set_target_properties(${UMAT} PROPERTIES CXX_STANDARD 11
-                              PUBLIC_HEADER ${UMAT}.h)
+                              PUBLIC_HEADER ${UMAT}.h
                               PREFIX ""
                               SUFFIX ".o")
 target_compile_options(${UMAT} PUBLIC)
