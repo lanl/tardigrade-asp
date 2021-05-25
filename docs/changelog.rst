@@ -8,6 +8,11 @@ Changelog
 0.0.5 (unreleased)
 ******************
 
+New Features
+============
+- Add CMake install configuration and CI/CD scripts for build, test, and installation to a Conda environment
+  (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
+
 Documentation
 =============
 - Update the Python package dependencies and add an example approach to future updates to the documentation
@@ -18,6 +23,8 @@ Internal Changes
 ================
 - Update markdown syntax in README for wider compatibility (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
 - Maintenance on ReST style guide updates (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
+- Address BOOST output test stream deprecations and update minimum version
+  (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
 
 Enhancements
 ============

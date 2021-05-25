@@ -51,7 +51,7 @@ C++ Libraries
    libraries managed in Conda. See the Conda environment file and discussion for non-admin environment management.
 
 * `Eigen`_ >= 3.3.7
-* `BOOST`_ >= 1.53.0
+* `BOOST`_ >= 1.59.0
 
 "Internal" project libraries
 ============================

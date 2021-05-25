@@ -5,22 +5,23 @@ enable_testing()
 
 # Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
+set(CMAKE_SRC_PATH "src/cmake")
 set(ABAQUS_SRC_PATH "src/abaqus")
 
 # Set some Abaqus integration variables
 set(UMAT "umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
 
-# Configure version
-configure_file("${CPP_SRC_PATH}/config.h.in" "${PROJECT_BINARY_DIR}/config.h")
+# Add installation directory variables
+include(GNUInstallDirs)
+
+# Make the code position independent
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -fmax-errors=5 -ggdb")
-
-# Include project source code directory for use by all libraries and executables in this project
-include_directories(${CPP_SRC_PATH})
 
 #================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
@@ -50,48 +51,40 @@ else()
 endif()
 
 # Add the cmake folder to locate the FindSphinx module
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
 
-# Find related, but external, projects
-# TODO: Decide how to handle master/dev build differences. bash env variables for GIT TAG?
-# TODO: Transition to installed libraries in conda environment (TOOL-360) and use FetchContent as fall back option
+# Set build type checks
+string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_lower)
+set(upstream_required "")
+if(cmake_build_type_lower STREQUAL "release")
+    set(upstream_required "REQUIRED")
+endif()
+
+# Find related, but external, projects in installed environment
 include(FetchContent)
-FetchContent_Declare(
-    error_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/error_tools.git
-    GIT_TAG        origin/dev
-)
-FetchContent_Declare(
-    vector_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/vector_tools.git
-    GIT_TAG        origin/dev
-)
-FetchContent_Declare(
-    constitutive_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/constitutive_tools.git
-    GIT_TAG        origin/dev
-)
-FetchContent_Declare(
-    stress_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/stress_tools.git
-    GIT_TAG        origin/dev
-)
-FetchContent_Declare(
-    solver_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/solver_tools.git
-    GIT_TAG        origin/dev
-)
-FetchContent_Declare(
-    abaqus_tools
-    GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/abaqus_tools.git
-    GIT_TAG        origin/dev
-)
-FetchContent_MakeAvailable(error_tools vector_tools constitutive_tools stress_tools solver_tools abaqus_tools)
+set(upstream_packages "error_tools" "vector_tools" "abaqus_tools")
+foreach(package ${upstream_packages})
+    find_package(${package} ${upstream_required} CONFIG)
+    if(${package}_FOUND)
+        message(STATUS "Found ${package}: ${${package}_DIR}")
+    else()
+        # Find related, but external, projects using FetchContent and building locally
+        message(WARNING "Did not find an installed ${package} package. Attempting local build with FetchContent.")
+        # TODO: Decide how to handle master/dev build differences. bash env variables for GIT TAG?
+        FetchContent_Declare(
+            ${package}
+            GIT_REPOSITORY ssh://git@xcp-stash.lanl.gov:7999/mm/${package}.git
+            GIT_TAG        origin/dev
+        )
+        FetchContent_MakeAvailable(${package})
+    endif()
+endforeach(package)
 
 #=============================================================================================== ADD PROJECT TARGETS ===
 # MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
-add_subdirectory("${CPP_SRC_PATH}")
+include_directories(${CPP_SRC_PATH})
+add_subdirectory(${CPP_SRC_PATH})
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -105,3 +98,27 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         add_subdirectory("${ABAQUS_SRC_PATH}/tests")
     endif()
 endif()
+
+#==================================================================================== SETUP INSTALLATION CMAKE FILES ===
+foreach(package ${PROJECT_NAME} ${UMAT})
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file("${package}ConfigVersion.cmake"
+                                     VERSION ${PROJECT_VERSION}
+                                     COMPATIBILITY SameMajorVersion)
+    configure_package_config_file(
+      "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}/Config.cmake.in"
+      "${PROJECT_BINARY_DIR}/${package}Config.cmake"
+      INSTALL_DESTINATION
+      ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+
+    # CMake won't build the targets for local builds of upstream projects
+    if(cmake_build_type_lower STREQUAL release)
+        install(EXPORT ${package}_Targets
+                FILE ${package}Targets.cmake
+                DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+    endif()
+
+    install(FILES "${PROJECT_BINARY_DIR}/${package}Config.cmake"
+                  "${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake"
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${package}/cmake)
+endforeach(package)
