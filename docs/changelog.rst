@@ -25,6 +25,8 @@ Internal Changes
 - Maintenance on ReST style guide updates (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
 - Address BOOST output test stream deprecations and update minimum version
   (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
+- Change project UMAT library name to avoid conflicts with external projects (:jira:`661`, :pull:`42`). By `Kyle
+  Brindley`_.
 
 Enhancements
 ============

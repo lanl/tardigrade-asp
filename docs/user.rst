@@ -23,13 +23,13 @@ Abaqus options
 
 .. code:: bash
 
-   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib/umat.o
+   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib/cpp_stub_umat.o
 
 For instance, with the W-13 "release" environment on ``sstelmo``
 
 .. code:: bash
 
-   $ abaqus -job <my_input_file> -user /projects/python/release/lib/umat.o
+   $ abaqus -job <my_input_file> -user /projects/python/release/lib/cpp_stub_umat.o
 
 As a convenience, the following code may be used to determine the correct, active Conda environment at Abaqus execution.
 The following bash code is provided as an example for end users and not supported by this project. End users who wish to
@@ -40,7 +40,7 @@ learn more about bash scripting are directed to the online Bash documentation.
    # Get current conda environment information
    conda_env_path=$(conda info | grep "active env location" | cut -f 2 -d :)
    # Execute Abaqus with current Conda environment's installation of this project
-   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib/umat.o
+   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib/cpp_stub_umat.o
 
 ***************************
 Use after build from source
@@ -50,7 +50,7 @@ The template UMAT can be used after build with the following Abaqus options
 
 .. code:: bash
 
-   $ abaqus -job <my_input_file> -user relative/path/to/cpp_stub/build/src/cpp/umat.o
+   $ abaqus -job <my_input_file> -user relative/path/to/cpp_stub/build/src/cpp/cpp_stub_umat.o
 
 It is strongly recommended that anyone building from source make use of the CMake ``--install`` options in a local Conda
 environment. It is also possible to install to more traditional system paths, but this may require significantly more
@@ -66,8 +66,8 @@ are present in the build directory, e.g.
 
    $ pwd
    /path/to/my/abaqus/job
-   $ cp /path/to/cpp_stub/build/src/cpp/{umat.o,libcpp_stub.so} .
-   $ abaqus -job <my_input_file> -user umat.o
+   $ cp /path/to/cpp_stub/build/src/cpp/{cpp_stub_umat.o,libcpp_stub.so} .
+   $ abaqus -job <my_input_file> -user cpp_stub_umat.o
 
 ******************************
 Input File Material Definition
