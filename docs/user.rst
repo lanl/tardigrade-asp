@@ -17,19 +17,29 @@ deployment (CD). Most users will not need to build and install this project from
 Environments`_, users may need to build and install directly from source. In that case, users are directed to the
 :ref:`build` instructions.
 
-With the `W-13 Python Environments`_, this project is installed in the Conda environment ``lib`` and ``include``
-directories, e.g. ``/path/to/my/conda/environment/{lib,include}``. The template UMAT can be used with the following
-Abaqus options
+With the `W-13 Python Environments`_, this project is installed in the Conda environment ``lib64`` and ``include``
+directories, e.g. ``/path/to/my/conda/environment/{lib64,include}``. The template UMAT can be used with the following
+Abaqus options after setting the system environment variable ``LD_LIBRARY_PATH``.
 
 .. code:: bash
 
-   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib/cpp_stub_umat.o
+   $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:path/to/conda/environment/lib64
+   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib64/cpp_stub_umat.o
+
+Where the appropriate path can be found with
+
+.. code:: bash
+
+   $ find path/to/conda/environment -name "libcpp_stub.so"
 
 For instance, with the W-13 "release" environment on ``sstelmo``
 
 .. code:: bash
 
-   $ abaqus -job <my_input_file> -user /projects/python/release/lib/cpp_stub_umat.o
+   $ find /projects/python/release -name "libcpp_stub.so"
+   /projects/python/release/lib64/libcpp_stub.so
+   $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/projects/python/release/lib64
+   $ abaqus -job <my_input_file> -user /projects/python/release/lib64/cpp_stub_umat.o
 
 As a convenience, the following code may be used to determine the correct, active Conda environment at Abaqus execution.
 The following bash code is provided as an example for end users and not supported by this project. End users who wish to
@@ -39,8 +49,10 @@ learn more about bash scripting are directed to the online Bash documentation.
 
    # Get current conda environment information
    conda_env_path=$(conda info | grep "active env location" | cut -f 2 -d :)
+   # Export the conda environment library path
+   $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${conda_env_path}/lib64
    # Execute Abaqus with current Conda environment's installation of this project
-   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib/cpp_stub_umat.o
+   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib64/cpp_stub_umat.o
 
 ***************************
 Use after build from source
