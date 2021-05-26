@@ -18,6 +18,8 @@ Documentation
 - Update the Python package dependencies and add an example approach to future updates to the documentation
   (:jira:`636`, :pull:`37`). By `Kyle Brindley`_.
 - Add file renaming commands to the project setup instructions (:jira:`634`, :pull:`38`). By `Kyle Brindley`_.
+- Update the user manual to reflect required environment variable ``LD_LIBRARY_PATH`` (:jira:`662`, :pull:`43`). By
+  `Kyle Brindley`_.
 
 Internal Changes
 ================
