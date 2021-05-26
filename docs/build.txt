@@ -85,7 +85,7 @@ Build on sstelmo
       integration test target copies all registered input files and the integration test bash script from source to build
       directory. This means the file copy operation is always performed when the integration test target is requested in the
       cmake build command, e.g. ``cmake --build .`` or ``cmake --build src/abaqus/tests``. This operation is computationally
-      inexpensive with respect to building the VIPor source code.
+      inexpensive with respect to building the ``cpp_stub`` source code.
 
    .. code:: bash
 
