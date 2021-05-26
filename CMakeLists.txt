@@ -9,7 +9,7 @@ set(CMAKE_SRC_PATH "src/cmake")
 set(ABAQUS_SRC_PATH "src/abaqus")
 
 # Set some Abaqus integration variables
-set(UMAT "umat")
+set(UMAT "cpp_umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
 
 # Add installation directory variables

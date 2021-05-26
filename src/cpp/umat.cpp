@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * \file umat.cpp
+  * \file cpp_umat.cpp
   ******************************************************************************
   * The Abaqus UMAT c++ interface template
   ******************************************************************************
   */
 
-#include<umat.h>
+#include<cpp_umat.h>
 
 extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
                        double &SCD,          double &RPL,          double *DDSDDT,       double *DRPLDE,       double &DRPLDT,
