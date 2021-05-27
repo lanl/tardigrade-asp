@@ -1,11 +1,18 @@
 .. _changelog:
 
+
 #########
 Changelog
 #########
 
+
 ******************
-0.0.5 (unreleased)
+0.1.1 (unreleased)
+******************
+
+
+******************
+0.1.0 (2021-05-27)
 ******************
 
 New Features
@@ -34,6 +41,7 @@ Internal Changes
 Enhancements
 ============
 - Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`) . By `Kyle Brindley`_.
+
 
 ******************
 0.0.4 (2021-04-30)
@@ -71,6 +79,7 @@ Enhancements
 ============
 - Add error reporting to the Abaqus interface from the ``error_tools`` package (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
 
+
 ******************
 0.0.3 (2021-04-13)
 ******************
@@ -82,6 +91,7 @@ Internal Changes
   Anaconda 2020 (:jira:`526`, :pull:`21`). By `Kyle Brindley`_.
 - Add explicit list of documentation source files for better conditional CMake documentation re-builds (:jira:`526`,
   :pull:`21`). By `Kyle Brindley`_.
+
 
 ******************
 0.0.2 (2021-02-11)
@@ -121,6 +131,7 @@ Internal Changes
 
 Enhancements
 ============
+
 
 ******************
 0.0.1 (2020-10-26)
