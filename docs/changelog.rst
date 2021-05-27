@@ -29,6 +29,7 @@ Internal Changes
   (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
 - Change project UMAT library name to avoid conflicts with external projects (:jira:`661`, :pull:`42`). By `Kyle
   Brindley`_.
+- Remove the ``CXX`` compiler variable settings for build scripts (:jira:`671`, :pull:`44`. By `Kyle Brindley`_.
 
 Enhancements
 ============
