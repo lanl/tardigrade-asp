@@ -1,16 +1,54 @@
 .. _changelog:
 
+
+#########
 Changelog
-=========
+#########
 
-0.0.5 (unreleased)
-------------------
 
-0.0.4 (2021-04-30)
-------------------
+******************
+0.1.1 (unreleased)
+******************
+
+
+******************
+0.1.0 (2021-05-28)
+******************
+
+New Features
+============
+- Add CMake install configuration and CI/CD scripts for build, test, and installation to a Conda environment
+  (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
 
 Documentation
-~~~~~~~~~~~~~
+=============
+- Update the Python package dependencies and add an example approach to future updates to the documentation
+  (:jira:`636`, :pull:`37`). By `Kyle Brindley`_.
+- Add file renaming commands to the project setup instructions (:jira:`634`, :pull:`38`). By `Kyle Brindley`_.
+- Update the user manual to reflect required environment variable ``LD_LIBRARY_PATH`` (:jira:`662`, :pull:`43`). By
+  `Kyle Brindley`_.
+
+Internal Changes
+================
+- Update markdown syntax in README for wider compatibility (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
+- Maintenance on ReST style guide updates (:jira:`604`, :pull:`36`). By `Kyle Brindley`_.
+- Address BOOST output test stream deprecations and update minimum version
+  (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
+- Change project UMAT library name to avoid conflicts with external projects (:jira:`661`, :pull:`42`). By `Kyle
+  Brindley`_.
+- Remove the ``CXX`` compiler variable settings for build scripts (:jira:`671`, :pull:`44`. By `Kyle Brindley`_.
+
+Enhancements
+============
+- Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`) . By `Kyle Brindley`_.
+
+
+******************
+0.0.4 (2021-04-30)
+******************
+
+Documentation
+=============
 - Clarify behavior for custom target for the integration tests (:jira:`557`, :pull:`29`). By `Kyle Brindley`_.
 - Add template documentation for the Abaqus material input definition (:jira:`575`, :pull:`31`). By `Kyle Brindley`_.
 - Major overhaul of documentation organization to single source the Jenkins setup information from markdown files.  Adds
@@ -18,7 +56,7 @@ Documentation
   Brindley`_.
 
 Internal Changes
-~~~~~~~~~~~~~~~~
+================
 - Update Jenkins CI configuration to build and test for PRs to both ``master`` and ``dev`` branches (:jira:`544`,
   :pull:`26`). By `Kyle Brindley`_.
 - Minor cleanup to root directory files. Move configuration and environment files to a subdirectory (:jira:`544`,
@@ -38,29 +76,33 @@ Internal Changes
 - Add unit tests for error codes in ``cpp_stub::sayHello`` (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
 
 Enhancements
-~~~~~~~~~~~~
+============
 - Add error reporting to the Abaqus interface from the ``error_tools`` package (:jira:`334`, :pull:`32`). By `Kyle Brindley`_.
 
+
+******************
 0.0.3 (2021-04-13)
-------------------
+******************
 
 Internal Changes
-~~~~~~~~~~~~~~~~
+================
 - Use ``abaqus_tools`` from a dedicated project (:jira:`535`, :pull:`23`). By `Kyle Brindley`_.
 - Add ``bibtex_bibfiles`` variable to Sphinx configuration for newer version of ``sphinxcontrib.bibtex`` extension in
   Anaconda 2020 (:jira:`526`, :pull:`21`). By `Kyle Brindley`_.
 - Add explicit list of documentation source files for better conditional CMake documentation re-builds (:jira:`526`,
   :pull:`21`). By `Kyle Brindley`_.
 
+
+******************
 0.0.2 (2021-02-11)
-------------------
+******************
 
 Breaking changes
-~~~~~~~~~~~~~~~~
+================
 - Remove testing and support for intel ``icpc`` compiler (:jira:`516`, :pull:`9`). By `Kyle Brindley`_.
 
 New Features
-~~~~~~~~~~~~
+============
 - Add do-nothing template c++ Abaqus UMAT interface and sample Abaqus input file (:jira:`502`, :pull:`6`). By `Kyle Brindley`_.
 - Use example c++ library in Abaqus UMAT template (:jira:`505`, :pull:`8`). By `Kyle Brindley`_.
 - Add c++ to fortran variable conversion and Abaqus variable return template (:jira:`521`, :pull:`15`, :pull:`16`). By
@@ -69,16 +111,16 @@ New Features
   Brindley`_.
 
 Bug fixes
-~~~~~~~~~
+=========
 
 Documentation
-~~~~~~~~~~~~~
+=============
 - Add changelog to documentation (:jira:`450`, :pull:`11`). By `Kyle Brindley`_.
 - Add direct CMake build instructions and minimal user manual (:jira:`519`, :pull:`12`). By `Kyle Brindley`_.
 - Add release guidance and release branch instructions (:jira:`520`, :pull:`13`). By `Kyle Brindley`_.
 
 Internal Changes
-~~~~~~~~~~~~~~~~
+================
 - Use BOOST and ctest for unit testing (:jira:`357`, :pull:`4`). By `Kyle Brindley`_.
 - Update Jenkins CI configuration and store with version controlled repository (:jira:`442`, :pull:`5`). By `Kyle Brindley`_.
 - Demonstrate c++ ``vector_tools`` library for unit testing (:jira:`506`, :pull:`7`). By `Kyle Brindley`_.
@@ -88,27 +130,29 @@ Internal Changes
 - Bump micro version number for release (:jira:`524`). By `Kyle Brindley`_.
 
 Enhancements
-~~~~~~~~~~~~
+============
 
+
+******************
 0.0.1 (2020-10-26)
-------------------
+******************
 
 Breaking changes
-~~~~~~~~~~~~~~~~
+================
 
 New Features
-~~~~~~~~~~~~
+============
 - Create c++ stub repository targeting constitutive modeling (:jira:`332`, :pull:`1`). By `Kyle Brindley`_.
 
 Bug fixes
-~~~~~~~~~
+=========
 
 Documentation
-~~~~~~~~~~~~~
+=============
 
 Internal Changes
-~~~~~~~~~~~~~~~~
+================
 - Add continuous integration scripts (:jira:`333`, :pull:`2`). By `Kyle Brindley`_.
 
 Enhancements
-~~~~~~~~~~~~
+============

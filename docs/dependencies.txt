@@ -21,15 +21,19 @@ Executables
 Python Modules (for documentation)
 ==================================
 
-* `Sphinx`_ >= 3.0.4
-* `Breathe`_ >= 4.18.1
-* `sphinx\_rtd\_theme`_ >= 0.4.3
-
 For convenience, the minimal Python environment requirements for the
-documentation build are included in ``configuration_files/environment.yaml`` and
-``configuration_files/requirements.txt``. A minimal anaconda environment for building the
-documentation can be created from an existing anaconda installation with the
-following commands.
+documentation build are included in ``configuration_files/environment.yaml``.
+This file was created from the `pipreqs`_ command line tool and Sphinx
+configuration inspection, e.g. the extension packages.
+
+.. code:: bash
+
+   $ pwd
+   path/to/cpp_stub/
+   $ pipreqs --use-local --print --no-pin .
+
+A minimal anaconda environment for building the documentation can be created
+from an existing anaconda installation with the following commands.
 
 .. code:: bash
 
@@ -41,58 +45,23 @@ the `Anaconda Documentation`_.
 C++ Libraries
 =============
 
+.. note:: 
+
+   **Non-admin installations for Eigen and Boost are no longer required.** This project is built and deployed against C++
+   libraries managed in Conda. See the Conda environment file and discussion for non-admin environment management.
+
 * `Eigen`_ >= 3.3.7
-* `BOOST`_ >= 1.53.0
+* `BOOST`_ >= 1.59.0
+
+"Internal" project libraries
+============================
+
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 * stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools
 * solver\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/solver_tools
 * constitutive\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/consitutive_tools
 
-Constitutive Tools
-------------------
-
 All of the ``{error,vector,stress,solver,constitutive}_tools`` libraries are
 pulled from their git repos by branch name and built with their respective cmake
 files as part of the cmake build for this project.
-
-Eigen
------
-
-https://gitlab.com/libeigen/eigen
-
-Eigen must be "installed" following the ``eigen/INSTALL`` instructions. The
-Eigen dependence is easiest to resolve if eigen is installed in the default
-install directory.  However, if you don't have admin privileges, you can also
-insall Eigen to your home directory in ``$HOME/.local/include`` or
-``$HOME/include``.
-
-Non-admin Eigen install
------------------------
-
-* Reference: https://unix.stackexchange.com/questions/36871/where-should-a-local-executable-be-placed
-
-.. code:: bash
-
-   # Create personal include file directory
-   $ pwd
-   /home/$USER
-   $ mkdir -p .local/include
-   # Move to repository directory
-   $ cd /preferred/path/to/repos
-   # Example
-   $ pwd
-   /projects/$USER/w13repos
-   # Clone eigen
-   $ git clone https://gitlab.com/libeigen/eigen.git
-   $ cd eigen
-   $ git checkout 3.3.7
-   # Create build directory
-   $ mkdir build
-   $ cd build
-   # OPTIONAL. Set c++ compiler separate from system default
-   $ export CXX=$(command -v g++)
-   # Build eigen
-   $ cmake3 .. -DCMAKE_INSTALL_PREFIX=$HOME/.local
-   $ make install
-
