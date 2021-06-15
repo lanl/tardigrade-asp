@@ -36,11 +36,13 @@ Internal Changes
   (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
 - Change project UMAT library name to avoid conflicts with external projects (:jira:`661`, :pull:`42`). By `Kyle
   Brindley`_.
-- Remove the ``CXX`` compiler variable settings for build scripts (:jira:`671`, :pull:`44`. By `Kyle Brindley`_.
+- Remove the ``CXX`` compiler variable settings for build scripts (:jira:`671`, :pull:`44`). By `Kyle Brindley`_.
+- Corrected bug in `cpp_stub.cpp` in the map of `ddsdde` to `DDSDDE` due to using `spatialDimensions` instead
+  of `NTENS` (:jira:`685`). By `Nathan Miller`_.
 
 Enhancements
 ============
-- Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`) . By `Kyle Brindley`_.
+- Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`). By `Kyle Brindley`_.
 
 
 ******************
