@@ -15,6 +15,11 @@ Bug Fixes
 - Corrected bug in `cpp_stub.cpp` in the map of `ddsdde` to `DDSDDE` due to using `spatialDimensions` instead
   of `NTENS` (:jira:`685`, :pull:`47`). By `Nathan Miller`_.
 
+Documentation
+=============
+- Add camelCase project name replacement instructions to project setup. By `Kyle Brindley`_.
+
+
 ******************
 0.1.0 (2021-05-28)
 ******************

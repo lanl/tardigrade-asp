@@ -252,7 +252,15 @@ The final repo setup step is to update the remote url of the local clone of
        $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
        # no stdout to terminal because no files found
 
-5. Find files containing the project in their file name
+5. Search and replace camelcase project name occurrences, e.g. ``cppStub``.
+
+       $ grep -r cppStub . --exclude-dir={build,.git}
+       ...
+       $ sed -i 's/cppStub/myProject/g' $(grep -r cppStub . --exclude-dir={build,.git} -l)
+       $ grep -r cppStub . --exclude-dir={build,.git} -l
+       # no stdout to terminal because no files found
+
+6. Find files containing the project in their file name
 
        $ pwd
        /projects/<moniker>/w13repos/my_project
@@ -261,11 +269,11 @@ The final repo setup step is to update the remote url of the local clone of
        ./src/cpp/cpp_stub.h
        ./src/cpp/tests/test_cpp_stub.cpp
 
-6. Rename files after current project
+7. Rename files after current project
 
        $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
 
-7. Commit and push your changes to your "remote" or "fork" repository
+8. Commit and push your changes to your "remote" or "fork" repository
 
        $ pwd
        /projects/<moniker>/w13repos/my_project
