@@ -148,7 +148,7 @@ namespace cppStub{
         abaqusTools::rowToColumnMajor( DRPLDE, drplde, 1, NTENS );
         abaqusTools::rowToColumnMajor( STATEV, statev, 1, NSTATV );
         //Arrays require vector of vector to column major conversion
-        abaqusTools::rowToColumnMajor( DDSDDE, ddsdde, spatialDimensions, spatialDimensions );
+        abaqusTools::rowToColumnMajor( DDSDDE, ddsdde, NTENS, NTENS );
 
     }
 

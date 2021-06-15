@@ -10,6 +10,10 @@ Changelog
 0.1.1 (unreleased)
 ******************
 
+Bug Fixes
+=========
+- Corrected bug in `cpp_stub.cpp` in the map of `ddsdde` to `DDSDDE` due to using `spatialDimensions` instead
+  of `NTENS` (:jira:`685`, :pull:`47`). By `Nathan Miller`_.
 
 ******************
 0.1.0 (2021-05-28)
@@ -36,11 +40,11 @@ Internal Changes
   (:jira:`654`, :pull:`41`). By `Kyle Brindley`_.
 - Change project UMAT library name to avoid conflicts with external projects (:jira:`661`, :pull:`42`). By `Kyle
   Brindley`_.
-- Remove the ``CXX`` compiler variable settings for build scripts (:jira:`671`, :pull:`44`. By `Kyle Brindley`_.
+- Remove the ``CXX`` compiler variable settings for build scripts (:jira:`671`, :pull:`44`). By `Kyle Brindley`_.
 
 Enhancements
 ============
-- Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`) . By `Kyle Brindley`_.
+- Add multi-host and multi-environment CI/CD (:jira:`630`, :pull:`39`). By `Kyle Brindley`_.
 
 
 ******************
