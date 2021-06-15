@@ -10,6 +10,10 @@ Changelog
 0.1.1 (unreleased)
 ******************
 
+New Features
+============
+- Add camelCase project name replacement instructions to project setup. By `Kyle Brindley`_.
+
 Bug Fixes
 =========
 - Corrected bug in `cpp_stub.cpp` in the map of `ddsdde` to `DDSDDE` due to using `spatialDimensions` instead
