@@ -1,6 +1,6 @@
 #===================================================================================================== PROJECT SETUP ===
 cmake_minimum_required(VERSION 3.14)
-project(cpp_stub VERSION 0.1.0)
+project(cpp_stub VERSION 0.1.1)
 enable_testing()
 
 # Set common project paths relative to project root directory
