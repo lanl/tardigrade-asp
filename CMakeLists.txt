@@ -1,16 +1,23 @@
 #===================================================================================================== PROJECT SETUP ===
 cmake_minimum_required(VERSION 3.14)
-project(cpp_stub VERSION 0.1.1)
-enable_testing()
+project(cpp_stub)
 
 # Set common project paths relative to project root directory
 set(CPP_SRC_PATH "src/cpp")
 set(CMAKE_SRC_PATH "src/cmake")
 set(ABAQUS_SRC_PATH "src/abaqus")
-
 # Set some Abaqus integration variables
 set(UMAT "cpp_stub_umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
+
+# Add the cmake folder to locate project CMake module(s)
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
+
+# Get version number from Git
+set(VERSION_UPDATE_FROM_GIT True)
+# FIXME: Figure out why include() doesn't pick up CMAKE_MODULE_PATH correctly
+include(${CMAKE_SRC_PATH}/GetVersionFromGitTag.cmake)
+project(${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
 
 # Add installation directory variables
 include(GNUInstallDirs)
@@ -22,6 +29,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -ansi -pedantic -O3 -fmax-errors=5 -ggdb")
+
+# Enable CTest
+enable_testing()
 
 #================================================================================================= FIND DEPENDENCIES ===
 # Find eigen
@@ -50,9 +60,6 @@ else()
     message(STATUS "Abaqus not found. ${MISSING_INTEGRATION_DEPS_MESSAGE}")
 endif()
 
-# Add the cmake folder to locate the FindSphinx module
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/${CMAKE_SRC_PATH}" ${CMAKE_MODULE_PATH})
-
 # Set build type checks
 string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_lower)
 set(upstream_required "")
@@ -64,6 +71,7 @@ endif()
 include(FetchContent)
 set(upstream_packages "error_tools" "vector_tools" "abaqus_tools")
 foreach(package ${upstream_packages})
+    string(TOUPPER "${package}" package_upper)
     find_package(${package} ${upstream_required} CONFIG)
     if(${package}_FOUND)
         message(STATUS "Found ${package}: ${${package}_DIR}")
@@ -83,7 +91,7 @@ endforeach(package)
 #=============================================================================================== ADD PROJECT TARGETS ===
 # MUST COME AFTER DEPENDENCY LOCATING
 # Add project source directories
-include_directories(${CPP_SRC_PATH})
+include_directories("${CPP_SRC_PATH}")
 add_subdirectory(${CPP_SRC_PATH})
 
 # Only add tests and documentation for current project builds. Protects downstream project builds.

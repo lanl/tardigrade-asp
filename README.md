@@ -358,7 +358,7 @@ packages.
 A minimal anaconda environment for building the documentation can be created
 from an existing anaconda installation with the following commands.
 
-    $ conda env create --file environment.yaml
+    $ conda env create --file configuration_files/environment.yaml
 
 You can learn more about Anaconda Python environment creation and management in
 the [Anaconda
@@ -372,18 +372,15 @@ Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/m
 
 * [Eigen](https://eigen.tuxfamily.org/dox/) >= 3.3.7
 * [BOOST](https://www.boost.org/doc/libs/1_53_0/) >= 1.59.0
-
-### "Internal" project libraries
-
 * error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
 * vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
 * stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools
 * solver\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/solver_tools
 * constitutive\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/consitutive_tools
 
-All of the ``{error,vector,stress,solver,constitutive}_tools`` libraries are
-pulled from their git repos by branch name and built with their respective cmake
-files as part of the cmake build for this project.
+If not found on the current system or active Conda environment, all of the
+``*_tools`` libraries are pulled from their git repos by branch name and built
+with their respective cmake files as part of the cmake build for this project.
 
 ---
 
@@ -398,7 +395,7 @@ This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
 
 1) Activate the correct python environment
 
-       $ module load python/2019.10-python-3.7
+       $ module load python/2020.07-python-3.8
        $ sv3r
 
 2) Create a build directory
@@ -508,8 +505,7 @@ configuration from scratch.
        # Just perform the build (pick one)
        $ ./new_build.sh <cmake build type>
        $ ./new_build.sh None
-       $ ./new_build.sh None
-       $ ./new_build.sh None
+       $ ./new_build.sh Release
 
        # Perform tests from PWD
        $ ./build/src/cpp/tests/test_cpp_stub
@@ -529,7 +525,7 @@ configuration from scratch.
 4) Display docs
 
        # Sphinx
-       $ firefox build/docs/sphinx/index.html &
+       $ firefox build/docs/sphinx/html/index.html &
 
        # Doxygen
        $ firefox build/docs/doxygen/html/index.html &
@@ -565,19 +561,45 @@ To build just the documentation pick up the steps here:
 
 5) Documentation builds to:
 
-       cpp_stub/build/docs/sphinx/index.html
+       cpp_stub/build/docs/sphinx/html/index.html
 
 6) Display docs
 
        $ pwd
        /path/to/cpp_stub/build/
-       $ firefox docs/sphinx/index.html &
+       $ firefox docs/sphinx/html/index.html &
 
 7) While the Sphinx API is still a WIP, try the doxygen API
 
        $ pwd
        /path/to/cpp_stub/build/
        $ firefox docs/doxygen/html/index.html &
+
+## Install the library
+
+Build the entire before performing the installation.
+
+4) Build the entire project
+
+       $ pwd
+       /path/to/cpp_stub/build
+       $ cmake3 --build .
+
+5) Install the library
+
+       $ pwd
+       /path/to/cpp_stub/build
+       $ cmake --install . --prefix path/to/root/install
+
+       # Example local user (non-admin) Linux install
+       $ cmake --install . --prefix /home/$USER/.local
+
+       # Example install to conda environment
+       $ conda active my_env
+       $ cmake --install . --prefix ${CONDA_DEFAULT_ENV} 
+
+       # Example install to W-13 CI/CD conda environment performed by CI/CD institutional account
+       $ cmake --install . --prefix /projects/python/release
 
 ---
 
