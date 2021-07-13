@@ -3,15 +3,16 @@ channels:
   - defaults
   - conda-forge
 dependencies:
+  - python>=3.7
   - boost>=1.59
   - breathe>=4.18.1
   - cython
   - eigen>=3.3.7
   - myst-parser
   - numpy
-  - pytest
-  - python>=3.7
-  - sphinx>=3.0.4
-  - sphinxcontrib-bibtex 
-  - sphinx_rtd_theme>=0.4.3
   - pip
+  - pytest
+  - pytest-cov
+  - sphinx>=3.0.4
+  - sphinx_rtd_theme>=0.4.3
+  - sphinxcontrib-bibtex 
