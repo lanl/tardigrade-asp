@@ -8,9 +8,7 @@
    :caption: Project Setup
    :maxdepth: 1
 
-   bitbucket_setup
-   jenkins_job_creation
-   jenkins_job_xml
+   gitlab_setup
 
 .. toctree::
    :maxdepth: 2

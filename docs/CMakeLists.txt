@@ -52,8 +52,6 @@ set(DOCUMENTATION_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/contribution.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/devops.rst
-    ${CMAKE_CURRENT_SOURCE_DIR}/jenkins_job_creation.md
-    ${CMAKE_CURRENT_SOURCE_DIR}/jenkins_job_xml.md
     ${CMAKE_CURRENT_SOURCE_DIR}/md2rst.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/project_brief.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/release_philosophy.rst
