@@ -1,18 +1,18 @@
-.. `Anaconda Documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
-.. `BOOST <https://www.boost.org/doc/libs/1_53_0/>`_
-.. `CMake <https://cmake.org/cmake/help/v3.14/>`_
-.. `CMake add_custom_target <https://cmake.org/cmake/help/latest/command/add_custom_target.html>`_
-.. `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_
-.. `Eigen <https://eigen.tuxfamily.org/dox/>`_
-.. `Sphinx <https://www.sphinx-doc.org/en/master/>`_
-.. `Breathe <https://breathe.readthedocs.io/en/latest/>`_
-.. `PEP-8 <https://www.python.org/dev/peps/pep-0008/>`_
-.. `pipreqs <https://github.com/bndr/pipreqs>`_ 
-.. `LaTeX <https://www.latex-project.org/help/documentation/>`_
-.. `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_
-.. `upstream repository <https://re-git.lanl.gov/aea/material-models/cpp_stub>`_
-.. `Material Models <https://re-git.lanl.gov/aea/material-models>`_
-.. `UNIX group <https://ddw-confluence.lanl.gov/pages/viewpage.action?pageId=150929410>`_
+.. _Anaconda Documentation: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
+.. _BOOST: https://www.boost.org/doc/libs/1_53_0/
+.. _CMake: https://cmake.org/cmake/help/v3.14/
+.. _CMake add_custom_target: https://cmake.org/cmake/help/latest/command/add_custom_target.html
+.. _Doxygen: https://www.doxygen.nl/manual/docblocks.html
+.. _Eigen: https://eigen.tuxfamily.org/dox/
+.. _Sphinx: https://www.sphinx-doc.org/en/master/
+.. _Breathe: https://breathe.readthedocs.io/en/latest/
+.. _PEP-8: https://www.python.org/dev/peps/pep-0008/
+.. _pipreqs: https://github.com/bndr/pipreqs 
+.. _LaTeX: https://www.latex-project.org/help/documentation/
+.. _W-13 DevOps Manual: https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps
+.. _upstream repository: https://re-git.lanl.gov/aea/material-models/cpp_stub
+.. _Material Models: https://re-git.lanl.gov/aea/material-models
+.. _UNIX group: https://ddw-confluence.lanl.gov/pages/viewpage.action?pageId=150929410
 
 ###################
 C++ Stub repository
