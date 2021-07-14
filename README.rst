@@ -496,8 +496,8 @@ Build on sstelmo
        The abaqus input files and bash scripts used for integration testing are
        built with the
        `CMake add_custom_target <https://cmake.org/cmake/help/latest/command/add_custom_target.html>`_
-       feature. Consequently, the integration test target is _always considered
-       out of date_. The integration test target copies all registered input files
+       feature. Consequently, the integration test target is *always considered
+       out of date*. The integration test target copies all registered input files
        and the integration test bash script from source to build directory. This
        means the file copy operation is always performed when the integration test
        target is requested in the cmake build command, e.g. ``cmake --build .`` or
