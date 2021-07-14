@@ -17,9 +17,11 @@ system with integrated documentation. It will also include the necessary hooks
 to commonly used C++ libraries for constitutive modeling. This stub repository
 also includes template hooks for integrating C++ code as Abaqus subroutines.
 
-    **NOTE**: you can use this repo as a stub for fortran projects as well! A
-    step-by-step may never happen because c++ is the future of W-13 subroutines.
-    For now, refer to the following references:
+    **NOTE**
+
+    You can use this repo as a stub for fortran projects as well! A step-by-step
+    may never happen because c++ is the future of W-13 subroutines.  For now, refer
+    to the following references:
    
     * `CMake for Fortran example CMakeLists.txt <https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample>`_
     * `CMake documentation starting point <https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html>`_
@@ -102,7 +104,9 @@ Clone cpp\_stub into a local repository
 Create a new repository on Bitbucket
 ====================================
 
-    Note: These notes are a text copy of a variation on the
+    **Note**
+
+    These notes are a text copy of a variation on the
     `New Bitbucket Repo Guide <https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide>`_
     which can also be found in the
     `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_
@@ -213,7 +217,9 @@ The final repo setup step is to update the remote url of the local clone of
 Update project name throughout repository
 =========================================
 
-    Note: the remaining steps are a truncated version of the W-13 Git project
+    **Note**
+
+    The remaining steps are a truncated version of the W-13 Git project
     `contribution guide <https://simulia.lanl.gov/ECMF-D/contribution_guide.html>`_
     which can also be found in the
     `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_.
@@ -400,8 +406,11 @@ the
 C++ Libraries
 =============
 
-    **NOTE: Non-admin installations for Eigen and Boost are no longer required.** This project is built and deployed
-    against C++ libraries managed in Conda. See the Conda environment file and README discussion for non-admin environment
+    **NOTE**
+
+    Non-admin installations for Eigen and Boost are no longer required.** This
+    project is built and deployed against C++ libraries managed in Conda. See the
+    Conda environment file and README discussion for non-admin environment
     management.
 
 * `Eigen <https://eigen.tuxfamily.org/dox/>`_ >= 3.3.7
@@ -599,8 +608,8 @@ Building the documentation
 
     **HEALTH WARNING**
    
-    **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
-    API is much more useful.
+    The sphinx API docs are a work-in-progress. The doxygen API is much more
+    useful.
 
 The documentation can be built with ``build_docs.sh``. The steps used in that
 shell script are repeated here.
