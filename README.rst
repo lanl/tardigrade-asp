@@ -1,3 +1,19 @@
+.. `Anaconda Documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
+.. `BOOST <https://www.boost.org/doc/libs/1_53_0/>`_
+.. `CMake <https://cmake.org/cmake/help/v3.14/>`_
+.. `CMake add_custom_target <https://cmake.org/cmake/help/latest/command/add_custom_target.html>`_
+.. `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_
+.. `Eigen <https://eigen.tuxfamily.org/dox/>`_
+.. `Sphinx <https://www.sphinx-doc.org/en/master/>`_
+.. `Breathe <https://breathe.readthedocs.io/en/latest/>`_
+.. `PEP-8 <https://www.python.org/dev/peps/pep-0008/>`_
+.. `pipreqs <https://github.com/bndr/pipreqs>`_ 
+.. `LaTeX <https://www.latex-project.org/help/documentation/>`_
+.. `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_
+.. `upstream repository <https://re-git.lanl.gov/aea/material-models/cpp_stub>`_
+.. `Material Models <https://re-git.lanl.gov/aea/material-models>`_
+.. `UNIX group <https://ddw-confluence.lanl.gov/pages/viewpage.action?pageId=150929410>`_
+
 ###################
 C++ Stub repository
 ###################
@@ -9,10 +25,7 @@ Project Description
 A stub repository for C++ development projects in W-13.
 
 This repository will contain the necessary setup files to integrate C++ doc
-strings, `CMake <https://cmake.org/cmake/help/v3.14/>`_,
-`Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_,
-`Sphinx <https://www.sphinx-doc.org/en/master/>`_, and
-`Breathe <https://breathe.readthedocs.io/en/latest/>`_ for a complete build
+strings, `CMake`_, `Doxygen`_, `Sphinx`_, and `Breathe`_ for a complete build
 system with integrated documentation. It will also include the necessary hooks
 to commonly used C++ libraries for constitutive modeling. This stub repository
 also includes template hooks for integrating C++ code as Abaqus subroutines.
@@ -47,7 +60,7 @@ on the W-13 Confluence page
 Clone cpp\_stub into a local repository
 =======================================
 
-1. Navigate to the `upstream cpp\_stub repo <https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/browse>`_
+1. Navigate to the `upstream repository`_
 
 2. Copy the ssh url from the Bitbucket "Clone" button on the Bitbucket
    repository web page. It should look like the following:
@@ -109,9 +122,9 @@ Create a new repository on Bitbucket
     These notes are a text copy of a variation on the
     `New Bitbucket Repo Guide <https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide>`_
     which can also be found in the
-    `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_
+    `W-13 DevOps Manual`_
 
-1. Navigate to the W-13 `Material Models <https://xcp-stash.lanl.gov/projects/MM>`_ Bitbucket project.
+1. Navigate to the W-13 `Material Models`_ Gitlab sub-group.
 
 2. Create a new repository by clicking on the "+" sign in the upper left corner.
 
@@ -135,13 +148,10 @@ Create a new repository on Bitbucket
 Update settings for your repository
 ===================================
 
-Bitbucket repositories in the
-`Material Models <https://xcp-stash.lanl.gov/projects/MM>`_ project inherit permissions and
+Bitbucket repositories in the `Material Models`_ project inherit permissions and
 settings from that project. This included read permission for the
-``w13bitbucket``
-`UNIX group <https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=150929410&searchId=Y1EVB37UN>`_.
-For most developers, these inherited repository settings are appropriate and
-only a small number of settings must be updated.
+``w13bitbucket`` `UNIX group`_.  For most developers, these inherited repository
+settings are appropriate and only a small number of settings must be updated.
 
 1. Click on the gear icon in the lower left sidebar.
 
@@ -160,7 +170,7 @@ Fork the upstream repository
 In the
 `Forking Workflow <https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow>`_
 the repository you just created in the
-`Material Models <https://xcp-stash.lanl.gov/projects/MM>`_ project is called
+`Material Models`_ project is called
 the "upstream" repository. Throughout older W-13 documentation this may also be
 called the "official" repository.
 
@@ -221,14 +231,13 @@ Update project name throughout repository
 
     The remaining steps are a truncated version of the W-13 Git project
     `contribution guide <https://simulia.lanl.gov/ECMF-D/contribution_guide.html>`_
-    which can also be found in the
-    `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_.
-    Critically, these steps will omit the Jira task creation and Bitbucket
-    Pull-Request (PR) steps.  The Bitbucket PR steps may be reproduced using the
-    contribution guide, but your project will have to create a Jira project prior to
-    integrating the Jira workflow. Contact the xcp devops team
-    <devops-help@lanl.gov> to create a Jira project. You can email the W-13 DevOps
-    team <w13devops@lanl.gov> for notes about setup.
+    which can also be found in the `W-13 DevOps Manual`_.  Critically, these
+    steps will omit the Jira task creation and Bitbucket Pull-Request (PR) steps.
+    The Bitbucket PR steps may be reproduced using the contribution guide, but your
+    project will have to create a Jira project prior to integrating the Jira
+    workflow. Contact the xcp devops team at devops-help@lanl.gov to create a Jira
+    project. You can email the W-13 DevOps team at w13devops@lanl.gov for notes about
+    setup.
 
 1. Create a feature branch for your project name updates
 
@@ -373,18 +382,17 @@ Compilers
 Executables
 ===========
 
-* `CMake <https://cmake.org/cmake/help/v3.14/>`_ >= 3.14
-* `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ >= 1.8.5
-* `LaTeX <https://www.latex-project.org/help/documentation/>`_ >= 2017
+* `CMake`_ >= 3.14
+* `Doxygen`_ >= 1.8.5
+* `LaTeX`_ >= 2017
 
 Conda Environment
 =================
 
 For convenience, the minimal Python environment requirements for the
 documentation build are included in ``configuration_files/environment.yaml``.
-This file was created from the `pipreqs <https://github.com/bndr/pipreqs>`_
-command line tool and Sphinx configuration inspection, e.g. the extension
-packages.
+This file was created from the `pipreqs`_ command line tool and Sphinx
+configuration inspection, e.g. the extension packages.
 
 .. code-block:: bash
 
@@ -400,8 +408,7 @@ from an existing anaconda installation with the following commands.
    $ conda env create --file configuration_files/environment.yaml
 
 You can learn more about Anaconda Python environment creation and management in
-the
-`Anaconda Documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
+the `Anaconda Documentation`_.
 
 C++ Libraries
 =============
@@ -413,8 +420,8 @@ C++ Libraries
     Conda environment file and README discussion for non-admin environment
     management.
 
-* `Eigen <https://eigen.tuxfamily.org/dox/>`_ >= 3.3.7
-* `BOOST <https://www.boost.org/doc/libs/1_53_0/>`_ >= 1.59.0
+* `Eigen`_ >= 3.3.7
+* `BOOST`_ >= 1.59.0
 * error\_tools: https://re-git.lanl.gov/aea/material-models/error_tools
 * vector\_tools: https://re-git.lanl.gov/aea/material-models/vector_tools
 * abaqus\_tools: https://re-git.lanl.gov/aea/material-models/abaqus_tools
@@ -430,10 +437,8 @@ with their respective cmake files as part of the cmake build for this project.
 Build and Test
 **************
 
-This project is built with `CMake <https://cmake.org/cmake/help/v3.14/>`_ and uses
-`Sphinx <https://www.sphinx-doc.org/en/master/>`_ to build the documentation with
-`Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ +
-`Breathe <https://breathe.readthedocs.io/en/latest/>`_ for the c++ API.
+This project is built with `CMake`_ and uses `Sphinx`_ to build the
+documentation with `Doxygen`_ + `Breathe`_ for the c++ API.
 
 Build on sstelmo
 ================
@@ -503,15 +508,14 @@ Build on sstelmo
        **HEALTH WARNING**
       
        The abaqus input files and bash scripts used for integration testing are
-       built with the
-       `CMake add_custom_target <https://cmake.org/cmake/help/latest/command/add_custom_target.html>`_
-       feature. Consequently, the integration test target is *always considered
-       out of date*. The integration test target copies all registered input files
-       and the integration test bash script from source to build directory. This
-       means the file copy operation is always performed when the integration test
-       target is requested in the cmake build command, e.g. ``cmake --build .`` or
-       ``cmake --build src/abaqus/tests``. This operation is computationally
-       inexpensive with respect to building the ``cpp_stub`` source code.
+       built with the `CMake add_custom_target`_ feature. Consequently, the integration
+       test target is *always considered out of date*. The integration test target
+       copies all registered input files and the integration test bash script from
+       source to build directory. This means the file copy operation is always
+       performed when the integration test target is requested in the cmake build
+       command, e.g. ``cmake --build .`` or ``cmake --build src/abaqus/tests``. This
+       operation is computationally inexpensive with respect to building the
+       ``cpp_stub`` source code.
       
        Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file
        under the ``ABAQUS_INPUT_FILES`` CMake variable.
@@ -729,8 +733,8 @@ doubt use ``feature/<description>``.
 reStructured Text
 =================
 
-`Sphinx <https://www.sphinx-doc.org/en/master/>`_ reads in docstrings and other
-special portions of the code as reStructured text. Developers should follow
+`Sphinx`_ reads in docstrings and other special portions of the code as
+reStructured text. Developers should follow
 styles in this `Sphinx style guide
 <https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#>`_.
 
@@ -738,12 +742,10 @@ Style Guide
 ===========
 
 This project does not yet have a full style guide. Generally, wherever a style
-can't be inferred from surrounding code this project falls back to
-`PEP-8 <https://www.python.org/dev/peps/pep-0008/>`_-like styles. There are two
-notable exceptions to the notional PEP-8 fall back:
+can't be inferred from surrounding code this project falls back to `PEP-8`_-like
+styles. There are two notable exceptions to the notional PEP-8 fall back:
 
-1. `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ style docstrings are
-   required for automated, API from source documentation.
+1. `Doxygen`_ style docstrings are required for automated, API from source documentation.
 2. This project prefers expansive whitespace surrounding parentheses, braces, and
    brackets.
 
