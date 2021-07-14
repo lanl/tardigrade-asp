@@ -491,7 +491,7 @@ Build on sstelmo
 
 6) Clean build directory to force a re-build
 
-       :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
+       **HEALTH WARNING**
       
        The abaqus input files and bash scripts used for integration testing are
        built with the
@@ -597,7 +597,7 @@ configuration from scratch.
 Building the documentation
 ==========================
 
-    :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
+    **HEALTH WARNING**
    
     **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
     API is much more useful.
