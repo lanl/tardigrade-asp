@@ -93,7 +93,7 @@ Create a new repository on Bitbucket
    These notes are a text copy of a variation on the `New Bitbucket Repo Guide`_
    which can also be found in the `W-13 DevOps Manual`_
 
-1. Navigate to the W-13 `Material Models Bitbucket project`_.
+1. Navigate to the W-13 `Material Models`_ Gitlab sub-group.
 
 2. Create a new repository by clicking on the "+" sign in the upper left corner.
 
@@ -118,7 +118,7 @@ Create a new repository on Bitbucket
 Update settings for your repository
 ***********************************
 
-Bitbucket repositories in the `Material Models Bitbucket project`_ inherit permissions and settings from that project.
+Bitbucket repositories in the `Material Models`_ Gitlab sub-group inherit permissions and settings from that sub-group.
 This included read permission for the ``w13bitbucket`` UNIX group (`W-13 Managed UNIX Groups`_). For most developers,
 these inherited repository settings are appropriate and only a small number of settings must be updated.
 
@@ -137,7 +137,7 @@ these inherited repository settings are appropriate and only a small number of s
 Fork the upstream repository
 ****************************
 
-In the `Forking Workflow`_ the repository you just created in the `Material Models Bitbucket project`_ project is called
+In the `Forking Workflow`_ the repository you just created in the `Material Models`_ Gitlab sub-group is called
 the "upstream" repository. Throughout older W-13 documentation this may also be called the "official" repository.
 
 Bitbucket repositories that inherit permissions from W-13 projects use the `Forking Workflow`_ and limit permissions for
