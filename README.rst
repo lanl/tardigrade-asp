@@ -1,90 +1,113 @@
-# C++ Stub repository
+###################
+C++ Stub repository
+###################
+
+*******************
+Project Description
+*******************
 
 A stub repository for C++ development projects in W-13.
 
-This repository will contain the necessary setup files to integrate C++ doc strings,
-[CMake](https://cmake.org/cmake/help/v3.14/), [Doxygen](https://www.doxygen.nl/manual/docblocks.html),
-[Sphinx](https://www.sphinx-doc.org/en/master/), and [Breathe](https://breathe.readthedocs.io/en/latest/) for a complete
-build system with integrated documentation. It will also include the necessary hooks to commonly used C++ libraries for
-constitutive modeling. This stub repository also includes template hooks for integrating C++ code as Abaqus subroutines.
+This repository will contain the necessary setup files to integrate C++ doc
+strings, `CMake <https://cmake.org/cmake/help/v3.14/>`_,
+`Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_,
+`Sphinx <https://www.sphinx-doc.org/en/master/>`_, and
+`Breathe <https://breathe.readthedocs.io/en/latest/>`_ for a complete build
+system with integrated documentation. It will also include the necessary hooks
+to commonly used C++ libraries for constitutive modeling. This stub repository
+also includes template hooks for integrating C++ code as Abaqus subroutines.
 
-> Note: you can use this repo as a stub for fortran projects as well! A
-> step-by-step may never happen because c++ is the future of W-13 subroutines.
-> For now, refer to the following references:
->
-> * [CMake for Fortran example
->   ``CMakeLists.txt``](https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample)
-> * [CMake documentation starting point](https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html)
-> * [Stack Overflow thread](https://stackoverflow.com/questions/12705562/using-cmake-with-fortran)
-> * [Doxygen comments for Fortran](https://www.doxygen.nl/manual/docblocks.html#fortranblocks)
+    **NOTE**: you can use this repo as a stub for fortran projects as well! A
+    step-by-step may never happen because c++ is the future of W-13 subroutines.
+    For now, refer to the following references:
+   
+    * `CMake for Fortran example CMakeLists.txt <https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample>`_
+    * `CMake documentation starting point <https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html>`_
+    * `Stack Overflow thread <https://stackoverflow.com/questions/12705562/using-cmake-with-fortran>`_
+    * `Doxygen comments for Fortran <https://www.doxygen.nl/manual/docblocks.html#fortranblocks>`_
 
-## Setting up a new project from this stub repo
+********************************************
+Setting up a new project from this stub repo
+********************************************
 
 This section has a corresponding section in the formatted and hyperlinked html
 documentation. The html documentation also includes setup instructions for
 Jenkins Continuous Integration (CI) setup. Build and view instructions are
 included in following sections, separated from project setup by horizontal bars.
 
-### Prerequisites
+Prerequisites
+=============
 
 Set up your profile on Bitbucket with ssh keys. You can follow the instructions
-on the W-13 Confluence page [Gitting started with W-13
-Bitbucket](https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+Git+Server)
+on the W-13 Confluence page
+`Gitting started with W-13 Bitbucket <https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+Git+Server>`_
 
-### Clone cpp\_stub into a local repository
+Clone cpp\_stub into a local repository
+=======================================
 
-1. Navigate to the [upstream cpp\_stub repo](https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/browse)
+1. Navigate to the `upstream cpp\_stub repo <https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/browse>`_
 
 2. Copy the ssh url from the Bitbucket "Clone" button on the Bitbucket
    repository web page. It should look like the following:
 
-       ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
+   .. code-block:: bash
+
+      ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
 
 3. Navigate to your preferred repository directory in a terminal or use the
    example commands below
 
-       $ ssh -X sstelmo.lanl.gov
-       $ pwd
-       /home/<moniker>
-       $ mkdir -p /projects/$USER/w13repos
-       $ cd /projects/$USER/w13repos
-       $ pwd
-       /projects/<moniker>/w13repos
+   .. code-block:: bash
+
+      $ ssh -X sstelmo.lanl.gov
+      $ pwd
+      /home/<moniker>
+      $ mkdir -p /projects/$USER/w13repos
+      $ cd /projects/$USER/w13repos
+      $ pwd
+      /projects/<moniker>/w13repos
 
 4. Clone the stub repository using the url copied in step 2.
 
-       $ pwd
-       /projects/<moniker>/w13repos
-       $ git clone ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos
+      $ git clone ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
 
 5. Rename the local repository directory for your project.
 
-       $ pwd
-       /projects/<moniker>/w13repos
-       $ ls cpp_stub -d
-       cpp_stub
-       $ mv cpp_stub my_project
-       $ ls cpp_stub -d
-       ls: cannot access 'cpp_stub': No such file or directory
-       $ mv cpp_stub my_project
-       my_project
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos
+      $ ls cpp_stub -d
+      cpp_stub
+      $ mv cpp_stub my_project
+      $ ls cpp_stub -d
+      ls: cannot access 'cpp_stub': No such file or directory
+      $ mv cpp_stub my_project
+      my_project
 
 6. Change to your project's repository directory
 
-       $ pwd
-       /projects/<moniker>/w13repos
-       $ cd my_project
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
+   .. code-block:: bash
 
-### Create a new repository on Bitbucket
+      $ pwd
+      /projects/<moniker>/w13repos
+      $ cd my_project
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
 
-> Note: These notes are a text copy of a variation on the [New Bitbucket Repo
-> Guide](https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide)
-> which can also be found in the [W-13 DevOps
-> Manual](https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps)
+Create a new repository on Bitbucket
+====================================
 
-1. Navigate to the W-13 [Material Models](https://xcp-stash.lanl.gov/projects/MM) Bitbucket project.
+    Note: These notes are a text copy of a variation on the
+    `New Bitbucket Repo Guide <https://simulia.lanl.gov/ECMF-D/devops_guide.html#new-bitbucket-repo-guide>`_
+    which can also be found in the
+    `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_
+
+1. Navigate to the W-13 `Material Models <https://xcp-stash.lanl.gov/projects/MM>`_ Bitbucket project.
 
 2. Create a new repository by clicking on the "+" sign in the upper left corner.
 
@@ -92,24 +115,27 @@ Bitbucket](https://xcp-confluence.lanl.gov/display/GIT/Gitting+Started+W-13%27s+
 
 4. Follow the "My code is already tracked by Git" instructions.
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
-       $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/mm/my_project.git
-       $ git push -u origin --all
-       $ git push origin --tags
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/mm/my_project.git
+      $ git push -u origin --all
+      $ git push origin --tags
 
 5. Refresh the Bitbucket webpage and verify that the repository code was pushed
    correctly. You should see a list of source files and this Bitbucket parsed
    ``README.md`` displayed. You can also select the drop down branch menu to
    view a "master" and "dev" branch.
 
-### Update settings for your repository
+Update settings for your repository
+===================================
 
-Bitbucket repositories in the [Material
-Models](https://xcp-stash.lanl.gov/projects/MM) project inherit permissions and
+Bitbucket repositories in the
+`Material Models <https://xcp-stash.lanl.gov/projects/MM>`_ project inherit permissions and
 settings from that project. This included read permission for the
-``w13bitbucket`` [UNIX
-group](https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=150929410&searchId=Y1EVB37UN).
+``w13bitbucket``
+`UNIX group <https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=150929410&searchId=Y1EVB37UN>`_.
 For most developers, these inherited repository settings are appropriate and
 only a small number of settings must be updated.
 
@@ -124,18 +150,18 @@ only a small number of settings must be updated.
 4. From the "Default reviewers" tab you can add yourself and any project
    co-owners as default reviewers.
 
-### Fork the upstream repository
+Fork the upstream repository
+============================
 
-In the [Forking
-Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
-the repository you just created in the [Material
-Models](https://xcp-stash.lanl.gov/projects/MM) project is called the "upstream"
-repository. Throughout older W-13 documentation this may also be called the
-"official" repository.
+In the
+`Forking Workflow <https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow>`_
+the repository you just created in the
+`Material Models <https://xcp-stash.lanl.gov/projects/MM>`_ project is called
+the "upstream" repository. Throughout older W-13 documentation this may also be
+called the "official" repository.
 
 Bitbucket repositories that inherit permissions from W-13 projects use the
-[Forking
-Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow)
+`Forking Workflow <https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow>`_
 and limit permissions for pushing changes to the upstream repository. Now that
 branches exist on this repository, no one will be able to push directly to
 *existing branches* of the upstream respository.
@@ -160,7 +186,8 @@ branches exist on this repository, no one will be able to push directly to
 This repository is referred to as the "fork" or "remote" repository throughout
 W-13 DevOps documentation.
 
-### Update the remote url in your local repository
+Update the remote url in your local repository
+==============================================
 
 The final repo setup step is to update the remote url of the local clone of
 ``my_project``.  We will return to the terminal session.
@@ -168,118 +195,139 @@ The final repo setup step is to update the remote url of the local clone of
 1. Copy the url of your "remote" repository from the Bitbucket webpage. It
    should look like:
 
-       ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
+   .. code-block:: bash
+
+      ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
 
 2. Return to your terminal session and update the remote repository for the
    final time.
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
-       $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
-       $ git push -u origin --all
-       $ git push origin --tags
+   .. code-block:: bash
 
-### Update project name throughout repository
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
+      $ git push -u origin --all
+      $ git push origin --tags
 
-> Note: the remaining steps are a truncated version of the W-13 Git project
-> [contribution guide](https://simulia.lanl.gov/ECMF-D/contribution_guide.html)
-> which can also be found in the [W-13 DevOps
-> Manual](https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps). Critically,
-> these steps will omit the Jira task creation and Bitbucket Pull-Request (PR)
-> steps. The Bitbucket PR steps may be reproduced using the contribution guide,
-> but your project will have to create a Jira project prior to integrating the
-> Jira workflow. Contact the xcp devops team <devops-help@lanl.gov> to create a
-> Jira project. You can email the W-13 DevOps team <w13devops@lanl.gov> for
-> notes about setup.
+Update project name throughout repository
+=========================================
+
+    Note: the remaining steps are a truncated version of the W-13 Git project
+    `contribution guide <https://simulia.lanl.gov/ECMF-D/contribution_guide.html>`_
+    which can also be found in the
+    `W-13 DevOps Manual <https://xcp-confluence.lanl.gov/display/COM/W-13+DevOps>`_.
+    Critically, these steps will omit the Jira task creation and Bitbucket
+    Pull-Request (PR) steps.  The Bitbucket PR steps may be reproduced using the
+    contribution guide, but your project will have to create a Jira project prior to
+    integrating the Jira workflow. Contact the xcp devops team
+    <devops-help@lanl.gov> to create a Jira project. You can email the W-13 DevOps
+    team <w13devops@lanl.gov> for notes about setup.
 
 1. Create a feature branch for your project name updates
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
-       $ git checkout -b feature/project-name-updates
-       $ git branch
-         dev
-       * feature/project-name-updates
-         master
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ git checkout -b feature/project-name-updates
+      $ git branch
+        dev
+      * feature/project-name-updates
+        master
 
 2. Search for all instances of ``cpp_stub``. The list of occurrences will look
    quite long, but we can search and replace with ``sed`` to avoid manual file
    edits.
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
+   .. code-block:: bash
 
-       # Recursive, case-insensitive search and count occurrences
-       $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
-       57
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
 
-       # Recursive, case-insensitive search and display
-       $ grep -ri cpp_stub . --exclude-dir={build,.git}
-       ...
+      # Recursive, case-insensitive search and count occurrences
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+      57
 
-       # Clean list of files with project name
-       $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-       ./CMakeLists.txt
-       ./docs/api.rst
-       ./docs/devops.rst
-       ./README.md
-       ./set_vars.sh
-       ./src/cpp/cpp_stub.cpp
-       ./src/cpp/cpp_stub.h
-       ./src/cpp/tests/test_cpp_stub.cpp
+      # Recursive, case-insensitive search and display
+      $ grep -ri cpp_stub . --exclude-dir={build,.git}
+      ...
+
+      # Clean list of files with project name
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      ./CMakeLists.txt
+      ./docs/api.rst
+      ./docs/devops.rst
+      ./README.md
+      ./set_vars.sh
+      ./src/cpp/cpp_stub.cpp
+      ./src/cpp/cpp_stub.h
+      ./src/cpp/tests/test_cpp_stub.cpp
 
 3. Search and replace from command line
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
+   .. code-block:: bash
 
-       # Replace lower case occurrences in place
-       $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
-       $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-       ./src/cpp/cpp_stub.h
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
 
-       # Replace upper case occurrences in place
-       $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
+      # Replace lower case occurrences in place
+      $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      ./src/cpp/cpp_stub.h
+
+      # Replace upper case occurrences in place
+      $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
 
 4. Verify no more occurrences of project name ``cpp_stub``
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
-       $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
-       0
-       $ grep -ri cpp_stub . --exclude-dir={build,.git}
-       # no stdout to terminal because no files found
-       $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-       # no stdout to terminal because no files found
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+      0
+      $ grep -ri cpp_stub . --exclude-dir={build,.git}
+      # no stdout to terminal because no files found
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      # no stdout to terminal because no files found
 
 5. Search and replace camelcase project name occurrences, e.g. ``cppStub``.
 
-       $ grep -r cppStub . --exclude-dir={build,.git}
-       ...
-       $ sed -i 's/cppStub/myProject/g' $(grep -r cppStub . --exclude-dir={build,.git} -l)
-       $ grep -r cppStub . --exclude-dir={build,.git} -l
-       # no stdout to terminal because no files found
+   .. code-block:: bash
+
+      $ grep -r cppStub . --exclude-dir={build,.git}
+      ...
+      $ sed -i 's/cppStub/myProject/g' $(grep -r cppStub . --exclude-dir={build,.git} -l)
+      $ grep -r cppStub . --exclude-dir={build,.git} -l
+      # no stdout to terminal because no files found
 
 6. Find files containing the project in their file name
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
-       $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
-       ./src/cpp/cpp_stub.cpp
-       ./src/cpp/cpp_stub.h
-       ./src/cpp/tests/test_cpp_stub.cpp
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
+      ./src/cpp/cpp_stub.cpp
+      ./src/cpp/cpp_stub.h
+      ./src/cpp/tests/test_cpp_stub.cpp
 
 7. Rename files after current project
 
-       $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
+   .. code-block:: bash
+
+      $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
 
 8. Commit and push your changes to your "remote" or "fork" repository
 
-       $ pwd
-       /projects/<moniker>/w13repos/my_project
-       # Add tracked files and message
-       $ git commit -a -m "FEAT: replace cpp_stub with my_project through repository"
-       $ git push origin feature/project-name-updates
+   .. code-block:: bash
+
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      # Add tracked files and message
+      $ git commit -a -m "FEAT: replace cpp_stub with my_project through repository"
+      $ git push origin feature/project-name-updates
 
 You can also perform some cleanup in ``README.md`` to remove this walk-through.
 
@@ -299,195 +347,205 @@ branch back to the fork/remote repo.
 
 Happy hacking!
 
-## Setting up a Jenkins CI job
+************
+Gitlab CI/CD
+************
 
-This section has a corresponding section in the formatted and hyperlinked html
-documentation. Build and view instructions are included in following sections,
-separated from project setup by horizontal bars.
+    Pending...
 
-See ``docs/jenkins_job_creation.md`` in this repo.
+************
+Dependencies
+************
 
-A quick build of just the jenkins markdown file can be performed with ``pandoc``
-
-    $ pwd
-    /path/to/local/cpp_stub
-    $ pandoc docs/jenkins_job_creation.md -o jenkins_job_creation.html
-
-## Version control for a Jenkins job
-
-This section has a corresponding section in the formatted and hyperlinked html
-documentation. Build and view instructions are included in following sections,
-separated from project setup by horizontal bars.
-
-See ``docs/jenkins_job_xml.md`` in this repo.
-
-A quick build of just the jenkins markdown file can be performed with ``pandoc``
-
-    $ pwd
-    /path/to/local/cpp_stub
-    $ pandoc docs/jenkins_job_xml.md -o jenkins_job_xml.html
-
----
-
-## Dependencies
-
-### Compilers
+Compilers
+=========
 
 * c++11 compiler (listed version number has been tested at some point)
 
   * g++ >= GNU 4.8.5
 
-### Executables
+Executables
+===========
 
-* [CMake](https://cmake.org/cmake/help/v3.14/) >= 3.14
-* [Doxygen](https://www.doxygen.nl/manual/docblocks.html) >= 1.8.5
-* [LaTeX](https://www.latex-project.org/help/documentation/) >= 2017
+* `CMake <https://cmake.org/cmake/help/v3.14/>`_ >= 3.14
+* `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ >= 1.8.5
+* `LaTeX <https://www.latex-project.org/help/documentation/>`_ >= 2017
 
-### Python Modules (for documentation)
+Conda Environment
+=================
 
 For convenience, the minimal Python environment requirements for the
 documentation build are included in ``configuration_files/environment.yaml``.
-This file was created from the [pipreqs](https://github.com/bndr/pipreqs)
+This file was created from the `pipreqs <https://github.com/bndr/pipreqs>`_
 command line tool and Sphinx configuration inspection, e.g. the extension
 packages.
 
-    $ pwd
-    path/to/cpp_stub/
-    $ pipreqs --use-local --print --no-pin .
+.. code-block:: bash
+
+   $ pwd
+   path/to/cpp_stub/
+   $ pipreqs --use-local --print --no-pin .
 
 A minimal anaconda environment for building the documentation can be created
 from an existing anaconda installation with the following commands.
 
-    $ conda env create --file configuration_files/environment.yaml
+.. code-block:: bash
+
+   $ conda env create --file configuration_files/environment.yaml
 
 You can learn more about Anaconda Python environment creation and management in
-the [Anaconda
-Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+the
+`Anaconda Documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html>`_
 
-### C++ Libraries
+C++ Libraries
+=============
 
-> **NOTE: Non-admin installations for Eigen and Boost are no longer required.** This project is built and deployed
-> against C++ libraries managed in Conda. See the Conda environment file and README discussion for non-admin environment
-> management.
+    **NOTE: Non-admin installations for Eigen and Boost are no longer required.** This project is built and deployed
+    against C++ libraries managed in Conda. See the Conda environment file and README discussion for non-admin environment
+    management.
 
-* [Eigen](https://eigen.tuxfamily.org/dox/) >= 3.3.7
-* [BOOST](https://www.boost.org/doc/libs/1_53_0/) >= 1.59.0
-* error\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/error_tools
-* vector\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/vector_tools
-* stress\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/stress_tools
-* solver\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/solver_tools
-* constitutive\_tools: https://xcp-stash.lanl.gov/projects/MM/repos/consitutive_tools
+* `Eigen <https://eigen.tuxfamily.org/dox/>`_ >= 3.3.7
+* `BOOST <https://www.boost.org/doc/libs/1_53_0/>`_ >= 1.59.0
+* error\_tools: https://re-git.lanl.gov/aea/material-models/error_tools
+* vector\_tools: https://re-git.lanl.gov/aea/material-models/vector_tools
+* abaqus\_tools: https://re-git.lanl.gov/aea/material-models/abaqus_tools
+* constitutive\_tools: https://re-git.lanl.gov/aea/material-models/constitutive_tools
+* stress\_tools: https://re-git.lanl.gov/aea/material-models/stress_tools
+* solver\_tools: https://re-git.lanl.gov/aea/material-models/solver_tools
 
 If not found on the current system or active Conda environment, all of the
 ``*_tools`` libraries are pulled from their git repos by branch name and built
 with their respective cmake files as part of the cmake build for this project.
 
----
+**************
+Build and Test
+**************
 
-## Build and Test
+This project is built with `CMake <https://cmake.org/cmake/help/v3.14/>`_ and uses
+`Sphinx <https://www.sphinx-doc.org/en/master/>`_ to build the documentation with
+`Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ +
+`Breathe <https://breathe.readthedocs.io/en/latest/>`_ for the c++ API.
 
-This project is built with [CMake](https://cmake.org/cmake/help/v3.14/) and uses
-[Sphinx](https://www.sphinx-doc.org/en/master/) to build the documentation with
-[Doxygen](https://www.doxygen.nl/manual/docblocks.html) +
-[Breathe](https://breathe.readthedocs.io/en/latest/) for the c++ API.
-
-### Build on sstelmo
+Build on sstelmo
+================
 
 1) Activate the correct python environment
 
-       $ module load python/2020.07-python-3.8
-       $ sv3r
+   .. code-block:: bash
+
+      $ module load python/2020.07-python-3.8
+      $ sv3r
 
 2) Create a build directory
 
-       $ pwd
-       /path/to/cpp_stub/
+   .. code-block:: bash
 
-       $ mkdir build
-       $ cd build
+      $ pwd
+      /path/to/cpp_stub/
+
+      $ mkdir build
+      $ cd build
 
 3) Configure ``cmake3``
 
-   > This step only needs to be performed once unless you need to specify a new CMake configuration for a re-build. Most
-   > command line arguments and environment variables are stored in the CMake cache. Anything found in cache will not be
-   > re-configured unless you remove the cache file or clobber the build directory.
+       This step only needs to be performed once unless you need to specify a
+       new CMake configuration for a re-build. Most command line arguments and
+       environment variables are stored in the CMake cache. Anything found in cache
+       will not be re-configured unless you remove the cache file or clobber the build
+       directory.
 
-       $ pwd
-       /path/to/cpp_stub/build
-       $ cmake3 ..
+   .. code-block:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+      $ cmake3 ..
 
 4) Build various portions of the project
 
-   > Most of the project will re-build only as necessary after source updates. Some portions of the documentation
-   > require a ``make clean`` after documentation source file updates to force a re-build.
+       Most of the project will re-build only as necessary after source updates. Some portions of the documentation
+       require a ``make clean`` after documentation source file updates to force a re-build.
 
-       $ pwd
-       /path/to/cpp_stub/build
+   .. code-block:: bash
 
-       # Build everything
-       $ cmake3 --build .
+      $ pwd
+      /path/to/cpp_stub/build
 
-       # Build only the c++ primary libraries
-       $ cmake3 --build src/cpp
+      # Build everything
+      $ cmake3 --build .
+
+      # Build only the c++ primary libraries
+      $ cmake3 --build src/cpp
 
 5) Locate build files
 
-   > The build directory structure may change between version releases. Developers and users are encouraged to become
-   > familiar with the bash ``find``, ``grep``, and ``tree`` commands to locate build files.
+       The build directory structure may change between version releases. Developers and users are encouraged to become
+       familiar with the bash ``find``, ``grep``, and ``tree`` commands to locate build files.
 
-       $ pwd
-       /path/to/cpp_stub/build
+   .. code-block:: bash
 
-       # find c++ libraries and ignore intermediate files with similar extensions
-       $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
+      $ pwd
+      /path/to/cpp_stub/build
+
+      # find c++ libraries and ignore intermediate files with similar extensions
+      $ find . \( -name "*.o" -o -name "*.so" -o -name "*.a" \) | grep -vE "\.cpp\."
 
 6) Clean build directory to force a re-build
 
-   > :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
-   >
-   > The abaqus input files and bash scripts used for integration testing are built with the [CMake
-   > ``add_custom_target``](https://cmake.org/cmake/help/latest/command/add_custom_target.html) feature. Consequently, the
-   > integration test target is _always considered out of date_. The integration test target copies all registered input
-   > files and the integration test bash script from source to build directory. This means the file copy operation is
-   > always performed when the integration test target is requested in the cmake build command, e.g. ``cmake --build .``
-   > or ``cmake --build src/abaqus/tests``. This operation is computationally inexpensive with respect to building the
-   > ``cpp_stub`` source code.
-   >
-   > Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file under the ``ABAQUS_INPUT_FILES`` CMake
-   > variable.
+       :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
+      
+       The abaqus input files and bash scripts used for integration testing are
+       built with the
+       `CMake add_custom_target <https://cmake.org/cmake/help/latest/command/add_custom_target.html>`_
+       feature. Consequently, the integration test target is _always considered
+       out of date_. The integration test target copies all registered input files
+       and the integration test bash script from source to build directory. This
+       means the file copy operation is always performed when the integration test
+       target is requested in the cmake build command, e.g. ``cmake --build .`` or
+       ``cmake --build src/abaqus/tests``. This operation is computationally
+       inexpensive with respect to building the ``cpp_stub`` source code.
+      
+       Input files are registered in the ``src/abaqus/tests/CMakeLists.txt`` file
+       under the ``ABAQUS_INPUT_FILES`` CMake variable.
 
+   .. code-block:: bash
 
-       $ pwd
-       /path/to/cpp_stub/build
+      $ pwd
+      /path/to/cpp_stub/build
 
-       $ make clean
+      $ make clean
 
-### Test on sstelmo
+Test on sstelmo
+===============
 
 4) Build tests of the project
 
-       $ pwd
-       /path/to/cpp_stub/build
+   .. code-block:: bash
 
-       # Build c++ tests
-       $ cmake3 --build src/cpp/tests
+      $ pwd
+      /path/to/cpp_stub/build
 
-       # Build Abaqus integration tests
-       $ cmake3 --build src/abaqus/tests
+      # Build c++ tests
+      $ cmake3 --build src/cpp/tests
+
+      # Build Abaqus integration tests
+      $ cmake3 --build src/abaqus/tests
 
 5) Run the tests
 
-       $ pwd
-       /path/to/cpp_stub/build
+   .. code-block:: bash
 
-       # Run ctest
-       $ ctest
+      $ pwd
+      /path/to/cpp_stub/build
 
-       # Results print to screen
-       # View details of most recent test execution including failure messages
-       $ less Testing/Temporary/LastTest.log
+      # Run ctest
+      $ ctest
 
-### Convenience build wrappers
+      # Results print to screen
+      # View details of most recent test execution including failure messages
+      $ less Testing/Temporary/LastTest.log
+
+Convenience build wrappers
+==========================
 
 Two build scripts have been created for convenience, ``new_build.sh`` and
 ``build_docs.sh``. The first will build everything including the library binary,
@@ -499,43 +557,50 @@ configuration from scratch.
 
 2) Build everything and run tests
 
-       $ pwd
-       /path/to/cpp_stub/
+   .. code-block:: bash
 
-       # Just perform the build (pick one)
-       $ ./new_build.sh <cmake build type>
-       $ ./new_build.sh None
-       $ ./new_build.sh Release
+      $ pwd
+      /path/to/cpp_stub/
 
-       # Perform tests from PWD
-       $ ./build/src/cpp/tests/test_cpp_stub
+      # Just perform the build (pick one)
+      $ ./new_build.sh <cmake build type>
+      $ ./new_build.sh None
+      $ ./new_build.sh Release
 
-       # Build and perform tests
-       $ ./jenkins_build.sh
+      # Perform tests from PWD
+      $ ./build/src/cpp/tests/test_cpp_stub
+
+      # Build and perform tests
+      $ ./jenkins_build.sh
 
 3) View test results
 
-       # As built directly to PWD
-       $ cat results.tex
+   .. code-block:: bash
 
-       # As built by jenkins_build.sh
-       $ cat build/src/cpp/tests/*_results.tex
-       $ cat *results.tex
+      # As built directly to PWD
+      $ cat results.tex
+
+      # As built by jenkins_build.sh
+      $ cat build/src/cpp/tests/*_results.tex
+      $ cat *results.tex
 
 4) Display docs
 
-       # Sphinx
-       $ firefox build/docs/sphinx/html/index.html &
+   .. code-block:: bash
 
-       # Doxygen
-       $ firefox build/docs/doxygen/html/index.html &
+      # Sphinx
+      $ firefox build/docs/sphinx/html/index.html &
 
-### Building the documentation
+      # Doxygen
+      $ firefox build/docs/doxygen/html/index.html &
 
-> :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
->
-> **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
-> API is much more useful.
+Building the documentation
+==========================
+
+    :warning: :warning: :warning: HEALTH WARNING :warning: :warning: :warning:
+   
+    **API Health Note**: The sphinx API docs are a work-in-progress. The doxygen
+    API is much more useful.
 
 The documentation can be built with ``build_docs.sh``. The steps used in that
 shell script are repeated here.
@@ -544,68 +609,87 @@ To build just the documentation pick up the steps here:
 
 2) Create the build directory and move there
 
-       $ pwd
-       /path/to/cpp_stub/
-       $ mkdir build/
-       $ cd build/
+   .. code-block:: bash
+
+      $ pwd
+      /path/to/cpp_stub/
+      $ mkdir build/
+      $ cd build/
 
 3) Run cmake3 configuration
 
-       $ pwd
-       /path/to/cpp_stub/build/
-       $ cmake3 ..
+   .. code-block:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build/
+      $ cmake3 ..
 
 4) Build the docs
 
-       $ cmake3 --build docs
+   .. code-block:: bash
+
+      $ cmake3 --build docs
 
 5) Documentation builds to:
 
-       cpp_stub/build/docs/sphinx/html/index.html
+   .. code-block:: bash
+
+      cpp_stub/build/docs/sphinx/html/index.html
 
 6) Display docs
 
-       $ pwd
-       /path/to/cpp_stub/build/
-       $ firefox docs/sphinx/html/index.html &
+   .. code-block:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build/
+      $ firefox docs/sphinx/html/index.html &
 
 7) While the Sphinx API is still a WIP, try the doxygen API
 
-       $ pwd
-       /path/to/cpp_stub/build/
-       $ firefox docs/doxygen/html/index.html &
+   .. code-block:: bash
 
-## Install the library
+      $ pwd
+      /path/to/cpp_stub/build/
+      $ firefox docs/doxygen/html/index.html &
+
+*******************
+Install the library
+*******************
 
 Build the entire before performing the installation.
 
 4) Build the entire project
 
-       $ pwd
-       /path/to/cpp_stub/build
-       $ cmake3 --build .
+   .. code-block:: bash
+
+      $ pwd
+      /path/to/cpp_stub/build
+      $ cmake3 --build .
 
 5) Install the library
 
-       $ pwd
-       /path/to/cpp_stub/build
-       $ cmake --install . --prefix path/to/root/install
+   .. code-block:: bash
 
-       # Example local user (non-admin) Linux install
-       $ cmake --install . --prefix /home/$USER/.local
+      $ pwd
+      /path/to/cpp_stub/build
+      $ cmake --install . --prefix path/to/root/install
 
-       # Example install to conda environment
-       $ conda active my_env
-       $ cmake --install . --prefix ${CONDA_DEFAULT_ENV} 
+      # Example local user (non-admin) Linux install
+      $ cmake --install . --prefix /home/$USER/.local
 
-       # Example install to W-13 CI/CD conda environment performed by CI/CD institutional account
-       $ cmake --install . --prefix /projects/python/release
+      # Example install to conda environment
+      $ conda active my_env
+      $ cmake --install . --prefix ${CONDA_DEFAULT_ENV}
 
----
+      # Example install to W-13 CI/CD conda environment performed by CI/CD institutional account
+      $ cmake --install . --prefix /projects/python/release
 
-## Contribution Guidelines
+***********************
+Contribution Guidelines
+***********************
 
-### Git Commit Message
+Git Commit Message
+==================
 
 Begin Git commit messages with one of the following headings:
 
@@ -619,33 +703,37 @@ Begin Git commit messages with one of the following headings:
 
 For example:
 
-    git commit -m "FEAT: short intent of new feature"
-    git commit -m "BUG: fixes nasty bug"
-    git commit -m "DOC: adds documentation for feature"
+.. code-block:: bash
 
-### Git Branch Names
+   git commit -m "DOC: adds documentation for feature"
+
+Git Branch Names
+================
 
 When creating branches use one of the following naming conventions. When in
 doubt use ``feature/<description>``.
 
-* bugfix/\<description>
-* feature/\<description>
-* release/\<description>
+* ``bugfix/\<description>``
+* ``feature/\<description>``
+* ``release/\<description>``
 
-### reStructured Text
+reStructured Text
+=================
 
-[Sphinx](https://www.sphinx-doc.org/en/master/) reads in docstrings and other special portions of the code as
-reStructured text. Developers should follow styles in this [Sphinx style
-guide](https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#).
+`Sphinx <https://www.sphinx-doc.org/en/master/>`_ reads in docstrings and other
+special portions of the code as reStructured text. Developers should follow
+styles in this `Sphinx style guide
+<https://documentation-style-guide-sphinx.readthedocs.io/en/latest/style-guide.html#>`_.
 
-### Style Guide
+Style Guide
+===========
 
-This project does not yet have a full style guide. Generally, wherever a style can't be
-inferred from surrounding code this project falls back to
-[PEP-8](https://www.python.org/dev/peps/pep-0008/)-like styles. There are two
+This project does not yet have a full style guide. Generally, wherever a style
+can't be inferred from surrounding code this project falls back to
+`PEP-8 <https://www.python.org/dev/peps/pep-0008/>`_-like styles. There are two
 notable exceptions to the notional PEP-8 fall back:
 
-1. [Doxygen](https://www.doxygen.nl/manual/docblocks.html) style docstrings are
+1. `Doxygen <https://www.doxygen.nl/manual/docblocks.html>`_ style docstrings are
    required for automated, API from source documentation.
 2. This project prefers expansive whitespace surrounding parentheses, braces, and
    brackets.
@@ -657,7 +745,9 @@ notable exceptions to the notional PEP-8 fall back:
 
 An example of the whitespace style:
 
-    my_function( arg1, { arg2, arg3 }, arg4 );
+.. code-block:: bash
+
+   my_function( arg1, { arg2, arg3 }, arg4 );
 
 The following ``sed`` commands may be useful for updating white space, but must
 be used with care. The developer is recommended to use a unique git commit
@@ -666,12 +756,18 @@ run.
 
 * Trailing space for open paren/brace/bracket
 
-      sed -i 's/\([({[]\)\([^ ]\)/\1 \2/g' <list of files to update>
+  .. code-block:: bash
+
+     sed -i 's/\([({[]\)\([^ ]\)/\1 \2/g' <list of files to update>
 
 * Leading space for close paren/brace/bracket
 
-      sed -i 's/\([^ ]\)\([)}\]]\)/\1 \2/g' <list of files to update>
+  .. code-block:: bash
+
+     sed -i 's/\([^ ]\)\([)}\]]\)/\1 \2/g' <list of files to update>
 
 * White space between adjacent paren/brace/bracket
 
-      sed -i 's/\([)}\]]\)\([)}\]]\)/\1 \2/g' <list of files to update>
+  .. code-block:: bash
+
+     sed -i 's/\([)}\]]\)\([)}\]]\)/\1 \2/g' <list of files to update>
