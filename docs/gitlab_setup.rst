@@ -26,21 +26,21 @@ Clone cpp\_stub into a local repository
    `upstream repository`_ web page. The URL should look like the following:
 
    .. code:: bash
-   
+
       ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git
 
 3. Navigate to your preferred repository directory on your local computer. In a
    terminal, you can follow the example ``sstelmo`` session below
 
    .. code:: bash
-   
+
       # Start an ssh session to sstelmo.lanl.gov
       $ ssh -X sstelmo.lanl.gov
-   
+
       # Note the present working directory (pwd) is your home directory
       $ pwd
       /home/<moniker>
-   
+
       # OPTIONAL: Create a project space repository directory
       $ mkdir -p /projects/$USER/w13repos
       # Change pwd to repository directory
@@ -52,33 +52,33 @@ Clone cpp\_stub into a local repository
 4. Clone the stub repository using the URL copied in step 2.
 
    .. code:: bash
-   
+
       # Double check pwd is repository parent directory
       $ pwd
       /projects/<moniker>/w13repos
-   
+
       # Clone the stub repository
       $ git clone ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git
 
 5. Rename the local repository directory for your project.
 
    .. code:: bash
-   
+
       # Double check pwd is repository directory
       $ pwd
       /projects/<moniker>/w13repos
-   
+
       # Observe the stub repo directory name
       $ ls cpp_stub -d
       cpp_stub
-   
+
       # Rename the stub repo directory after your project
       $ mv cpp_stub my_project
-   
+
       # Observe that the stub repo directory no longer exists
       $ ls cpp_stub -d
       ls: cannot access 'cpp_stub': No such file or directory
-   
+
       # Observe that your project directory exists
       $ ls my_project -d
       my_project
@@ -86,14 +86,14 @@ Clone cpp\_stub into a local repository
 6. Change to your project's local repository directory
 
    .. code:: bash
-   
+
       # Double check pwd is repository directory
       $ pwd
       /projects/<moniker>/w13repos
-   
+
       # Change to your project directory
       $ cd my_project
-   
+
       # Double check pwd is your project directory
       $ pwd
       /projects/<moniker>/w13repos/my_project
@@ -132,7 +132,7 @@ Create a new upstream repository on Gitlab
    the new project webpage.
 
    .. code:: bash
-   
+
       $ pwd
       /projects/<moniker>/w13repos/my_project
       $ git remote rename origin old-origin
@@ -167,36 +167,164 @@ Create a new upstream repository on Gitlab
       $ git checkout master
 
       # Remove all the cpp_stub issue branches
-      $ git branch | grep -v "master\|dev" | xargs git branch -D 
+      $ git branch | grep -v "master\|dev" | xargs git branch -D
 
 ***********************************
 Update settings for your repository
 ***********************************
 
 Gitlab repositories (a.k.a. 'projects') in the `Material Models`_ Gitlab
-sub-group inherit permissions and settings from that sub-group.  This included
-read permission for the ``w13bitbucket`` UNIX group (`W-13 Managed UNIX
-Groups`_). For most developers, these inherited repository settings are
-appropriate and only a small number of settings must be updated.
+sub-group inherit permissions and settings from that sub-group. This includes
+inherited minimum roles from the parent `AEA Gitlab group members`. These
+default permissions and settings provide access to the AEA group runners on W-13
+compute servers and minimize the DevOps work required for new Gitlab projects.
+For most developers, these inherited repository settings are appropriate and
+only a small number of settings must be updated.
 
-1. Click on the gear icon labelled "Settings" in the lower left sidebar.
+1. Click on the gear icon labeled "Settings" in the lower left sidebar of your
+   Gitlab project webpage.
 
 2. Click on the "Repository" menu item that appears in the left sidebar
 
 3. From the "Default branch" > "Expand" page, update the default branch from
-   "master" to "dev".
+   "master" to "dev" and click the blue "Save changes" button.
 
 4. From the "Protected branches" > "Expand" page, protect the "master" and "dev"
-   branches according to the needs of your project.
+   branches according to the needs of your project. The recommended settings are:
+
+   * "allowed to merge"
+
+     * master: Maintainers
+     * dev: Developers+Maitainers
+
+   * "allowed to push": No one
 
 5. From the "Project Information" > "Members" item at the top of the left side
    bar you can add additional permissions by user and UNIX group.
+
+   .. note::
+
+   Minimum project roles are inherited from `AEA Gitlab group`_ and `Material
+   Models`_ sub-group.  Individual projects can elevate roles beyond the minimum,
+   but cannot reduce roles.
+
+****************************************
+Enable Gitlab CI/CD project token access
+****************************************
+
+The ``cpp_stub`` project comes pre-configured to perform continuous integration
+(CI) and continuous deployment (CD) on W-13's compute server ``sstelmo`` with
+testing performed in and deployment to the `W-13 Python Environments`_.
+
+The CI/CD configuration is found in the ``.gitlab-ci.yml`` file. You can read
+more about Gitlab CI/CD configuration in the `ASC RE Gitlab User
+Documentation`_: https://re-git.lanl.gov/help/ci/README.md
+
+As an alternative to full CI/CD configuration, you may remove the ``git``
+operations found in the ``CD.sh`` file, for example found using the ``grep``
+command as
+
+.. code-block::
+
+   $ pwd
+   /projects/<moniker>/w13repos/my_project
+
+   $ grep git CD.sh
+       git config user.name "${GITLAB_USER_NAME}"
+       git config user.email "${GITLAB_USER_EMAIL}"
+       git remote add oauth2-origin https://gitlab-ci-token:${GITLAB_ACCESS_TOKEN}@re-git.lanl.gov/${CI_PROJECT_PATH}.git
+       git tag -a ${production_version} -m "production release ${production_version}" || true
+       last_merge_hash=$(git log --pretty=format:"%H" --merges -n 2 | tail -n 1)  # Assume last merge was dev->master. Pick previous
+       git tag -a ${developer_version} -m "developer release ${developer_version}" ${last_merge_hash} || true
+       git push oauth2-origin --tags
+
+You may also simply remove the ``deploy_build`` job entirely from the
+``.gitlab-ci.yml`` file, for example
+
+.. literalinclude:: ../.gitlab-ci.yml
+   :linenos:
+   :lines: 31-40
+
+The ``git`` operations automate micro version bumps during master branch
+deployment and are not strictly necessary for CI/CD. The ``deploy_build`` job
+performs the CD process and is not required for CI, which is performed by the
+``test_build`` job.
+
+The only project configuration required to enable the existing Gitlab CI/CD is
+to add a project access token. To add a project access with the naming
+convention expected by the CI/CD configuration
+
+1. Click on the gear icon labeled "Settings" in the lower left sidebar of your
+   Gitlab project webpage.
+
+2. Click on the "Access Tokens" menu item that appears in the left sidebar
+
+3. Enter the *case-sensitive* name ``GITLAB_ACCESS_TOKEN`` in the "Name" field.
+
+4. Check the ``api`` and ``write_repository`` Scope check boxes. Leave the
+   remaining check boxes *unchecked*.
+
+5. Click the blue "Create project access token" button.
+
+6. Copy the text in the "Your new project access token" field.
+
+   .. warning::
+
+      When you navigate away from this page, the access token will *NEVER* be
+      visible again. If your copy operation fails or if you overwrite the access token
+      in your clipboard, you will need to "revoke" the existing access token from the
+      "Active project access tokens" table available on the "Access Tokens" webpage
+      and create a new access token from scratch.
+
+      It may be helpful to *TEMPORARILY* copy the access token to an
+      intermediate text file for steps 7-10. This access token provides write access
+      to your project. *DO NOT SAVE THIS ACCESS TOKEN TO A PLAIN TEXT FILE*.
+
+7. Navigate to the "CI/CD" menu item under "Settings" in the left sidebar.
+
+8. Expand the "Variables" section of the "CI/CD" webpage.
+
+9. Click the blue "Add variable" button.
+
+10. Enter ``GITLAB_ACCESS_TOKEN`` in the "Key" field. This variable name is
+    case-sensitive.
+
+11. Paste the access token into the "Value" field.
+
+12. Check both the "Protect Variable" and "Mask Variable" check boxes.
+
+    .. warning::
+
+       Failure to check "Protect Variable" will expose your access token to all
+       ASC RE Gitlab runners for all CI/CD pipeline executions on all project
+       branches. This may inadvertently expose write access to your project on
+       future Gitlab mirrored projects, to users who otherwise have no write access, to
+       accidental direct pushes on production branches, or on servers not owned by
+       W-13.
+
+    .. warning::
+
+       Failure to check "Mask Variable" will expose your access token in plain
+       text in all Gitlab project log files on all servers where the CI/CD is
+       performed. It will also expose your access token in plain text on the Gitlab
+       CI/CD "Varibles" webpage for all users with project roles of Developer or
+       greater access.
+
+13. Click the green "Add variable" button.
+
+14. Click on the "Repository" menu item under the "Settings" item in the left
+    sidebar.
+
+15. Expand the "Protected branches" section of the "Repository" webpage.
+
+16. Add the project access token, ``GITLAB_ACCESS_TOKEN``, to the "Allowed to
+    push" drop down menu of the "master" and "dev" branches.
 
 **********************************************
 Update the remote URL in your local repository
 **********************************************
 
-The final repo setup step is to update the remote URL of the local clone of
+The final repository setup step is to update the remote URL of the local clone of
 ``my_project``.  We will return to the terminal session.
 
 1. Copy the URL of your "remote" repository from the Bitbucket webpage. It

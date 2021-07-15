@@ -4,6 +4,7 @@
 .. _`ASC RE Gitlab HPC Accounts`: https://hpcaccounts.lanl.gov/projects/request/asc-re-gitlab
 .. _`ASC RE Gitlab User Documentation`: https://re-git.lanl.gov/help/user/index.md
 .. _`AEA Gitlab group`: https://re-git.lanl.gov/aea 
+.. _`AEA Gitlab group members`: https://re-git.lanl.gov/groups/aea/-/group_members
 .. _`DevOps`: https://en.wikipedia.org/wiki/DevOps
 .. _`W-13`: https://int.lanl.gov/org/ddw/aldw/weapon-systems-engineering/advanced-engineering-analysis/index.shtml
 .. _`W-13 Managed UNIX Groups`: https://xcp-confluence.lanl.gov/pages/viewpage.action?pageId=150929410
