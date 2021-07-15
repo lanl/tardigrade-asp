@@ -1,9 +1,3 @@
-########################
-Bitbucket and repo setup
-########################
-
-.. include:: md2rst.txt
-
 *************
 Prerequisites
 *************
@@ -98,9 +92,9 @@ Clone cpp\_stub into a local repository
       $ pwd
       /projects/<moniker>/w13repos/my_project
 
-******************************************
-Create a new upstream repository on Gitlab
-******************************************
+********************************
+Create a new upstream repository
+********************************
 
 1. Navigate to the W-13 `Material Models`_ Gitlab sub-group.
 
@@ -170,7 +164,7 @@ Create a new upstream repository on Gitlab
       $ git branch | grep -v "master\|dev" | xargs git branch -D
 
 ***********************************
-Update settings for your repository
+Update upstream repository settings
 ***********************************
 
 Gitlab repositories (a.k.a. 'projects') in the `Material Models`_ Gitlab
@@ -197,7 +191,10 @@ only a small number of settings must be updated.
      * master: Maintainers
      * dev: Developers+Maitainers
 
-   * "allowed to push": No one
+   * "allowed to push":
+
+     * master: No one 
+     * dev: No one
 
 5. From the "Project Information" > "Members" item at the top of the left side
    bar you can add additional permissions by user and UNIX group.
@@ -208,9 +205,9 @@ only a small number of settings must be updated.
       Models`_ sub-group.  Individual projects can elevate roles beyond the minimum,
       but cannot reduce roles.
 
-****************************************
-Enable Gitlab CI/CD project token access
-****************************************
+********************
+Enable project CI/CD
+********************
 
 The ``cpp_stub`` project comes pre-configured to perform continuous integration
 (CI) and continuous deployment (CD) on W-13's compute server ``sstelmo`` with
@@ -220,7 +217,7 @@ The CI/CD configuration is found in the ``.gitlab-ci.yml`` file. You can read
 more about Gitlab CI/CD configuration in the `ASC RE Gitlab User
 Documentation`_: https://re-git.lanl.gov/help/ci/README.md.
 
-No CI/CD configuration is required for Merge-Requests to or deployment of the
+No project configuration is required for CI/CD of Merge-Requests to or deployment of the
 ``dev`` branch. As an alternative to full CI/CD configuration, you may remove the
 ``git`` operations found in the ``CD.sh`` file, for example found using the
 ``grep`` command as
@@ -243,7 +240,7 @@ You may also simply remove the ``deploy_build`` job entirely from the
 ``.gitlab-ci.yml`` file, an example job definition is included below, but the
 details may change. The key to identifying the deployment job is the ``stage:
 deploy`` attribute and shell commands indicating the CD job definition, e.g.
-``script: ./CD.sh``.  
+``script: ./CD.sh``.
 
 .. code-block::
    :linenos:
@@ -339,9 +336,9 @@ convention expected by the CI/CD configuration
 16. Add the project access token, ``GITLAB_ACCESS_TOKEN``, to the "Allowed to
     push" drop down menu of the "master" and "dev" branches.
 
-*****************************************
-Update project name throughout repository
-*****************************************
+*******************
+Update project name
+*******************
 
 .. note::
 

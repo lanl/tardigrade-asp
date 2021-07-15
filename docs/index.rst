@@ -5,7 +5,7 @@
 .. include:: project_brief.txt
 
 .. toctree::
-   :caption: Project Setup
+   :caption: Gitlab Project Setup
    :maxdepth: 1
 
    gitlab_setup
