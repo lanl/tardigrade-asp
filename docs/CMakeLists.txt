@@ -55,6 +55,7 @@ set(DOCUMENTATION_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/md2rst.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/project_brief.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/release_philosophy.rst
+    ${CMAKE_CURRENT_SOURCE_DIR}/software.bib
     ${CMAKE_CURRENT_SOURCE_DIR}/targets.txt
     ${CMAKE_CURRENT_SOURCE_DIR}/theory.rst
     ${CMAKE_CURRENT_SOURCE_DIR}/user.rst
