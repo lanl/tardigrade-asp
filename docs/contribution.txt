@@ -2,8 +2,7 @@
 Contribution Guidelines
 ***********************
 
-W-13 python projects, including the |project| project, use the Atlassian `Forking
-Workflow`_ and `Gitflow Workflow`_ models.
+W-13 python projects, including the |project| project, use the `Gitlab Flow`_ workflow model.
 
 Git Commit Message
 ==================

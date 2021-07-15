@@ -204,9 +204,9 @@ only a small number of settings must be updated.
 
    .. note::
 
-   Minimum project roles are inherited from `AEA Gitlab group`_ and `Material
-   Models`_ sub-group.  Individual projects can elevate roles beyond the minimum,
-   but cannot reduce roles.
+      Minimum project roles are inherited from `AEA Gitlab group`_ and `Material
+      Models`_ sub-group.  Individual projects can elevate roles beyond the minimum,
+      but cannot reduce roles.
 
 ****************************************
 Enable Gitlab CI/CD project token access
@@ -240,11 +240,29 @@ No CI/CD configuration is required for Merge-Requests to or deployment of the
        git push oauth2-origin --tags
 
 You may also simply remove the ``deploy_build`` job entirely from the
-``.gitlab-ci.yml`` file, for example
+``.gitlab-ci.yml`` file, an example job definition is included below, but the
+details may change. The key to identifying the deployment job is the ``stage:
+deploy`` attribute and shell commands indicating the CD job definition, e.g.
+``script: ./CD.sh``.  
 
-.. literalinclude:: ../.gitlab-ci.yml
+.. code-block::
    :linenos:
-   :lines: 31-40
+
+   deploy_build:
+     stage: deploy
+     variables:
+       GIT_STRATEGY: clone
+     script: ./CD.sh
+     tags:
+       - sstelmo-shell-aea
+     only:
+       - master
+       - dev
+
+The ``pages`` job is a special deploy stage job that builds and deploys
+documentation to your project's Gitlab Pages, e.g.
+https://aea.re-pages.lanl.gov/material-models/cpp_stub. This job should be
+retained for building and deploying documentation for your project users.
 
 The ``git`` operations automate micro version bumps during master branch
 deployment and are not strictly necessary for CI/CD. The ``deploy_build`` job
