@@ -20,104 +20,154 @@ Prerequisites
 Clone cpp\_stub into a local repository
 ***************************************
 
-1. Navigate to the `upstream cpp\_stub repo`_.
+1. Navigate to the `upstream repository`_.
 
-2. Copy the ssh url from the Bitbucket "Clone" button on the Bitbucket
-   repository web page. It should look like the following:
+2. Copy the ssh URL from the blue Gitlab "Clone" button on the
+   `upstream repository`_ web page. The URL should look like the following:
 
-.. code:: bash
+   .. code:: bash
+   
+      ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git
 
-   ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git 
+3. Navigate to your preferred repository directory on your local computer. In a
+   terminal, you can follow the example ``sstelmo`` session below
 
-3. Navigate to your preferred repository directory in a terminal or use the
-   example commands below
+   .. code:: bash
+   
+      # Start an ssh session to sstelmo.lanl.gov
+      $ ssh -X sstelmo.lanl.gov
+   
+      # Note the present working directory (pwd) is your home directory
+      $ pwd
+      /home/<moniker>
+   
+      # OPTIONAL: Create a project space repository directory
+      $ mkdir -p /projects/$USER/w13repos
+      # Change pwd to repository directory
+      $ cd /projects/$USER/w13repos
+      # Double check pwd is repository parent directory
+      $ pwd
+      /projects/<moniker>/w13repos
 
-.. code:: bash
+4. Clone the stub repository using the URL copied in step 2.
 
-   # Start an ssh session to sstelmo.lanl.gov
-   $ ssh -X sstelmo.lanl.gov
-   # Note the present working directory (pwd) is your home directory
-   $ pwd
-   /home/<moniker>
-   # OPTIONAL: Create a project space repository directory
-   $ mkdir -p /projects/$USER/w13repos
-   # Change pwd to repository directory
-   $ cd /projects/$USER/w13repos
-   # Double check pwd is repository directory
-   $ pwd
-   /projects/<moniker>/w13repos
-
-4. Clone the stub repository using the url copied in step 2.
-
-.. code:: bash
-
-   # Double check pwd is repository directory
-   $ pwd
-   /projects/<moniker>/w13repos
-   # Clone the stub repository
-   $ git clone ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git 
+   .. code:: bash
+   
+      # Double check pwd is repository parent directory
+      $ pwd
+      /projects/<moniker>/w13repos
+   
+      # Clone the stub repository
+      $ git clone ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git
 
 5. Rename the local repository directory for your project.
 
-.. code:: bash
+   .. code:: bash
+   
+      # Double check pwd is repository directory
+      $ pwd
+      /projects/<moniker>/w13repos
+   
+      # Observe the stub repo directory name
+      $ ls cpp_stub -d
+      cpp_stub
+   
+      # Rename the stub repo directory after your project
+      $ mv cpp_stub my_project
+   
+      # Observe that the stub repo directory no longer exists
+      $ ls cpp_stub -d
+      ls: cannot access 'cpp_stub': No such file or directory
+   
+      # Observe that your project directory exists
+      $ ls my_project -d
+      my_project
 
-   # Double check pwd is repository directory
-   $ pwd
-   /projects/<moniker>/w13repos
-   # Observe the stub repo directory name
-   $ ls cpp_stub -d
-   cpp_stub
-   # Rename the stub repo directory after your project
-   $ mv cpp_stub my_project
-   # Observe that the stub repo directory no longer exists
-   $ ls cpp_stub -d
-   ls: cannot access 'cpp_stub': No such file or directory
-   # Observe that your project directory exists
-   $ ls my_project -d
-   my_project
+6. Change to your project's local repository directory
 
-6. Change to your project's repository directory
+   .. code:: bash
+   
+      # Double check pwd is repository directory
+      $ pwd
+      /projects/<moniker>/w13repos
+   
+      # Change to your project directory
+      $ cd my_project
+   
+      # Double check pwd is your project directory
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
 
-.. code:: bash
-
-   # Double check pwd is repository directory
-   $ pwd
-   /projects/<moniker>/w13repos
-   # Change to your project directory
-   $ cd my_project
-   # Double check pwd is your project directory
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-
-************************************
-Create a new repository on Bitbucket
-************************************
-
-.. note::
-
-   These notes are a text copy of a variation on the `New Bitbucket Repo Guide`_
-   which can also be found in the `W-13 DevOps Manual`_
+******************************************
+Create a new upstream repository on Gitlab
+******************************************
 
 1. Navigate to the W-13 `Material Models`_ Gitlab sub-group.
 
-2. Create a new repository by clicking on the "+" sign in the upper left corner.
+2. Create a new repository by clicking on the blue "New project" button in the
+   upper right corner of the sub-group main page.
 
-3. Enter a name for your project and click "Create repository"
+   .. note::
 
-4. Follow the "My code is already tracked by Git" instructions.
+      If you do not have the "Developer" or "Maintainer" role assigned to you in
+      this sub-group, you will not be able to create a new project directly. You can
+      request a role change from the `Material Models`_ sub-group owners. Sub-group
+      owners may prefer to create a project for you and make you the owner of that
+      project. You can check the `Material Models members`_ list for contact
+      information.
 
-.. code:: bash
+3. On the "Create new project" page, follow the link for "Create blank project".
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-   $ git remote set-url origin ssh://git@re-git.lanl.gov:10022/aea/material-models/my_project.git
-   $ git push -u origin --all
-   $ git push origin --tags
+   .. note::
 
-5. Refresh the Bitbucket webpage and verify that the repository code was pushed
+      Gitlab offers a feature to create template projects that may make this
+      guide much simpler in the future. Contact the ``cpp_stub`` developers and `AEA
+      Gitlab group`_ owners to discuss progress on simplified repository setup using
+      templates.
+
+3. Enter a name for your project in the "Project name" field. Optionally add a
+   "project description" and click the blue "Create project" button.
+
+4. Follow the "Push an existing Git repository" instructions at the bottom of
+   the new project webpage.
+
+   .. code:: bash
+   
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ git remote rename origin old-origin
+      $ git remote add origin ssh://git@re-git.lanl.gov:10022/aea/material-models/dummy.git
+      $ git push -u origin --all
+      $ git push -u origin --tags
+
+5. Refresh the Gitlab project webpage and verify that the repository code was pushed
    correctly. You should see a list of source files and this Bitbucket parsed
-   ``README.md`` displayed. You can also select the drop down branch menu to
-   view a "master" and "dev" branch.
+   ``README.rst`` displayed. You can also review the "master" and "dev" branch from
+   the left hand side bar "Repository" > "Branches" menu and the Git tags from the
+   "Repository" > "Tags" menu.
+
+6. Remove any issue branches from the ``cpp_stub`` project on the "Repository" >
+   "Branches" menu. You should keep only the "master" and "dev" branches.
+
+7. If everything looks correct on Gitlab project, you can clean up your local
+   repository.
+
+   .. warning::
+
+      WARNING: the ``-D`` option FORCE deletes branches. Triple check the
+      command and use with caution. If you're uncertain about this step, contact the
+      cpp_stub developers for help.
+
+   .. code:: bash
+
+      # Remove the cpp_stub remote
+      $ git remote remove old-origin
+
+      # Ensure that you're on the master branch
+      $ git checkout master
+
+      # Remove all the cpp_stub issue branches
+      $ git branch | grep -v "master\|dev" | xargs git branch -D 
 
 ***********************************
 Update settings for your repository
@@ -143,13 +193,13 @@ appropriate and only a small number of settings must be updated.
    bar you can add additional permissions by user and UNIX group.
 
 **********************************************
-Update the remote url in your local repository
+Update the remote URL in your local repository
 **********************************************
 
-The final repo setup step is to update the remote url of the local clone of
+The final repo setup step is to update the remote URL of the local clone of
 ``my_project``.  We will return to the terminal session.
 
-1. Copy the url of your "remote" repository from the Bitbucket webpage. It
+1. Copy the URL of your "remote" repository from the Bitbucket webpage. It
 should look like:
 
 .. code:: bash
@@ -269,7 +319,7 @@ Update project name throughout repository
    $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
    ./src/cpp/cpp_stub.cpp
    ./src/cpp/cpp_stub.h
-   ./src/cpp/tests/test_cpp_stub.cpp 
+   ./src/cpp/tests/test_cpp_stub.cpp
 
 7. Rename files after current project
 
