@@ -22,7 +22,7 @@ Clone cpp\_stub into a local repository
 
 .. code:: bash
 
-   ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
+   ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git 
 
 3. Navigate to your preferred repository directory in a terminal or use the
    example commands below
@@ -50,7 +50,7 @@ Clone cpp\_stub into a local repository
    $ pwd
    /projects/<moniker>/w13repos
    # Clone the stub repository
-   $ git clone ssh://git@xcp-stash.lanl.gov:7999/mm/cpp_stub.git
+   $ git clone ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git 
 
 5. Rename the local repository directory for your project.
 
@@ -105,7 +105,7 @@ Create a new repository on Bitbucket
 
    $ pwd
    /projects/<moniker>/w13repos/my_project
-   $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/mm/my_project.git
+   $ git remote set-url origin ssh://git@re-git.lanl.gov:10022/aea/material-models/my_project.git
    $ git push -u origin --all
    $ git push origin --tags
 
@@ -118,51 +118,24 @@ Create a new repository on Bitbucket
 Update settings for your repository
 ***********************************
 
-Bitbucket repositories in the `Material Models`_ Gitlab sub-group inherit permissions and settings from that sub-group.
-This included read permission for the ``w13bitbucket`` UNIX group (`W-13 Managed UNIX Groups`_). For most developers,
-these inherited repository settings are appropriate and only a small number of settings must be updated.
+Gitlab repositories (a.k.a. 'projects') in the `Material Models`_ Gitlab
+sub-group inherit permissions and settings from that sub-group.  This included
+read permission for the ``w13bitbucket`` UNIX group (`W-13 Managed UNIX
+Groups`_). For most developers, these inherited repository settings are
+appropriate and only a small number of settings must be updated.
 
-1. Click on the gear icon in the lower left sidebar.
+1. Click on the gear icon labelled "Settings" in the lower left sidebar.
 
-2. From the "Repository details" landing page, update the default branch from
+2. Click on the "Repository" menu item that appears in the left sidebar
+
+3. From the "Default branch" > "Expand" page, update the default branch from
    "master" to "dev".
 
-3. From the "Repository permissions" tab you can add additional permissions by
-   user and UNIX group.
+4. From the "Protected branches" > "Expand" page, protect the "master" and "dev"
+   branches according to the needs of your project.
 
-4. From the "Default reviewers" tab you can add yourself and any project
-   co-owners as default reviewers.
-
-****************************
-Fork the upstream repository
-****************************
-
-In the `Forking Workflow`_ the repository you just created in the `Material Models`_ Gitlab sub-group is called
-the "upstream" repository. Throughout older W-13 documentation this may also be called the "official" repository.
-
-Bitbucket repositories that inherit permissions from W-13 projects use the `Forking Workflow`_ and limit permissions for
-pushing changes to the upstream repository. Now that branches exist on this repository, no one will be able to push
-directly to *existing branches* of the upstream respository.
-
-1. Click the fork button in the left hand sidebar just above the gear icon.
-
-2. Click "fork this repository" button.
-
-3. Verify
-
-   a. The "Project" points to your personal project space in Bitbucket. It will
-      probably show your full name as it appears in the phonebook.
-
-   b. The "Name" matches your project name
-
-   c. The "Enable fork syncing" checkbox is checked
-
-4. Click the "Fork Repository" button. You should land on a familiar looking
-   source code view of your repository, but now located in your personal project
-   space.
-
-This repository is referred to as the "fork" or "remote" repository throughout
-W-13 DevOps documentation.
+5. From the "Project Information" > "Members" item at the top of the left side
+   bar you can add additional permissions by user and UNIX group.
 
 **********************************************
 Update the remote url in your local repository
@@ -176,7 +149,7 @@ should look like:
 
 .. code:: bash
 
-   ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
+   ssh://git@re-git.lanl.gov:10022/aea/material-models/my_project.git
 
 2. Return to your terminal session and update the remote repository for the
    final time.
@@ -185,7 +158,7 @@ should look like:
 
    $ pwd
    /projects/<moniker>/w13repos/my_project
-   $ git remote set-url origin ssh://git@xcp-stash.lanl.gov:7999/~<moniker>/my_project.git
+   $ git remote set-url origin ssh://git@re-git.lanl.gov:10022/aea/material-models/my_project.git
    $ git push -u origin --all
    $ git push origin --tags
 
@@ -196,13 +169,13 @@ Update project name throughout repository
 .. note::
 
    Note: the remaining steps are a truncated version of the W-13 Git project
-   `ECMF contribution guide`_.  which can also be found in the `W-13 DevOps Manual`_.
-   Critically, these steps will omit the Jira task creation and
+   `ECMF contribution guide`_.  which can also be found in the `W-13 DevOps
+   Manual`_.  Critically, these steps will omit the Jira task creation and
    Bitbucket Pull-Request (PR) steps. The Bitbucket PR steps may be reproduced
    using the contribution guide, but your project will have to create a Jira
-   project prior to integrating the Jira workflow. Contact the xcp devops team
-   <devops-help@lanl.gov> to create a Jira project. You can email the W-13 DevOps
-   team <w13devops@lanl.gov> for notes about setup.
+   project prior to integrating the Jira workflow. Contact the `AEA Gitlab group`_
+   owners to create new sub-groups or projects.  You can email the W-13 DevOps team
+   w13devops@lanl.gov for notes about setup.
 
 1. Create a feature branch for your project name updates
 
