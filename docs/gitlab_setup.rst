@@ -25,14 +25,14 @@ Clone cpp\_stub into a local repository
 2. Copy the ssh URL from the blue Gitlab "Clone" button on the
    `upstream repository`_ web page. The URL should look like the following:
 
-   .. code:: bash
+   .. code-block:: bash
 
       ssh://git@re-git.lanl.gov:10022/aea/material-models/cpp_stub.git
 
 3. Navigate to your preferred repository directory on your local computer. In a
    terminal, you can follow the example ``sstelmo`` session below
 
-   .. code:: bash
+   .. code-block:: bash
 
       # Start an ssh session to sstelmo.lanl.gov
       $ ssh -X sstelmo.lanl.gov
@@ -51,7 +51,7 @@ Clone cpp\_stub into a local repository
 
 4. Clone the stub repository using the URL copied in step 2.
 
-   .. code:: bash
+   .. code-block:: bash
 
       # Double check pwd is repository parent directory
       $ pwd
@@ -62,7 +62,7 @@ Clone cpp\_stub into a local repository
 
 5. Rename the local repository directory for your project.
 
-   .. code:: bash
+   .. code-block:: bash
 
       # Double check pwd is repository directory
       $ pwd
@@ -85,7 +85,7 @@ Clone cpp\_stub into a local repository
 
 6. Change to your project's local repository directory
 
-   .. code:: bash
+   .. code-block:: bash
 
       # Double check pwd is repository directory
       $ pwd
@@ -131,7 +131,7 @@ Create a new upstream repository on Gitlab
 4. Follow the "Push an existing Git repository" instructions at the bottom of
    the new project webpage.
 
-   .. code:: bash
+   .. code-block:: bash
 
       $ pwd
       /projects/<moniker>/w13repos/my_project
@@ -158,7 +158,7 @@ Create a new upstream repository on Gitlab
       command and use with caution. If you're uncertain about this step, contact the
       cpp_stub developers for help.
 
-   .. code:: bash
+   .. code-block:: bash
 
       # Remove the cpp_stub remote
       $ git remote remove old-origin
@@ -166,7 +166,7 @@ Create a new upstream repository on Gitlab
       # Ensure that you're on the master branch
       $ git checkout master
 
-      # Remove all the cpp_stub issue branches
+      # Remove ALL cpp_stub branches except master and dev
       $ git branch | grep -v "master\|dev" | xargs git branch -D
 
 ***********************************
@@ -218,11 +218,12 @@ testing performed in and deployment to the `W-13 Python Environments`_.
 
 The CI/CD configuration is found in the ``.gitlab-ci.yml`` file. You can read
 more about Gitlab CI/CD configuration in the `ASC RE Gitlab User
-Documentation`_: https://re-git.lanl.gov/help/ci/README.md
+Documentation`_: https://re-git.lanl.gov/help/ci/README.md.
 
-As an alternative to full CI/CD configuration, you may remove the ``git``
-operations found in the ``CD.sh`` file, for example found using the ``grep``
-command as
+No CI/CD configuration is required for Merge-Requests to or deployment of the
+``dev`` branch. As an alternative to full CI/CD configuration, you may remove the
+``git`` operations found in the ``CD.sh`` file, for example found using the
+``grep`` command as
 
 .. code-block::
 
@@ -320,165 +321,154 @@ convention expected by the CI/CD configuration
 16. Add the project access token, ``GITLAB_ACCESS_TOKEN``, to the "Allowed to
     push" drop down menu of the "master" and "dev" branches.
 
-**********************************************
-Update the remote URL in your local repository
-**********************************************
-
-The final repository setup step is to update the remote URL of the local clone of
-``my_project``.  We will return to the terminal session.
-
-1. Copy the URL of your "remote" repository from the Bitbucket webpage. It
-should look like:
-
-.. code:: bash
-
-   ssh://git@re-git.lanl.gov:10022/aea/material-models/my_project.git
-
-2. Return to your terminal session and update the remote repository for the
-   final time.
-
-.. code:: bash
-
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-   $ git remote set-url origin ssh://git@re-git.lanl.gov:10022/aea/material-models/my_project.git
-   $ git push -u origin --all
-   $ git push origin --tags
-
 *****************************************
 Update project name throughout repository
 *****************************************
 
 .. note::
 
-   Note: the remaining steps are a truncated version of the W-13 Git project
-   `ECMF contribution guide`_.  which can also be found in the `W-13 DevOps
-   Manual`_.  Critically, these steps will omit the Jira task creation and
-   Bitbucket Pull-Request (PR) steps. The Bitbucket PR steps may be reproduced
-   using the contribution guide, but your project will have to create a Jira
-   project prior to integrating the Jira workflow. Contact the `AEA Gitlab group`_
-   owners to create new sub-groups or projects.  You can email the W-13 DevOps team
-   w13devops@lanl.gov for notes about setup.
+   The remaining steps are a truncated version of the `Gitlab Flow`_ workflow.
+   Critically, these steps will omit the Gitlab issue creation and Gitlab
+   Merge-Request (MR) steps. This step-by-step guide will focus on the Git
+   operations performed in the your local repository. The Gitlab MR steps are
+   described in greater detail in the `Gitlab Flow`_ documentation.
 
-1. Create a feature branch for your project name updates
+1. Create a branch for your project name updates using your project's branch
+   naming conventions if they exist.
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-   $ git checkout -b feature/project-name-updates
-   $ git branch
-     dev
-   * feature/project-name-updates
-     master
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ git checkout -b feature/project-name-updates
+      $ git branch
+        dev
+      * feature/project-name-updates
+        master
 
 2. Search for all instances of ``cpp_stub``. The list of occurrences will look
    quite long, but we can search and replace with ``sed`` to avoid manual file
-   edits.
+   edits. The session below is an example, the exact output may change but the
+   commands should work regardless of project re-organization or evolving features.
+   The ellipsis indicates truncated output.
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
 
-   # Recursive, case-insensitive search and count occurrences
-   $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
-   57
+      # Recursive, case-insensitive search and count occurrences
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+      57
 
-   # Recursive, case-insensitive search and display
-   $ grep -ri cpp_stub . --exclude-dir={build,.git}
-   ...
+      # Recursive, case-insensitive search and display
+      $ grep -ri cpp_stub . --exclude-dir={build,.git}
+      ...
 
-   # Clean list of files with project name
-   $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-   ./CMakeLists.txt
-   ./docs/api.rst
-   ./docs/devops.rst
-   ./README.md
-   ./set_vars.sh
-   ./src/cpp/cpp_stub.cpp
-   ./src/cpp/cpp_stub.h
-   ./src/cpp/tests/test_cpp_stub.cpp
+      # Clean list of files with project name
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      ./CMakeLists.txt
+      ./docs/api.rst
+      ./docs/devops.rst
+      ./README.md
+      ./set_vars.sh
+      ./src/cpp/cpp_stub.cpp
+      ./src/cpp/cpp_stub.h
+      ./src/cpp/tests/test_cpp_stub.cpp
 
 3. Search and replace from command line
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
 
-   # Replace lower case occurrences in place
-   $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
-   $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-   ./src/cpp/cpp_stub.h
+      # Replace lower case occurrences in place
+      $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      ./src/cpp/cpp_stub.h
 
-   # Replace upper case occurrences in place
-   $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
+      # Replace upper case occurrences in place
+      $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
 
 4. Verify no more occurrences of project name ``cpp_stub``
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-   $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
-   0
-   $ grep -ri cpp_stub . --exclude-dir={build,.git}
-   # no stdout to terminal because no files found
-   $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-   # no stdout to terminal because no files found
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+      0
+      $ grep -ri cpp_stub . --exclude-dir={build,.git}
+      # no stdout to terminal because no occurrences found
+      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      # no stdout to terminal because no files found
 
-5. Search and replace camelcase project name occurrences, e.g. ``cppStub``.
+5. Search and replace camelCase project name occurrences, e.g. ``cppStub``.
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ grep -r cppStub . --exclude-dir={build,.git}
-   ...
-   $ sed -i 's/cppStub/myProject/g' $(grep -r cppStub . --exclude-dir={build,.git} -l)
-   $ grep -r cppStub . --exclude-dir={build,.git} -l
-   # no stdout to terminal because no files found
+      $ grep -r cppStub . --exclude-dir={build,.git}
+      ...
+      $ sed -i 's/cppStub/myProject/g' $(grep -r cppStub . --exclude-dir={build,.git} -l)
+      $ grep -r cppStub . --exclude-dir={build,.git} -l
+      # no stdout to terminal because no files found
 
 6. Find files containing the project in their file name
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-   $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
-   ./src/cpp/cpp_stub.cpp
-   ./src/cpp/cpp_stub.h
-   ./src/cpp/tests/test_cpp_stub.cpp
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
+      ./src/cpp/cpp_stub.cpp
+      ./src/cpp/cpp_stub.h
+      ./src/cpp/tests/test_cpp_stub.cpp
 
 7. Rename files after current project
 
-.. code:: bash
+   .. note::
 
-   $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
+      The ``rename`` bash command is common, but not ubiquitous, to UNIX-like
+      operating systems. It's reasonably ubiquitous on the most common linux
+      distributions. You should find it on ``sstelmo``, but probably won't find it on
+      macOS.
+
+   .. code-block:: bash
+
+      $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
 
 8. Commit and push your changes to your "remote" or "fork" repository
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ pwd
-   /projects/<moniker>/w13repos/my_project
-   # Add tracked files and message
-   $ git commit -a -m "FEAT: replace cpp_stub with my_project through repository"
-   $ git push origin feature/project-name-updates
+      $ pwd
+      /projects/<moniker>/w13repos/my_project
+      # Add tracked files and message
+      $ git commit -a -m "FEAT: replace cpp_stub with my_project throughout repository"
+      $ git push origin feature/project-name-updates
 
-You can also perform some cleanup in ``README.md`` to remove this walk-through.
+You can also perform some cleanup in your documentation directory to remove this
+walk-through.
 
-From here, the W-13 best practice workflow would return to the Bitbucket webpage
-and submit a Pull-Request from the ``feature/project-name-updates`` branch of
-"\<moniker\>/my_project" repository (a.k.a. fork or remote) to the ``dev`` branch
-of "Material Models/my_project" repository (a.k.a. upstream or official).
+From here, the W-13 workflows would return to the Gitlab webpage and submit a
+Merge-Request from the ``feature/project-name-updates`` branch of the upstream
+repository to the ``dev`` branch of your "Material Models/my_project"
+repository. If the ``.gitlab-ci.yml`` file has been kept, the Merge-Request will
+automatically begin running the repository build and test job for continuous
+integration (CI). No CI/CD configuration is required for Merge-Requests to or
+deployment of the ``dev`` branch.
 
-After updating your project by merging to the upstream repository, the fork
-syncing feature of Bitbucket will automatically update any identically named
-branches in your fork repository. Best practices suggest you should limit the
-upstream repository branches to clean ``dev`` and ``master`` branches and
-*NEVER* develop directly on the ``dev`` and ``master`` branches of your fork
-repository. Limit development work to ``feature/thing`` type branches on your
-fork/remote repo and frequently commit changes and push from the local feature
-branch back to the fork/remote repo.
+.. note::
+
+   For Merge-Request and CI/CD of the ``master`` branch, see the previous CI/CD
+   configuration section in this setup guide.
+
+For continuing development, W-13 workflows recommend that you should keep the
+upstream repository production branches, ``dev`` and ``master``, clean from
+development work and *NEVER* develop directly on the ``dev`` and ``master``
+branches of your local repository. Limit development work to ``feature/thing``
+type branches on your local repo and frequently commit changes and push from the
+local feature branch back to the upstream repository.
 
 Happy hacking!
