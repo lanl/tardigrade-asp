@@ -59,7 +59,9 @@ Setting up a new project from this stub repo
 
     **NOTE**
 
-    The repository setup has moved out of the README and into the HTML documentation.
+    The repository setup has moved out of the README and into the HTML
+    documentation. You can find the Gitlab project setup guide here:
+    https://aea.re-pages.lanl.gov/material-models/cpp_stub/gitlab_setup.html
 
 ************
 Gitlab CI/CD
@@ -67,7 +69,9 @@ Gitlab CI/CD
 
     **NOTE**
 
-    The repository setup has moved out of the README and into the HTML documentation.
+    The repository setup has moved out of the README and into the HTML
+    documentation. You can find the Gitlab project setup guide here:
+    https://aea.re-pages.lanl.gov/material-models/cpp_stub/gitlab_setup.html
 
 ************
 Dependencies
