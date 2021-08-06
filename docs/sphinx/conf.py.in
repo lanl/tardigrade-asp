@@ -50,7 +50,7 @@ extensions = ["breathe", 'sphinxcontrib.bibtex', 'sphinx.ext.extlinks', 'myst_pa
 bibtex_bibfiles = ['software.bib']
 
 # Breathe Configuration
-breathe_projects = {project: "../build/docs/doxygen/xml"}
+breathe_projects = {project: "../doxygen/xml"}
 breathe_default_project = project
 
 # Links to PRs, Jira issues.

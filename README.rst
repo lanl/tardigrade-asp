@@ -44,7 +44,11 @@ also includes template hooks for integrating C++ code as Abaqus subroutines.
 Information
 ===========
 
-* Documentation: https://aea.re-pages.lanl.gov/material-models/cpp_stub
+* Documentation
+
+  * production version (``master`` branch): https://aea.re-pages.lanl.gov/material-models/cpp_stub/master
+  * development version (``dev`` branch): https://aea.re-pages.lanl.gov/material-models/cpp_stub/dev
+
 * Wiki: https://re-git.lanl.gov/aea/material-models/cpp_stub/-/wikis/home
 
 Developers
@@ -319,6 +323,9 @@ Building the documentation
    
     The sphinx API docs are a work-in-progress. The doxygen API is much more
     useful.
+
+    * production version (``master`` branch): https://aea.re-pages.lanl.gov/material-models/cpp_stub/master/doxygen
+    * development version (``dev`` branch): https://aea.re-pages.lanl.gov/material-models/cpp_stub/dev/doxygen
 
 The documentation can be built with ``build_docs.sh``. The steps used in that
 shell script are repeated here.
