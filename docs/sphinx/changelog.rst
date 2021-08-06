@@ -10,6 +10,10 @@ Changelog
 0.1.6 (unreleased)
 ******************
 
+Documentation
+=============
+- Deploy both ``master`` and ``dev`` branch documentation (:issue:`4`, :merge:`8`). By `Kyle Brindley`_.
+
 
 ******************
 0.1.5 (2021-07-19)
