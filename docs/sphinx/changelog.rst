@@ -10,6 +10,11 @@ Changelog
 0.1.6 (unreleased)
 ******************
 
+Bug fixes
+=========
+- Update the documenation ``cmake`` command to match the new documentation directory structure (:merge:`10`). By `Kyle
+  Brindley`_.
+
 Documentation
 =============
 - Deploy both ``master`` and ``dev`` branch documentation (:issue:`4`, :merge:`8`). By `Kyle Brindley`_.
