@@ -353,7 +353,7 @@ To build just the documentation pick up the steps here:
 
    .. code-block:: bash
 
-      $ cmake3 --build docs
+      $ cmake3 --build docs/sphinx
 
 5) Documentation builds to:
 
