@@ -18,6 +18,9 @@ Bug fixes
 Documentation
 =============
 - Deploy both ``master`` and ``dev`` branch documentation (:issue:`4`, :merge:`8`). By `Kyle Brindley`_.
+- Fix broken documentation URLs in README (:merge:`11`). By `Kyle Brindley`_.
+- Fix broken Gitlab documentation URLs in Gitlab setup (:merge:`12`). By `Kyle Brindley`_.
+- Fix broken ``rename`` command in Gitlab setup (:merge:`13`). By `Kyle Brindley`_.
 
 
 ******************

@@ -451,7 +451,7 @@ Update project name
 
    .. code-block:: bash
 
-      $ rename 's/cpp_stub/myproject/' $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
+      $ rename cpp_stub myproject $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
 
 8. Commit and push your changes to your "remote" or "fork" repository
 
