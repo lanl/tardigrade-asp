@@ -107,10 +107,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     add_subdirectory(${DOXYGEN_SRC_PATH})
     add_subdirectory(${SPHINX_SRC_PATH})
     add_subdirectory(${ABAQUS_SRC_PATH})
-    # Abaqus integration tests
-    if(BASH_PROGRAM AND ABAQUS_PROGRAM)
-        add_subdirectory(${ABAQUS_TEST_PATH})
-    endif()
 endif()
 
 #==================================================================================== SETUP INSTALLATION CMAKE FILES ===
