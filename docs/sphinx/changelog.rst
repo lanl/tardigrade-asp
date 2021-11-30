@@ -12,8 +12,9 @@ Changelog
 
 Bug fixes
 =========
-- Update the documenation ``cmake`` command to match the new documentation directory structure (:merge:`10`). By `Kyle
+- Update the documentation ``cmake`` command to match the new documentation directory structure (:merge:`10`). By `Kyle
   Brindley`_.
+- Re-enabled the Abaqus integration tests (:merge:`14`). By `Nathan Miller`_.
 
 Documentation
 =============
