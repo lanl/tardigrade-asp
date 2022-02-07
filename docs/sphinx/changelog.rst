@@ -23,6 +23,10 @@ Documentation
 - Fix broken Gitlab documentation URLs in Gitlab setup (:merge:`12`). By `Kyle Brindley`_.
 - Fix broken ``rename`` command in Gitlab setup (:merge:`13`). By `Kyle Brindley`_.
 
+Internal Changes
+================
+- Removed unused myst-parser extension from the Sphinx configuration (:issue:`9`, :merge:`15`). By `Kyle Brindley`_.
+
 
 ******************
 0.1.5 (2021-07-19)
