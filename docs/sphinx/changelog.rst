@@ -26,6 +26,8 @@ Documentation
 Internal Changes
 ================
 - Removed unused myst-parser extension from the Sphinx configuration (:issue:`9`, :merge:`15`). By `Kyle Brindley`_.
+- Update the build configuration to handle conda environments than manage cpp compilers and libraries (:issue:`11`
+  :merge:`16`). By `Kyle Brindley`_.
 
 
 ******************
