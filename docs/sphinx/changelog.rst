@@ -7,7 +7,12 @@ Changelog
 
 
 ******************
-0.1.6 (unreleased)
+0.1.7 (unreleased)
+******************
+
+
+******************
+0.1.6 (2022-03-21)
 ******************
 
 Bug fixes
@@ -28,6 +33,8 @@ Internal Changes
 - Removed unused myst-parser extension from the Sphinx configuration (:issue:`9`, :merge:`15`). By `Kyle Brindley`_.
 - Update the build configuration to handle conda environments than manage cpp compilers and libraries (:issue:`11`
   :merge:`16`). By `Kyle Brindley`_.
+- Add back compiler flags related to code warnings for the project wide compile options (:issue:`12`, :merge:`18`). By
+  `Kyle Brindley`_.
 
 
 ******************
