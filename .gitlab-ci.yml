@@ -46,17 +46,6 @@ test_build:
   tags:
     - sstelmo-shell-aea
 
-deploy_build:
-  stage: deploy
-  variables:
-    GIT_STRATEGY: clone
-  script: ./CD.sh
-  tags:
-    - sstelmo-shell-aea
-  only:
-    - master
-    - dev
-
 # It MUST be called pages
 pages:
   stage: deploy
