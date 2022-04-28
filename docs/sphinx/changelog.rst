@@ -10,6 +10,12 @@ Changelog
 0.1.8 (unreleased)
 ******************
 
+Internal Changes
+================
+- Remove the package deployment Gitlab-CI job because the AEA Compute environment no longer allows projects to directly
+  update the environment. Instead, projects must request that their package is added to the AEA Compute environment
+  build (:issue:`18`, :merge:`23`). By `Kyle Brindley`_.
+
 
 ******************
 0.1.7 (2022-03-24)
