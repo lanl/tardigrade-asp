@@ -41,7 +41,7 @@ microbump:
     GIT_STRATEGY: clone
   script:
     # Build VERSION file from GetVersionFromGit.cmake without a full CMake configuration
-    - ${cmake_exec} -D PROJECT_NAME=cpp_stub -D VERSION_UPDATE_FROM_GIT=True -P src/cmake/GetVersionFromGitTag.cmake
+    - ${cmake_program} -D PROJECT_NAME=cpp_stub -D VERSION_UPDATE_FROM_GIT=True -P src/cmake/GetVersionFromGitTag.cmake
     # GetVersionFromGit.cmake bumps micro/patch version. Retrieve next release from VERSION
     - production_version=$(cut -f 1 -d '*' VERSION)
     - developer_version=${production_version}+dev
