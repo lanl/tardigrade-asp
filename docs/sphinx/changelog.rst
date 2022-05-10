@@ -47,6 +47,7 @@ Bug fixes
 
 Documentation
 =============
+- Update URLs for cpp stub repository (:issue:`22`, :merge:`28`). By `Prabhu Khalsa`_.
 - Deploy both ``master`` and ``dev`` branch documentation (:issue:`4`, :merge:`8`). By `Kyle Brindley`_.
 - Fix broken documentation URLs in README (:merge:`11`). By `Kyle Brindley`_.
 - Fix broken Gitlab documentation URLs in Gitlab setup (:merge:`12`). By `Kyle Brindley`_.
