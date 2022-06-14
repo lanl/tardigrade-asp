@@ -21,3 +21,6 @@ build*/
 *.prt
 *.sim
 *.sta
+
+# PyCharm IDE
+.idea/
