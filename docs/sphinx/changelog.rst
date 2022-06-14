@@ -10,6 +10,9 @@ Changelog
 0.1.9 (unreleased)
 ******************
 
+Internal Changes
+================
+- Added SSL workaround to Pages job (:issue:`23`, :merge:`29`). By `Sergio Cordova`_.
 
 ******************
 0.1.8 (2022-04-28)
