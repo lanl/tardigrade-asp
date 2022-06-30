@@ -25,6 +25,7 @@ Internal Changes
   build (:issue:`18`, :merge:`23`). By `Kyle Brindley`_.
 - Move the production release automatic microbumping to a dedicated Gitlab-CI job (:issue:`18`, :merge:`23`). By `Kyle
   Brindley`_.
+- Added fix to avaid warnings treated as errors introduced in Sphinx 5 (:issue:`25`, :merge:`30`). By `Sergio Cordova`_.
 
 
 ******************
