@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * \file cpp_stub.h
+  * \file asp.h
   ******************************************************************************
   * A C++ library for printing messages to stdout. Used as a stub repo example.
   ******************************************************************************
   */
 
-#ifndef CPP_STUB_H
-#define CPP_STUB_H
+#ifndef ASP_H
+#define ASP_H
 
 #include<sstream>
 
@@ -15,7 +15,7 @@
 #include<vector_tools.h>
 #include<abaqus_tools.h>
 
-namespace cppStub{
+namespace asp{
 
     constexpr const char* str_end(const char *str) {
         /*! Recursively search string for last character

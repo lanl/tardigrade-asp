@@ -1,16 +1,16 @@
 /**
   ******************************************************************************
-  * \file cpp_stub.cpp
+  * \file asp.cpp
   ******************************************************************************
   * A C++ library for printing messages to stdout. Used as a stub repo example.
   ******************************************************************************
   */
 
-#include<cpp_stub.h>
+#include<asp.h>
 
-namespace cppStub{
+namespace asp{
 
-    //Define cpp_stub global constants in a place that Doxygen can pick up for documentation
+    //Define asp global constants in a place that Doxygen can pick up for documentation
     /** \brief Define the expected number of tensor spatial dimensions for the Abaqus interface. */
     const int spatialDimensions = 3;
 
@@ -99,18 +99,18 @@ namespace cppStub{
         const std::vector< std::vector< double > > dfgrd0 = abaqusTools::columnToRowMajor( DFGRD0, spatialDimensions, spatialDimensions );
         const std::vector< std::vector< double > > dfgrd1 = abaqusTools::columnToRowMajor( DFGRD1, spatialDimensions, spatialDimensions );
 
-        //Verify number of state variables against cpp_stub expectations
+        //Verify number of state variables against asp expectations
         if ( statev.size( ) != nStateVariables ){
             message.clear();
-            message << "ERROR:" << __FILENAME__ << "." << __func__ << ": The cpp_stub Abaqus interface requires exactly "
+            message << "ERROR:" << __FILENAME__ << "." << __func__ << ": The asp Abaqus interface requires exactly "
                 << nStateVariables << " state variables. Found " << statev.size( ) << ".";
             throw std::runtime_error( message.str( ) );
         }
 
-        //Verify number of material parameters against cpp_stub expectations
+        //Verify number of material parameters against asp expectations
         if ( props.size( ) != nMaterialParameters ){
             message.clear();
-            message << "ERROR:" << __FILENAME__ << "." << __func__ << ": The cpp_stub Abaqus interface requires exactly "
+            message << "ERROR:" << __FILENAME__ << "." << __func__ << ": The asp Abaqus interface requires exactly "
                 << nMaterialParameters << " material constants. Found " << props.size( ) << ".";
             throw std::runtime_error( message.str( ) );
         }
