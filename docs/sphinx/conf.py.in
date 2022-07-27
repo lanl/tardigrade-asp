@@ -16,15 +16,15 @@ import os
 # -- Project information -----------------------------------------------------
 # Meta data from CMake configure()
 project = '@PROJECT_NAME@'
-RECENT_GIT_TAG = '@cpp_stub_RECENT_GIT_TAG@'
-VERSION_STRING_FULL = '@cpp_stub_VERSION_STRING_FULL@'
-VERSION = '@cpp_stub_VERSION@'
-VERSION_MAJOR = '@cpp_stub_VERSION_MAJOR@'
-VERSION_MINOR = '@cpp_stub_VERSION_MINOR@'
-VERSION_PATCH = '@cpp_stub_VERSION_PATCH@'
-VERSION_TWEAK = '@cpp_stub_VERSION_TWEAK@'
-VERSION_AHEAD = '@cpp_stub_VERSION_AHEAD@'
-VERSION_GIT_SHA = '@cpp_stub_VERSION_GIT_SHA@'
+RECENT_GIT_TAG = '@asp_RECENT_GIT_TAG@'
+VERSION_STRING_FULL = '@asp_VERSION_STRING_FULL@'
+VERSION = '@asp_VERSION@'
+VERSION_MAJOR = '@asp_VERSION_MAJOR@'
+VERSION_MINOR = '@asp_VERSION_MINOR@'
+VERSION_PATCH = '@asp_VERSION_PATCH@'
+VERSION_TWEAK = '@asp_VERSION_TWEAK@'
+VERSION_AHEAD = '@asp_VERSION_AHEAD@'
+VERSION_GIT_SHA = '@asp_VERSION_GIT_SHA@'
 
 # Hardcoded project information
 copyright = '2020, Nathan A. Miller and Kyle A. Brindley'
@@ -55,10 +55,10 @@ breathe_default_project = project
 
 # Links to PRs, Jira issues.
 extlinks = {
-     "merge": ("https://re-git.lanl.gov/aea/stub-repositories/cpp_stub/-/merge_requests/%s", "MERGE-%s"),
-     "issue": ("https://re-git.lanl.gov/aea/stub-repositories/cpp_stub/-/issues/%s", "ISSUE-%s"),
+     "merge": ("https://re-git.lanl.gov/aea/stub-repositories/asp/-/merge_requests/%s", "MERGE-%s"),
+     "issue": ("https://re-git.lanl.gov/aea/stub-repositories/asp/-/issues/%s", "ISSUE-%s"),
      # Maintain the old Atlassian links until the servers don't exist. Required for changelog entries.
-     "pull": ("https://xcp-stash.lanl.gov/projects/MM/repos/cpp_stub/pull-requests/%s/overview", "PR%s"),
+     "pull": ("https://xcp-stash.lanl.gov/projects/MM/repos/asp/pull-requests/%s/overview", "PR%s"),
      "jira": ("https://xcp-jira.lanl.gov/browse/VIP-%s", "VIP-%s"),
 }
 
