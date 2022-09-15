@@ -28,11 +28,11 @@ namespace linearElasticity{
     errorOut evaluateEnergy( const floatVector &chi, const floatVector &parameters, floatType &energy, floatVector &cauchyStress );
 
     errorOut evaluateEnergy( const floatVector &chi, const floatVector &parameters, floatType &energy, floatVector &cauchyStress,
-                             floatVector &dEnergydChi, floatVector &dCauchyStressdChi );
+                             floatVector &dEnergydChi, floatMatrix &dCauchyStressdChi );
 
     errorOut evaluateEnergy( const floatVector &chi, const floatVector &parameters, floatType &energy, floatVector &cauchyStress,
-                             floatVector &dEnergydChi, floatVector &dCauchyStressdChi,
-                             floatVector &d2EnergydChi2, floatVector &d2CauchyStressdChi2 );
+                             floatVector &dEnergydChi, floatMatrix &dCauchyStressdChi,
+                             floatVector &d2EnergydChi2, floatMatrix &d2CauchyStressdChi2 );
 
 }
 
