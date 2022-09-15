@@ -343,7 +343,7 @@ namespace linearElasticity{
                         for ( unsigned int K = 0; K < spatialDimensions; K++ ){
 
                             dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * k + K ] += - ( 1 / detChi ) * invChi[ spatialDimensions * K + k ] * dEnergydChi[ spatialDimensions * i + I ] * chi[ spatialDimensions * j + I ]
-                                                                                                         + d2EnergydChi[ spatialDimensions * spatialDimensions * spatialDimensions * i + spatialDimensions * spatialDimensions * I + spatialDimensions * k + K ] * chi[ spatialDimensions * j + I ] / detChi;
+                                                                                                         + d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * i + spatialDimensions * spatialDimensions * I + spatialDimensions * k + K ] * chi[ spatialDimensions * j + I ] / detChi;
 
                         }
 
