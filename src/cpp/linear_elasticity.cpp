@@ -6,6 +6,56 @@ namespace linearElasticity{
     /** Define the expected number of spatial dimensions */
     unsigned int spatialDimensions = 3;
 
+    errorOut formReferenceStiffnessTensor( const floatVector &parameters, floatMatrix &C ){
+        /*!
+         * Form the stiffness tensor in the reference configuration.
+         * 
+         * \param &parameters: The parameters. The first index is the type of stiffness tensor and the later values are the coefficients.
+         *     -type 0: Isotropic stiffness parameterized by lambda and mu
+         * \param &C: The resulting stiffness tensor.
+         */
+
+        if ( parameters.size( ) < 1 ){
+
+            return new errorNode( __func__, "The parameters must at least define the type" );
+
+        }
+
+        // Form isotropic stiffness tensor
+        if ( int( parameters[ 0 ] + 0.5 ) == 0 ){
+
+            if ( parameters.size( ) != 3 ){
+
+                return new errorNode( __func__, "Isotropic stiffeness requires two parameters. Parameters only defines " + std::to_string( parameters.size( ) - 1 ) );
+
+            }
+
+            floatType lambda = parameters[ 1 ];
+            floatType mu     = parameters[ 2 ];
+
+            C = {
+                    { lambda + 2 * mu,      0,      0,      0,          lambda,      0,      0,      0,          lambda },
+                    {               0,      0,      0, 2 * mu,               0,      0,      0,      0,               0 },
+                    {               0,      0,      0,      0,               0,      0, 2 * mu,      0,               0 },
+                    {               0, 2 * mu,      0,      0,               0,      0,      0,      0,               0 },
+                    {          lambda,      0,      0,      0, lambda + 2 * mu,      0,      0,      0,          lambda },
+                    {               0,      0,      0,      0,               0,      0,      0, 2 * mu,               0 },
+                    {               0,      0, 2 * mu,      0,               0,      0,      0,      0,               0 },
+                    {               0,      0,      0,      0,               0, 2 * mu,      0,      0,               0 },
+                    {          lambda,      0,      0,      0,          lambda,      0,      0,      0, lambda + 2 * mu }
+                }; 
+
+        }
+        else{
+
+            return new errorNode( __func__, "Type " + std::to_string( parameters[ 0 ] ) + " is not recognized" );
+
+        }
+
+        return NULL;
+
+    }
+
     errorOut evaluateEnergy( const floatVector &chi, const floatVector &parameters, floatType &energy ){
         /*!
          * Compute the value of the linear elastic energy which we define via
@@ -359,7 +409,90 @@ namespace linearElasticity{
 
     errorOut evaluateEnergy( const floatVector &chi, const floatVector &parameters, floatType &energy, floatVector &cauchyStress,
                              floatVector &dEnergydChi, floatMatrix &dCauchyStressdChi,
-                             floatVector &d2EnergydChi2, floatMatrix &d2CauchyStressdChi2 );
+                             floatVector &d2EnergydChi2, floatMatrix &d2CauchyStressdChi2 ){
+        /*!
+         * Compute the value of the linear elastic energy which we define via
+         * 
+         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] $\f
+         * 
+         * and the value of the Cauchy stress which is defined via
+         * 
+         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} $\f
+         * 
+         * \param &chi: The micro-deformation
+         * \param &parameters: The parameters used in the calculation. The two Lame parameters are expected lambda and mu.
+         * \param &energy: The resulting free energy in the current configuration
+         * \param &cauchyStress; The expected cauchy stress
+         * \param &dEnergydChi: The gradient of the energy w.r.t. the micro deformation
+         * \param &dCauchyStressdChi: The gradient of the Cauchy stress w.r.t. the micro deformation
+         * \param &d2EnergydChi2: The second gradient of the energy w.r.t. the micro deformation
+         * \param &d2CauchyStressdChi2: The second gradient of the Cauchy stress w.r.t. the micro deformation
+         * 
+         */
+
+        if ( chi.size( ) != spatialDimensions * spatialDimensions ){
+            return new errorNode( __func__, "The spatial dimension of " + std::to_string( spatialDimensions ) + " is not reflected by chi which has a size of " + std::to_string( chi.size( ) ) + " rather than " + std::to_string( spatialDimensions * spatialDimensions ) );
+        }
+
+        floatVector E;
+        floatMatrix dEdChi;
+        errorOut error = constitutiveTools::computeGreenLagrangeStrain( chi, E, dEdChi );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the Green-Lagrange strain" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        floatType detChi;
+        floatVector dDetChidChi;
+        floatVector invChi;
+
+        try{
+
+            detChi = vectorTools::determinant( chi, spatialDimensions, spatialDimensions );
+            dDetChidChi = vectorTools::computeDDetAdJ( chi, spatialDimensions, spatialDimensions );
+
+            invChi = vectorTools::inverse( chi, spatialDimensions, spatialDimensions );
+
+        }
+        catch ( std::exception &e ) {
+
+            std::ostringstream message;
+            message << "Error in calculation of det( chi ). Error follows:\n";
+            message << e.what( );
+            return new errorNode( __func__, message.str( ) );
+
+        }
+
+        if ( parameters.size( ) != 2 ){
+            return new errorNode( __func__, "The expected parameters are the Lame parameters. " + std::to_string( parameters.size( ) ) + " were provided rather than 2." );
+        }
+
+        floatType lambda = parameters[ 0 ];
+        floatType mu     = parameters[ 1 ];
+
+        // Compute the energy and the gradient of the energy w.r.t. chi.
+        floatType trE = 0;
+        floatType trEsq = 0;
+        floatVector dtrEdChi( spatialDimensions * spatialDimensions, 0. );
+        floatVector dtrEsqdChi( spatialDimensions * spatialDimensions, 0. );
+        floatVector d2trEdChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
+        vectorTools::eye( d2trEdChi2 );
+        floatVector d2trEsqdChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
+        floatVector d3trEsqdChi3( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
+        energy = 0;
+        dEnergydChi = floatVector( spatialDimensions * spatialDimensions, 0. );
+
+        floatVector eye( spatialDimensions * spatialDimensions, 0 );
+        vectorTools::eye( eye );
+
+
+        return NULL;
+
+    }
 
 }
 

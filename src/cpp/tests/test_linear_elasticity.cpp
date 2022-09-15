@@ -31,6 +31,34 @@ struct cout_redirect{
         std::streambuf * old;
 };
 
+BOOST_AUTO_TEST_CASE( formReferenceStiffnessTensor ){
+
+    floatType lamb = 12.3;
+    floatType mu   = 43.4;
+
+    floatVector parameters = { 0, lamb, mu };
+
+    floatMatrix C_answer =
+        {
+            { 99.1,  0.0,  0.0,  0.0, 12.3,  0.0,  0.0,  0.0, 12.3 },
+            {  0.0,  0.0,  0.0, 86.8,  0.0,  0.0,  0.0,  0.0,  0.0 },
+            {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 86.8,  0.0,  0.0 },
+            {  0.0, 86.8,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0 },
+            { 12.3,  0.0,  0.0,  0.0, 99.1,  0.0,  0.0,  0.0, 12.3 },
+            {  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 86.8,  0.0 },
+            {  0.0,  0.0, 86.8,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0 },
+            {  0.0,  0.0,  0.0,  0.0,  0.0, 86.8,  0.0,  0.0,  0.0 },
+            { 12.3,  0.0,  0.0,  0.0, 12.3,  0.0,  0.0,  0.0, 99.1 }
+        };
+
+    floatMatrix C;
+
+    BOOST_CHECK( !linearElasticity::formReferenceStiffnessTensor( parameters, C ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( C, C_answer ) );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_evaluateEnergy ){
 
     unsigned int spatialDimensions = 3;
