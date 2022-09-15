@@ -10,6 +10,9 @@ set(ABAQUS_SRC_PATH "src/abaqus")
 set(ABAQUS_TEST_PATH "${ABAQUS_SRC_PATH}/tests")
 set(DOXYGEN_SRC_PATH "docs/doxygen")
 set(SPHINX_SRC_PATH "docs/sphinx")
+# Set the internal support libraries
+set(INTERNAL_SUPPORT_LIBRARIES "linear_elasticity")
+set(LINEAR_ELASTICITY_UPSTREAM_LIBRARIES "constitutive_tools")
 # Set some Abaqus integration variables
 set(UMAT "asp_umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")
@@ -73,7 +76,7 @@ endif()
 
 # Find related, but external, projects in installed environment
 include(FetchContent)
-set(upstream_packages "error_tools" "vector_tools" "abaqus_tools")
+set(upstream_packages "error_tools" "vector_tools" "constitutive_tools" "abaqus_tools")
 foreach(package ${upstream_packages})
     string(TOUPPER "${package}" package_upper)
     find_package(${package} ${upstream_required} CONFIG)
@@ -110,7 +113,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 #==================================================================================== SETUP INSTALLATION CMAKE FILES ===
-foreach(package ${PROJECT_NAME} ${UMAT})
+foreach(package ${PROJECT_NAME} ${UMAT} ${INTERNAL_SUPPORT_LIBRARIES})
     include(CMakePackageConfigHelpers)
     write_basic_package_version_file("${package}ConfigVersion.cmake"
                                      VERSION ${PROJECT_VERSION}
