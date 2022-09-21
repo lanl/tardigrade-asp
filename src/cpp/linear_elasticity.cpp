@@ -97,25 +97,19 @@ namespace linearElasticity{
 
         }
 
-        if ( parameters.size( ) != 2 ){
-            return new errorNode( __func__, "The expected parameters are the Lame parameters. " + std::to_string( parameters.size( ) ) + " were provided rather than 2." );
+        floatMatrix C;
+
+        error = formReferenceStiffnessTensor( parameters, C );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in computation of the reference stiffness tensor" );
+            result->addNext( error );
+            return result;
+
         }
 
-        floatType lambda = parameters[ 0 ];
-        floatType mu     = parameters[ 1 ];
-
-        floatType trE = 0;
-        floatType trEsq = 0;
-
-        energy = 0;
-        for ( unsigned int I = 0; I < spatialDimensions; I++ ){
-            trE += E[ spatialDimensions * I + I ];
-            for ( unsigned int J = 0; J < spatialDimensions; J++ ){
-                trEsq += E[ spatialDimensions * I + J ] * E[ spatialDimensions * J + I ];
-            }
-        }
-
-        energy += ( 1. / detChi ) * ( 0.5 * lambda * trE * trE + mu * trEsq );
+        energy = 0.5 * vectorTools::dot( vectorTools::dot( C, E ), E ) / detChi;
 
         return NULL;
     }
@@ -171,55 +165,24 @@ namespace linearElasticity{
 
         }
 
-        if ( parameters.size( ) != 2 ){
-            return new errorNode( __func__, "The expected parameters are the Lame parameters. " + std::to_string( parameters.size( ) ) + " were provided rather than 2." );
-        }
+        floatMatrix C;
+        error = formReferenceStiffnessTensor( parameters, C );
 
-        floatType lambda = parameters[ 0 ];
-        floatType mu     = parameters[ 1 ];
+        if ( error ){
 
-        // Compute the energy and the gradient of the energy w.r.t. chi.
-        floatType trE = 0;
-        floatType trEsq = 0;
-        floatVector dtrEdChi( spatialDimensions * spatialDimensions, 0. );
-        floatVector dtrEsqdChi( spatialDimensions * spatialDimensions, 0. );
-        energy = 0;
-        floatVector dEnergydChi( spatialDimensions * spatialDimensions, 0. );
-
-        energy = 0;
-        for ( unsigned int I = 0; I < spatialDimensions; I++ ){
-            trE += E[ spatialDimensions * I + I ];
-            for ( unsigned int J = 0; J < spatialDimensions; J++ ){
-                trEsq += E[ spatialDimensions * I + J ] * E[ spatialDimensions * J + I ];
-
-                for ( unsigned int k = 0; k < spatialDimensions; k++ ){
-
-                    dtrEdChi[ spatialDimensions * J + k ] += dEdChi[ spatialDimensions * I + I ][ spatialDimensions * J + k ];
-
-                    for ( unsigned int K = 0; K < spatialDimensions; K++ ){
-
-                        dtrEsqdChi[ spatialDimensions * k + K ] += 2 * dEdChi[ spatialDimensions * I + J ][ spatialDimensions * k + K ] * E[ spatialDimensions * I + J ];
-
-                    }
-
-                }
-
-            }
+            errorOut result = new errorNode( __func__, "Error in computation of the reference stiffness tensor" );
+            result->addNext( error );
+            return result;
 
         }
 
-        energy += ( 1. / detChi ) * ( 0.5 * lambda * trE * trE + mu * trEsq );
+        floatVector eye( spatialDimensions * spatialDimensions );
+        vectorTools::eye( eye );
 
-        for ( unsigned int k = 0; k < spatialDimensions; k++ ){
+        energy = 0.5 * vectorTools::dot( vectorTools::dot( C, E ), E ) / detChi;
 
-            for ( unsigned int K = 0; K < spatialDimensions; K++ ){
-
-                dEnergydChi[ spatialDimensions * k + K ] += ( 1 / detChi ) * (   lambda * dtrEdChi[ spatialDimensions * k + K ] * trE + mu * dtrEsqdChi[ spatialDimensions * k + K ]
-                                                                               - invChi[ spatialDimensions * K + k ] * ( 0.5 * lambda * trE * trE + mu * trEsq ) );
-
-            }
-
-        }
+        floatVector dEnergydChi = vectorTools::Tdot( dEdChi, vectorTools::dot( C, E ) ) / detChi
+                                - energy * vectorTools::matrixMultiply( eye, invChi, spatialDimensions, spatialDimensions, spatialDimensions, spatialDimensions, false, true );
 
         // Use the energy gradient to compute the Cauchy stress
         cauchyStress = floatVector( spatialDimensions * spatialDimensions, 0 );
@@ -292,95 +255,62 @@ namespace linearElasticity{
 
         }
 
-        if ( parameters.size( ) != 2 ){
-            return new errorNode( __func__, "The expected parameters are the Lame parameters. " + std::to_string( parameters.size( ) ) + " were provided rather than 2." );
+        floatMatrix C;
+        error = formReferenceStiffnessTensor( parameters, C );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in computation of the reference stiffness tensor" );
+            result->addNext( error );
+            return result;
+
         }
 
-        floatType lambda = parameters[ 0 ];
-        floatType mu     = parameters[ 1 ];
-
-        // Compute the energy and the gradient of the energy w.r.t. chi.
-        floatType trE = 0;
-        floatType trEsq = 0;
-        floatVector dtrEdChi( spatialDimensions * spatialDimensions, 0. );
-        floatVector dtrEsqdChi( spatialDimensions * spatialDimensions, 0. );
-        floatVector d2trEdChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
-        vectorTools::eye( d2trEdChi2 );
-        floatVector d2trEsqdChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
-        energy = 0;
-        dEnergydChi = floatVector( spatialDimensions * spatialDimensions, 0. );
-
-        floatVector eye( spatialDimensions * spatialDimensions, 0 );
+        floatVector eye( spatialDimensions * spatialDimensions );
         vectorTools::eye( eye );
 
-        energy = 0;
-        for ( unsigned int I = 0; I < spatialDimensions; I++ ){
-            trE += E[ spatialDimensions * I + I ];
-            for ( unsigned int J = 0; J < spatialDimensions; J++ ){
-                trEsq += E[ spatialDimensions * I + J ] * E[ spatialDimensions * J + I ];
+        floatVector invChiT = vectorTools::matrixMultiply( eye, invChi, spatialDimensions, spatialDimensions, spatialDimensions, spatialDimensions, false, true );
 
-                for ( unsigned int k = 0; k < spatialDimensions; k++ ){
+        floatVector CE = vectorTools::dot( C, E );
+        floatMatrix dCEdChi = vectorTools::dot( C, dEdChi );
 
-                    dtrEdChi[ spatialDimensions * J + k ] += dEdChi[ spatialDimensions * I + I ][ spatialDimensions * J + k ];
+        energy = 0.5 * vectorTools::dot( CE, E ) / detChi;
 
-                    for ( unsigned int K = 0; K < spatialDimensions; K++ ){
+        dEnergydChi = vectorTools::Tdot( dEdChi, CE ) / detChi - energy * invChiT;
 
-                        dtrEsqdChi[ spatialDimensions * k + K ] += 2 * dEdChi[ spatialDimensions * I + J ][ spatialDimensions * k + K ] * E[ spatialDimensions * I + J ];
-                        d2trEsqdChi2[ spatialDimensions * spatialDimensions * spatialDimensions * I + spatialDimensions * spatialDimensions * J + spatialDimensions * k + K ]
-                            += 2 * eye[ spatialDimensions * I + k ] * E[ spatialDimensions * J + K ];
-
-                        for ( unsigned int l = 0; l < spatialDimensions; l++ ){
-
-                            for ( unsigned int L = 0; L < spatialDimensions; L++ ){
-
-                                d2trEsqdChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ]
-                                    += 2 * dEdChi[ spatialDimensions * I + J ][ spatialDimensions * k + K ] *  dEdChi[ spatialDimensions * J + I ][ spatialDimensions * l + L ];
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        energy += ( 1. / detChi ) * ( 0.5 * lambda * trE * trE + mu * trEsq );
+//        dedChi_kK = dEdChi_IJkK CE_IJ / detChi - energy * invChi_Kk
+//
+//        d2edChi2_kKlL = (d2EdChi2_IJkKlL CE_IJ + dEdChi_IJkK dCEdChi_IJlL - dEdChi_IJkK CE_IJ invChi_Ll ) / detChi - dedChi_lL * invChi_Kk + energy * invChi_Kl invChi_Lk
+//                        (eye_lk CE_KL + dEdChi_IJkK dCEdChi_IJlL - dEdChi_IJkK CE_IJ invChi_Ll ) / detChi 
+//
+//        0.5 * (chi_iI chi_iJ)
+//        0.5 * (eye_IK chi_kJ + chi_kI eye_JK)
+//        0.5 * (eye_IK eye_lk eye_JL + eye_lk eye_IL eye_JK)
 
         floatVector d2EnergydChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0 );
 
         for ( unsigned int k = 0; k < spatialDimensions; k++ ){
-
             for ( unsigned int K = 0; K < spatialDimensions; K++ ){
-
-                dEnergydChi[ spatialDimensions * k + K ] += ( 1 / detChi ) * (   lambda * dtrEdChi[ spatialDimensions * k + K ] * trE + mu * dtrEsqdChi[ spatialDimensions * k + K ]
-                                                                               - invChi[ spatialDimensions * K + k ] * ( 0.5 * lambda * trE * trE + mu * trEsq ) );
-
                 for ( unsigned int l = 0; l < spatialDimensions; l++ ){
-
                     for ( unsigned int L = 0; L < spatialDimensions; L++ ){
-
                         d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ]
-                            += ( 1 / detChi ) * ( - invChi[ spatialDimensions * L + l ] *  (   lambda * dtrEdChi[ spatialDimensions * k + K ] * trE + mu * dtrEsqdChi[ spatialDimensions * k + K ]
-                                                                                             - invChi[ spatialDimensions * K + k ] * ( 0.5 * lambda * trE * trE + mu * trEsq ) )
-                                                  + lambda * d2trEdChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ] * trE + lambda * dtrEdChi[ spatialDimensions * k + K ] * dtrEdChi[ spatialDimensions * l + L ] + mu * d2trEsqdChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ]
-                                                  + invChi[ spatialDimensions * K + l ] * invChi[ spatialDimensions * L + k ] * ( 0.5 * lambda * trE * trE + mu * trEsq )
-                                                  - invChi[ spatialDimensions * K + k ] * ( lambda * dtrEdChi[ spatialDimensions * l + L ] * trE + mu * dtrEsqdChi[ spatialDimensions * l + L ] ) );
-
+                            += eye[ spatialDimensions * l + k ] * CE[ spatialDimensions * K + L ] / detChi
+                             - dEnergydChi[ spatialDimensions * l + L ] * invChi[ spatialDimensions * K + k ]
+                             + energy * invChi[ spatialDimensions * K + l ] * invChi[ spatialDimensions * L + k ];
+                        for ( unsigned int IJ = 0; IJ < spatialDimensions * spatialDimensions; IJ++ ){
+                            d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ]
+                                += ( dEdChi[ IJ ][ spatialDimensions * k + K ] * dCEdChi[ IJ ][ spatialDimensions * l + L ]
+                                   - dEdChi[ IJ ][ spatialDimensions * k + K ] * CE[ IJ ] * invChi[ spatialDimensions * L + l ] ) / detChi;
+                        }
                     }
-
                 }
-
             }
-
         }
 
         // Use the energy gradient to compute the Cauchy stress
         cauchyStress = floatVector( spatialDimensions * spatialDimensions, 0 );
         dCauchyStressdChi = floatMatrix( spatialDimensions * spatialDimensions, floatVector( spatialDimensions * spatialDimensions, 0 ) );
+
         for ( unsigned int i = 0; i < spatialDimensions; i++ ){
             for ( unsigned int j = 0; j < spatialDimensions; j++ ){
                 for ( unsigned int I = 0; I < spatialDimensions; I++ ){
@@ -388,19 +318,26 @@ namespace linearElasticity{
 
                     for ( unsigned int k = 0; k < spatialDimensions; k++ ){
 
-                        dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * I + k ] +=  dEnergydChi[ spatialDimensions * i + k ] * eye[ spatialDimensions * j + I ] / detChi;
+                        //dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * I + k ] += dEnergydChi[ spatialDimensions * i + k ] * eye[ spatialDimensions * j + I ] / detChi;
 
                         for ( unsigned int K = 0; K < spatialDimensions; K++ ){
 
-                            dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * k + K ] += - ( 1 / detChi ) * invChi[ spatialDimensions * K + k ] * dEnergydChi[ spatialDimensions * i + I ] * chi[ spatialDimensions * j + I ]
-                                                                                                         + d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * i + spatialDimensions * spatialDimensions * I + spatialDimensions * k + K ] * chi[ spatialDimensions * j + I ] / detChi;
+
+                            dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * k + K ] += ( d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * i + spatialDimensions * spatialDimensions * I + spatialDimensions * k + K ] * chi[ spatialDimensions * j + I ]
+                                                                                                           + dEnergydChi[ spatialDimensions * i + I ] * eye[ spatialDimensions * j + k ] * eye[ spatialDimensions * I + K ]
+                                                                                                           - dEnergydChi[ spatialDimensions * i + I ] * chi[ spatialDimensions * j + I ] * invChi[ spatialDimensions * K + k ] ) / detChi;
+
+//                            dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * k + K ] += - ( 1 / detChi ) * invChi[ spatialDimensions * K + k ] * dEnergydChi[ spatialDimensions * i + I ] * chi[ spatialDimensions * j + I ]
+//                                                                                                         + d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * i + spatialDimensions * spatialDimensions * I + spatialDimensions * k + K ] * chi[ spatialDimensions * j + I ] / detChi;
 
                         }
 
                     }
 
                 }
+
             }
+
         }
 
         return NULL;
@@ -467,28 +404,82 @@ namespace linearElasticity{
 
         }
 
-        if ( parameters.size( ) != 2 ){
-            return new errorNode( __func__, "The expected parameters are the Lame parameters. " + std::to_string( parameters.size( ) ) + " were provided rather than 2." );
+        floatMatrix C;
+        error = formReferenceStiffnessTensor( parameters, C );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in computation of the reference stiffness tensor" );
+            result->addNext( error );
+            return result;
+
         }
 
-        floatType lambda = parameters[ 0 ];
-        floatType mu     = parameters[ 1 ];
-
-        // Compute the energy and the gradient of the energy w.r.t. chi.
-        floatType trE = 0;
-        floatType trEsq = 0;
-        floatVector dtrEdChi( spatialDimensions * spatialDimensions, 0. );
-        floatVector dtrEsqdChi( spatialDimensions * spatialDimensions, 0. );
-        floatVector d2trEdChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
-        vectorTools::eye( d2trEdChi2 );
-        floatVector d2trEsqdChi2( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
-        floatVector d3trEsqdChi3( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0. );
-        energy = 0;
-        dEnergydChi = floatVector( spatialDimensions * spatialDimensions, 0. );
-
-        floatVector eye( spatialDimensions * spatialDimensions, 0 );
+        floatVector eye( spatialDimensions * spatialDimensions );
         vectorTools::eye( eye );
 
+        floatVector invChiT = vectorTools::matrixMultiply( eye, invChi, spatialDimensions, spatialDimensions, spatialDimensions, spatialDimensions, false, true );
+
+        floatVector CE = vectorTools::dot( C, E );
+        floatMatrix dCEdChi = vectorTools::dot( C, dEdChi );
+
+        energy = 0.5 * vectorTools::dot( CE, E ) / detChi;
+
+        dEnergydChi = vectorTools::Tdot( dEdChi, CE ) / detChi - energy * invChiT;
+
+//        dedChi_kK = dEdChi_IJkK CE_IJ / detChi - energy * invChi_Kk
+//
+//        d2edChi2_kKlL = (d2EdChi2_IJkKlL CE_IJ + dEdChi_IJkK dCEdChi_IJlL - dEdChi_IJkK CE_IJ invChi_Ll ) / detChi - dedChi_lL * invChi_Kk + energy * invChi_Kl invChi_Lk
+//                        (eye_lk CE_KL + dEdChi_IJkK dCEdChi_IJlL - dEdChi_IJkK CE_IJ invChi_Ll ) / detChi 
+//
+//        0.5 * (chi_iI chi_iJ)
+//        0.5 * (eye_IK chi_kJ + chi_kI eye_JK)
+//        0.5 * (eye_IK eye_lk eye_JL + eye_lk eye_IL eye_JK)
+
+        d2EnergydChi2 = floatVector( spatialDimensions * spatialDimensions * spatialDimensions * spatialDimensions, 0 );
+
+        for ( unsigned int k = 0; k < spatialDimensions; k++ ){
+            for ( unsigned int K = 0; K < spatialDimensions; K++ ){
+                for ( unsigned int l = 0; l < spatialDimensions; l++ ){
+                    for ( unsigned int L = 0; L < spatialDimensions; L++ ){
+                        d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ]
+                            += eye[ spatialDimensions * l + k ] * CE[ spatialDimensions * K + L ] / detChi
+                             - dEnergydChi[ spatialDimensions * l + L ] * invChi[ spatialDimensions * K + k ]
+                             + energy * invChi[ spatialDimensions * K + l ] * invChi[ spatialDimensions * L + k ];
+                        for ( unsigned int IJ = 0; IJ < spatialDimensions * spatialDimensions; IJ++ ){
+                            d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + spatialDimensions * l + L ]
+                                += ( dEdChi[ IJ ][ spatialDimensions * k + K ] * dCEdChi[ IJ ][ spatialDimensions * l + L ]
+                                   - dEdChi[ IJ ][ spatialDimensions * k + K ] * CE[ IJ ] * invChi[ spatialDimensions * L + l ] ) / detChi;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Use the energy gradient to compute the Cauchy stress
+        cauchyStress = floatVector( spatialDimensions * spatialDimensions, 0 );
+        dCauchyStressdChi = floatMatrix( spatialDimensions * spatialDimensions, floatVector( spatialDimensions * spatialDimensions, 0 ) );
+        for ( unsigned int i = 0; i < spatialDimensions; i++ ){
+            for ( unsigned int j = 0; j < spatialDimensions; j++ ){
+                for ( unsigned int I = 0; I < spatialDimensions; I++ ){
+                    cauchyStress[ spatialDimensions * i + j ] += dEnergydChi[ spatialDimensions * i + I ] * chi[ spatialDimensions * j + I ] / detChi;
+
+                    for ( unsigned int k = 0; k < spatialDimensions; k++ ){
+
+                        dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * I + k ] +=  dEnergydChi[ spatialDimensions * i + k ] * eye[ spatialDimensions * j + I ] / detChi;
+
+                        for ( unsigned int K = 0; K < spatialDimensions; K++ ){
+
+                            dCauchyStressdChi[ spatialDimensions * i + j ][ spatialDimensions * k + K ] += - ( 1 / detChi ) * invChi[ spatialDimensions * K + k ] * dEnergydChi[ spatialDimensions * i + I ] * chi[ spatialDimensions * j + I ]
+                                                                                                         + d2EnergydChi2[ spatialDimensions * spatialDimensions * spatialDimensions * i + spatialDimensions * spatialDimensions * I + spatialDimensions * k + K ] * chi[ spatialDimensions * j + I ] / detChi;
+
+                        }
+
+                    }
+
+                }
+            }
+        }
 
         return NULL;
 
