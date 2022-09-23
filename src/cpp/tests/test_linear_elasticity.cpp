@@ -215,7 +215,20 @@ BOOST_AUTO_TEST_CASE( test_evaluateEnergy ){
         for ( unsigned int k = 0; k < spatialDimensions; k++ ){
             for ( unsigned int K = 0; K < spatialDimensions; K++ ){
                 d2EnergydChi2_answer[ spatialDimensions * spatialDimensions * spatialDimensions * k + spatialDimensions * spatialDimensions * K + i ] = ( dedChip[ spatialDimensions * k + K ] - dedChim[ spatialDimensions * k + K ] ) / ( 2 * delta[ i ] );
+
+                for ( unsigned int l = 0; l < spatialDimensions; l++ ){
+
+                    for ( unsigned int L = 0; L < spatialDimensions; L++ ){
+
+                        d2CauchyStressdChi2_answer[ spatialDimensions * k + K ][ spatialDimensions * spatialDimensions * spatialDimensions * l + spatialDimensions * spatialDimensions * L + i ]
+                            = ( dCauchydChip[ spatialDimensions * k + K ][ spatialDimensions * l + L ] - dCauchydChim[ spatialDimensions * k + K ][ spatialDimensions * l + L ] ) / ( 2 * delta[ i ] );
+
+                    }
+
+                }
+
             }
+
         }
 
     }
