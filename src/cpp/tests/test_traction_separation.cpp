@@ -66,4 +66,78 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d, d_answer ) );
 
+    d.clear( );
+
+    floatMatrix dddF, dddChi, dddGradChi;
+
+    BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi, d, dddF, dddChi, dddGradChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d, d_answer ) );
+
+    floatMatrix dddF_answer( d_answer.size( ), floatVector( F.size( ), 0 ) );
+    floatMatrix dddChi_answer( d_answer.size( ), floatVector( chi.size( ), 0 ) );
+    floatMatrix dddGradChi_answer( d_answer.size( ), floatVector( gradChi.size( ), 0 ) );
+
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < F.size( ); i++ ){
+        
+        floatVector delta( F.size( ), 0 );
+        delta[ i ] = eps * std::abs( F[ i ] ) + eps;
+
+        floatVector dp, dm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F + delta, chi, gradChi, dp ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F - delta, chi, gradChi, dm ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            dddF_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddF, dddF_answer ) );
+
+    for ( unsigned int i = 0; i < chi.size( ); i++ ){
+        
+        floatVector delta( chi.size( ), 0 );
+        delta[ i ] = eps * std::abs( chi[ i ] ) + eps;
+
+        floatVector dp, dm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi + delta, gradChi, dp ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi - delta, gradChi, dm ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            dddChi_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddChi, dddChi_answer ) );
+
+    for ( unsigned int i = 0; i < gradChi.size( ); i++ ){
+        
+        floatVector delta( gradChi.size( ), 0 );
+        delta[ i ] = eps * std::abs( gradChi[ i ] ) + eps;
+
+        floatVector dp, dm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi + delta, dp ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi - delta, dm ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            dddGradChi_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChi, dddGradChi_answer ) );
+
 }
