@@ -60,7 +60,7 @@ namespace linearElasticity{
         /*!
          * Compute the value of the linear elastic energy which we define via
          * 
-         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] $\f
+         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] \f$
          * 
          * \param &chi: The micro-deformation
          * \param &parameters: The parameters used in the calculation. The two Lame parameters are expected lambda and mu.
@@ -118,11 +118,11 @@ namespace linearElasticity{
         /*!
          * Compute the value of the linear elastic energy which we define via
          * 
-         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] $\f
+         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] \f$
          * 
          * and the value of the Cauchy stress which is defined via
          * 
-         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} $\f
+         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} \f$
          * 
          * \param &chi: The micro-deformation
          * \param &parameters: The parameters used in the calculation. The two Lame parameters are expected lambda and mu.
@@ -203,11 +203,11 @@ namespace linearElasticity{
         /*!
          * Compute the value of the linear elastic energy which we define via
          * 
-         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] $\f
+         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] \f$
          * 
          * and the value of the Cauchy stress which is defined via
          * 
-         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} $\f
+         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} \f$
          * 
          * \param &chi: The micro-deformation
          * \param &parameters: The parameters used in the calculation. The two Lame parameters are expected lambda and mu.
@@ -335,11 +335,11 @@ namespace linearElasticity{
         /*!
          * Compute the value of the linear elastic energy which we define via
          * 
-         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] $\f
+         * \f$\rho \psi = \frac{1}{J} \left[ \frac{\lambda}{2} \left( E_{II} \right)^2 + \mu E_{IJ} E_{JI} \right] \f$
          * 
          * and the value of the Cauchy stress which is defined via
          * 
-         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} $\f
+         * \f$\sigma_{ij} = \frac{1}{J} \frac{ \partial \left( \rho \psi \right ) }{\partial F_{iI}} F_{jI} \f$
          * 
          * \param &chi: The micro-deformation
          * \param &parameters: The parameters used in the calculation. The two Lame parameters are expected lambda and mu.
