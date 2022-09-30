@@ -68,17 +68,236 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
 
     d.clear( );
 
-    floatMatrix dddF, dddChi, dddGradChi;
+    floatMatrix dddXi_1, dddXi_2, dddD, dddF, dddChi, dddGradChi;
 
-    BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi, d, dddF, dddChi, dddGradChi ) );
+    BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi, d, dddXi_1, dddXi_2, dddD, dddF, dddChi, dddGradChi ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( d, d_answer ) );
+    floatVector d_2;
+    floatMatrix dddXi_1_2, dddXi_2_2, dddD_2, dddF_2, dddChi_2, dddGradChi_2;
+    floatMatrix d2ddFdXi_1,       d2ddFdXi_2,       d2ddFdD;
+    floatMatrix d2ddChidXi_1,     d2ddChidXi_2,     d2ddChidD;
+    floatMatrix d2ddGradChidXi_1, d2ddGradChidXi_2, d2ddGradChidD;
 
+    BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi, d_2, dddXi_1_2, dddXi_2_2, dddD_2, dddF_2, dddChi_2, dddGradChi_2,
+                                                              d2ddFdXi_1,       d2ddFdXi_2,       d2ddFdD,
+                                                              d2ddChidXi_1,     d2ddChidXi_2,     d2ddChidD,
+                                                              d2ddGradChidXi_1, d2ddGradChidXi_2, d2ddGradChidD ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d_2, d_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_1,    dddXi_1_2    ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_2,    dddXi_2_2    ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddD,       dddD_2       ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddF,       dddF_2       ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddChi,     dddChi_2     ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChi, dddGradChi_2 ) );
+
+    floatMatrix dddXi_1_answer( d_answer.size( ), floatVector( Xi_1.size( ), 0 ) );
+    floatMatrix dddXi_2_answer( d_answer.size( ), floatVector( Xi_2.size( ), 0 ) );
+    floatMatrix dddD_answer( d_answer.size( ), floatVector( D.size( ), 0 ) );
     floatMatrix dddF_answer( d_answer.size( ), floatVector( F.size( ), 0 ) );
     floatMatrix dddChi_answer( d_answer.size( ), floatVector( chi.size( ), 0 ) );
     floatMatrix dddGradChi_answer( d_answer.size( ), floatVector( gradChi.size( ), 0 ) );
+    floatMatrix d2ddFdXi_1_answer( d_answer.size( ), floatVector( F.size( ) * Xi_1.size( ), 0 ) );
+    floatMatrix d2ddFdXi_2_answer( d_answer.size( ), floatVector( F.size( ) * Xi_2.size( ), 0 ) );
+    floatMatrix d2ddFdD_answer( d_answer.size( ), floatVector( F.size( ) * D.size( ), 0 ) );
+    floatMatrix d2ddChidXi_1_answer( d_answer.size( ), floatVector( chi.size( ) * Xi_1.size( ), 0 ) );
+    floatMatrix d2ddChidXi_2_answer( d_answer.size( ), floatVector( chi.size( ) * Xi_2.size( ), 0 ) );
+    floatMatrix d2ddChidD_answer( d_answer.size( ), floatVector( chi.size( ) * D.size( ), 0 ) );
+    floatMatrix d2ddGradChidXi_1_answer( d_answer.size( ), floatVector( gradChi.size( ) * Xi_1.size( ), 0 ) );
+    floatMatrix d2ddGradChidXi_2_answer( d_answer.size( ), floatVector( gradChi.size( ) * Xi_2.size( ), 0 ) );
+    floatMatrix d2ddGradChidD_answer( d_answer.size( ), floatVector( gradChi.size( ) * D.size( ), 0 ) );
 
     floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+        
+        floatVector delta( Xi_1.size( ), 0 );
+        delta[ i ] = eps * std::abs( Xi_1[ i ] ) + eps;
+
+        floatVector dp, dm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1 + delta, Xi_2, D, F, chi, gradChi, dp ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1 - delta, Xi_2, D, F, chi, gradChi, dm ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            dddXi_1_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix dddXi_1p, dddXi_1m;
+        floatMatrix dddXi_2p, dddXi_2m;
+        floatMatrix dddDp, dddDm;
+        floatMatrix dddFp, dddFm;
+        floatMatrix dddChip, dddChim;
+        floatMatrix dddGradChip, dddGradChim; 
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1 + delta, Xi_2, D, F, chi, gradChi, dp, dddXi_1p, dddXi_2p, dddDp, dddFp, dddChip, dddGradChip ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1 - delta, Xi_2, D, F, chi, gradChi, dm, dddXi_1m, dddXi_2m, dddDm, dddFm, dddChim, dddGradChim ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_1_answer[ j ][ i ], ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] ) ) );
+
+        }
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < d_answer.size( ); k++ ){
+
+                for ( unsigned int K = 0; K < d_answer.size( ); K++ ){
+
+                    d2ddFdXi_1_answer[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + i ]
+                        += ( dddFp[ j ][ d_answer.size( ) * k + K ] - dddFm[ j ][ d_answer.size( ) * k + K ] ) / ( 2 * delta [ i ] );
+                    d2ddChidXi_1_answer[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + i ]
+                        += ( dddChip[ j ][ d_answer.size( ) * k + K ] - dddChim[ j ][ d_answer.size( ) * k + K ] ) / ( 2 * delta [ i ] );
+
+                    for ( unsigned int L = 0; L < d_answer.size( ); L++ ){
+
+                        d2ddGradChidXi_1_answer[ j ][ d_answer.size( ) * d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * d_answer.size( ) * K + d_answer.size( ) * L + i ]
+                            += ( dddGradChip[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + L ] - dddGradChim[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + L ] ) / ( 2 * delta[ i ] );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_1,          dddXi_1_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddFdXi_1,       d2ddFdXi_1_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddChidXi_1,     d2ddChidXi_1_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddGradChidXi_1, d2ddGradChidXi_1_answer ) );
+
+    for ( unsigned int i = 0; i < Xi_2.size( ); i++ ){
+        
+        floatVector delta( Xi_2.size( ), 0 );
+        delta[ i ] = eps * std::abs( Xi_2[ i ] ) + eps;
+
+        floatVector dp, dm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2 + delta, D, F, chi, gradChi, dp ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2 - delta, D, F, chi, gradChi, dm ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            dddXi_2_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix dddXi_1p, dddXi_1m;
+        floatMatrix dddXi_2p, dddXi_2m;
+        floatMatrix dddDp, dddDm;
+        floatMatrix dddFp, dddFm;
+        floatMatrix dddChip, dddChim;
+        floatMatrix dddGradChip, dddGradChim; 
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2 + delta, D, F, chi, gradChi, dp, dddXi_1p, dddXi_2p, dddDp, dddFp, dddChip, dddGradChip ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2 - delta, D, F, chi, gradChi, dm, dddXi_1m, dddXi_2m, dddDm, dddFm, dddChim, dddGradChim ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_2_answer[ j ][ i ], ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] ) ) );
+
+        }
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < d_answer.size( ); k++ ){
+
+                for ( unsigned int K = 0; K < d_answer.size( ); K++ ){
+
+                    d2ddFdXi_2_answer[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + i ]
+                        += ( dddFp[ j ][ d_answer.size( ) * k + K ] - dddFm[ j ][ d_answer.size( ) * k + K ] ) / ( 2 * delta [ i ] );
+                    d2ddChidXi_2_answer[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + i ]
+                        += ( dddChip[ j ][ d_answer.size( ) * k + K ] - dddChim[ j ][ d_answer.size( ) * k + K ] ) / ( 2 * delta [ i ] );
+
+                    for ( unsigned int L = 0; L < d_answer.size( ); L++ ){
+
+                        d2ddGradChidXi_2_answer[ j ][ d_answer.size( ) * d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * d_answer.size( ) * K + d_answer.size( ) * L + i ]
+                            += ( dddGradChip[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + L ] - dddGradChim[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + L ] ) / ( 2 * delta[ i ] );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_2,          dddXi_2_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddFdXi_2,       d2ddFdXi_2_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddChidXi_2,     d2ddChidXi_2_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddGradChidXi_2, d2ddGradChidXi_2_answer ) );
+
+    for ( unsigned int i = 0; i < D.size( ); i++ ){
+        
+        floatVector delta( D.size( ), 0 );
+        delta[ i ] = eps * std::abs( D[ i ] ) + eps;
+
+        floatVector dp, dm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D + delta, F, chi, gradChi, dp ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D - delta, F, chi, gradChi, dm ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            dddD_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix dddXi_1p, dddXi_1m;
+        floatMatrix dddXi_2p, dddXi_2m;
+        floatMatrix dddDp, dddDm;
+        floatMatrix dddFp, dddFm;
+        floatMatrix dddChip, dddChim;
+        floatMatrix dddGradChip, dddGradChim; 
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D + delta, F, chi, gradChi, dp, dddXi_1p, dddXi_2p, dddDp, dddFp, dddChip, dddGradChip ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D - delta, F, chi, gradChi, dm, dddXi_1m, dddXi_2m, dddDm, dddFm, dddChim, dddGradChim ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( dddD_answer[ j ][ i ], ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] ) ) );
+
+        }
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < d_answer.size( ); k++ ){
+
+                for ( unsigned int K = 0; K < d_answer.size( ); K++ ){
+
+                    d2ddFdD_answer[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + i ]
+                        += ( dddFp[ j ][ d_answer.size( ) * k + K ] - dddFm[ j ][ d_answer.size( ) * k + K ] ) / ( 2 * delta [ i ] );
+                    d2ddChidD_answer[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + i ]
+                        += ( dddChip[ j ][ d_answer.size( ) * k + K ] - dddChim[ j ][ d_answer.size( ) * k + K ] ) / ( 2 * delta [ i ] );
+
+                    for ( unsigned int L = 0; L < d_answer.size( ); L++ ){
+
+                        d2ddGradChidD_answer[ j ][ d_answer.size( ) * d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * d_answer.size( ) * K + d_answer.size( ) * L + i ]
+                            += ( dddGradChip[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + L ] - dddGradChim[ j ][ d_answer.size( ) * d_answer.size( ) * k + d_answer.size( ) * K + L ] ) / ( 2 * delta[ i ] );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddD,          dddD_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddFdD,       d2ddFdD_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddChidD,     d2ddChidD_answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddGradChidD, d2ddGradChidD_answer ) );
 
     for ( unsigned int i = 0; i < F.size( ); i++ ){
         
@@ -95,6 +314,26 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
             dddF_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
 
         }
+
+        floatMatrix dddXi_1p, dddXi_1m;
+        floatMatrix dddXi_2p, dddXi_2m;
+        floatMatrix dddDp, dddDm;
+        floatMatrix dddFp, dddFm;
+        floatMatrix dddChip, dddChim;
+        floatMatrix dddGradChip, dddGradChim; 
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F + delta, chi, gradChi, dp, dddXi_1p, dddXi_2p, dddDp, dddFp, dddChip, dddGradChip ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F - delta, chi, gradChi, dm, dddXi_1m, dddXi_2m, dddDm, dddFm, dddChim, dddGradChim ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( dddF_answer[ j ][ i ], ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] ) ) );
+
+        }
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddFp, dddFm ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddChip, dddChim ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChip, dddGradChim ) );
 
     }
 
@@ -116,6 +355,26 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
 
         }
 
+        floatMatrix dddXi_1p, dddXi_1m;
+        floatMatrix dddXi_2p, dddXi_2m;
+        floatMatrix dddDp, dddDm;
+        floatMatrix dddFp, dddFm;
+        floatMatrix dddChip, dddChim;
+        floatMatrix dddGradChip, dddGradChim;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi + delta, gradChi, dp, dddXi_1p, dddXi_2p, dddDp, dddFp, dddChip, dddGradChip ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi - delta, gradChi, dm, dddXi_1m, dddXi_2m, dddDm, dddFm, dddChim, dddGradChim ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( dddChi_answer[ j ][ i ], ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] ) ) );
+
+        }
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddFp, dddFm ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddChip, dddChim ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChip, dddGradChim ) );
+
     }
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dddChi, dddChi_answer ) );
@@ -135,6 +394,26 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
             dddGradChi_answer[ j ][ i ] = ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] );
 
         }
+
+        floatMatrix dddXi_1p, dddXi_1m;
+        floatMatrix dddXi_2p, dddXi_2m;
+        floatMatrix dddDp, dddDm;
+        floatMatrix dddFp, dddFm;
+        floatMatrix dddChip, dddChim;
+        floatMatrix dddGradChip, dddGradChim;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi + delta, dp, dddXi_1p, dddXi_2p, dddDp, dddFp, dddChip, dddGradChip ) );
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistance( Xi_1, Xi_2, D, F, chi, gradChi - delta, dm, dddXi_1m, dddXi_2m, dddDm, dddFm, dddChim, dddGradChim ) );
+
+        for ( unsigned int j = 0; j < d_answer.size( ); j++ ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChi_answer[ j ][ i ], ( dp[ j ] - dm[ j ] ) / ( 2 * delta[ i ] ) ) );
+
+        }
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddFp, dddFm ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddChip, dddChim ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChip, dddGradChim ) );
 
     }
 

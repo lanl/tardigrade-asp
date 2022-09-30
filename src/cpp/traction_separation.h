@@ -25,19 +25,23 @@ namespace tractionSeparation{
     typedef constitutiveTools::floatMatrix floatMatrix; //!< Define a matrix of floats
 
     errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
-                                     const floatVector &F,    const floatVector &chi,  const floatVector &grad_chi,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &d );
 
     errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
-                                     const floatVector &F,    const floatVector &chi,  const floatVector &grad_chi,
-                                     floatVector &d, floatMatrix &dddF, floatMatrix &dddChi, floatMatrix &dddGradChi );
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &d,
+                                     floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
+                                     floatMatrix &dddF, floatMatrix &dddChi, floatMatrix &dddGradChi );
 
     errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
-                                     const floatVector &F,    const floatVector &chi,  const floatVector &grad_chi,
-                                     floatVector &d, floatMatrix &dddF, floatMatrix &dddChi, floatMatrix &dddGradChi,
-                                     floatMatrix &d2ddFdF, floatMatrix &d2ddFdChi, floatMatrix &d2ddFdGradChi,
-                                     floatMatrix &d2ddChidChi, floatMatrix &d2ddChidGradChi,
-                                     floatMatrix &d2ddGradChidGradChi );
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &d,
+                                     floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
+                                     floatMatrix &dddF, floatMatrix &dddChi, floatMatrix &dddGradChi,
+                                     floatMatrix &d2ddFdXi_1,       floatMatrix &d2ddFdXi_2,       floatMatrix &d2ddFdD,
+                                     floatMatrix &d2ddChidXi_1,     floatMatrix &d2ddChidXi_2,     floatMatrix &d2ddChidD,
+                                     floatMatrix &d2ddGradChidXi_1, floatMatrix &d2ddGradChidXi_2, floatMatrix &d2ddGradChidD );
 
     errorOut decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt );
