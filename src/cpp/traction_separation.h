@@ -48,11 +48,13 @@ namespace tractionSeparation{
 
     errorOut decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt,
-                              floatMatrix &ddndd, floatMatrix &ddndn );
+                              floatMatrix &ddndd, floatMatrix &ddndn,
+                              floatMatrix &ddtdd, floatMatrix &ddtdn );
 
     errorOut decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt,
                               floatMatrix &ddndd, floatMatrix &ddndn,
+                              floatMatrix &ddtdd, floatMatrix &ddtdn,
                               floatMatrix &d2dndddd, floatMatrix &d2dndddn,
                               floatMatrix &d2dndndn,
                               floatMatrix &d2dtdddd, floatMatrix &d2dtdddn,

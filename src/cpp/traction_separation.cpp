@@ -400,19 +400,152 @@ namespace tractionSeparation{
     }
 
     errorOut decomposeVector( const floatVector &d, const floatVector &n,
-                              floatVector &dn, floatVector &dt );
+                              floatVector &dn, floatVector &dt ){
+        /*!
+         * Decompose a vector into a normal part and a tangential part via
+         * 
+         * \f$ d^n_i = d_a n_a n_i \f$
+         * 
+         * \f$ d^t_i = d_i - d^n_i \f$
+         * 
+         * \param &d: The vector to decompose
+         * \param &n: The normal vector ( assumed to be unit length ).
+         * \param &dn: The part of the vector in the normal direction
+         * \param &dt: The tangential part of the vector
+         */
 
-    errorOut decomposeVector( const floatVector &d, const floatVector &n,
-                              floatVector &dn, floatVector &dt,
-                              floatMatrix &ddndd, floatMatrix &ddndn );
+        if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
+            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+        }
+
+        dn = vectorTools::dot( d, n ) * n;
+
+        dt = d - dn;
+
+        return NULL;
+
+    }
 
     errorOut decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt,
                               floatMatrix &ddndd, floatMatrix &ddndn,
+                              floatMatrix &ddtdd, floatMatrix &ddtdn ){
+        /*!
+         * Decompose a vector into a normal part and a tangential part via
+         * 
+         * \f$ d^n_i = d_a n_a n_i \f$
+         * 
+         * \f$ d^t_i = d_i - d^n_i \f$
+         * 
+         * \param &d: The vector to decompose
+         * \param &n: The normal vector ( assumed to be unit length ).
+         * \param &dn: The part of the vector in the normal direction
+         * \param &dt: The tangential part of the vector
+         * \param &ddndd: The derivative of the normal part of the vector w.r.t. the original vector
+         * \param &ddndn: The derivative of the normal part of the vector w.r.t. the normal vector
+         * \param &ddtdd: The derivative of the tangential part of the vector w.r.t. the original vector
+         * \param &ddtdn: The derivative of the tangential part of the vector w.r.t. the normal vector
+         */
+
+        if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
+            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+        }
+
+        dn = vectorTools::dot( d, n ) * n;
+
+        ddndd = vectorTools::dyadic( n, n );
+
+        ddndn = vectorTools::dyadic( n, d ) + vectorTools::dot( d, n ) * vectorTools::eye<floatType>( d.size( ) );
+
+        dt = d - dn;
+
+        ddtdd = vectorTools::eye<floatType>( d.size( ) ) - ddndd;
+
+        ddtdn = -ddndn;
+
+        return NULL;
+
+    }
+
+    errorOut decomposeVector( const floatVector &d, const floatVector &n,
+                              floatVector &dn, floatVector &dt,
+                              floatMatrix &ddndd, floatMatrix &ddndn,
+                              floatMatrix &ddtdd, floatMatrix &ddtdn,
                               floatMatrix &d2dndddd, floatMatrix &d2dndddn,
                               floatMatrix &d2dndndn,
                               floatMatrix &d2dtdddd, floatMatrix &d2dtdddn,
-                              floatMatrix &d2dtdndn );
+                              floatMatrix &d2dtdndn ){
+        /*!
+         * Decompose a vector into a normal part and a tangential part via
+         * 
+         * \f$ d^n_i = d_a n_a n_i \f$
+         * 
+         * \f$ d^t_i = d_i - d^n_i \f$
+         * 
+         * \param &d: The vector to decompose
+         * \param &n: The normal vector ( assumed to be unit length ).
+         * \param &dn: The part of the vector in the normal direction
+         * \param &dt: The tangential part of the vector
+         * \param &ddndd: The derivative of the normal part of the vector w.r.t. the original vector
+         * \param &ddndn: The derivative of the normal part of the vector w.r.t. the normal vector
+         * \param &ddtdd: The derivative of the tangential part of the vector w.r.t. the original vector
+         * \param &ddtdn: The derivative of the tangential part of the vector w.r.t. the normal vector
+         * \param &d2dndddd: The second derivative of the normal part of the vector w.r.t. the original vector
+         * \param &d2dndddn: The second derivative of the normal part of the vector w.r.t. the original vector and the normal vector
+         * \param &d2dndndn: The second derivative of the normal part of the vector w.r.t. the normal vector
+         * \param &d2dtdddd: The second derivative of the tangential part of the vector w.r.t. the original vector
+         * \param &d2dtdddn: The second derivative of the tangential part of the vector w.r.t. the original vector and the normal vector
+         * \param &d2dtdndn: The second derivative of the tangential part of the vector w.r.t. the normal vector
+         */
+
+        if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
+            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+        }
+
+        dn = vectorTools::dot( d, n ) * n;
+
+        ddndd = vectorTools::dyadic( n, n );
+
+        ddndn = vectorTools::dyadic( n, d ) + vectorTools::dot( d, n ) * vectorTools::eye<floatType>( d.size( ) );
+
+        dt = d - dn;
+
+        ddtdd = vectorTools::eye<floatType>( d.size( ) ) - ddndd;
+
+        ddtdn = -ddndn;
+
+        d2dndddd = floatMatrix( d.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+        d2dndddn = floatMatrix( d.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+        d2dndndn = floatMatrix( d.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+
+        d2dtdddd = floatMatrix( d.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+        d2dtdddn = floatMatrix( d.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+        d2dtdndn = floatMatrix( d.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+
+        floatVector eye( d.size( ) * d.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < d.size( ); i++ ){
+
+            for ( unsigned int j = 0; j < d.size( ); j++ ){
+
+                for ( unsigned int k = 0; k < d.size( ); k++ ){
+
+                    d2dndddn[ i ][ d.size( ) * j + k ] += eye[ d.size( ) * i + k ] * n[ j ] + n[ i ] * eye[ d.size( ) * j + k ];
+                    d2dndndn[ i ][ d.size( ) * j + k ] += eye[ d.size( ) * i + k ] * d[ j ] + d[ k ] * eye[ d.size( ) * i + j ];
+
+                }
+
+            }
+
+        }
+
+        d2dtdddn = -d2dndddn;
+        d2dtdndn = -d2dndndn;
+
+        return NULL;
+
+    }
 
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy );

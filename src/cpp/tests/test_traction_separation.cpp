@@ -420,3 +420,183 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
     BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChi, dddGradChi_answer ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_decomposeVector ){
+    /*!
+     * Test the decomposition of a vector into normal and tangential parts
+     */
+
+    floatVector d = { 0.69646919, 0.28613933, 0.22685145 };
+
+    floatVector n = { 0.55114872, 0.71925227, 0.42297903 };
+
+    floatVector dn_answer = { 0.37787741, 0.49313221, 0.29000198 };
+
+    floatVector dt_answer = { 0.31859177, -0.20699288, -0.06315053 };
+
+    floatVector dn, dt;
+
+    BOOST_CHECK( !tractionSeparation::decomposeVector( d, n, dn, dt ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dn, dn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dt, dt_answer ) );
+
+    floatMatrix ddndn, ddndd, ddtdn, ddtdd;
+
+    BOOST_CHECK( !tractionSeparation::decomposeVector( d, n, dn, dt, ddndd, ddndn, ddtdd, ddtdn ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dn, dn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dt, dt_answer ) );
+
+    floatVector dn_2, dt_2;
+
+    floatMatrix ddndn_2, ddndd_2, ddtdn_2, ddtdd_2;
+    floatMatrix d2dndddd, d2dndddn, d2dndndn;
+    floatMatrix d2dtdddd, d2dtdddn, d2dtdndn;
+
+    BOOST_CHECK( !tractionSeparation::decomposeVector( d, n, dn_2, dt_2, ddndd_2, ddndn_2, ddtdd_2, ddtdn_2,
+                                                       d2dndddd, d2dndddn, d2dndndn, d2dtdddd, d2dtdddn, d2dtdndn ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dn_2, dn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dt_2, dt_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddndd, ddndd_2 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddndn, ddndn_2 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddtdd, ddtdd_2 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddtdn, ddtdn_2 ) );
+
+    floatMatrix ddndd_answer( dn.size( ), floatVector( d.size( ), 0 ) );
+    floatMatrix ddndn_answer( dn.size( ), floatVector( n.size( ), 0 ) );
+    floatMatrix ddtdd_answer( dt.size( ), floatVector( d.size( ), 0 ) );
+    floatMatrix ddtdn_answer( dt.size( ), floatVector( n.size( ), 0 ) );
+
+    floatMatrix d2dndddd_answer( dn.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+    floatMatrix d2dndddn_answer( dn.size( ), floatVector( d.size( ) * n.size( ), 0 ) );
+    floatMatrix d2dndndn_answer( dn.size( ), floatVector( n.size( ) * n.size( ), 0 ) );
+    floatMatrix d2dtdddd_answer( dt.size( ), floatVector( d.size( ) * d.size( ), 0 ) );
+    floatMatrix d2dtdddn_answer( dt.size( ), floatVector( d.size( ) * n.size( ), 0 ) );
+    floatMatrix d2dtdndn_answer( dt.size( ), floatVector( n.size( ) * n.size( ), 0 ) );
+
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < d.size( ); i++ ){
+
+        floatVector delta( d.size( ), 0 );
+
+        delta[ i ] += eps * std::abs( d[ i ] ) + eps;
+
+        floatVector dnp, dnm;
+
+        floatVector dtp, dtm;
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d + delta, n, dnp, dtp ) );
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d - delta, n, dnm, dtm ) );
+
+        for ( unsigned int j = 0; j < d.size( ); j++ ){
+
+            ddndd_answer[ j ][ i ] = ( dnp[ j ] - dnm[ j ] ) / ( 2 * delta[ i ] );
+
+            ddtdd_answer[ j ][ i ] = ( dtp[ j ] - dtm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix ddnddp, ddnddm;
+        floatMatrix ddndnp, ddndnm;
+        floatMatrix ddtddp, ddtddm;
+        floatMatrix ddtdnp, ddtdnm;
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d + delta, n, dnp, dtp, ddnddp, ddndnp, ddtddp, ddtdnp ) );
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d - delta, n, dnm, dtm, ddnddm, ddndnm, ddtddm, ddtdnm ) );
+
+        for ( unsigned int j = 0; j < d.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < d.size( ); k++ ){
+
+                d2dndddd_answer[ j ][ d.size( ) * k + i ] += ( ddnddp[ j ][ k ] - ddnddm[ j ][ k ] ) / ( 2 * delta[ i ] );
+
+                d2dtdddd_answer[ j ][ d.size( ) * k + i ] += ( ddtddp[ j ][ k ] - ddtddm[ j ][ k ] ) / ( 2 * delta[ i ] );
+
+            }
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddndd, ddndd_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddtdd, ddtdd_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dtdddd, d2dtdddd_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dndddd, d2dndddd_answer ) );
+
+    for ( unsigned int i = 0; i < n.size( ); i++ ){
+
+        floatVector delta( n.size( ), 0 );
+
+        delta[ i ] += eps * std::abs( n[ i ] ) + eps;
+
+        floatVector dnp, dnm;
+
+        floatVector dtp, dtm;
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d, n + delta, dnp, dtp ) );
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d, n - delta, dnm, dtm ) );
+
+        for ( unsigned int j = 0; j < d.size( ); j++ ){
+
+            ddndn_answer[ j ][ i ] = ( dnp[ j ] - dnm[ j ] ) / ( 2 * delta[ i ] );
+
+            ddtdn_answer[ j ][ i ] = ( dtp[ j ] - dtm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix ddnddp, ddnddm;
+        floatMatrix ddndnp, ddndnm;
+        floatMatrix ddtddp, ddtddm;
+        floatMatrix ddtdnp, ddtdnm;
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d, n + delta, dnp, dtp, ddnddp, ddndnp, ddtddp, ddtdnp ) );
+
+        BOOST_CHECK( !tractionSeparation::decomposeVector( d, n - delta, dnm, dtm, ddnddm, ddndnm, ddtddm, ddtdnm ) );
+
+        for ( unsigned int j = 0; j < d.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < d.size( ); k++ ){
+
+                d2dndddn_answer[ j ][ d.size( ) * k + i ] += ( ddnddp[ j ][ k ] - ddnddm[ j ][ k ] ) / ( 2 * delta[ i ] );
+
+                d2dtdddn_answer[ j ][ d.size( ) * k + i ] += ( ddtddp[ j ][ k ] - ddtddm[ j ][ k ] ) / ( 2 * delta[ i ] );
+
+                d2dndndn_answer[ j ][ d.size( ) * k + i ] += ( ddndnp[ j ][ k ] - ddndnm[ j ][ k ] ) / ( 2 * delta[ i ] );
+
+                d2dtdndn_answer[ j ][ d.size( ) * k + i ] += ( ddtdnp[ j ][ k ] - ddtdnm[ j ][ k ] ) / ( 2 * delta[ i ] );
+
+            }
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddndn, ddndn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddtdn, ddtdn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dtdddn, d2dtdddn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dndddn, d2dndddn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dtdndn, d2dtdndn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dndndn, d2dndndn_answer ) );
+
+}
