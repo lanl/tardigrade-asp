@@ -8,7 +8,7 @@
 #include<sstream>
 #include<fstream>
 
-#define BOOST_TEST_MODULE test_asp
+#define BOOST_TEST_MODULE test_linear_elasticity
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/tools/output_test_stream.hpp>
 

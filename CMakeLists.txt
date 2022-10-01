@@ -11,8 +11,9 @@ set(ABAQUS_TEST_PATH "${ABAQUS_SRC_PATH}/tests")
 set(DOXYGEN_SRC_PATH "docs/doxygen")
 set(SPHINX_SRC_PATH "docs/sphinx")
 # Set the internal support libraries
-set(INTERNAL_SUPPORT_LIBRARIES "linear_elasticity")
+set(INTERNAL_SUPPORT_LIBRARIES "linear_elasticity" "traction_separation")
 set(LINEAR_ELASTICITY_UPSTREAM_LIBRARIES "constitutive_tools")
+set(TRACTION_SEPARATION_UPSTREAM_LIBRARIES "constitutive_tools")
 # Set some Abaqus integration variables
 set(UMAT "asp_umat")
 set(MISSING_INTEGRATION_DEPS_MESSAGE "Abaqus integration tests will be skipped.")

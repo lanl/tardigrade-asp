@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * \file linearElasticity.h
+  * \file linear_elasticity.h
   ******************************************************************************
   * The header file for an implementation of quadratic energy form linear
   * elasticity. This serves as a test for the micro particle
