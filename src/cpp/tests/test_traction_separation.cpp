@@ -600,3 +600,131 @@ BOOST_AUTO_TEST_CASE( test_decomposeVector ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d2dndndn, d2dndndn_answer ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_computeLinearTractionEnergy ){
+    /*!
+     * Compute the linear traction energy
+     */
+
+    floatVector dt = { 0.69646919, 0.28613933, 0.22685145 };
+
+    floatVector dn = { 0.55131477, 0.71946897, 0.42310646 };
+
+    floatVector parameters = { 0.9807641983846155, 0.6848297385848633 };
+
+    floatType energy_answer = 0.702429252330725;
+
+    floatType energy;
+
+    BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt, parameters, energy ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( energy_answer, energy ) );
+
+    floatVector denergydn, denergydt;
+
+    energy = 0.;
+
+    BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt, parameters, energy, denergydn, denergydt ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( energy_answer, energy ) );
+
+    floatType energy_2;
+
+    floatVector denergydn_2, denergydt_2;
+
+    floatVector d2energydndn, d2energydndt, d2energydtdt;
+
+    BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt, parameters, energy_2, denergydn_2, denergydt_2,
+                                                                   d2energydndn, d2energydndt, d2energydtdt ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( energy_answer, energy_2 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( denergydn_2, denergydn ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( denergydt_2, denergydt ) );
+
+    floatType eps = 1e-6;
+
+    floatVector denergydn_answer( dn.size( ), 0 );
+
+    floatVector denergydt_answer( dt.size( ), 0 );
+
+    floatVector d2energydndn_answer( dn.size( ) * dn.size( ), 0 );
+
+    floatVector d2energydndt_answer( dn.size( ) * dt.size( ), 0 );
+
+    floatVector d2energydtdt_answer( dt.size( ) * dt.size( ), 0 );
+
+    for ( unsigned int i = 0; i < dn.size( ); i++ ){
+
+        floatVector delta( dn.size( ), 0 );
+
+        delta[ i ] = eps * std::abs( dn[ i ] ) + eps;
+
+        floatType energyp, energym;
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn + delta, dt, parameters, energyp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn - delta, dt, parameters, energym ) );
+
+        denergydn_answer[ i ] += ( energyp - energym ) / ( 2 * delta[ i ] );
+
+        floatVector dednp, dednm;
+
+        floatVector dedtp, dedtm;
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn + delta, dt, parameters, energyp, dednp, dedtp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn - delta, dt, parameters, energym, dednm, dedtm ) );
+
+        for ( unsigned int j = 0; j < dn.size( ); j++ ){
+
+            d2energydndn_answer[ dn.size( ) * i + j ] += ( dednp[ j ] - dednm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( denergydn, denergydn_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2energydndn, d2energydndn_answer ) );
+
+    for ( unsigned int i = 0; i < dt.size( ); i++ ){
+
+        floatVector delta( dt.size( ), 0 );
+
+        delta[ i ] = eps * std::abs( dt[ i ] ) + eps;
+
+        floatType energyp, energym;
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt + delta, parameters, energyp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt - delta, parameters, energym ) );
+
+        denergydt_answer[ i ] += ( energyp - energym ) / ( 2 * delta[ i ] );
+
+        floatVector dednp, dednm;
+
+        floatVector dedtp, dedtm;
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt + delta, parameters, energyp, dednp, dedtp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeLinearTractionEnergy( dn, dt - delta, parameters, energym, dednm, dedtm ) );
+
+        for ( unsigned int j = 0; j < dt.size( ); j++ ){
+
+            d2energydndt_answer[ dt.size( ) * i + j ] += ( dednp[ j ] - dednm[ j ] ) / ( 2 * delta[ i ] );
+
+            d2energydtdt_answer[ dt.size( ) * i + j ] += ( dedtp[ j ] - dedtm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( denergydt, denergydt_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2energydndt, d2energydndt_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2energydtdt, d2energydtdt_answer ) );
+
+}

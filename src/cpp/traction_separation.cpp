@@ -548,17 +548,119 @@ namespace tractionSeparation{
     }
 
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
-                                          const floatVector &parameters, floatType &energy );
+                                          const floatVector &parameters, floatType &energy ){
+        /*!
+         * Compute the linear traction-separation energy
+         * 
+         * \f$ e^t = \frac{1}{2} \left[ E^n d^n_i d^n_i + E^t d^t_i d^t_i\right]\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &energy: The returned energy value \f$ e^t \f$
+         */
 
+        if ( parameters.size( ) != 2 ){
+
+            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        energy = 0.5 * ( En * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ) + Et * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) );
+
+        return NULL;
+
+    }
 
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
-                                          floatVector &denergyddn, floatVector &denergyddt );
+                                          floatVector &denergyddn, floatVector &denergyddt ){
+        /*!
+         * Compute the linear traction-separation energy
+         * 
+         * \f$ e^t = \frac{1}{2} \left[ E^n d^n_i d^n_i + E^t d^t_i d^t_i\right]\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &energy: The returned energy value \f$ e^t \f$
+         * \param &denergyddn: The derivative of the energy w.r.t. the normal deformation measure
+         * \param &denergyddt: The derivative of the energy w.r.t. the tangential deformation measure
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        energy = 0.5 * ( En * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ) + Et * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) );
+
+        denergyddn = En * normalDeformationMeasure;
+
+        denergyddt = Et * tangentialDeformationMeasure;
+
+        return NULL;
+
+    }
 
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
                                           floatVector &denergyddn, floatVector &denergyddt,
                                           floatVector &d2energyddnddn, floatVector &d2energyddnddt,
-                                          floatVector &d2energyddtddt );
+                                          floatVector &d2energyddtddt ){
+        /*!
+         * Compute the linear traction-separation energy
+         * 
+         * \f$ e^t = \frac{1}{2} \left[ E^n d^n_i d^n_i + E^t d^t_i d^t_i\right]\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &energy: The returned energy value \f$ e^t \f$
+         * \param &denergyddn: The derivative of the energy w.r.t. the normal deformation measure
+         * \param &denergyddt: The derivative of the energy w.r.t. the tangential deformation measure
+         * \param &d2energyddnddn: The second derivative of the energy w.r.t. the normal deformation measure
+         * \param &d2energyddnddt: The second derivative of the energy w.r.t. the normal and tangential deformation measures
+         * \param &d2energyddtddt: The second derivative of the energy w.r.t. the tangential deformation measure
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        energy = 0.5 * ( En * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ) + Et * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) );
+
+        denergyddn = En * normalDeformationMeasure;
+
+        denergyddt = Et * tangentialDeformationMeasure;
+
+        floatVector eye( normalDeformationMeasure.size( ) * normalDeformationMeasure.size( ) );
+
+        vectorTools::eye( eye );
+
+        d2energyddnddn = En * eye;
+
+        d2energyddnddt = floatVector( eye.size( ), 0 );
+
+        d2energyddtddt = Et * eye;
+
+        return NULL;
+
+    }
 
 }
