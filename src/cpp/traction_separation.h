@@ -63,7 +63,6 @@ namespace tractionSeparation{
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy );
 
-
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy,
                                           floatVector &denergyddn, floatVector &denergyddt );
@@ -73,6 +72,17 @@ namespace tractionSeparation{
                                           floatVector &denergyddn, floatVector &denergyddt,
                                           floatVector &d2energyddnddn, floatVector &d2energyddnddt,
                                           floatVector &d2energyddtddt );
+
+    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                          const floatVector &parameters, floatType &energy,
+                                          floatVector &denergyddn, floatVector &denergyddt, floatVector &denergydParameters );
+
+    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                          const floatVector &parameters, floatType &energy,
+                                          floatVector &denergyddn, floatVector &denergyddt, floatVector &denergydParameters,
+                                          floatVector &d2energyddnddn, floatVector &d2energyddnddt, floatVector &d2energyddndParameters,
+                                          floatVector &d2energyddtddt, floatVector &d2energyddtdParameters,
+                                          floatVector &d2energydParametersdParameters );
 
 }
 
