@@ -663,4 +663,119 @@ namespace tractionSeparation{
 
     }
 
+    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                          const floatVector &parameters, floatType &energy,
+                                          floatVector &denergyddn, floatVector &denergyddt, floatVector &denergydParameters ){
+        /*!
+         * Compute the linear traction-separation energy
+         * 
+         * \f$ e^t = \frac{1}{2} \left[ E^n d^n_i d^n_i + E^t d^t_i d^t_i\right]\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &energy: The returned energy value \f$ e^t \f$
+         * \param &denergyddn: The derivative of the energy w.r.t. the normal deformation measure
+         * \param &denergyddt: The derivative of the energy w.r.t. the tangential deformation measure
+         * \param &denergydParameters: The derivative of the energy w.r.t. the parameters
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        energy = 0.5 * ( En * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ) + Et * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) );
+
+        denergyddn = En * normalDeformationMeasure;
+
+        denergyddt = Et * tangentialDeformationMeasure;
+
+        denergydParameters = { 0.5 * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ),
+                               0.5 * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) };
+
+        return NULL;
+    }
+
+    errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                          const floatVector &parameters, floatType &energy,
+                                          floatVector &denergyddn, floatVector &denergyddt, floatVector &denergydParameters,
+                                          floatVector &d2energyddnddn, floatVector &d2energyddnddt, floatVector &d2energyddndParameters,
+                                          floatVector &d2energyddtddt, floatVector &d2energyddtdParameters,
+                                          floatVector &d2energydParametersdParameters ){
+        /*!
+         * Compute the linear traction-separation energy
+         * 
+         * \f$ e^t = \frac{1}{2} \left[ E^n d^n_i d^n_i + E^t d^t_i d^t_i\right]\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &energy: The returned energy value \f$ e^t \f$
+         * \param &denergyddn: The derivative of the energy w.r.t. the normal deformation measure
+         * \param &denergyddt: The derivative of the energy w.r.t. the tangential deformation measure
+         * \param &denergydParameters: The derivative of the energy w.r.t. the parameters
+         * \param &d2energyddnddn: The second derivative of the energy w.r.t. the normal deformation measure
+         * \param &d2energyddnddt: The second derivative of the energy w.r.t. the normal and tangential deformation measures
+         * \param &d2energyddnddt: The second derivative of the energy w.r.t. the normal deformation measure and the parameters
+         * \param &d2energyddtdParameters: The second derivative of the energy w.r.t. the tangential deformation measure and the parameters
+         * \param &d2energyddtdParameters: The second derivative of the energy w.r.t. the parameters
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        energy = 0.5 * ( En * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ) + Et * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) );
+
+        denergyddn = En * normalDeformationMeasure;
+
+        denergyddt = Et * tangentialDeformationMeasure;
+
+        denergydParameters = { 0.5 * vectorTools::dot( normalDeformationMeasure, normalDeformationMeasure ),
+                               0.5 * vectorTools::dot( tangentialDeformationMeasure, tangentialDeformationMeasure ) };
+
+        floatVector eye( normalDeformationMeasure.size( ) * normalDeformationMeasure.size( ) );
+
+        vectorTools::eye( eye );
+
+        d2energyddnddn = En * eye;
+
+        d2energyddnddt = floatVector( eye.size( ), 0 );
+
+        d2energyddndParameters = floatVector( normalDeformationMeasure.size( ) * parameters.size( ), 0 );
+
+        for ( unsigned int i = 0; i < normalDeformationMeasure.size( ); i++ ){
+
+            d2energyddndParameters[ parameters.size( ) * i ] += normalDeformationMeasure[ i ];
+
+        }
+
+        d2energyddtddt = Et * eye;
+
+        d2energyddtdParameters = floatVector( tangentialDeformationMeasure.size( ) * parameters.size( ), 0 );
+
+        for ( unsigned int i = 0; i < tangentialDeformationMeasure.size( ); i++ ){
+
+            d2energyddtdParameters[ parameters.size( ) * i + 1 ] += tangentialDeformationMeasure[ i ];
+
+        }
+
+        d2energydParametersdParameters = floatVector( parameters.size( ) * parameters.size( ), 0 );
+
+        return NULL;
+
+    }
+
 }
