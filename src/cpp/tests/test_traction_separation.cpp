@@ -825,3 +825,144 @@ BOOST_AUTO_TEST_CASE( test_computeLinearTractionEnergy ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d2energydParametersdParameters, d2energydParametersdParameters_answer ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_computeNansonsRelation ){
+    /*!
+     * Compute Nanson's relation
+     */
+
+    floatVector deformationGradient = { 0.39293837, -0.42772133, -0.54629709,
+                                        0.10262954,  0.43893794, -0.15378708,
+                                        0.9615284 ,  0.36965948, -0.0381362 };
+
+    floatVector dAN = { 0.02650791,  0.03853289, -0.05628004 };
+
+    floatVector dan_answer = { 0.01713406,  0.04519858, -0.00390936 };
+
+    floatVector dan;
+
+    BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN, dan ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dan, dan_answer ) );
+
+    floatMatrix ddandF, ddanddAN;
+
+    BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN, dan, ddandF, ddanddAN ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dan, dan_answer ) );
+
+    floatVector dan_2;
+
+    floatMatrix ddandF_2, ddanddAN_2;
+
+    floatMatrix d2dandFdF, d2dandFddAN;
+
+    BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN, dan_2, ddandF_2, ddanddAN_2, d2dandFdF, d2dandFddAN ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dan_2, dan_answer ) );
+
+    floatMatrix ddandF_answer( dan_answer.size( ), floatVector( deformationGradient.size( ), 0 ) );
+
+    floatMatrix ddanddAN_answer( dan_answer.size( ), floatVector( dAN.size( ), 0 ) );
+
+    floatMatrix d2dandFdF_answer( dan_answer.size( ), floatVector( deformationGradient.size( ) * deformationGradient.size( ), 0 ) );
+
+    floatMatrix d2dandFddAN_answer( dan_answer.size( ), floatVector( deformationGradient.size( ) * dAN.size( ), 0 ) );
+
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < deformationGradient.size( ); i++ ){
+
+        floatVector delta( deformationGradient.size( ), 0 );
+
+        delta[ i ] += eps * std::abs( deformationGradient[ i ] ) + eps;
+
+        floatVector danp, danm;
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient + delta, dAN, danp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient - delta, dAN, danm ) );
+
+        for ( unsigned int j = 0; j < dan_answer.size( ); j++ ){
+
+            ddandF_answer[ j ][ i ] += ( danp[ j ] - danm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix ddandFp, ddandFm;
+
+        floatMatrix ddanddANp, ddanddANm;
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient + delta, dAN, danp, ddandFp, ddanddANp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient - delta, dAN, danm, ddandFm, ddanddANm ) );
+
+        for ( unsigned int j = 0; j < dan_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < dan_answer.size( ); k++ ){
+
+                for ( unsigned int K = 0; K < dan_answer.size( ); K++ ){
+
+                    d2dandFdF_answer[ j ][ dan_answer.size( ) * dan_answer.size( ) * dan_answer.size( ) * k + dan_answer.size( ) * dan_answer.size( ) * K + i ] += ( ddandFp[ j ][ dan_answer.size( ) * k + K ] - ddandFm[ j ][ dan_answer.size( ) * k + K ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddandF, ddandF_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dandFdF, d2dandFdF_answer ) );
+
+    for ( unsigned int i = 0; i < dAN.size( ); i++ ){
+
+        floatVector delta( dAN.size( ), 0 );
+
+        delta[ i ] += eps * std::abs( dAN[ i ] ) + eps;
+
+        floatVector danp, danm;
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN + delta, danp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN - delta, danm ) );
+
+        for ( unsigned int j = 0; j < dan_answer.size( ); j++ ){
+
+            ddanddAN_answer[ j ][ i ] += ( danp[ j ] - danm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+        floatMatrix ddandFp, ddandFm;
+
+        floatMatrix ddanddANp, ddanddANm;
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN + delta, danp, ddandFp, ddanddANp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeNansonsRelation( deformationGradient, dAN - delta, danm, ddandFm, ddanddANm ) );
+
+        for ( unsigned int j = 0; j < dan_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < dan_answer.size( ); k++ ){
+
+                for ( unsigned int K = 0; K < dan_answer.size( ); K++ ){
+
+                    d2dandFddAN_answer[ j ][ dan_answer.size( ) * dan_answer.size( ) * k + dan_answer.size( ) * K + i ] += ( ddandFp[ j ][ dan_answer.size( ) * k + K ] - ddandFm[ j ][ dan_answer.size( ) * k + K ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+        }
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( ( ddanddANp - ddanddANm ) / ( 2 * delta[ i ] ), floatMatrix( dan_answer.size( ), floatVector( dAN.size( ), 0 ) ) ) );
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( ddanddAN, ddanddAN_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2dandFddAN, d2dandFddAN_answer ) );
+
+}
