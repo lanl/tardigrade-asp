@@ -84,6 +84,15 @@ namespace tractionSeparation{
                                           floatVector &d2energyddtddt, floatVector &d2energyddtdParameters,
                                           floatVector &d2energydParametersdParameters );
 
+    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan );
+
+    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
+                                     floatMatrix &ddandF, floatMatrix &ddanddAN );
+
+    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
+                                     floatMatrix &ddandF, floatMatrix &ddanddAN,
+                                     floatMatrix &d2dandFdF, floatMatrix &d2dandFddAN );
+
 }
 
 #endif

@@ -778,4 +778,181 @@ namespace tractionSeparation{
 
     }
 
+    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan ){
+        /*!
+         * Compute Nanson's relation
+         * 
+         * \f$ da n_i = J dA N_I F_{Ii}^{-1} \f$
+         * 
+         * where \f$ J \f$ is the determinant of the deformation gradient \f$ F \f$
+         * 
+         * \param &deformationGradient: The deformation gradient \f$ F \f$
+         * \param &dAN: The product of the reference area \f$ dA \f$ and the reference normal \f$ N \f$
+         * \param &dan: The mapping of \f$ dA N_I \f$ to the current configuration.
+         */
+
+        if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
+
+            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+
+        }
+
+        floatVector Finv = vectorTools::inverse( deformationGradient, dAN.size( ), dAN.size( ) );
+
+        floatType J = vectorTools::determinant( deformationGradient, dAN.size( ), dAN.size( ) );
+
+        dan = floatVector( dAN.size( ), 0 );
+
+        for ( unsigned int i = 0; i < dAN.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dAN.size( ); I++ ){
+
+                dan[ i ] += J * dAN[ I ] * Finv[ dAN.size( ) * I + i ];
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
+                                     floatMatrix &ddandF, floatMatrix &ddanddAN ){
+        /*!
+         * Compute Nanson's relation
+         * 
+         * \f$ da n_i = J dA N_I F_{Ii}^{-1} \f$
+         * 
+         * where \f$ J \f$ is the determinant of the deformation gradient \f$ F \f$
+         * 
+         * \param &deformationGradient: The deformation gradient \f$ F \f$
+         * \param &dAN: The product of the reference area \f$ dA \f$ and the reference normal \f$ N \f$
+         * \param &dan: The mapping of \f$ dA N_I \f$ to the current configuration.
+         * \param &ddandF: The gradient of the current surface area w.r.t. the deformation gradient
+         * \param &ddanddAN: The gradient of the current surface area w.r.t. the reference surface area
+         */
+
+        if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
+
+            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+
+        }
+
+        floatVector Finv = vectorTools::inverse( deformationGradient, dAN.size( ), dAN.size( ) );
+
+        floatType J = vectorTools::determinant( deformationGradient, dAN.size( ), dAN.size( ) );
+
+        dan = floatVector( dAN.size( ), 0 );
+
+        ddandF = floatMatrix( dan.size( ), floatVector( deformationGradient.size( ), 0 ) );
+
+        ddanddAN = floatMatrix( dan.size( ), floatVector( dAN.size( ), 0 ) );
+
+        for ( unsigned int i = 0; i < dAN.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dAN.size( ); I++ ){
+
+                dan[ i ] += J * dAN[ I ] * Finv[ dAN.size( ) * I + i ];
+
+                ddanddAN[ i ][ I ] += J * Finv[ dAN.size( ) * I + i ];
+
+                for ( unsigned int a = 0; a < dAN.size( ); a++ ){
+
+                    for ( unsigned int A = 0; A < dAN.size( ); A++ ){
+
+                        ddandF[ i ][ dAN.size( ) * a + A ] += J * dAN[ I ] * ( Finv[ dAN.size( ) * I + i ] * Finv[ dAN.size( ) * A + a ] - Finv[ dAN.size( ) * A + i ] * Finv[ dAN.size( ) * I + a ] );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeNansonsRelation( const floatVector &deformationGradient, const floatVector &dAN, floatVector &dan,
+                                     floatMatrix &ddandF, floatMatrix &ddanddAN,
+                                     floatMatrix &d2dandFdF, floatMatrix &d2dandFddAN ){
+        /*!
+         * Compute Nanson's relation
+         * 
+         * \f$ da n_i = J dA N_I F_{Ii}^{-1} \f$
+         * 
+         * where \f$ J \f$ is the determinant of the deformation gradient \f$ F \f$
+         * 
+         * \param &deformationGradient: The deformation gradient \f$ F \f$
+         * \param &dAN: The product of the reference area \f$ dA \f$ and the reference normal \f$ N \f$
+         * \param &dan: The mapping of \f$ dA N_I \f$ to the current configuration.
+         * \param &ddandF: The gradient of the current surface area w.r.t. the deformation gradient
+         * \param &ddanddAN: The gradient of the current surface area w.r.t. the reference surface area
+         * \param &d2dandFdF: The second derivative of the current surface area w.r.t. the deformation gradient
+         * \param &d2dandFddAN: The second derivative of the current surface area w.r.t. the deformation gradient and reference surface area
+         */
+
+        if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
+
+            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+
+        }
+
+        floatVector Finv = vectorTools::inverse( deformationGradient, dAN.size( ), dAN.size( ) );
+
+        floatType J = vectorTools::determinant( deformationGradient, dAN.size( ), dAN.size( ) );
+
+        dan = floatVector( dAN.size( ), 0 );
+
+        ddandF = floatMatrix( dan.size( ), floatVector( deformationGradient.size( ), 0 ) );
+
+        ddanddAN = floatMatrix( dan.size( ), floatVector( dAN.size( ), 0 ) );
+
+        d2dandFdF = floatMatrix( dan.size( ), floatVector( deformationGradient.size( ) * deformationGradient.size( ), 0 ) );
+
+        d2dandFddAN = floatMatrix( dan.size( ), floatVector( deformationGradient.size( ) * dAN.size( ), 0 ) );
+
+        for ( unsigned int i = 0; i < dAN.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dAN.size( ); I++ ){
+
+                dan[ i ] += J * dAN[ I ] * Finv[ dAN.size( ) * I + i ];
+
+                ddanddAN[ i ][ I ] += J * Finv[ dAN.size( ) * I + i ];
+
+                for ( unsigned int a = 0; a < dAN.size( ); a++ ){
+
+                    for ( unsigned int A = 0; A < dAN.size( ); A++ ){
+
+                        ddandF[ i ][ dAN.size( ) * a + A ] += J * dAN[ I ] * ( Finv[ dAN.size( ) * I + i ] * Finv[ dAN.size( ) * A + a ] - Finv[ dAN.size( ) * A + i ] * Finv[ dAN.size( ) * I + a ] );
+
+                        d2dandFddAN[ i ][ dAN.size( ) * dAN.size( ) * a + dAN.size( ) * A + I ] += J * ( Finv[ dAN.size( ) * I + i ] * Finv[ dAN.size( ) * A + a ] - Finv[ dAN.size( ) * A + i ] * Finv[ dAN.size( ) * I + a ] );
+
+                        for ( unsigned int b = 0; b < dAN.size( ); b++ ){
+
+                            for ( unsigned int B = 0; B < dAN.size( ); B++ ){
+
+                                d2dandFdF[ i ][ dAN.size( ) * dAN.size( ) * dAN.size( ) * a + dAN.size( ) * dAN.size( ) * A + dAN.size( ) * b + B ]
+                                    += J * dAN[ I ] * Finv[ dAN.size( ) * B + b ] *  ( Finv[ dAN.size( ) * I + i ] * Finv[ dAN.size( ) * A + a ] - Finv[ dAN.size( ) * A + i ] * Finv[ dAN.size( ) * I + a ] )
+                                     - J * dAN[ I ] * ( Finv[ dAN.size( ) * I + b ] * Finv[ dAN.size( ) * B + i ] * Finv[ dAN.size( ) * A + a ] + Finv[ dAN.size( ) * I + i ] * Finv[ dAN.size( ) * A + b ] * Finv[ dAN.size( ) * B + a ]
+                                                      - Finv[ dAN.size( ) * A + b ] * Finv[ dAN.size( ) * B + i ] * Finv[ dAN.size( ) * I + a ] - Finv[ dAN.size( ) * A + i ] * Finv[ dAN.size( ) * I + b ] * Finv[ dAN.size( ) * B + a ] );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
 }
