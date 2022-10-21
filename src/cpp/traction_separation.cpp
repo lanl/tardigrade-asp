@@ -955,4 +955,275 @@ namespace tractionSeparation{
 
     }
 
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatType &Xi_2, const floatVector &D,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So the overlap vector can be computed as
+         * 
+         * 
+         * 
+         * \param &Xi_1: The local micro relative position vector.
+         * \param &Xi_2: The non-local micro relative position vector.
+         * \param &D: The initial spacing between the particles
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &gradChi: The gradient of the micro deformation tensor w.r.t. the reference spatial position
+         * \param &overlap: The overlap vector
+         */
+
+        return NULL;
+
+    }
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L ){
+        /*!
+         * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
+         * is overlapping it's non-local neighbor.
+         * 
+         * \f$ \mathcal{L} = \frac{1}{2} \left( \chi^{nl}_{iI} \Xi_I - \xi_i \right)\left( \chi^{nl}_{iJ} \Xi_J - \xi_i\right) - \lambda \left( \Xi_I \Xi_I - 1\right)\f$
+         * 
+         * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
+         * \param &chi_nl: The non-local micro-deformation tensor
+         * \param &xi_t: The target point in the local particle
+         * \param &L: The value of the Lagrangian
+         */
+
+        unsigned int Xsize = X.size( );
+
+        if ( Xsize < ( xi_t.size( ) + 1 ) ){
+
+            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+
+        }
+
+        if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
+
+            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+
+        }
+
+        floatVector Xi( X.begin( ), X.begin( ) + xi_t.size( ) );
+        floatType lambda = X.back( );
+
+        floatVector d = -xi_t;
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                d[ i ] += chi_nl[ xi_t.size( ) * i + I ] * Xi[ I ];
+
+            }
+
+        }
+        
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - 1 );
+
+        return NULL;
+
+    }
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t ){
+        /*!
+         * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
+         * is overlapping it's non-local neighbor.
+         * 
+         * \f$ \mathcal{L} = \frac{1}{2} \left( \chi^{nl}_{iI} \Xi_I - \xi_i \right)\left( \chi^{nl}_{iJ} \Xi_J - \xi_i\right) - \lambda \left( \Xi_I \Xi_I - 1\right)\f$
+         * 
+         * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
+         * \param &chi_nl: The non-local micro-deformation tensor
+         * \param &xi_t: The target point in the local particle
+         * \param &L: The value of the Lagrangian
+         * \param &dLdX: The gradient of the Lagrangian w.r.t. the unknown vector
+         * \param &dLdchi_nl: The gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
+         * \param &dLdxi_t: The gradient of the Lagrangian w.r.t. the target point
+         */
+
+        unsigned int Xsize = X.size( );
+
+        if ( Xsize < ( xi_t.size( ) + 1 ) ){
+
+            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+
+        }
+
+        if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
+
+            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+
+        }
+
+        floatVector Xi( X.begin( ), X.begin( ) + xi_t.size( ) );
+        floatType lambda = X.back( );
+
+        floatVector d = -xi_t;
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                d[ i ] += chi_nl[ xi_t.size( ) * i + I ] * Xi[ I ];
+
+            }
+
+        }
+        
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - 1 );
+
+        dLdX = floatVector( X.size( ), 0 );
+
+        dLdchi_nl = floatVector( chi_nl.size( ), 0 );
+
+        dLdxi_t = -d;
+
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                dLdX[ I ] += chi_nl[ xi_t.size( ) * i + I ] * d[ i ];
+
+                dLdchi_nl[ xi_t.size( ) * i + I ] += Xi[ I ] * d[ i ];
+
+            }
+
+            dLdX[ i ] -= 2 * lambda * Xi[ i ];
+
+        }
+
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - 1 );
+
+        return NULL;
+
+    }
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t,
+                                               floatVector &d2Ldxi_tdxi_t ){
+        /*!
+         * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
+         * is overlapping it's non-local neighbor.
+         * 
+         * \f$ \mathcal{L} = \frac{1}{2} \left( \chi^{nl}_{iI} \Xi_I - \xi_i \right)\left( \chi^{nl}_{iJ} \Xi_J - \xi_i\right) - \lambda \left( \Xi_I \Xi_I - 1\right)\f$
+         * 
+         * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
+         * \param &chi_nl: The non-local micro-deformation tensor
+         * \param &xi_t: The target point in the local particle
+         * \param &L: The value of the Lagrangian
+         * \param &dLdX: The gradient of the Lagrangian w.r.t. the unknown vector
+         * \param &dLdchi_nl: The gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
+         * \param &dLdxi_t: The gradient of the Lagrangian w.r.t. the target point
+         */
+
+        unsigned int Xsize = X.size( );
+
+        if ( Xsize < ( xi_t.size( ) + 1 ) ){
+
+            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+
+        }
+
+        if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
+
+            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+
+        }
+
+        floatVector Xi( X.begin( ), X.begin( ) + xi_t.size( ) );
+        floatType lambda = X.back( );
+
+        floatVector d = -xi_t;
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                d[ i ] += chi_nl[ xi_t.size( ) * i + I ] * Xi[ I ];
+
+            }
+
+        }
+        
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - 1 );
+
+        dLdX = floatVector( X.size( ), 0 );
+
+        dLdchi_nl = floatVector( chi_nl.size( ), 0 );
+
+        dLdxi_t = -d;
+
+        d2LdXdX = floatVector( X.size( ) * X.size( ), 0 );
+
+        d2LdXdchi_nl = floatVector( X.size( ) * chi_nl.size( ), 0 );
+
+        d2LdXdxi_t = floatVector( X.size( ) * xi_t.size( ), 0 );
+
+        d2Ldchi_nldchi_nl = floatVector( chi_nl.size( ) * chi_nl.size( ), 0 );
+
+        d2Ldchi_nldxi_t = floatVector( chi_nl.size( ) * xi_t.size( ), 0 );
+
+        d2Ldxi_tdxi_t = floatVector( xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector eye( chi_nl.size( ), 0 );
+
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            d2Ldxi_tdxi_t[ xi_t.size( ) * i + i ] = 1;
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                dLdX[ I ] += chi_nl[ xi_t.size( ) * i + I ] * d[ i ];
+
+                dLdchi_nl[ xi_t.size( ) * i + I ] += Xi[ I ] * d[ i ];
+
+                d2LdXdxi_t[ xi_t.size( ) * i + I ] -= chi_nl[ xi_t.size( ) * I + i ];
+
+                for ( unsigned int J = 0; J < xi_t.size( ); J++ ){
+
+                    d2LdXdX[ X.size( ) * I + J ] += chi_nl[ xi_t.size( ) * i + I ] * chi_nl[ xi_t.size( ) * i + J ];
+
+                    d2LdXdchi_nl[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * i + J ] += d[ i ] * eye[ xi_t.size( ) * I + J ] + chi_nl[ xi_t.size( ) * i + I ] * Xi[ J ];
+
+                    d2Ldchi_nldxi_t[ xi_t.size( ) * xi_t.size( ) * i + xi_t.size( ) * I + J ] -= Xi[ I ] * eye[ xi_t.size( ) * i + J ];
+
+                    for ( unsigned int j = 0; j < xi_t.size( ); j++ ){
+
+                        d2Ldchi_nldchi_nl[ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * i + xi_t.size( ) * xi_t.size( ) * I + j * xi_t.size( ) + J ] += Xi[ I ] * eye[ xi_t.size( ) * i + j ] * Xi[ J ];
+
+                    }
+
+                }
+
+            }
+
+            dLdX[ i ] -= 2 * lambda * Xi[ i ];
+
+            d2LdXdX[ X.size( ) * i + i ] -= 2 * lambda;
+
+            d2LdXdX[ X.size( ) * i + X.size( ) - 1 ] -= 2 * Xi[ i ];
+            d2LdXdX[ X.size( ) * ( X.size( ) - 1 ) + i ] -= 2 * Xi[ i ];
+
+        }
+
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - 1 );
+
+        return NULL;
+
+    }
+
 }

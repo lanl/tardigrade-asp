@@ -93,6 +93,21 @@ namespace tractionSeparation{
                                      floatMatrix &ddandF, floatMatrix &ddanddAN,
                                      floatMatrix &d2dandFdF, floatMatrix &d2dandFddAN );
 
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatType &R_2, const floatVector &D,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t,
+                                               floatVector &d2Ldxi_tdxi_t );
+
 }
 
 #endif
