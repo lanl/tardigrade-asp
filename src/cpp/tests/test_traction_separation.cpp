@@ -977,17 +977,21 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     floatVector xi_t = { -0.88064421, -0.20391149,  0.47599081 };
 
-    floatType L_answer = 0.595416169431248;
+    floatType R_nl = 0.7453818629935041;
+
+    floatType L_answer = 0.5692848289101061;
 
     floatType L;
 
-    BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, L ) );
+    BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( L, L_answer ) );
 
     floatVector dLdX, dLdchi_nl, dLdxi_t;
+    
+    floatType dLdR_nl;
 
-    BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, L, dLdX, dLdchi_nl, dLdxi_t ) );
+    BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( L, L_answer ) );
 
@@ -995,12 +999,17 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     floatVector dLdX_2, dLdchi_nl_2, dLdxi_t_2;
 
-    floatVector d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldxi_tdxi_t;
+    floatType dLdR_nl_2;
 
-    BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, L_2, dLdX_2, dLdchi_nl_2, dLdxi_t_2,
-                                                                        d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t,
-                                                                        d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t,
-                                                                        d2Ldxi_tdxi_t ) );
+    floatVector d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl, d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl, d2Ldxi_tdxi_t, d2Ldxi_tdR_nl;
+
+    floatType d2LdR_nldR_nl;
+
+    BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L_2, dLdX_2, dLdchi_nl_2, dLdxi_t_2, dLdR_nl_2,
+                                                                        d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                        d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                        d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                        d2LdR_nldR_nl ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( L_2, L_answer ) );
 
@@ -1010,6 +1019,8 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dLdxi_t_2, dLdxi_t ) );
 
+    BOOST_CHECK( vectorTools::fuzzyEquals( dLdR_nl_2, dLdR_nl ) );
+
     floatType eps = 1e-6;
 
     floatVector dLdX_answer( X.size( ), 0 );
@@ -1018,17 +1029,27 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     floatVector dLdxi_t_answer( xi_t.size( ), 0 );
 
+    floatType dLdR_nl_answer = 0;
+
     floatVector d2LdXdX_answer( X.size( ) * X.size( ), 0 );
 
     floatVector d2LdXdchi_nl_answer( X.size( ) * chi_nl.size( ), 0 );
 
     floatVector d2LdXdxi_t_answer( X.size( ) * xi_t.size( ), 0 );
 
+    floatVector d2LdXdR_nl_answer( X.size( ), 0 );
+
     floatVector d2Ldchi_nldchi_nl_answer( chi_nl.size( ) * chi_nl.size( ), 0 );
 
     floatVector d2Ldchi_nldxi_t_answer( chi_nl.size( ) * xi_t.size( ), 0 );
 
+    floatVector d2Ldchi_nldR_nl_answer( chi_nl.size( ), 0 );
+
     floatVector d2Ldxi_tdxi_t_answer( xi_t.size( ) * xi_t.size( ), 0 );
+
+    floatVector d2Ldxi_tdR_nl_answer( xi_t.size( ), 0 );
+
+    floatType d2LdR_nldR_nl_answer = 0;
 
     for ( unsigned int i = 0; i < X.size( ); i++ ){
 
@@ -1038,9 +1059,9 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
         floatType Lp, Lm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X + delta, chi_nl, xi_t, Lp ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X + delta, chi_nl, xi_t, R_nl, Lp ) );
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X - delta, chi_nl, xi_t, Lm ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X - delta, chi_nl, xi_t, R_nl, Lm ) );
 
         dLdX_answer[ i ] += ( Lp - Lm ) / ( 2 * delta[ i ] );
 
@@ -1050,9 +1071,11 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
         floatVector dLdxi_tp, dLdxi_tm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X + delta, chi_nl, xi_t, Lp, dLdXp, dLdchi_nlp, dLdxi_tp ) );
+        floatType dLdR_nlp, dLdR_nlm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X - delta, chi_nl, xi_t, Lm, dLdXm, dLdchi_nlm, dLdxi_tm ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X + delta, chi_nl, xi_t, R_nl, Lp, dLdXp, dLdchi_nlp, dLdxi_tp, dLdR_nlp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X - delta, chi_nl, xi_t, R_nl, Lm, dLdXm, dLdchi_nlm, dLdxi_tm, dLdR_nlm ) );
 
         for ( unsigned int j = 0; j < X.size( ); j++ ){
 
@@ -1074,9 +1097,9 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
         floatType Lp, Lm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl + delta, xi_t, Lp ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl + delta, xi_t, R_nl, Lp ) );
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl - delta, xi_t, Lm ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl - delta, xi_t, R_nl, Lm ) );
 
         dLdchi_nl_answer[ i ] += ( Lp - Lm ) / ( 2 * delta[ i ] );
 
@@ -1086,9 +1109,11 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
         floatVector dLdxi_tp, dLdxi_tm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl + delta, xi_t, Lp, dLdXp, dLdchi_nlp, dLdxi_tp ) );
+        floatType dLdR_nlp, dLdR_nlm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl - delta, xi_t, Lm, dLdXm, dLdchi_nlm, dLdxi_tm ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl + delta, xi_t, R_nl, Lp, dLdXp, dLdchi_nlp, dLdxi_tp, dLdR_nlp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl - delta, xi_t, R_nl, Lm, dLdXm, dLdchi_nlm, dLdxi_tm, dLdR_nlm ) );
 
         for ( unsigned int j = 0; j < X.size( ); j++ ){
 
@@ -1110,8 +1135,6 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d2Ldchi_nldchi_nl, d2Ldchi_nldchi_nl_answer ) );
 
-    floatMatrix _d2Ldchi_nldxi_t_answer( chi_nl.size( ), floatVector( xi_t.size( ), 0 ) );
-
     for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
         floatVector delta( xi_t.size( ), 0 );
@@ -1120,9 +1143,9 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
         floatType Lp, Lm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t + delta, Lp ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t + delta, R_nl, Lp ) );
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t - delta, Lm ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t - delta, R_nl, Lm ) );
 
         dLdxi_t_answer[ i ] += ( Lp - Lm ) / ( 2 * delta[ i ] );
 
@@ -1132,9 +1155,11 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
         floatVector dLdxi_tp, dLdxi_tm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t + delta, Lp, dLdXp, dLdchi_nlp, dLdxi_tp ) );
+        floatType dLdR_nlp, dLdR_nlm;
 
-        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t - delta, Lm, dLdXm, dLdchi_nlm, dLdxi_tm ) );
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t + delta, R_nl, Lp, dLdXp, dLdchi_nlp, dLdxi_tp, dLdR_nlp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t - delta, R_nl, Lm, dLdXm, dLdchi_nlm, dLdxi_tm, dLdR_nlm ) );
 
         for ( unsigned int j = 0; j < X.size( ); j++ ){
 
@@ -1163,4 +1188,77 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d2Ldxi_tdxi_t, d2Ldxi_tdxi_t_answer ) );
 
+    for ( unsigned int i = 0; i < 1; i++ ){
+
+        floatType delta = eps * std::abs( R_nl ) + eps;
+
+        floatType Lp, Lm;
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl + delta, Lp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl - delta, Lm ) );
+
+        dLdR_nl_answer += ( Lp - Lm ) / ( 2 * delta );
+
+        floatVector dLdXp, dLdXm;
+
+        floatVector dLdchi_nlp, dLdchi_nlm;
+
+        floatVector dLdxi_tp, dLdxi_tm;
+
+        floatType dLdR_nlp, dLdR_nlm;
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl + delta, Lp, dLdXp, dLdchi_nlp, dLdxi_tp, dLdR_nlp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl - delta, Lm, dLdXm, dLdchi_nlm, dLdxi_tm, dLdR_nlm ) );
+
+        for ( unsigned int j = 0; j < X.size( ); j++ ){
+
+            d2LdXdR_nl_answer[ j + i ] = ( dLdXp[ j ] - dLdXm[ j ] ) / ( 2 * delta );
+
+        }
+
+        for ( unsigned int j = 0; j < chi_nl.size( ); j++ ){
+
+            d2Ldchi_nldR_nl_answer[ j + i ] = ( dLdchi_nlp[ j ] - dLdchi_nlm[ j ] ) / ( 2 * delta );
+
+        }
+
+        for ( unsigned int j = 0; j < xi_t.size( ); j++ ){
+
+            d2Ldxi_tdR_nl_answer[ j + i ] = ( dLdxi_tp[ j ] - dLdxi_tm[ j ] ) / ( 2 * delta );
+        }
+
+        d2LdR_nldR_nl_answer = ( dLdR_nlp - dLdR_nlm ) / ( 2 * delta );
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dLdR_nl, dLdR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2LdXdR_nl, d2LdXdR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2Ldchi_nldR_nl, d2Ldchi_nldR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2Ldxi_tdR_nl, d2Ldxi_tdR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2LdR_nldR_nl, d2LdR_nldR_nl_answer ) );
+
 }
+
+//BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
+//
+//    floatVector chi_nl = { 2.0, 0.0, 0.0,
+//                           0.0, 0.5, 0.0,
+//                           0.0, 0.0, 0.5 };
+//
+//    floatVector xi_t = { 0.0, 0.25, 0.0 };
+//
+//    floatType R_nl = 0.5;
+//
+//    floatVector distance_answer = { 0.0, 0.25, 0.0 };
+//
+//    floatVector distance;
+//
+//    BOOST_CHECK( !tractionSeparation::solveOverlapDistance( chi_nl, xi_t, R_nl, distance ) );
+//
+//}

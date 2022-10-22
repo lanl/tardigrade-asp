@@ -989,7 +989,7 @@ namespace tractionSeparation{
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L ){
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L ){
         /*!
          * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
          * is overlapping it's non-local neighbor.
@@ -999,6 +999,7 @@ namespace tractionSeparation{
          * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
          * \param &chi_nl: The non-local micro-deformation tensor
          * \param &xi_t: The target point in the local particle
+         * \param &R_nl: The non-local particle radius in the reference configuration
          * \param &L: The value of the Lagrangian
          */
 
@@ -1030,14 +1031,14 @@ namespace tractionSeparation{
 
         }
         
-        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - 1 );
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl );
 
         return NULL;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L,
-                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t ){
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl ){
         /*!
          * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
          * is overlapping it's non-local neighbor.
@@ -1047,10 +1048,12 @@ namespace tractionSeparation{
          * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
          * \param &chi_nl: The non-local micro-deformation tensor
          * \param &xi_t: The target point in the local particle
+         * \param &R_nl: The radius of the non-local particle in the reference configuration
          * \param &L: The value of the Lagrangian
          * \param &dLdX: The gradient of the Lagrangian w.r.t. the unknown vector
          * \param &dLdchi_nl: The gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
          * \param &dLdxi_t: The gradient of the Lagrangian w.r.t. the target point
+         * \param &dLdR_nl: The gradient of the Lagrangian w.r.t. the reference configuration non-local particle radius
          */
 
         unsigned int Xsize = X.size( );
@@ -1081,13 +1084,15 @@ namespace tractionSeparation{
 
         }
         
-        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - 1 );
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl );
 
         dLdX = floatVector( X.size( ), 0 );
 
         dLdchi_nl = floatVector( chi_nl.size( ), 0 );
 
         dLdxi_t = -d;
+
+        dLdR_nl = lambda;
 
         for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
@@ -1103,17 +1108,18 @@ namespace tractionSeparation{
 
         }
 
-        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - 1 );
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl );
 
         return NULL;
 
     }
 
-    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, floatType &L,
-                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t,
-                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t,
-                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t,
-                                               floatVector &d2Ldxi_tdxi_t ){
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
+                                               floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
+                                               floatType &d2LdR_nldR_nl ){
         /*!
          * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
          * is overlapping it's non-local neighbor.
@@ -1123,10 +1129,22 @@ namespace tractionSeparation{
          * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
          * \param &chi_nl: The non-local micro-deformation tensor
          * \param &xi_t: The target point in the local particle
+         * \param &R_nl: The radius of the non-local particle in the reference configuration
          * \param &L: The value of the Lagrangian
          * \param &dLdX: The gradient of the Lagrangian w.r.t. the unknown vector
          * \param &dLdchi_nl: The gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
          * \param &dLdxi_t: The gradient of the Lagrangian w.r.t. the target point
+         * \param &dLdR_nl: The gradient of the Lagrangian w.r.t. the reference configuration non-local particle radius
+         * \param &d2LdXdX: The second gradient of the Lagrangian w.r.t. the solution vector
+         * \param &d2LdXdchi_nl: The second gradient of the Lagrangian w.r.t. the solution vector and the non-local micro deformation tensor
+         * \param &d2LdXdxi_t: The second gradient of the Lagrangian w.r.t. the solution vector and the target point
+         * \param &d2LdXdR_nl: The second gradient of the Lagrangina w.r.t. the solution vector and the non-local radius in the reference configuration
+         * \param &d2Ldchi_nldchi_nl: The second gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
+         * \param &d2Ldchi_nldxi_t: The second gradient of the Lagrangian w.r.t. the non-local micro deformation tensor and the target point
+         * \param &d2Ldchi_nldR_nl: The second gradient of the Lagrangina w.r.t. the non-local micro deformation tensor and the non-local radius in the reference configuration
+         * \param &d2Ldxi_tdxi_t: The second gradient of the Lagrangian w.r.t. the target point
+         * \param &d2Ldxi_tdR_nl: The second gradient of the Lagrangina w.r.t. the target point and the non-local radius in the reference configuration
+         * \param &d2LdR_nldR_nl: The second gradient of the Lagrangina w.r.t. the non-local radius in the reference configuration
          */
 
         unsigned int Xsize = X.size( );
@@ -1157,13 +1175,15 @@ namespace tractionSeparation{
 
         }
         
-        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - 1 );
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl );
 
         dLdX = floatVector( X.size( ), 0 );
 
         dLdchi_nl = floatVector( chi_nl.size( ), 0 );
 
         dLdxi_t = -d;
+
+        dLdR_nl = lambda;
 
         d2LdXdX = floatVector( X.size( ) * X.size( ), 0 );
 
@@ -1176,6 +1196,14 @@ namespace tractionSeparation{
         d2Ldchi_nldxi_t = floatVector( chi_nl.size( ) * xi_t.size( ), 0 );
 
         d2Ldxi_tdxi_t = floatVector( xi_t.size( ) * xi_t.size( ), 0 );
+
+        d2LdXdR_nl = floatVector( X.size( ), 0 );
+
+        d2Ldchi_nldR_nl = floatVector( chi_nl.size( ), 0 );
+
+        d2Ldxi_tdR_nl = floatVector( xi_t.size( ), 0 );
+
+        d2LdR_nldR_nl = 0;
 
         floatVector eye( chi_nl.size( ), 0 );
 
@@ -1220,10 +1248,179 @@ namespace tractionSeparation{
 
         }
 
-        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - 1 );
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl );
+
+        d2LdXdR_nl[ X.size( ) - 1 ] = 1;
 
         return NULL;
 
     }
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   const floatType tolr, const floatType tola, const unsigned int max_iteration,
+                                   const unsigned int max_ls, const floatType alpha_ls ){
+        /*!
+         * Solve for the overlap distance where \f$\xi_t\f$ is known to be inside of the non-local particle
+         * 
+         * \param &chi_nl: The non-local micro-deformation tensor
+         * \param &xi_t: The position inside of the non-local particle
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &d: The distance vector going from the solved point on the surface of the non-local particle
+         *     to \f$\xi_t\f$.
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param max_iteration: The maximum number of iterations
+         * \param max_ls: The maximum number of line-search iterations
+         * \param alpha_ls: The alpha parameter for the line-search
+         */
+
+        floatVector inv_chi_nl = vectorTools::inverse( chi_nl, xi_t.size( ), xi_t.size( ) );
+
+        floatVector Xi_t( xi_t.size( ), 0 );
+
+        for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+            for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+                Xi_t[ I ] += inv_chi_nl[ xi_t.size( ) * I + i ] * xi_t[ i ];
+
+            }
+
+        }
+
+        floatVector lagrange( 1, 1 );
+
+        floatVector X = vectorTools::appendVectors( { Xi_t, lagrange } );
+
+        floatType L;
+
+        floatVector dLdX, dLdchi_nl, dLdxi_t;
+
+        floatType dLdR_nl;
+
+        floatVector d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl, d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl, d2Ldxi_tdxi_t, d2Ldxi_tdR_nl;
+
+        floatType d2LdR_nldR_nl;
+
+        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                           d2LdR_nldR_nl );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        floatType R = vectorTools::l2norm( dLdX );
+
+        floatType Rp = R;
+
+        floatType tol = tolr * R + tola;
+
+        unsigned int num_iteration = 0;
+
+        floatVector dX;
+
+        while ( ( num_iteration < max_iteration ) && ( R > tol ) ){
+
+            std::cout << "  dLdX: "; vectorTools::print( dLdX );
+            std::cout << "  d2LdXdX:\n"; vectorTools::print( vectorTools::inflate( d2LdXdX, dLdX.size( ), dLdX.size( ) ) );
+
+            unsigned int rank;
+
+            dX = -vectorTools::solveLinearSystem( d2LdXdX, dLdX, dLdX.size( ), dLdX.size( ), rank );
+
+            std::cout << "  dX: "; vectorTools::print( dX );
+            std::cout << "  rank: " << rank << "\n";
+
+            floatType lambda = 1;
+
+            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                      d2LdR_nldR_nl );
+
+            if ( error ){
+    
+                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
+    
+                result->addNext( error );
+    
+                return result;
+    
+            }
+
+            unsigned int num_ls = 0;
+
+            R = vectorTools::l2norm( dLdX );
+
+            while ( ( num_ls < max_ls ) && ( R > ( 1 - alpha_ls ) * Rp ) ){ 
+
+                lambda *= 0.5;
+
+                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                          d2LdR_nldR_nl );
+    
+                if ( error ){
+        
+                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
+        
+                    result->addNext( error );
+        
+                    return result;
+        
+                }
+
+                R = vectorTools::l2norm( dLdX );
+
+                num_ls++;
+
+            }
+
+            X += lambda * dX;
+
+            Rp = R;
+
+            num_iteration++;
+
+        }
+
+        if ( R > tol ){
+
+            return new errorNode( __func__, "The optimizer did not converge" );
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
+                                   const floatType tolr, const floatType tola, const unsigned int max_iteration,
+                                   const unsigned int max_ls, const floatType alpha_ls );
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
+                                   floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
+                                   floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
+                                   floatVector &d2ddR_nldR_nl,
+                                   const floatType tolr, const floatType tola, const unsigned int max_iteration,
+                                   const unsigned int max_ls, const floatType alpha_ls );
+
 
 }
