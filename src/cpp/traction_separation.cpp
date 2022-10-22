@@ -1031,7 +1031,7 @@ namespace tractionSeparation{
 
         }
         
-        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl );
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
         return NULL;
 
@@ -1084,7 +1084,7 @@ namespace tractionSeparation{
 
         }
         
-        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl );
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
         dLdX = floatVector( X.size( ), 0 );
 
@@ -1092,7 +1092,7 @@ namespace tractionSeparation{
 
         dLdxi_t = -d;
 
-        dLdR_nl = lambda;
+        dLdR_nl = 2 * lambda * R_nl;
 
         for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
@@ -1108,7 +1108,7 @@ namespace tractionSeparation{
 
         }
 
-        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl );
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
         return NULL;
 
@@ -1175,7 +1175,7 @@ namespace tractionSeparation{
 
         }
         
-        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl );
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
         dLdX = floatVector( X.size( ), 0 );
 
@@ -1183,7 +1183,7 @@ namespace tractionSeparation{
 
         dLdxi_t = -d;
 
-        dLdR_nl = lambda;
+        dLdR_nl = 2 * lambda * R_nl;
 
         d2LdXdX = floatVector( X.size( ) * X.size( ), 0 );
 
@@ -1203,7 +1203,7 @@ namespace tractionSeparation{
 
         d2Ldxi_tdR_nl = floatVector( xi_t.size( ), 0 );
 
-        d2LdR_nldR_nl = 0;
+        d2LdR_nldR_nl = 2 * lambda;
 
         floatVector eye( chi_nl.size( ), 0 );
 
@@ -1248,9 +1248,9 @@ namespace tractionSeparation{
 
         }
 
-        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl );
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
 
-        d2LdXdR_nl[ X.size( ) - 1 ] = 1;
+        d2LdXdR_nl[ X.size( ) - 1 ] = 2 * R_nl;
 
         return NULL;
 
@@ -1331,15 +1331,9 @@ namespace tractionSeparation{
 
         while ( ( num_iteration < max_iteration ) && ( R > tol ) ){
 
-            std::cout << "  dLdX: "; vectorTools::print( dLdX );
-            std::cout << "  d2LdXdX:\n"; vectorTools::print( vectorTools::inflate( d2LdXdX, dLdX.size( ), dLdX.size( ) ) );
-
             unsigned int rank;
 
             dX = -vectorTools::solveLinearSystem( d2LdXdX, dLdX, dLdX.size( ), dLdX.size( ), rank );
-
-            std::cout << "  dX: "; vectorTools::print( dX );
-            std::cout << "  rank: " << rank << "\n";
 
             floatType lambda = 1;
 
@@ -1402,6 +1396,18 @@ namespace tractionSeparation{
         if ( R > tol ){
 
             return new errorNode( __func__, "The optimizer did not converge" );
+
+        }
+
+        d = -xi_t;
+
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                d[ i ] += chi_nl[ xi_t.size( ) * i + I ] * X[ I ];
+
+            }
 
         }
 

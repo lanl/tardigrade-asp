@@ -979,7 +979,7 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
     floatType R_nl = 0.7453818629935041;
 
-    floatType L_answer = 0.5692848289101061;
+    floatType L_answer = 0.5498070003214279;
 
     floatType L;
 
@@ -1245,20 +1245,22 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
 }
 
-//BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
-//
-//    floatVector chi_nl = { 2.0, 0.0, 0.0,
-//                           0.0, 0.5, 0.0,
-//                           0.0, 0.0, 0.5 };
-//
-//    floatVector xi_t = { 0.0, 0.25, 0.0 };
-//
-//    floatType R_nl = 0.5;
-//
-//    floatVector distance_answer = { 0.0, 0.25, 0.0 };
-//
-//    floatVector distance;
-//
-//    BOOST_CHECK( !tractionSeparation::solveOverlapDistance( chi_nl, xi_t, R_nl, distance ) );
-//
-//}
+BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
+
+    floatVector chi_nl = { 2.0, 0.0, 0.0,
+                           0.0, 0.5, 0.0,
+                           0.0, 0.0, 0.5 };
+
+    floatVector xi_t = { 0.0, 0.125, 0.0 };
+
+    floatType R_nl = 0.5;
+
+    floatVector distance_answer = { 0.0, 0.125, 0.0 };
+
+    floatVector distance;
+
+    BOOST_CHECK( !tractionSeparation::solveOverlapDistance( chi_nl, xi_t, R_nl, distance ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( distance, distance_answer ) );
+
+}
