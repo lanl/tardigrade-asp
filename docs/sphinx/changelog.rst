@@ -20,3 +20,4 @@ New Features
 - Added the calculation of Nanson's relation for mapping reference areas to the current configuration (:merge:`7`). By `Nathan Miller`_.
 - Added the calculation of the Lagrangian for the overlap particle (:merge:`8`). By `Nathan Miller`_.
 - Extended the Lagrangian for the overlap particle to have a radius other than 1 (:merge:`8`). By `Nathan Miller`_.
+- Extended the number of gradients computed in the Lagrangian for the overlap particle (:merge:`8`). By `Nathan Miller`_.

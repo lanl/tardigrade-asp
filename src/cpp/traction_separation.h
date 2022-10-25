@@ -109,6 +109,18 @@ namespace tractionSeparation{
                                                floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
                                                floatType &d2LdR_nldR_nl );
 
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
+                                               floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
+                                               floatType &d2LdR_nldR_nl,
+                                               floatVector &d3LdXdXdX, floatVector &d3LdXdXdchi_nl, floatVector &d3LdXdchi_nldchi_nl,
+                                               floatVector &d3LdXdXdxi_t, floatVector &d3LdXdchi_nldxi_t,
+                                               floatVector &d3LdXdXdR_nl, floatVector &d3LdXdchi_nldR_nl,
+                                               floatVector &d3LdXdxi_tdxi_t, floatVector &d3LdXdxi_tdR_nl,
+                                               floatVector &d3LdXdR_nldR_nl );
+
     errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
                                    const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
                                    const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
