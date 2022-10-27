@@ -1858,7 +1858,521 @@ namespace tractionSeparation{
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
                                    floatVector &d2ddR_nldR_nl,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
-                                   const unsigned int max_ls, const floatType alpha_ls );
+                                   const unsigned int max_ls, const floatType alpha_ls ){
+        /*!
+         * Solve for the overlap distance where \f$\xi_t\f$ is known to be inside of the non-local particle
+         * 
+         * \param &chi_nl: The non-local micro-deformation tensor
+         * \param &xi_t: The position inside of the non-local particle
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &d: The distance vector going from \f$\xi_t\f$ to the solved point on the surface of the non-local particle.
+         * \param &dddchi_nl: The gradient of the distance vector w.r.t. the non-local micro-deformation tensor
+         * \param &dddxi_t: The gradient of the distance vector w.r.t. the target micro-relative position vector
+         * \param &dddR_nl: The gradient of the distance vector w.r.t. the non-local particle radius
+         * \param &d2ddchi_nldchi_nl: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor
+         * \param &d2ddchi_nldxi_t: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor and \f$\xi_t\f$
+         * \param &d2ddchi_nldxi_t: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor the non-local reference radius
+         * \param &d2ddxi_tdxi_t: The second gradient of the distance vector w.r.t. \f$\xi_t\f$
+         * \param &d2ddxi_tdR_nl: The second gradient of the distance vector w.r.t. \f$\xi_t\f$ and the non-local reference radius
+         * \param &d2ddR_nldR_nl: The second gradient of the distance vector w.r.t. the non-local reference radius
+         * \param tolr: The relative tolerance
+         * \param tola: The absolute tolerance
+         * \param max_iteration: The maximum number of iterations
+         * \param max_ls: The maximum number of line-search iterations
+         * \param alpha_ls: The alpha parameter for the line-search
+         */
+
+        floatVector inv_chi_nl = vectorTools::inverse( chi_nl, xi_t.size( ), xi_t.size( ) );
+
+        floatVector Xi_t( xi_t.size( ), 0 );
+
+        for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+            for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+                Xi_t[ I ] += inv_chi_nl[ xi_t.size( ) * I + i ] * xi_t[ i ];
+
+            }
+
+        }
+
+        floatVector lagrange( 1, 1 );
+
+        floatVector X = vectorTools::appendVectors( { Xi_t, lagrange } );
+
+        floatType L;
+
+        floatVector dLdX, dLdchi_nl, dLdxi_t;
+
+        floatType dLdR_nl;
+
+        floatVector d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl, d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl, d2Ldxi_tdxi_t, d2Ldxi_tdR_nl;
+
+        floatType d2LdR_nldR_nl;
+
+        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                           d2LdR_nldR_nl );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        floatType R = vectorTools::l2norm( dLdX );
+
+        floatType Rp = R;
+
+        floatType tol = tolr * R + tola;
+
+        unsigned int num_iteration = 0;
+
+        floatVector dX;
+
+        while ( ( num_iteration < max_iteration ) && ( R > tol ) ){
+
+            unsigned int rank;
+
+            dX = -vectorTools::solveLinearSystem( d2LdXdX, dLdX, dLdX.size( ), dLdX.size( ), rank );
+
+            floatType lambda = 1;
+
+            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                      d2LdR_nldR_nl );
+
+            if ( error ){
+    
+                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
+    
+                result->addNext( error );
+    
+                return result;
+    
+            }
+
+            unsigned int num_ls = 0;
+
+            R = vectorTools::l2norm( dLdX );
+
+            while ( ( num_ls < max_ls ) && ( R > ( 1 - alpha_ls ) * Rp ) ){ 
+
+                lambda *= 0.5;
+
+                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                          d2LdR_nldR_nl );
+    
+                if ( error ){
+        
+                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
+        
+                    result->addNext( error );
+        
+                    return result;
+        
+                }
+
+                R = vectorTools::l2norm( dLdX );
+
+                num_ls++;
+
+            }
+
+            X += lambda * dX;
+
+            Rp = R;
+
+            num_iteration++;
+
+        }
+
+        if ( R > tol ){
+
+            return new errorNode( __func__, "The optimizer did not converge" );
+
+        }
+
+        d = -xi_t;
+
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                d[ i ] += chi_nl[ xi_t.size( ) * i + I ] * X[ I ];
+
+            }
+
+        }
+
+        // Evaluate the additional derivatives
+
+        floatVector d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl, d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
+                    d3LdXdXdR_nl, d3LdXdchi_nldR_nl, d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl, d3LdXdR_nldR_nl;
+
+        error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                  d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                  d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                  d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                  d2LdR_nldR_nl,
+                                                  d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
+                                                  d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
+                                                  d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
+                                                  d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
+                                                  d3LdXdR_nldR_nl );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "An error occurred when computing the overlap distance lagrangian for second gradients" );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        // Compute the first order derivatives
+
+         // Wrap the Jacobians of the Residual
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2LdXdX( d2LdXdX.data( ), X.size( ), X.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2LdXdchi_nl( d2LdXdchi_nl.data( ), X.size( ), chi_nl.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2LdXdxi_t( d2LdXdxi_t.data( ), X.size( ), xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2LdXdR_nl( d2LdXdR_nl.data( ), X.size( ), 1 );
+
+        // Wrap the flattened versions of the Jacobians
+        floatVector _flat_dXdchi_nl( X.size( ) * chi_nl.size( ), 0 );
+
+        floatVector _flat_dXdxi_t( X.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_dXdR_nl( X.size( ), 0 );
+
+        floatVector _flat_d2Xdchi_nldchi_nl( X.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
+
+        floatVector _flat_d2Xdchi_nldxi_t( X.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d2Xdchi_nldR_nl( X.size( ) * chi_nl.size( ), 0 );
+
+        floatVector _flat_d2Xdxi_tdxi_t( X.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d2Xdxi_tdR_nl( X.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d2XdR_nldR_nl( X.size( ), 0 );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _dXdchi_nl( _flat_dXdchi_nl.data( ), X.size( ), chi_nl.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _dXdxi_t( _flat_dXdxi_t.data( ), X.size( ), xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _dXdR_nl( _flat_dXdR_nl.data( ), X.size( ), 1 );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2Xdchi_nldchi_nl( _flat_d2Xdchi_nldchi_nl.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2Xdchi_nldxi_t( _flat_d2Xdchi_nldxi_t.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2Xdchi_nldR_nl( _flat_d2Xdchi_nldR_nl.data( ), X.size( ), chi_nl.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2Xdxi_tdxi_t( _flat_d2Xdxi_tdxi_t.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2Xdxi_tdR_nl( _flat_d2Xdxi_tdR_nl.data( ), X.size( ), xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d2XdR_nldR_nl( _flat_d2XdR_nldR_nl.data( ), X.size( ), 1 );
+
+        // Compute the Jacobians of the unknown vector
+
+        vectorTools::solverType< floatType > linearSolver( _d2LdXdX );
+
+        _dXdchi_nl = -linearSolver.solve( _d2LdXdchi_nl );
+
+        _dXdxi_t = -linearSolver.solve( _d2LdXdxi_t );
+
+        _dXdR_nl = -linearSolver.solve( _d2LdXdR_nl );
+
+        floatVector D2XDCHIDCHI_RHS( X.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
+
+        floatVector D2XDCHIDXI_RHS( X.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
+        floatVector D2XDCHIDR_RHS( X.size( ) * chi_nl.size( ), 0 );
+
+        floatVector D2XDXIDXI_RHS( X.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector D2XDXIDR_RHS( X.size( ) * xi_t.size( ), 0 );
+
+        floatVector D2XDRDR_RHS( X.size( ), 0 );
+
+        for ( unsigned int I = 0; I < X.size( ); I++ ){
+
+            D2XDRDR_RHS[ I ] += d3LdXdR_nldR_nl[ I ];
+
+            for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                D2XDRDR_RHS[ I ] += 2 * d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_dXdR_nl[ J ];
+
+                for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                    D2XDRDR_RHS[ I ] += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ J ] * _flat_dXdR_nl[ K ];
+
+                }
+
+            }
+
+            for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                D2XDXIDR_RHS[ xi_t.size( ) * I + a ] += d3LdXdxi_tdR_nl[ xi_t.size( ) * I + a ];
+
+                for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                    D2XDXIDR_RHS[ xi_t.size( ) * I + a ] += d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ]
+                                                          + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + a ] * _flat_dXdR_nl[ J ];
+
+                    for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                        D2XDXIDR_RHS[ xi_t.size( ) * I + a ] += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ] * _flat_dXdR_nl[ K ];
+
+                    }
+
+                }
+
+                for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                    D2XDXIDXI_RHS[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * a + b ]
+                         += d3LdXdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * a + b ];
+
+                    for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                        D2XDXIDXI_RHS[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * a + b ]
+                             += d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + b ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ]
+                             + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + a ] * _flat_dXdxi_t[ xi_t.size( ) * J + b ];
+
+                        for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                            D2XDXIDXI_RHS[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * a + b ]
+                                 += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ] * _flat_dXdxi_t[ xi_t.size( ) * K + b ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+
+                    D2XDCHIDR_RHS[ chi_nl.size( ) * I + xi_t.size( ) * a + A ]
+                         += d3LdXdchi_nldR_nl[ chi_nl.size( ) * I + xi_t.size( ) * a + A ];
+
+                    for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                        D2XDCHIDR_RHS[ chi_nl.size( ) * I + xi_t.size( ) * a + A ]
+                             += d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * a + A ]
+                              + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + xi_t.size( ) * a + A ] * _flat_dXdR_nl[ J ];
+
+                        for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                            D2XDCHIDR_RHS[ chi_nl.size( ) * I + xi_t.size( ) * a + A ]
+                                 += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * a + A ] * _flat_dXdR_nl[ K ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                        D2XDCHIDXI_RHS[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ]
+                             += d3LdXdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ];
+
+                        for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                            D2XDCHIDXI_RHS[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ]
+                                 += d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + b ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * a + A ]
+                                  + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + xi_t.size( ) * a + A ] * _flat_dXdxi_t[ xi_t.size( ) * J + b ];
+
+                            for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                                D2XDCHIDXI_RHS[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ]
+                                     += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * a + A ] * _flat_dXdxi_t[ xi_t.size( ) * K + b ];
+
+                            }
+
+                        }
+            
+                        for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+        
+                            D2XDCHIDCHI_RHS[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                 += d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ];
+
+                            for ( unsigned int J = 0; J < X.size( ); J++ ){
+            
+                                D2XDCHIDCHI_RHS[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                     += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + xi_t.size( ) * b + B ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * a + A ]
+                                      + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + xi_t.size( ) * a + A ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * b + B ];
+            
+                                for ( unsigned int K = 0; K < X.size( ); K++ ){
+            
+                                    D2XDCHIDCHI_RHS[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                         += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + xi_t.size( ) * b + B ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + xi_t.size( ) * a + A ];
+            
+                                }
+            
+                            }
+        
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D2XDCHIDCHI_RHS( D2XDCHIDCHI_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D2XDCHIDXI_RHS( D2XDCHIDXI_RHS.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D2XDCHIDR_RHS( D2XDCHIDR_RHS.data( ), X.size( ), chi_nl.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D2XDXIDXI_RHS( D2XDXIDXI_RHS.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D2XDXIDR_RHS( D2XDXIDR_RHS.data( ), X.size( ), xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D2XDRDR_RHS( D2XDRDR_RHS.data( ), X.size( ), 1 );
+
+        _d2Xdchi_nldchi_nl = -linearSolver.solve( _D2XDCHIDCHI_RHS );
+
+        _d2Xdchi_nldxi_t   = -linearSolver.solve( _D2XDCHIDXI_RHS );
+
+        _d2Xdchi_nldR_nl   = -linearSolver.solve( _D2XDCHIDR_RHS );
+
+        _d2Xdxi_tdxi_t     = -linearSolver.solve( _D2XDXIDXI_RHS );
+
+        _d2Xdxi_tdR_nl     = -linearSolver.solve( _D2XDXIDR_RHS );
+
+        _d2XdR_nldR_nl     = -linearSolver.solve( _D2XDRDR_RHS );
+
+        // Construct the jacobians of the distance vector
+
+        floatVector eye( chi_nl.size( ), 0 );
+
+        vectorTools::eye( eye );
+
+        dddchi_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ), 0 ) );
+
+        dddxi_t   = floatMatrix( d.size( ), floatVector( xi_t.size( ), 0 ) );
+
+        dddR_nl   = floatVector( d.size( ), 0 );
+
+        d2ddchi_nldchi_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
+
+        d2ddchi_nldxi_t = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * xi_t.size( ), 0 ) );
+
+        d2ddchi_nldR_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ), 0 ) );
+
+        d2ddxi_tdxi_t = floatMatrix( d.size( ), floatVector( xi_t.size( ) * xi_t.size( ), 0 ) );
+
+        d2ddxi_tdR_nl = floatMatrix( d.size( ), floatVector( xi_t.size( ), 0 ) );
+
+        d2ddR_nldR_nl = floatVector( d.size( ), 0 );
+
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            dddxi_t[ i ][ i ] = -1;
+
+            for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                dddR_nl[ i ] += chi_nl[ xi_t.size( ) * i + a ] * _flat_dXdR_nl[ a ];
+                d2ddR_nldR_nl[ i ] += chi_nl[ xi_t.size( ) * i + a ] * _flat_d2XdR_nldR_nl[ a ];
+
+                for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+
+                    dddchi_nl[ i ][ xi_t.size( ) * a + A ] += eye[ xi_t.size( ) * i + a ] * X[ A ];
+
+                    d2ddchi_nldR_nl[ i ][ xi_t.size( ) * a + A ] += eye[ xi_t.size( ) * i + a ] * _flat_dXdR_nl[ A ];
+
+                    for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                        d2ddchi_nldxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ] += eye[ xi_t.size( ) * i + a ] * _flat_dXdxi_t[ xi_t.size( ) * A + b ];
+
+                        for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+
+                            d2ddchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                += eye[ xi_t.size( ) * i + a ] * _flat_dXdchi_nl[ chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                 + eye[ xi_t.size( ) * i + b ] * _flat_dXdchi_nl[ chi_nl.size( ) * B + xi_t.size( ) * a + A ];
+
+                        }
+
+                    }
+
+                    dddxi_t[ i ][ a ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_dXdxi_t[ xi_t.size( ) * A + a ];
+
+                    d2ddxi_tdR_nl[ i ][ a ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * A + a ];
+
+                    for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                        dddchi_nl[ i ][ xi_t.size( ) * a + A ] += chi_nl[ xi_t.size( ) * i + I ] * _flat_dXdchi_nl[ chi_nl.size( ) * I + xi_t.size( ) * a + A ];
+
+                        d2ddchi_nldR_nl[ i ][ xi_t.size( ) * a + A ] += chi_nl[ xi_t.size( ) * i + I ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * I + xi_t.size( ) * a + A ];
+
+                        d2ddxi_tdxi_t[ i ][ xi_t.size( ) * a + I ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * a + I ];
+
+                        for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                            d2ddchi_nldxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ]
+                                += chi_nl[ xi_t.size( ) * i + I ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ];
+    
+                            for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+    
+                            d2ddchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                += chi_nl[ xi_t.size( ) * i + I ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
 
 
 }
