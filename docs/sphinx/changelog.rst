@@ -23,3 +23,4 @@ New Features
 - Extended the number of gradients computed in the Lagrangian for the overlap particle (:merge:`8`). By `Nathan Miller`_.
 - Added the calculation of the amount of overlap of a non-local and local particles (:merge:`8`). By `Nathan Miller`_.
 - Added the calculation of the gradients for the local and non-local particles (:merge:`8`). By `Nathan Miller`_.
+- Added the calculation of the fourth-order gradients for the Lagrangian for the overlap particle. This is required for the constraint equation. (:merge:`8`). `Nathan Miller`_.

@@ -2347,6 +2347,217 @@ namespace tractionSeparation{
 
     }
 
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
+                                               floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
+                                               floatType &d2LdR_nldR_nl,
+                                               floatVector &d3LdXdXdX, floatVector &d3LdXdXdchi_nl, floatVector &d3LdXdchi_nldchi_nl,
+                                               floatVector &d3LdXdXdxi_t, floatVector &d3LdXdchi_nldxi_t,
+                                               floatVector &d3LdXdXdR_nl, floatVector &d3LdXdchi_nldR_nl,
+                                               floatVector &d3LdXdxi_tdxi_t, floatVector &d3LdXdxi_tdR_nl,
+                                               floatVector &d3LdXdR_nldR_nl,
+                                               floatVector &d4LdXdXdchi_nldchi_nl ){
+        /*!
+         * Compute the Lagrangian for the computation of the amount that the point \f$\xi_t\f$ in the local particle
+         * is overlapping it's non-local neighbor.
+         * 
+         * \f$ \mathcal{L} = \frac{1}{2} \left( \chi^{nl}_{iI} \Xi_I - \xi_i \right)\left( \chi^{nl}_{iJ} \Xi_J - \xi_i\right) - \lambda \left( \Xi_I \Xi_I - 1\right)\f$
+         * 
+         * \param &X: The vector of unknowns. The first values are the current estimate of \f$\Xi\f$ and the final value is the Lagrange multiplier \f$\lambda\f$.
+         * \param &chi_nl: The non-local micro-deformation tensor
+         * \param &xi_t: The target point in the local particle
+         * \param &R_nl: The radius of the non-local particle in the reference configuration
+         * \param &L: The value of the Lagrangian
+         * \param &dLdX: The gradient of the Lagrangian w.r.t. the unknown vector
+         * \param &dLdchi_nl: The gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
+         * \param &dLdxi_t: The gradient of the Lagrangian w.r.t. the target point
+         * \param &dLdR_nl: The gradient of the Lagrangian w.r.t. the reference configuration non-local particle radius
+         * \param &d2LdXdX: The second gradient of the Lagrangian w.r.t. the solution vector
+         * \param &d2LdXdchi_nl: The second gradient of the Lagrangian w.r.t. the solution vector and the non-local micro deformation tensor
+         * \param &d2LdXdxi_t: The second gradient of the Lagrangian w.r.t. the solution vector and the target point
+         * \param &d2LdXdR_nl: The second gradient of the Lagrangina w.r.t. the solution vector and the non-local radius in the reference configuration
+         * \param &d2Ldchi_nldchi_nl: The second gradient of the Lagrangian w.r.t. the non-local micro deformation tensor
+         * \param &d2Ldchi_nldxi_t: The second gradient of the Lagrangian w.r.t. the non-local micro deformation tensor and the target point
+         * \param &d2Ldchi_nldR_nl: The second gradient of the Lagrangina w.r.t. the non-local micro deformation tensor and the non-local radius in the reference configuration
+         * \param &d2Ldxi_tdxi_t: The second gradient of the Lagrangian w.r.t. the target point
+         * \param &d2Ldxi_tdR_nl: The second gradient of the Lagrangina w.r.t. the target point and the non-local radius in the reference configuration
+         * \param &d2LdR_nldR_nl: The second gradient of the Lagrangina w.r.t. the non-local radius in the reference configuration
+         * \param &d3LdXdXdX: The third gradient of the Lagrangian w.r.t. the unknown vector
+         * \param &d3LdXdXdchi_nl: The third gradient of the Lagrangian w.r.t. the unknown vector twice and the micro-deformation tensor once
+         * \param &d3LdXdchi_nldchi_nl: The third gradient of the Lagrangian w.r.t. the unknown vector once and the micro-deformation tensor twice
+         * \param &d3LdXdXdxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector twice and \f$\xi^t\f$ once
+         * \param &d3LdXdchi_nldxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector, the micro-deformation tensor, and \f$\xi^t\f$.
+         * \param &d3LdXdXdR_nl: The third gradient of the Lagrangian w.r.t. the unknown vector twice and the non-local radius once
+         * \param &d3LdXdchi_nldR_nl: The third gradient of the Lagrangian w.r.t. the unknown vector, the micro-deformation tensor, and the non-local radius
+         * \param &d3LdXdxi_tdxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector once and \f$\xi_t\f$ twice
+         * \param &d3LdXdxi_tdxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector,  f$\xi_t\f$, and the reference configuration non-local radius
+         * \param &d3LdXdR_nldR_nl: The third gradient of the Lagrangian w.r.t. the unknown vector once and the non-local reference radius once
+         * \param &d4LdXdXdchi_nldchi_nl: The fourth gradient of the Lagrangian w.r.t. the unknown vector twice and the non-local micro deformation tensor twice
+         */
+
+        unsigned int Xsize = X.size( );
+
+        if ( Xsize < ( xi_t.size( ) + 1 ) ){
+
+            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+
+        }
+
+        if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
+
+            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+
+        }
+
+        floatVector Xi( X.begin( ), X.begin( ) + xi_t.size( ) );
+        floatType lambda = X.back( );
+
+        floatVector d = -xi_t;
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                d[ i ] += chi_nl[ xi_t.size( ) * i + I ] * Xi[ I ];
+
+            }
+
+        }
+        
+        L = 0.5 * vectorTools::dot( d, d ) - lambda * ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
+
+        dLdX = floatVector( X.size( ), 0 );
+
+        dLdchi_nl = floatVector( chi_nl.size( ), 0 );
+
+        dLdxi_t = -d;
+
+        dLdR_nl = 2 * lambda * R_nl;
+
+        d2LdXdX = floatVector( X.size( ) * X.size( ), 0 );
+
+        d2LdXdchi_nl = floatVector( X.size( ) * chi_nl.size( ), 0 );
+
+        d2LdXdxi_t = floatVector( X.size( ) * xi_t.size( ), 0 );
+
+        d2Ldchi_nldchi_nl = floatVector( chi_nl.size( ) * chi_nl.size( ), 0 );
+
+        d2Ldchi_nldxi_t = floatVector( chi_nl.size( ) * xi_t.size( ), 0 );
+
+        d2Ldxi_tdxi_t = floatVector( xi_t.size( ) * xi_t.size( ), 0 );
+
+        d2LdXdR_nl = floatVector( X.size( ), 0 );
+
+        d2Ldchi_nldR_nl = floatVector( chi_nl.size( ), 0 );
+
+        d2Ldxi_tdR_nl = floatVector( xi_t.size( ), 0 );
+
+        d2LdR_nldR_nl = 2 * lambda;
+
+        d3LdXdXdX = floatVector( X.size( ) * X.size( ) * X.size( ), 0 );
+
+        d3LdXdXdchi_nl = floatVector( X.size( ) * X.size( ) * chi_nl.size( ), 0 );
+
+        d3LdXdchi_nldchi_nl = floatVector( X.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
+
+        d3LdXdXdxi_t = floatVector( X.size( ) * X.size( ) * xi_t.size( ), 0 );
+
+        d3LdXdchi_nldxi_t = floatVector( X.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
+        d3LdXdXdR_nl = floatVector( X.size( ) * X.size( ), 0 );
+
+        d3LdXdchi_nldR_nl = floatVector( X.size( ) * chi_nl.size( ), 0 );
+
+        d3LdXdxi_tdxi_t = floatVector( X.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        d3LdXdxi_tdR_nl = floatVector( X.size( ) * xi_t.size( ), 0 );
+
+        d3LdXdR_nldR_nl = floatVector( X.size( ), 0 );
+
+        d4LdXdXdchi_nldchi_nl = floatVector( X.size( ) * X.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
+
+        floatVector eye( chi_nl.size( ), 0 );
+
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
+
+            d2Ldxi_tdxi_t[ xi_t.size( ) * i + i ] = 1;
+
+            for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
+
+                dLdX[ I ] += chi_nl[ xi_t.size( ) * i + I ] * d[ i ];
+
+                dLdchi_nl[ xi_t.size( ) * i + I ] += Xi[ I ] * d[ i ];
+
+                d2LdXdxi_t[ xi_t.size( ) * i + I ] -= chi_nl[ xi_t.size( ) * I + i ];
+
+                d3LdXdXdX[ X.size( ) * X.size( ) * i + X.size( ) * I + ( X.size( ) - 1 ) ] = -2 * eye[ xi_t.size( ) * i + I ];
+
+                d3LdXdXdX[ X.size( ) * X.size( ) * i + X.size( ) * ( X.size( ) - 1 ) + I ] = -2 * eye[ xi_t.size( ) * i + I ];
+
+                d3LdXdXdX[ X.size( ) * X.size( ) * ( X.size( ) - 1 ) + X.size( ) * i + I ] = -2 * eye[ xi_t.size( ) * i + I ];
+
+                for ( unsigned int J = 0; J < xi_t.size( ); J++ ){
+
+                    d2LdXdX[ X.size( ) * I + J ] += chi_nl[ xi_t.size( ) * i + I ] * chi_nl[ xi_t.size( ) * i + J ];
+
+                    d2LdXdchi_nl[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * i + J ] += d[ i ] * eye[ xi_t.size( ) * I + J ] + chi_nl[ xi_t.size( ) * i + I ] * Xi[ J ];
+
+                    d2Ldchi_nldxi_t[ xi_t.size( ) * xi_t.size( ) * i + xi_t.size( ) * I + J ] -= Xi[ I ] * eye[ xi_t.size( ) * i + J ];
+
+                    for ( unsigned int j = 0; j < xi_t.size( ); j++ ){
+
+                        d2Ldchi_nldchi_nl[ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * i + xi_t.size( ) * xi_t.size( ) * I + j * xi_t.size( ) + J ] += Xi[ I ] * eye[ xi_t.size( ) * i + j ] * Xi[ J ];
+                    
+                        d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + xi_t.size( ) * i + j ] += eye[ xi_t.size( ) * I + j ] * chi_nl[ xi_t.size( ) * i + J ]
+                                                                                                                      + chi_nl[ xi_t.size( ) * i + I ] * eye[ xi_t.size( )* J + j ];
+
+
+                        d3LdXdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * i + xi_t.size( ) * J + j ] += -eye[ xi_t.size( ) * i + j ] * eye[ xi_t.size( ) * I + J ];
+
+                        for ( unsigned int K = 0; K < xi_t.size( ); K++ ){
+
+                            d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + xi_t.size( ) * chi_nl.size( ) * i + chi_nl.size( ) * J + xi_t.size( ) * j + K ]
+                                += eye[ xi_t.size( ) * i + j ] * Xi[ K ] * eye[ xi_t.size( ) * I + J ] + eye[ xi_t.size( ) * i + j ] * eye[ xi_t.size( ) * I + K ] * Xi[ J ];
+
+                            for ( unsigned int L = 0; L < xi_t.size( ); L++ ){
+
+                                d4LdXdXdchi_nldchi_nl[ X.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * J + xi_t.size( ) * chi_nl.size( ) * i + chi_nl.size( ) * j + xi_t.size( ) * K + L ]
+                                    += eye[ xi_t.size( ) * I + j ] * eye[ xi_t.size( ) * i + K ] * eye[ xi_t.size( ) * J + L ]
+                                     + eye[ xi_t.size( ) * i + K ] * eye[ xi_t.size( ) * I + L ] * eye[ xi_t.size( )* J + j ];
+
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            dLdX[ i ] -= 2 * lambda * Xi[ i ];
+
+            d2LdXdX[ X.size( ) * i + i ] -= 2 * lambda;
+
+            d2LdXdX[ X.size( ) * i + X.size( ) - 1 ] -= 2 * Xi[ i ];
+            d2LdXdX[ X.size( ) * ( X.size( ) - 1 ) + i ] -= 2 * Xi[ i ];
+
+        }
+
+        dLdX[ Xi.size( ) ] -= ( vectorTools::dot( Xi, Xi ) - R_nl * R_nl );
+
+        d2LdXdR_nl[ X.size( ) - 1 ] = 2 * R_nl;
+
+        d3LdXdR_nldR_nl[ X.size( ) - 1 ] = 2;
+
+        return NULL;
+
+    }
+
     errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
