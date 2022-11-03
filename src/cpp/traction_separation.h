@@ -93,9 +93,27 @@ namespace tractionSeparation{
                                      floatMatrix &ddandF, floatMatrix &ddanddAN,
                                      floatMatrix &d2dandFdF, floatMatrix &d2dandFddAN );
 
-    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatType &R_2, const floatVector &D,
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &overlap );
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdGradChi );
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdGradChi,
+                                     floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dGradChi,
+                                     floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdGradChi,
+                                     floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldGradChi,
+                                     floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdGradChi,
+                                     floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidGradChi,
+                                     floatMatrix &d2OverlapdGradChidGradChi );
 
     errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L );
 
