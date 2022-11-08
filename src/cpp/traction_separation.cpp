@@ -3504,7 +3504,22 @@ namespace tractionSeparation{
 
                 for ( unsigned int bB = 0; bB < chi_nl.size( ); bB++ ){
 
-                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] = _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
+                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
+
+//                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
+//
+//                    for ( unsigned int J = 0; J < X.size( ); J++ ){
+//
+//                        RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ]
+//                                                                  + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + bB ];
+//
+//                        for ( unsigned int K = 0; K < X.size( ); K++ ){
+//
+//                            RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ];
+//
+//                        }
+//
+//                    }
 
                 }
 
@@ -3541,7 +3556,7 @@ namespace tractionSeparation{
                                    floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
                                    floatVector &d2ddR_nldR_nl,
-                                   floatMatrix &d3ddchi_nldchi_nldchi_nl,
+                                   floatMatrix &d3ddchi_nldchi_nldchi_nl, floatMatrix &d3ddchi_nldchi_nldxi_t,
                                    floatMatrix &RHSTERM_GRAD,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
@@ -3562,6 +3577,7 @@ namespace tractionSeparation{
          * \param &d2ddxi_tdR_nl: The second gradient of the distance vector w.r.t. \f$\xi_t\f$ and the non-local reference radius
          * \param &d2ddR_nldR_nl: The second gradient of the distance vector w.r.t. the non-local reference radius
          * \param &d3ddchi_nldchi_nldchi_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor
+         * \param &d3ddchi_nldchi_nldchi_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor twice and \f$\xi_t\f$ once
          * \param tolr: The relative tolerance
          * \param tola: The absolute tolerance
          * \param max_iteration: The maximum number of iterations
@@ -3776,6 +3792,8 @@ namespace tractionSeparation{
 
         floatVector _flat_d3Xdchi_nldchi_nldchi_nl( X.size( ) * chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
 
+        floatVector _flat_d3Xdchi_nldchi_nldxi_t( X.size( ) * chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _dXdchi_nl( _flat_dXdchi_nl.data( ), X.size( ), chi_nl.size( ) );
 
@@ -3805,6 +3823,9 @@ namespace tractionSeparation{
 
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _d3Xdchi_nldchi_nldchi_nl( _flat_d3Xdchi_nldchi_nldchi_nl.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdchi_nldchi_nldxi_t( _flat_d3Xdchi_nldchi_nldxi_t.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) );
 
         // Compute the Jacobians of the unknown vector
 
@@ -3985,6 +4006,8 @@ namespace tractionSeparation{
 
         floatVector D3XDCHIDCHIDCHI_RHS( X.size( ) * chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
 
+        floatVector D3XDCHIDCHIDXI_RHS( X.size( ) * chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
         for ( unsigned int I = 0; I < X.size( ); I++ ){
 
             for ( unsigned int aA = 0; aA < chi_nl.size( ); aA++ ){
@@ -4016,6 +4039,29 @@ namespace tractionSeparation{
     
                     }
     
+                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+    
+                        for ( unsigned int J = 0; J < X.size( ); J++ ){
+        
+                            D3XDCHIDCHIDXI_RHS[ chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) * I + chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
+                                += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + c ]
+                                 + d4LdXdXdchi_nldchi_nl[ X.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ] * _flat_dXdxi_t[ xi_t.size( ) * J + c ]
+                                 + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * bB + c ]
+                                 + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + c ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ];
+        
+                            for ( unsigned int K = 0; K < X.size( ); K++ ){
+        
+                                D3XDCHIDCHIDXI_RHS[ chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) * I + chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
+                                    += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * K + xi_t.size( ) * bB + c ]
+                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + c ]
+                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * K + c ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ];
+        
+                            }
+        
+                        }
+    
+                    }
+    
                 }
 
             }
@@ -4025,7 +4071,12 @@ namespace tractionSeparation{
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _D3XDCHIDCHIDCHI_RHS( D3XDCHIDCHIDCHI_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ) );
 
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDCHIDCHIDXI_RHS( D3XDCHIDCHIDXI_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) );
+
         _d3Xdchi_nldchi_nldchi_nl = -linearSolver.solve( _D3XDCHIDCHIDCHI_RHS );
+
+        _d3Xdchi_nldchi_nldxi_t = -linearSolver.solve( _D3XDCHIDCHIDXI_RHS );
 
         // Construct the jacobians of the distance vector
 
@@ -4053,6 +4104,8 @@ namespace tractionSeparation{
 
         d3ddchi_nldchi_nldchi_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
+        d3ddchi_nldchi_nldxi_t = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 ) );
+
         for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
             dddxi_t[ i ][ i ] = -1;
@@ -4077,6 +4130,22 @@ namespace tractionSeparation{
                             d2ddchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
                                 += eye[ xi_t.size( ) * i + a ] * _flat_dXdchi_nl[ chi_nl.size( ) * A + xi_t.size( ) * b + B ]
                                  + eye[ xi_t.size( ) * i + b ] * _flat_dXdchi_nl[ chi_nl.size( ) * B + xi_t.size( ) * a + A ];
+
+                            for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                d3ddchi_nldchi_nldxi_t[ i ][ xi_t.size( ) * chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * xi_t.size( ) * b + xi_t.size( ) * B + c ]
+                                    += eye[ xi_t.size( ) * i + a ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * xi_t.size( ) * b + xi_t.size( ) * B + c ]
+                                     + eye[ xi_t.size( ) * i + b ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + c ];
+
+                                for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+
+                                    d3ddchi_nldchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * chi_nl.size( ) * A + xi_t.size( ) * chi_nl.size( ) * b + chi_nl.size( ) * B + xi_t.size( ) * c + C ]
+                                        += eye[ xi_t.size( ) * i + a ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * A + xi_t.size( ) * chi_nl.size( ) * b + chi_nl.size( ) * B + xi_t.size( ) * c + C ]
+                                         + eye[ xi_t.size( ) * i + b ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * B + xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * c + C ];
+
+                                }
+
+                            }
 
                         }
 
@@ -4106,10 +4175,13 @@ namespace tractionSeparation{
 
                                 for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
+                                    d3ddchi_nldchi_nldxi_t[ i ][ xi_t.size( ) * chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * xi_t.size( ) * b + xi_t.size( ) * B + c ]
+                                        += chi_nl[ xi_t.size( ) * i + I ] * _flat_d3Xdchi_nldchi_nldxi_t[ chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * chi_nl.size( ) * xi_t.size( ) * a + chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * xi_t.size( ) * b + xi_t.size( ) * B + c ];
+
                                     for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
 
                                         d3ddchi_nldchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * chi_nl.size( ) * A + xi_t.size( ) * chi_nl.size( ) * b + chi_nl.size( ) * B + xi_t.size( ) * c + C ]
-                                            += eye[ xi_t.size( ) * i + c ] * eye[ xi_t.size( ) * I + C ] *  _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                            += eye[ xi_t.size( ) * i + c ] * eye[ xi_t.size( ) * I + C ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
                                              + chi_nl[ xi_t.size( ) * i + I ] * _flat_d3Xdchi_nldchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + xi_t.size( ) * chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * chi_nl.size( ) * A + xi_t.size( ) * chi_nl.size( ) * b + chi_nl.size( ) * B + xi_t.size( ) * c + C ];
 
                                     }
@@ -4128,7 +4200,7 @@ namespace tractionSeparation{
 
         }
 
-        RHSTERM_GRAD = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
+        RHSTERM_GRAD = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 ) );
 
         for ( unsigned int I = 0; I < X.size( ); I++ ){
 
@@ -4136,9 +4208,26 @@ namespace tractionSeparation{
 
                 for ( unsigned int bB = 0; bB < chi_nl.size( ); bB++ ){
     
-                    for ( unsigned int cC = 0; cC < chi_nl.size( ); cC++ ){
+                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                        RHSTERM_GRAD[ I ][ chi_nl.size( ) * chi_nl.size( ) * aA + chi_nl.size( ) * bB + cC ] = _flat_d3Xdchi_nldchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * aA + chi_nl.size( ) * bB + cC ];
+                        RHSTERM_GRAD[ I ][ chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
+                            += _flat_d3Xdchi_nldchi_nldxi_t[ chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) * I + chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ];
+//
+//                        for ( unsigned int J = 0; J < X.size( ); J++ ){
+//
+//                            RHSTERM_GRAD[ I ][ chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
+//                                += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + c ]
+//                                 + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * bB + c ];
+//
+//                            for ( unsigned int K = 0; K < X.size( ); K++ ){
+//
+//                                RHSTERM_GRAD[ I ][ chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
+//                                    += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * K + xi_t.size( ) * bB + c ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ]
+//                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + c ];
+//
+//                            }
+//
+//                        }
 
                     }
 
