@@ -3558,6 +3558,7 @@ namespace tractionSeparation{
                                    floatVector &d2ddR_nldR_nl,
                                    floatMatrix &d3ddchi_nldchi_nldchi_nl, floatMatrix &d3ddchi_nldchi_nldxi_t,
                                    floatMatrix &d3ddchi_nldxi_tdxi_t,
+                                   floatMatrix &d3ddxi_tdxi_tdxi_t,
                                    floatMatrix &RHSTERM_GRAD,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
@@ -3580,6 +3581,7 @@ namespace tractionSeparation{
          * \param &d3ddchi_nldchi_nldchi_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor
          * \param &d3ddchi_nldchi_nldxi_t: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor twice and \f$\xi_t\f$ once
          * \param &d3ddchi_nldxi_tdxi_t: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor once and \f$\xi_t\f$ twice
+         * \param &d3ddchi_nldxi_tdxi_t: The third gradient of the distance vector w.r.t. \f$\xi_t\f$
          * \param tolr: The relative tolerance
          * \param tola: The absolute tolerance
          * \param max_iteration: The maximum number of iterations
@@ -3798,6 +3800,8 @@ namespace tractionSeparation{
 
         floatVector _flat_d3Xdchi_nldxi_tdxi_t( X.size( ) * chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
 
+        floatVector _flat_d3Xdxi_tdxi_tdxi_t( X.size( ) * xi_t.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _dXdchi_nl( _flat_dXdchi_nl.data( ), X.size( ), chi_nl.size( ) );
 
@@ -3833,6 +3837,9 @@ namespace tractionSeparation{
 
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _d3Xdchi_nldxi_tdxi_t( _flat_d3Xdchi_nldxi_tdxi_t.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdxi_tdxi_tdxi_t( _flat_d3Xdxi_tdxi_tdxi_t.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) * xi_t.size( ) );
 
         // Compute the Jacobians of the unknown vector
 
@@ -4017,6 +4024,8 @@ namespace tractionSeparation{
 
         floatVector D3XDCHIDXIDXI_RHS( X.size( ) * chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
 
+        floatVector D3XDXIDXIDXI_RHS( X.size( ) * xi_t.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
         for ( unsigned int I = 0; I < X.size( ); I++ ){
 
             for ( unsigned int aA = 0; aA < chi_nl.size( ); aA++ ){
@@ -4101,6 +4110,36 @@ namespace tractionSeparation{
 
             }
 
+            for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                        for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                            D3XDXIDXIDXI_RHS[ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ]
+                                += d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + b ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * a + c ]
+                                 + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + a ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * b + c ]
+                                 + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + c ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * a + b ];
+
+                            for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                                D3XDXIDXIDXI_RHS[ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ]
+                                    += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * b + c ]
+                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * K + b ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * a + c ]
+                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * K + c ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * a + b ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
@@ -4112,11 +4151,16 @@ namespace tractionSeparation{
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _D3XDCHIDXIDXI_RHS( D3XDCHIDXIDXI_RHS.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) * xi_t.size( ) );
 
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDXIDXIDXI_RHS( D3XDXIDXIDXI_RHS.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) * xi_t.size( ) );
+
         _d3Xdchi_nldchi_nldchi_nl = -linearSolver.solve( _D3XDCHIDCHIDCHI_RHS );
 
         _d3Xdchi_nldchi_nldxi_t = -linearSolver.solve( _D3XDCHIDCHIDXI_RHS );
 
         _d3Xdchi_nldxi_tdxi_t = -linearSolver.solve( _D3XDCHIDXIDXI_RHS );
+
+        _d3Xdxi_tdxi_tdxi_t = -linearSolver.solve( _D3XDXIDXIDXI_RHS );
 
         // Construct the jacobians of the distance vector
 
@@ -4147,6 +4191,8 @@ namespace tractionSeparation{
         d3ddchi_nldchi_nldxi_t = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 ) );
 
         d3ddchi_nldxi_tdxi_t = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 ) );
+
+        d3ddxi_tdxi_tdxi_t = floatMatrix( d.size( ), floatVector( xi_t.size( ) * xi_t.size( ) * xi_t.size( ), 0 ) );
 
         for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
@@ -4212,6 +4258,9 @@ namespace tractionSeparation{
                             d2ddchi_nldxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ]
                                 += chi_nl[ xi_t.size( ) * i + I ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ];
     
+                            d3ddxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * I + b ]
+                                += chi_nl[ xi_t.size( ) * i + A ] * _flat_d3Xdxi_tdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * I + b ];
+
                             for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
     
                                 d2ddchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]

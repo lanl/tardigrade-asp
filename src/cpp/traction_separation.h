@@ -177,6 +177,7 @@ namespace tractionSeparation{
                                    floatVector &d2ddR_nldR_nl,
                                    floatMatrix &d3ddchi_nldchi_nldchi_nl, floatMatrix &d3ddchi_nldchi_nldxi_t,
                                    floatMatrix &d3ddchi_nldxi_tdxi_t,
+                                   floatMatrix &d3ddxi_tdxi_tdxi_t,
                                    floatMatrix &RHSTERM_GRAD,
                                    const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
                                    const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
