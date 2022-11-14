@@ -233,6 +233,9 @@ namespace tractionSeparation{
          * \param &chi: The micro-deformation
          * \param &gradChi: the gradient of the micro deformation w.r.t. the reference spatial variable
          * \param &d: The current separation between the particles
+         * \param &dddXi_1: The gradient of the separation w.r.t. the local reference micro-vector
+         * \param &dddXi_2: The gradient of the separation w.r.t. the non-local reference micro-vector
+         * \param &dddD: The gradient of the separation w.r.t. the initial separation between the particles
          * \param &dddF: The gradient of the separation w.r.t. the deformation gradient
          * \param &dddChi: The gradient of the separation w.r.t. the micro deformation
          * \param &dddGradChi: The gradient of the separation w.r.t. the gradient of the micro deformation
@@ -722,9 +725,10 @@ namespace tractionSeparation{
          * \param &denergydParameters: The derivative of the energy w.r.t. the parameters
          * \param &d2energyddnddn: The second derivative of the energy w.r.t. the normal deformation measure
          * \param &d2energyddnddt: The second derivative of the energy w.r.t. the normal and tangential deformation measures
-         * \param &d2energyddnddt: The second derivative of the energy w.r.t. the normal deformation measure and the parameters
+         * \param &d2energyddndParameters: The second derivative of the energy w.r.t. the normal deformation measure and the parameters
+         * \param &d2energyddtddt: The second derivative of the energy w.r.t. the tangential deformation measures
          * \param &d2energyddtdParameters: The second derivative of the energy w.r.t. the tangential deformation measure and the parameters
-         * \param &d2energyddtdParameters: The second derivative of the energy w.r.t. the parameters
+         * \param &d2energydParametersdParameters: The second derivative of the energy w.r.t. the parameters
          */
 
         if ( parameters.size( ) != 2 ){
@@ -1133,10 +1137,10 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
          * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
-         * \param &dOverlapddR_nl: The gradient of the overlap w.r.t. the non-local reference radius
-         * \param &dOverlapddF: The gradient of the overlap w.r.t. the deformation gradient
-         * \param &dOverlapddChi: The gradient of the overlap w.r.t. the micro-deformation tensor
-         * \param &dOverlapddGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
          */
 
         if ( Xi_1.size( ) != dX.size( ) ){
@@ -1372,21 +1376,21 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
          * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
-         * \param &dOverlapddR_nl: The gradient of the overlap w.r.t. the non-local reference radius
-         * \param &dOverlapddF: The gradient of the overlap w.r.t. the deformation gradient
-         * \param &dOverlapddChi: The gradient of the overlap w.r.t. the micro-deformation tensor
-         * \param &dOverlapddGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdXi_1dXi_1: The second gradient of the overlap w.r.t. the local reference relative micro-position vector
-         * \param &d2OverlapdXi_1dX: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the particle reference center-to-center vector
+         * \param &d2OverlapdXi_1ddX: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the particle reference center-to-center vector
          * \param &d2OverlapdXi_1dR_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
          * \param &d2OverlapdXi_1dF: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient
          * \param &d2OverlapdXi_1dChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor
          * \param &d2OverlapdXi_1dGradChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the spatial gradient of the micro-deformation tensor
-         * \param &d2OverlapdXdX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
-         * \param &d2OverlapdXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
-         * \param &d2OverlapdXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
-         * \param &d2OverlapdXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
-         * \param &d2OverlapdXdGradChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapddXddX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
+         * \param &d2OverlapddXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
+         * \param &d2OverlapddXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
+         * \param &d2OverlapddXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
+         * \param &d2OverlapddXdGradChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdR_nldR_nl: The second gradient of the overlap w.r.t. the non-local reference radius
          * \param &d2OverlapdR_nldF: The second gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient
          * \param &d2OverlapdR_nldChi: The second gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor
@@ -1638,12 +1642,10 @@ namespace tractionSeparation{
             floatMatrix d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
                         d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl;
 
-            floatMatrix RHSTERM;
-
             errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
                                                    d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
                                                    d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
-                                                   d2OverlapdR_nldR_nl, RHSTERM );
+                                                   d2OverlapdR_nldR_nl );
 
             if ( error ){
 
@@ -2976,7 +2978,6 @@ namespace tractionSeparation{
                                    floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
                                    floatVector &d2ddR_nldR_nl,
-                                   floatMatrix &RHSTERM,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
         /*!
@@ -2991,7 +2992,7 @@ namespace tractionSeparation{
          * \param &dddR_nl: The gradient of the distance vector w.r.t. the non-local particle radius
          * \param &d2ddchi_nldchi_nl: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor
          * \param &d2ddchi_nldxi_t: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor and \f$\xi_t\f$
-         * \param &d2ddchi_nldxi_t: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor the non-local reference radius
+         * \param &d2ddchi_nldR_nl: The second gradient of the distance vector w.r.t. the non-local micro-deformation tensor the non-local reference radius
          * \param &d2ddxi_tdxi_t: The second gradient of the distance vector w.r.t. \f$\xi_t\f$
          * \param &d2ddxi_tdR_nl: The second gradient of the distance vector w.r.t. \f$\xi_t\f$ and the non-local reference radius
          * \param &d2ddR_nldR_nl: The second gradient of the distance vector w.r.t. the non-local reference radius
@@ -3496,59 +3497,6 @@ namespace tractionSeparation{
 
         }
 
-        RHSTERM = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
-
-        std::cerr << "PRE-RHSTERM\n";
-        for ( unsigned int I = 0; I < X.size( ); I++ ){
-
-            for ( unsigned int aA = 0; aA < chi_nl.size( ); aA++ ){
-
-                for ( unsigned int bB = 0; bB < chi_nl.size( ); bB++ ){
-
-                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
-
-//                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
-//
-//                    for ( unsigned int J = 0; J < X.size( ); J++ ){
-//
-//                        RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ]
-//                                                                  + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + bB ];
-//
-//                        for ( unsigned int K = 0; K < X.size( ); K++ ){
-//
-//                            RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ];
-//
-//                        }
-//
-//                    }
-
-                }
-
-            }
-
-        }
-        std::cerr << "POST-RHSTERM\n";
-//                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
-//    
-//                    for ( unsigned int J = 0; J < X.size( ); J++ ){
-//    
-//                        RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ]
-//                                                                  + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + bB ];
-//    
-//                        for ( unsigned int K = 0; K < X.size( ); K++ ){
-//    
-//                            RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ];
-//    
-//                        }
-//    
-//                    }
-//    
-//                }
-//
-//            }
-//
-//        }
-
         return NULL;
 
     }
@@ -3564,7 +3512,6 @@ namespace tractionSeparation{
                                    floatMatrix &d3ddxi_tdxi_tdxi_t, floatMatrix &d3ddxi_tdxi_tdR_nl,
                                    floatMatrix &d3ddxi_tdR_nldR_nl,
                                    floatVector &d3ddR_nldR_nldR_nl,
-                                   floatMatrix &RHSTERM_GRAD,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
         /*!
@@ -3599,8 +3546,6 @@ namespace tractionSeparation{
          * \param max_ls: The maximum number of line-search iterations
          * \param alpha_ls: The alpha parameter for the line-search
          */
-
-        std::cerr << "START OF D3\n";
 
         floatVector inv_chi_nl = vectorTools::inverse( chi_nl, xi_t.size( ), xi_t.size( ) );
 
@@ -4306,8 +4251,6 @@ namespace tractionSeparation{
 
         }
 
-        std::cerr << "POST-RHS CONSTRUCTION\n";
-
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _D3XDCHIDCHIDCHI_RHS( D3XDCHIDCHIDCHI_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ) );
 
@@ -4401,8 +4344,6 @@ namespace tractionSeparation{
         d3ddxi_tdR_nldR_nl = floatMatrix( d.size( ), floatVector( xi_t.size( ), 0 ) );
 
         d3ddR_nldR_nldR_nl = floatVector( d.size( ), 0 );
-
-        std::cerr << "PRE-D CONSTRUCTION\n";
 
         for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
@@ -4528,29 +4469,6 @@ namespace tractionSeparation{
             }
 
         }
-
-        std::cerr << "PRE-RHSTERM_GRAD\n";
-        RHSTERM_GRAD = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
-
-        for ( unsigned int I = 0; I < X.size( ); I++ ){
-
-            for ( unsigned int aA = 0; aA < chi_nl.size( ); aA++ ){
-
-                for ( unsigned int bB = 0; bB < chi_nl.size( ); bB++ ){
-    
-                    for ( unsigned int c = 0; c < 1; c++ ){
-
-                        RHSTERM_GRAD[ I ][ chi_nl.size( ) * aA + bB + c ]
-                            += _flat_d3Xdchi_nldchi_nldR_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB + c ];
-
-                    }
-
-                }
-
-            }
-
-        }    
-        std::cerr << "POST-RHSTERM_GRAD\n";
 
         return NULL;
 

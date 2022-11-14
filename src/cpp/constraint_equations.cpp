@@ -115,10 +115,10 @@ namespace constraintEquations{
          * \param &dCdNormal: The derivative of the constraint w.r.t. the normal
          * \param &dCdTraction: The derivative of the constraint w.r.t. the traction
          * \param &dCdP: The derivative of the constraint w.r.t. the penalty parameter
-         * \param &dCdCauchyStressdNormal: The second derivative of the constraint w.r.t. the Cauchy stress and normal vector
-         * \param &dCdCauchyStressdP: The second derivative of the constraint w.r.t. the Cauchy stress and the penalty parameter
-         * \param &dCdNormaldP: The second derivative of the constraint w.r.t. the normal and the penalty parameter
-         * \param &dCdTractiondP: The second derivative of the constraint w.r.t. the traction and the penalty parameter
+         * \param &d2CdCauchyStressdNormal: The second derivative of the constraint w.r.t. the Cauchy stress and normal vector
+         * \param &d2CdCauchyStressdP: The second derivative of the constraint w.r.t. the Cauchy stress and the penalty parameter
+         * \param &d2CdNormaldP: The second derivative of the constraint w.r.t. the normal and the penalty parameter
+         * \param &d2CdTractiondP: The second derivative of the constraint w.r.t. the traction and the penalty parameter
          */
 
         floatVector error;

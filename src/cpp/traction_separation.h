@@ -166,7 +166,6 @@ namespace tractionSeparation{
                                    floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
                                    floatVector &d2ddR_nldR_nl,
-                                   floatMatrix &RHSTERM,
                                    const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
                                    const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
 
@@ -181,7 +180,6 @@ namespace tractionSeparation{
                                    floatMatrix &d3ddxi_tdxi_tdxi_t, floatMatrix &d3ddxi_tdxi_tdR_nl,
                                    floatMatrix &d3ddxi_tdR_nldR_nl,
                                    floatVector &d3ddR_nldR_nldR_nl,
-                                   floatMatrix &RHSTERM_GRAD,
                                    const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
                                    const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
 
