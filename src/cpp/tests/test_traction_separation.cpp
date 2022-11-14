@@ -2106,9 +2106,12 @@ BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
                                                             d2Distancedchi_nldchi_nl_3, d2Distancedchi_nldxi_t_3, d2Distancedchi_nldR_nl_3,
                                                             d2Distancedxi_tdxi_t_3, d2Distancedxi_tdR_nl_3,
                                                             d2DistancedR_nldR_nl_3,
-                                                            d3Distancedchi_nldchi_nldchi_nl, d3Distancedchi_nldchi_nldxi_t,
-                                                            d3Distancedchi_nldxi_tdxi_t,
-                                                            d3Distancedxi_tdxi_tdxi_t, RHSTERM_GRAD ) );
+                                                            d3Distancedchi_nldchi_nldchi_nl, d3Distancedchi_nldchi_nldxi_t, d3Distancedchi_nldchi_nldR_nl,
+                                                            d3Distancedchi_nldxi_tdxi_t, d3Distancedchi_nldxi_tdR_nl,
+                                                            d3Distancedchi_nldR_nldR_nl,
+                                                            d3Distancedxi_tdxi_tdxi_t, d3Distancedxi_tdxi_tdR_nl,
+                                                            d3Distancedxi_tdR_nldR_nl,
+                                                            d3DistancedR_nldR_nldR_nl, RHSTERM_GRAD ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( distance_3, distance_answer ) );
 
@@ -2150,7 +2153,7 @@ BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
 
     floatVector d3DistancedR_nldR_nldR_nl_answer( distance_answer.size( ), 0 );
 
-    floatMatrix RHSTERM_GRAD_ANSWER( 4, floatVector( chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 ) );
+    floatMatrix RHSTERM_GRAD_ANSWER( 4, floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
     floatType eps = 1e-6;
 
@@ -2326,20 +2329,6 @@ BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
 
         }
 
-        for ( unsigned int j = 0; j < 4; j++ ){
-
-            for ( unsigned int k = 0; k < chi_nl.size( ); k++ ){
-
-                for ( unsigned int l = 0; l < xi_t.size( ); l++ ){
-
-                    RHSTERM_GRAD_ANSWER[ j ][ xi_t.size( ) * xi_t.size( ) * k + xi_t.size( ) * l + i ] = ( RHSTERMp[ j ][ xi_t.size( ) * k + l ] - RHSTERMm[ j ][ xi_t.size( ) * k + l ] ) / ( 2 * delta[ i ] );
-
-                }
-
-            }
-
-        }
-
     }
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dDistancedxi_t, dDistancedxi_t_answer ) );
@@ -2353,12 +2342,6 @@ BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedchi_nldxi_tdxi_t, d3Distancedchi_nldxi_tdxi_t_answer ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedxi_tdxi_tdxi_t, d3Distancedxi_tdxi_tdxi_t_answer ) );
-    std::cout << "d3Distancedxi_tdxi_tdxi_t:\n"; vectorTools::print( d3Distancedxi_tdxi_tdxi_t );
-    std::cout << "d3Distancedxi_tdxi_tdxi_t_answer:\n"; vectorTools::print( d3Distancedxi_tdxi_tdxi_t_answer );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( RHSTERM_GRAD, RHSTERM_GRAD_ANSWER ) );
-    std::cout << "RHSTERM_GRAD:\n"; vectorTools::print( RHSTERM_GRAD );
-    std::cout << "RHSTERM_GRAD_answer:\n"; vectorTools::print( RHSTERM_GRAD_ANSWER );
 
     for ( unsigned int i = 0; i < 1; i++ ){
 
@@ -2408,6 +2391,95 @@ BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
 
         }
 
+        floatMatrix d2Distancedchi_nldchi_nlp, d2Distancedchi_nldxi_tp, d2Distancedchi_nldR_nlp, d2Distancedxi_tdxi_tp, d2Distancedxi_tdR_nlp;
+        floatMatrix d2Distancedchi_nldchi_nlm, d2Distancedchi_nldxi_tm, d2Distancedchi_nldR_nlm, d2Distancedxi_tdxi_tm, d2Distancedxi_tdR_nlm;
+
+        floatVector d2DistancedR_nldR_nlp, d2DistancedR_nldR_nlm;
+
+        floatMatrix RHSTERMp, RHSTERMm;
+
+        BOOST_CHECK( !tractionSeparation::solveOverlapDistance( chi_nl, xi_t, R_nl + delta, dp, dDistancedchi_nlp, dDistancedxi_tp, dDistancedR_nlp,
+                                                                d2Distancedchi_nldchi_nlp, d2Distancedchi_nldxi_tp, d2Distancedchi_nldR_nlp,
+                                                                d2Distancedxi_tdxi_tp, d2Distancedxi_tdR_nlp,
+                                                                d2DistancedR_nldR_nlp, RHSTERMp ) );
+
+        BOOST_CHECK( !tractionSeparation::solveOverlapDistance( chi_nl, xi_t, R_nl - delta, dm, dDistancedchi_nlm, dDistancedxi_tm, dDistancedR_nlm,
+                                                                d2Distancedchi_nldchi_nlm, d2Distancedchi_nldxi_tm, d2Distancedchi_nldR_nlm,
+                                                                d2Distancedxi_tdxi_tm, d2Distancedxi_tdR_nlm,
+                                                                d2DistancedR_nldR_nlm, RHSTERMm ) );
+
+        for ( unsigned int j = 0; j < distance_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < chi_nl.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < chi_nl.size( ); l++ ){
+
+                    d3Distancedchi_nldchi_nldR_nl_answer[ j ][ chi_nl.size( ) * k + l + i ]
+                        += ( d2Distancedchi_nldchi_nlp[ j ][ chi_nl.size( ) * k + l ] - d2Distancedchi_nldchi_nlm[ j ][ chi_nl.size( ) * k + l ] ) / ( 2 * delta );
+
+                }
+
+                for ( unsigned int l = 0; l < xi_t.size( ); l++ ){
+
+                    d3Distancedchi_nldxi_tdR_nl_answer[ j ][ xi_t.size( ) * k + l + i ]
+                        += ( d2Distancedchi_nldxi_tp[ j ][ xi_t.size( ) * k + l ] - d2Distancedchi_nldxi_tm[ j ][ xi_t.size( ) * k + l ] ) / ( 2 * delta );
+
+                }
+
+                for ( unsigned int l = 0; l < 1; l++ ){
+
+                    d3Distancedchi_nldR_nldR_nl_answer[ j ][ k + l + i ]
+                        += ( d2Distancedchi_nldR_nlp[ j ][ k + l ] - d2Distancedchi_nldR_nlm[ j ][ k + l ] ) / ( 2 * delta );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < xi_t.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < xi_t.size( ); l++ ){
+
+                    d3Distancedxi_tdxi_tdR_nl_answer[ j ][ xi_t.size( ) * k + l + i ]
+                        += ( d2Distancedxi_tdxi_tp[ j ][ xi_t.size( ) * k + l ] - d2Distancedxi_tdxi_tm[ j ][ xi_t.size( ) * k + l ] ) / ( 2 * delta );
+
+                }
+
+                for ( unsigned int l = 0; l < 1; l++ ){
+
+                    d3Distancedxi_tdR_nldR_nl_answer[ j ][ k + l + i ]
+                        += ( d2Distancedxi_tdR_nlp[ j ][ k + l ] - d2Distancedxi_tdR_nlm[ j ][ k + l ] ) / ( 2 * delta );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < 1; k++ ){
+
+                for ( unsigned int l = 0; l < 1; l++ ){
+
+                    d3DistancedR_nldR_nldR_nl_answer[ j ]
+                        += ( d2DistancedR_nldR_nlp[ j ] - d2DistancedR_nldR_nlm[ j ] ) / ( 2 * delta );
+
+                }
+
+            }
+
+        }
+
+        for ( unsigned int j = 0; j < 4; j++ ){
+
+            for ( unsigned int k = 0; k < chi_nl.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < chi_nl.size( ); l++ ){
+
+                    RHSTERM_GRAD_ANSWER[ j ][ chi_nl.size( ) * k + l + i ] = ( RHSTERMp[ j ][ chi_nl.size( ) * k + l ] - RHSTERMm[ j ][ chi_nl.size( ) * k + l ] ) / ( 2 * delta );
+
+                }
+
+            }
+
+        }
+
     }
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dDistancedR_nl, dDistancedR_nl_answer ) );
@@ -2417,6 +2489,24 @@ BOOST_AUTO_TEST_CASE( test_solveOverlapDistance ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d2Distancedxi_tdR_nl, d2Distancedxi_tdR_nl_answer ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d2DistancedR_nldR_nl, d2DistancedR_nldR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedchi_nldchi_nldR_nl, d3Distancedchi_nldchi_nldR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedchi_nldxi_tdR_nl, d3Distancedchi_nldxi_tdR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedchi_nldR_nldR_nl, d3Distancedchi_nldR_nldR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedxi_tdxi_tdR_nl, d3Distancedxi_tdxi_tdR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3Distancedxi_tdR_nldR_nl, d3Distancedxi_tdR_nldR_nl_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3DistancedR_nldR_nldR_nl, d3DistancedR_nldR_nldR_nl_answer ) );
+    std::cout << "d3DistancedR_nldR_nldR_nl:\n"; vectorTools::print( d3DistancedR_nldR_nldR_nl );
+    std::cout << "d3DistancedR_nldR_nldR_nl_answer:\n"; vectorTools::print( d3DistancedR_nldR_nldR_nl_answer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( RHSTERM_GRAD, RHSTERM_GRAD_ANSWER ) );
+    std::cout << "RHSTERM_GRAD:\n"; vectorTools::print( RHSTERM_GRAD );
+    std::cout << "RHSTERM_GRAD_ANSWER:\n"; vectorTools::print( RHSTERM_GRAD_ANSWER );
 
 }
 

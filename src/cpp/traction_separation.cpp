@@ -3496,15 +3496,16 @@ namespace tractionSeparation{
 
         }
 
-        RHSTERM = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * xi_t.size( ), 0 ) );
+        RHSTERM = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
+        std::cerr << "PRE-RHSTERM\n";
         for ( unsigned int I = 0; I < X.size( ); I++ ){
 
             for ( unsigned int aA = 0; aA < chi_nl.size( ); aA++ ){
 
-                for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+                for ( unsigned int bB = 0; bB < chi_nl.size( ); bB++ ){
 
-                    RHSTERM[ I ][ xi_t.size( ) * aA + b ] += _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * aA + b ];
+                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
 
 //                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
 //
@@ -3526,6 +3527,7 @@ namespace tractionSeparation{
             }
 
         }
+        std::cerr << "POST-RHSTERM\n";
 //                    RHSTERM[ I ][ chi_nl.size( ) * aA + bB ] += d3LdXdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ];
 //    
 //                    for ( unsigned int J = 0; J < X.size( ); J++ ){
@@ -3556,9 +3558,12 @@ namespace tractionSeparation{
                                    floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
                                    floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
                                    floatVector &d2ddR_nldR_nl,
-                                   floatMatrix &d3ddchi_nldchi_nldchi_nl, floatMatrix &d3ddchi_nldchi_nldxi_t,
-                                   floatMatrix &d3ddchi_nldxi_tdxi_t,
-                                   floatMatrix &d3ddxi_tdxi_tdxi_t,
+                                   floatMatrix &d3ddchi_nldchi_nldchi_nl, floatMatrix &d3ddchi_nldchi_nldxi_t, floatMatrix &d3ddchi_nldchi_nldR_nl,
+                                   floatMatrix &d3ddchi_nldxi_tdxi_t, floatMatrix &d3ddchi_nldxi_tdR_nl,
+                                   floatMatrix &d3ddchi_nldR_nldR_nl,
+                                   floatMatrix &d3ddxi_tdxi_tdxi_t, floatMatrix &d3ddxi_tdxi_tdR_nl,
+                                   floatMatrix &d3ddxi_tdR_nldR_nl,
+                                   floatVector &d3ddR_nldR_nldR_nl,
                                    floatMatrix &RHSTERM_GRAD,
                                    const floatType tolr, const floatType tola, const unsigned int max_iteration,
                                    const unsigned int max_ls, const floatType alpha_ls ){
@@ -3580,14 +3585,22 @@ namespace tractionSeparation{
          * \param &d2ddR_nldR_nl: The second gradient of the distance vector w.r.t. the non-local reference radius
          * \param &d3ddchi_nldchi_nldchi_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor
          * \param &d3ddchi_nldchi_nldxi_t: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor twice and \f$\xi_t\f$ once
+         * \param &d3ddchi_nldchi_nldR_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor, \f$\xi_t\f$, and the non-local reference radius
          * \param &d3ddchi_nldxi_tdxi_t: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor once and \f$\xi_t\f$ twice
-         * \param &d3ddchi_nldxi_tdxi_t: The third gradient of the distance vector w.r.t. \f$\xi_t\f$
+         * \param &d3ddchi_nldxi_tdR_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor, \f$\xi_t\f$ twice, and the non-local reference radius
+         * \param &d3ddchi_nldR_nldR_nl: The third gradient of the distance vector w.r.t. the non-local micro-deformation tensor once and the non-local reference radius twice
+         * \param &d3ddxi_tdxi_tdxi_t: The third gradient of the distance vector w.r.t. \f$\xi_t\f$
+         * \param &d3ddxi_tdxi_tdR_nl: The third gradient of the distance vector w.r.t. \f$\xi_t\f$ twice and the non-local reference radius once
+         * \param &d3ddxi_tdR_nldR_nl: The third gradient of the distance vector w.r.t. \f$\xi_t\f$ once and the non-local reference radius twice
+         * \param &d3ddR_nldR_nldR_nl: The third gradient of the distance vector w.r.t. the non-local reference radius
          * \param tolr: The relative tolerance
          * \param tola: The absolute tolerance
          * \param max_iteration: The maximum number of iterations
          * \param max_ls: The maximum number of line-search iterations
          * \param alpha_ls: The alpha parameter for the line-search
          */
+
+        std::cerr << "START OF D3\n";
 
         floatVector inv_chi_nl = vectorTools::inverse( chi_nl, xi_t.size( ), xi_t.size( ) );
 
@@ -3798,9 +3811,21 @@ namespace tractionSeparation{
 
         floatVector _flat_d3Xdchi_nldchi_nldxi_t( X.size( ) * chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
 
+        floatVector _flat_d3Xdchi_nldchi_nldR_nl( X.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
+
         floatVector _flat_d3Xdchi_nldxi_tdxi_t( X.size( ) * chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
 
+        floatVector _flat_d3Xdchi_nldxi_tdR_nl( X.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d3Xdchi_nldR_nldR_nl( X.size( ) * chi_nl.size( ), 0 );
+
         floatVector _flat_d3Xdxi_tdxi_tdxi_t( X.size( ) * xi_t.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d3Xdxi_tdxi_tdR_nl( X.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d3Xdxi_tdR_nldR_nl( X.size( ) * xi_t.size( ), 0 );
+
+        floatVector _flat_d3XdR_nldR_nldR_nl( X.size( ), 0 );
 
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _dXdchi_nl( _flat_dXdchi_nl.data( ), X.size( ), chi_nl.size( ) );
@@ -3836,10 +3861,28 @@ namespace tractionSeparation{
             _d3Xdchi_nldchi_nldxi_t( _flat_d3Xdchi_nldchi_nldxi_t.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) );
 
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdchi_nldchi_nldR_nl( _flat_d3Xdchi_nldchi_nldR_nl.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _d3Xdchi_nldxi_tdxi_t( _flat_d3Xdchi_nldxi_tdxi_t.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) * xi_t.size( ) );
 
         Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdchi_nldxi_tdR_nl( _flat_d3Xdchi_nldxi_tdR_nl.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdchi_nldR_nldR_nl( _flat_d3Xdchi_nldR_nldR_nl.data( ), X.size( ), chi_nl.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _d3Xdxi_tdxi_tdxi_t( _flat_d3Xdxi_tdxi_tdxi_t.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdxi_tdxi_tdR_nl( _flat_d3Xdxi_tdxi_tdR_nl.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3Xdxi_tdR_nldR_nl( _flat_d3Xdxi_tdR_nldR_nl.data( ), X.size( ), xi_t.size( ) );
+
+        Eigen::Map< Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _d3XdR_nldR_nldR_nl( _flat_d3XdR_nldR_nldR_nl.data( ), X.size( ), 1 );
 
         // Compute the Jacobians of the unknown vector
 
@@ -4022,9 +4065,21 @@ namespace tractionSeparation{
 
         floatVector D3XDCHIDCHIDXI_RHS( X.size( ) * chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
 
+        floatVector D3XDCHIDCHIDR_RHS( X.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 );
+
         floatVector D3XDCHIDXIDXI_RHS( X.size( ) * chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
 
+        floatVector D3XDCHIDXIDR_RHS( X.size( ) * chi_nl.size( ) * xi_t.size( ), 0 );
+
+        floatVector D3XDCHIDRDR_RHS( X.size( ) * chi_nl.size( ), 0 );
+
         floatVector D3XDXIDXIDXI_RHS( X.size( ) * xi_t.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector D3XDXIDXIDR_RHS( X.size( ) * xi_t.size( ) * xi_t.size( ), 0 );
+
+        floatVector D3XDXIDRDR_RHS( X.size( ) * xi_t.size( ), 0 );
+
+        floatVector D3XDRDRDR_RHS( X.size( ), 0 );
 
         for ( unsigned int I = 0; I < X.size( ); I++ ){
 
@@ -4079,6 +4134,24 @@ namespace tractionSeparation{
                         }
     
                     }
+
+                    for ( unsigned int J = 0; J < X.size( ); J++ ){
+        
+                        D3XDCHIDCHIDR_RHS[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB ]
+                            += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ]
+                             + d4LdXdXdchi_nldchi_nl[ X.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ] * _flat_dXdR_nl[ J ]
+                             + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + bB ]
+                             + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ];
+
+                        for ( unsigned int K = 0; K < X.size( ); K++ ){
+        
+                            D3XDCHIDCHIDR_RHS[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA +  bB ]
+                                += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * K + bB ]
+                                 + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ]
+                                 + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ];
+                        }
+        
+                    }
     
                 }
 
@@ -4106,6 +4179,42 @@ namespace tractionSeparation{
 
                     }
 
+                    for ( unsigned int J = 0; J < X.size( ); J++ ){
+        
+                        D3XDCHIDXIDR_RHS[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * aA + b ]
+                            += d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + b ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ]
+                             + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + b ]
+                             + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + b ];
+        
+                        for ( unsigned int K = 0; K < X.size( ); K++ ){
+        
+                            D3XDCHIDXIDR_RHS[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * aA + b ]
+                                += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * K + b ]
+                                 + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * K + b ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ]
+                                 + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + b ];
+        
+                        }
+        
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < X.size( ); J++ ){
+        
+                    D3XDCHIDRDR_RHS[ chi_nl.size( ) * I + aA ]
+                        += d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ]
+                         + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2XdR_nldR_nl[ J ]
+                         + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ];
+        
+                    for ( unsigned int K = 0; K < X.size( ); K++ ){
+        
+                        D3XDCHIDRDR_RHS[ chi_nl.size( ) * I + aA ]
+                            += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ] * _flat_d2XdR_nldR_nl[ K ]
+                             + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ]
+                             + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * J + aA ];
+        
+                    }
+        
                 }
 
             }
@@ -4136,11 +4245,68 @@ namespace tractionSeparation{
 
                     }
 
+                    for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                        D3XDXIDXIDR_RHS[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * a + b ]
+                            += d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + b ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + a ]
+                             + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + a ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + b ]
+                             + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * a + b ];
+
+                        for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                            D3XDXIDXIDR_RHS[ xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * a + b ]
+                                += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * K + b ]
+                                 + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * K + b ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + a ]
+                                 + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * J + xi_t.size( ) * a + b ];
+
+                        }
+
+                    }
+
+                }
+
+
+                for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                    D3XDXIDRDR_RHS[ xi_t.size( ) * I + a ]
+                        += d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + a ]
+                         + d3LdXdXdxi_t[ X.size( ) * xi_t.size( ) * I + xi_t.size( ) * J + a ] * _flat_d2XdR_nldR_nl[ J ]
+                         + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + a ];
+
+                    for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                        D3XDXIDRDR_RHS[ xi_t.size( ) * I + a ]
+                            += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdxi_t[ xi_t.size( ) * J + a ] * _flat_d2XdR_nldR_nl[ K ]
+                             + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + a ]
+                             + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * J + a ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int J = 0; J < X.size( ); J++ ){
+
+                D3XDRDRDR_RHS[ I ]
+                    += d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2XdR_nldR_nl[ J ]
+                     + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2XdR_nldR_nl[ J ]
+                     + d3LdXdXdR_nl[ X.size( ) * I + J ] * _flat_d2XdR_nldR_nl[ J ];
+
+                for ( unsigned int K = 0; K < X.size( ); K++ ){
+
+                    D3XDRDRDR_RHS[ I ]
+                        += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ J ] * _flat_d2XdR_nldR_nl[ K ]
+                         + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2XdR_nldR_nl[ J ]
+                         + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdR_nl[ K ] * _flat_d2XdR_nldR_nl[ J ];
+
                 }
 
             }
 
         }
+
+        std::cerr << "POST-RHS CONSTRUCTION\n";
 
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _D3XDCHIDCHIDCHI_RHS( D3XDCHIDCHIDCHI_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ) );
@@ -4149,18 +4315,48 @@ namespace tractionSeparation{
             _D3XDCHIDCHIDXI_RHS( D3XDCHIDCHIDXI_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ) );
 
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDCHIDCHIDR_RHS( D3XDCHIDCHIDR_RHS.data( ), X.size( ), chi_nl.size( ) * chi_nl.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _D3XDCHIDXIDXI_RHS( D3XDCHIDXIDXI_RHS.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) * xi_t.size( ) );
 
         Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDCHIDXIDR_RHS( D3XDCHIDXIDR_RHS.data( ), X.size( ), chi_nl.size( ) * xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDCHIDRDR_RHS( D3XDCHIDRDR_RHS.data( ), X.size( ), chi_nl.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
             _D3XDXIDXIDXI_RHS( D3XDXIDXIDXI_RHS.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDXIDXIDR_RHS( D3XDXIDXIDR_RHS.data( ), X.size( ), xi_t.size( ) * xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDXIDRDR_RHS( D3XDXIDRDR_RHS.data( ), X.size( ), xi_t.size( ) );
+
+        Eigen::Map< const Eigen::Matrix< floatType, -1, -1, Eigen::RowMajor > >
+            _D3XDRDRDR_RHS( D3XDRDRDR_RHS.data( ), X.size( ), 1 );
 
         _d3Xdchi_nldchi_nldchi_nl = -linearSolver.solve( _D3XDCHIDCHIDCHI_RHS );
 
         _d3Xdchi_nldchi_nldxi_t = -linearSolver.solve( _D3XDCHIDCHIDXI_RHS );
 
+        _d3Xdchi_nldchi_nldR_nl = -linearSolver.solve( _D3XDCHIDCHIDR_RHS );
+
         _d3Xdchi_nldxi_tdxi_t = -linearSolver.solve( _D3XDCHIDXIDXI_RHS );
 
+        _d3Xdchi_nldxi_tdR_nl = -linearSolver.solve( _D3XDCHIDXIDR_RHS );
+
+        _d3Xdchi_nldR_nldR_nl = -linearSolver.solve( _D3XDCHIDRDR_RHS );
+
         _d3Xdxi_tdxi_tdxi_t = -linearSolver.solve( _D3XDXIDXIDXI_RHS );
+
+        _d3Xdxi_tdxi_tdR_nl = -linearSolver.solve( _D3XDXIDXIDR_RHS );
+
+        _d3Xdxi_tdR_nldR_nl = -linearSolver.solve( _D3XDXIDRDR_RHS );
+
+        _d3XdR_nldR_nldR_nl = -linearSolver.solve( _D3XDRDRDR_RHS );
 
         // Construct the jacobians of the distance vector
 
@@ -4190,9 +4386,23 @@ namespace tractionSeparation{
 
         d3ddchi_nldchi_nldxi_t = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * xi_t.size( ), 0 ) );
 
+        d3ddchi_nldchi_nldR_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
+
         d3ddchi_nldxi_tdxi_t = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 ) );
 
+        d3ddchi_nldxi_tdR_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ) * xi_t.size( ), 0 ) );
+
+        d3ddchi_nldR_nldR_nl = floatMatrix( d.size( ), floatVector( chi_nl.size( ), 0 ) );
+
         d3ddxi_tdxi_tdxi_t = floatMatrix( d.size( ), floatVector( xi_t.size( ) * xi_t.size( ) * xi_t.size( ), 0 ) );
+
+        d3ddxi_tdxi_tdR_nl = floatMatrix( d.size( ), floatVector( xi_t.size( ) * xi_t.size( ), 0 ) );
+
+        d3ddxi_tdR_nldR_nl = floatMatrix( d.size( ), floatVector( xi_t.size( ), 0 ) );
+
+        d3ddR_nldR_nldR_nl = floatVector( d.size( ), 0 );
+
+        std::cerr << "PRE-D CONSTRUCTION\n";
 
         for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
 
@@ -4201,7 +4411,10 @@ namespace tractionSeparation{
             for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
                 dddR_nl[ i ] += chi_nl[ xi_t.size( ) * i + a ] * _flat_dXdR_nl[ a ];
+
                 d2ddR_nldR_nl[ i ] += chi_nl[ xi_t.size( ) * i + a ] * _flat_d2XdR_nldR_nl[ a ];
+
+                d3ddR_nldR_nldR_nl[ i ] += chi_nl[ xi_t.size( ) * i + a ] * _flat_d3XdR_nldR_nldR_nl[ a ];
 
                 for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
 
@@ -4209,9 +4422,13 @@ namespace tractionSeparation{
 
                     d2ddchi_nldR_nl[ i ][ xi_t.size( ) * a + A ] += eye[ xi_t.size( ) * i + a ] * _flat_dXdR_nl[ A ];
 
+                    d3ddchi_nldR_nldR_nl[ i ][ xi_t.size( ) * a + A ] += eye[ xi_t.size( ) * i + a ] * _flat_d2XdR_nldR_nl[ A ];
+
                     for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
                         d2ddchi_nldxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ] += eye[ xi_t.size( ) * i + a ] * _flat_dXdxi_t[ xi_t.size( ) * A + b ];
+
+                        d3ddchi_nldxi_tdR_nl[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ] += eye[ xi_t.size( ) * i + a ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * A + b ];
 
                         for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
 
@@ -4220,6 +4437,10 @@ namespace tractionSeparation{
                                  + eye[ xi_t.size( ) * i + b ] * _flat_dXdchi_nl[ chi_nl.size( ) * B + xi_t.size( ) * a + A ];
 
                             d3ddchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * b + B ] += eye[ xi_t.size( ) * i + a ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * b + B ];
+
+                            d3ddchi_nldchi_nldR_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                += eye[ xi_t.size( ) * i + a ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                 + eye[ xi_t.size( ) * i + b ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * B + xi_t.size( ) * a + A ];
 
                             for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
@@ -4245,13 +4466,19 @@ namespace tractionSeparation{
 
                     d2ddxi_tdR_nl[ i ][ a ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_d2Xdxi_tdR_nl[ xi_t.size( ) * A + a ];
 
+                    d3ddxi_tdR_nldR_nl[ i ][ a ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_d3Xdxi_tdR_nldR_nl[ xi_t.size( ) * A + a ];
+
                     for ( unsigned int I = 0; I < xi_t.size( ); I++ ){
 
                         dddchi_nl[ i ][ xi_t.size( ) * a + A ] += chi_nl[ xi_t.size( ) * i + I ] * _flat_dXdchi_nl[ chi_nl.size( ) * I + xi_t.size( ) * a + A ];
 
                         d2ddchi_nldR_nl[ i ][ xi_t.size( ) * a + A ] += chi_nl[ xi_t.size( ) * i + I ] * _flat_d2Xdchi_nldR_nl[ chi_nl.size( ) * I + xi_t.size( ) * a + A ];
 
+                        d3ddchi_nldR_nldR_nl[ i ][ xi_t.size( ) * a + A ] += chi_nl[ xi_t.size( ) * i + I ] * _flat_d3Xdchi_nldR_nldR_nl[ chi_nl.size( ) * I + xi_t.size( ) * a + A ];
+
                         d2ddxi_tdxi_t[ i ][ xi_t.size( ) * a + I ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_d2Xdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * a + I ];
+
+                        d3ddxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + I ] += chi_nl[ xi_t.size( ) * i + A ] * _flat_d3Xdxi_tdxi_tdR_nl[ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * a + I ];
 
                         for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
@@ -4261,6 +4488,9 @@ namespace tractionSeparation{
                             d3ddxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * I + b ]
                                 += chi_nl[ xi_t.size( ) * i + A ] * _flat_d3Xdxi_tdxi_tdxi_t[ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * I + b ];
 
+                            d3ddchi_nldxi_tdR_nl[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ]
+                                += chi_nl[ xi_t.size( ) * i + I ] * _flat_d3Xdchi_nldxi_tdR_nl[ chi_nl.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * A + b ];
+
                             for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
     
                                 d2ddchi_nldchi_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
@@ -4268,6 +4498,9 @@ namespace tractionSeparation{
 
                                 d3ddchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * b + B ]
                                     += chi_nl[ xi_t.size( ) * i + I ] * _flat_d3Xdchi_nldxi_tdxi_t[ chi_nl.size( ) * xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * b + B ];
+
+                                d3ddchi_nldchi_nldR_nl[ i ][ xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ]
+                                    += chi_nl[ xi_t.size( ) * i + I ] * _flat_d3Xdchi_nldchi_nldR_nl[ chi_nl.size( ) * chi_nl.size( ) * I + xi_t.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * A + xi_t.size( ) * b + B ];
 
                                 for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
@@ -4296,34 +4529,19 @@ namespace tractionSeparation{
 
         }
 
-        RHSTERM_GRAD = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * xi_t.size( ) * xi_t.size( ), 0 ) );
+        std::cerr << "PRE-RHSTERM_GRAD\n";
+        RHSTERM_GRAD = floatMatrix( X.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         for ( unsigned int I = 0; I < X.size( ); I++ ){
 
             for ( unsigned int aA = 0; aA < chi_nl.size( ); aA++ ){
 
-                for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+                for ( unsigned int bB = 0; bB < chi_nl.size( ); bB++ ){
     
-                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+                    for ( unsigned int c = 0; c < 1; c++ ){
 
-                        RHSTERM_GRAD[ I ][ xi_t.size( ) * xi_t.size( ) * aA + xi_t.size( ) * b + c ]
-                            += _flat_d3Xdchi_nldxi_tdxi_t[ chi_nl.size( ) * xi_t.size( ) * xi_t.size( ) * I + xi_t.size( ) * xi_t.size( ) * aA + xi_t.size( ) * b + c ];
-//
-//                        for ( unsigned int J = 0; J < X.size( ); J++ ){
-//
-//                            RHSTERM_GRAD[ I ][ chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
-//                                += d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + bB ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + c ]
-//                                 + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * bB + c ];
-//
-//                            for ( unsigned int K = 0; K < X.size( ); K++ ){
-//
-//                                RHSTERM_GRAD[ I ][ chi_nl.size( ) * xi_t.size( ) * aA + xi_t.size( ) * bB + c ]
-//                                    += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * K + xi_t.size( ) * bB + c ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ]
-//                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_d2Xdchi_nldxi_t[ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * aA + c ];
-//
-//                            }
-//
-//                        }
+                        RHSTERM_GRAD[ I ][ chi_nl.size( ) * aA + bB + c ]
+                            += _flat_d3Xdchi_nldchi_nldR_nl[ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * aA + bB + c ];
 
                     }
 
@@ -4332,34 +4550,7 @@ namespace tractionSeparation{
             }
 
         }    
-//                        for ( unsigned int J = 0; J < X.size( ); J++ ){
-//        
-//                            RHSTERM_GRAD[ I ][ chi_nl.size( ) * chi_nl.size( ) * aA + chi_nl.size( ) * bB + cC ]
-//                                += d4LdXdXdchi_nldchi_nl[ X.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * bB + cC ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ]
-//                                 + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( )  * J + bB ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA  + cC ]
-//                                 + d4LdXdXdchi_nldchi_nl[ X.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + cC ]
-//                                 + d4LdXdXdchi_nldchi_nl[ X.size( ) * chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + cC ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + bB ]
-//                                 + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * bB + cC ]
-//                                 + d3LdXdXdchi_nl[ X.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + cC ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ];
-//        
-//                            for ( unsigned int K = 0; K < X.size( ); K++ ){
-//        
-//                                RHSTERM_GRAD[ I ][ chi_nl.size( ) * chi_nl.size( ) * aA + chi_nl.size( ) * bB + cC ]
-//                                    += d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * J + aA ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * bB + cC ]
-//                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + bB ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + cC ]
-//                                     + d3LdXdXdX[ X.size( ) * X.size( ) * I + X.size( ) * J + K ] * _flat_dXdchi_nl[ chi_nl.size( ) * K + cC ] * _flat_d2Xdchi_nldchi_nl[ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * aA + bB ];
-//        
-//                            }
-//        
-//                        }
-//    
-//                    }
-//    
-//                }
-//
-//            }
-//
-//        }
+        std::cerr << "POST-RHSTERM_GRAD\n";
 
         return NULL;
 
