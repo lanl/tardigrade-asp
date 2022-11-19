@@ -4751,8 +4751,6 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlap ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdF_answer ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXddXdF, d3OverlapddXddXdF_answer ) );
-    std::cout << "d3OverlapddXddXdF:\n"; vectorTools::print( d3OverlapddXddXdF );
-    std::cout << "d3OverlapddXddXdF_answer:\n"; vectorTools::print( d3OverlapddXddXdF_answer );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXdR_nldF, d3OverlapddXdR_nldF_answer ) );
 
@@ -4960,7 +4958,7 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlap ){
                 for ( unsigned int l = 0; l < chi.size( ); l++ ){
 
                     d3OverlapdR_nldChidChi_answer[ j ][ chi.size( ) * chi.size( ) * k + chi.size( ) * l + i ]
-                        = ( d2OverlapdR_nldFp[ j ][ F.size( ) * k + l ] - d2OverlapdR_nldFm[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+                        = ( d2OverlapdR_nldChip[ j ][ F.size( ) * k + l ] - d2OverlapdR_nldChim[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
 
                 }
 
@@ -5022,8 +5020,6 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlap ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidChi_answer ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXddXdChi, d3OverlapddXddXdChi_answer ) );
-    std::cout << "d3OverlapddXddXdChi:\n"; vectorTools::print( d3OverlapddXddXdChi );
-    std::cout << "d3OverlapddXddXdChi_answer:\n"; vectorTools::print( d3OverlapddXddXdChi_answer );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXdR_nldChi, d3OverlapddXdR_nldChi_answer ) );
 
@@ -5119,6 +5115,215 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlap ){
 
         }
 
+        floatMatrix d2OverlapdXi_1dXi_1p, d2OverlapdXi_1ddXp, d2OverlapdXi_1dR_nlp, d2OverlapdXi_1dFp, d2OverlapdXi_1dChip, d2OverlapdXi_1dGradChip,
+                    d2OverlapddXddXp, d2OverlapddXdR_nlp, d2OverlapddXdFp, d2OverlapddXdChip, d2OverlapddXdGradChip,
+                    d2OverlapdR_nldFp, d2OverlapdR_nldChip, d2OverlapdR_nldGradChip,
+                    d2OverlapdFdFp, d2OverlapdFdChip, d2OverlapdFdGradChip,
+                    d2OverlapdChidChip, d2OverlapdChidGradChip,
+                    d2OverlapdGradChidGradChip;
+    
+        floatMatrix d2OverlapdXi_1dXi_1m, d2OverlapdXi_1ddXm, d2OverlapdXi_1dR_nlm, d2OverlapdXi_1dFm, d2OverlapdXi_1dChim, d2OverlapdXi_1dGradChim,
+                    d2OverlapddXddXm, d2OverlapddXdR_nlm, d2OverlapddXdFm, d2OverlapddXdChim, d2OverlapddXdGradChim,
+                    d2OverlapdR_nldFm, d2OverlapdR_nldChim, d2OverlapdR_nldGradChim,
+                    d2OverlapdFdFm, d2OverlapdFdChim, d2OverlapdFdGradChim,
+                    d2OverlapdChidChim, d2OverlapdChidGradChim,
+                    d2OverlapdGradChidGradChim;
+    
+        floatVector d2OverlapdR_nldR_nlp, d2OverlapdR_nldR_nlm;
+    
+        BOOST_CHECK( !tractionSeparation::computeParticleOverlap( Xi_1, dX, R_nl, F, chi, gradChi + delta, overlapp,
+                                                                  dOverlapdXi_1p, dOverlapddXp, dOverlapdR_nlp, dOverlapdFp, dOverlapdChip, dOverlapdGradChip,
+                                                                  d2OverlapdXi_1dXi_1p,      d2OverlapdXi_1ddXp, d2OverlapdXi_1dR_nlp, d2OverlapdXi_1dFp,       d2OverlapdXi_1dChip,   d2OverlapdXi_1dGradChip,
+                                                                  d2OverlapddXddXp,          d2OverlapddXdR_nlp, d2OverlapddXdFp,      d2OverlapddXdChip,       d2OverlapddXdGradChip,
+                                                                  d2OverlapdR_nldR_nlp,      d2OverlapdR_nldFp,  d2OverlapdR_nldChip,  d2OverlapdR_nldGradChip,
+                                                                  d2OverlapdFdFp,            d2OverlapdFdChip,   d2OverlapdFdGradChip,
+                                                                  d2OverlapdChidChip,        d2OverlapdChidGradChip,
+                                                                  d2OverlapdGradChidGradChip ) );
+
+        BOOST_CHECK( !tractionSeparation::computeParticleOverlap( Xi_1, dX, R_nl, F, chi, gradChi - delta, overlapm,
+                                                                  dOverlapdXi_1m, dOverlapddXm, dOverlapdR_nlm, dOverlapdFm, dOverlapdChim, dOverlapdGradChim,
+                                                                  d2OverlapdXi_1dXi_1m,      d2OverlapdXi_1ddXm, d2OverlapdXi_1dR_nlm, d2OverlapdXi_1dFm,       d2OverlapdXi_1dChim,   d2OverlapdXi_1dGradChim,
+                                                                  d2OverlapddXddXm,          d2OverlapddXdR_nlm, d2OverlapddXdFm,      d2OverlapddXdChim,       d2OverlapddXdGradChim,
+                                                                  d2OverlapdR_nldR_nlm,      d2OverlapdR_nldFm,  d2OverlapdR_nldChim,  d2OverlapdR_nldGradChim,
+                                                                  d2OverlapdFdFm,            d2OverlapdFdChim,   d2OverlapdFdGradChim,
+                                                                  d2OverlapdChidChim,        d2OverlapdChidGradChim,
+                                                                  d2OverlapdGradChidGradChim ) );
+
+        for ( unsigned int j = 0; j < overlap_answer.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < Xi_1.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < Xi_1.size( ); l++ ){
+
+                    d3OverlapdXi_1dXi_1dGradChi_answer[ j ][ Xi_1.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdXi_1dXi_1p[ j ][ Xi_1.size( ) * k + l ] - d2OverlapdXi_1dXi_1m[ j ][ Xi_1.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < dX.size( ); l++ ){
+
+                    d3OverlapdXi_1ddXdGradChi_answer[ j ][ dX.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdXi_1ddXp[ j ][ dX.size( ) * k + l ] - d2OverlapdXi_1ddXm[ j ][ dX.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < 1; l++ ){
+
+                    d3OverlapdXi_1dR_nldGradChi_answer[ j ][ gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdXi_1dR_nlp[ j ][ k + l ] - d2OverlapdXi_1dR_nlm[ j ][ k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < F.size( ); l++ ){
+
+                    d3OverlapdXi_1dFdGradChi_answer[ j ][ F.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdXi_1dFp[ j ][ F.size( ) * k + l ] - d2OverlapdXi_1dFm[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < chi.size( ); l++ ){
+
+                    d3OverlapdXi_1dChidGradChi_answer[ j ][ chi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdXi_1dChip[ j ][ F.size( ) * k + l ] - d2OverlapdXi_1dChim[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < gradChi.size( ); l++ ){
+
+                    d3OverlapdXi_1dGradChidGradChi_answer[ j ][ gradChi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdXi_1dGradChip[ j ][ gradChi.size( ) * k + l ] - d2OverlapdXi_1dGradChim[ j ][ gradChi.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < dX.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < dX.size( ); l++ ){
+
+                    d3OverlapddXddXdGradChi_answer[ j ][ dX.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapddXddXp[ j ][ dX.size( ) * k + l ] - d2OverlapddXddXm[ j ][ dX.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < 1; l++ ){
+
+                    d3OverlapddXdR_nldGradChi_answer[ j ][ gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapddXdR_nlp[ j ][ k + l ] - d2OverlapddXdR_nlm[ j ][ k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < F.size( ); l++ ){
+
+                    d3OverlapddXdFdGradChi_answer[ j ][ F.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapddXdFp[ j ][ F.size( ) * k + l ] - d2OverlapddXdFm[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < chi.size( ); l++ ){
+
+                    d3OverlapddXdChidGradChi_answer[ j ][ chi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapddXdChip[ j ][ F.size( ) * k + l ] - d2OverlapddXdChim[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < gradChi.size( ); l++ ){
+
+                    d3OverlapddXdGradChidGradChi_answer[ j ][ gradChi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapddXdGradChip[ j ][ gradChi.size( ) * k + l ] - d2OverlapddXdGradChim[ j ][ gradChi.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < 1; k++ ){
+
+                for ( unsigned int l = 0; l < 1; l++ ){
+
+                    d3OverlapdR_nldR_nldGradChi_answer[ j ][ gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdR_nldR_nlp[ j ] - d2OverlapdR_nldR_nlm[ j ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < F.size( ); l++ ){
+
+                    d3OverlapdR_nldFdGradChi_answer[ j ][ F.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdR_nldFp[ j ][ F.size( ) * k + l ] - d2OverlapdR_nldFm[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < chi.size( ); l++ ){
+
+                    d3OverlapdR_nldChidGradChi_answer[ j ][ chi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdR_nldChip[ j ][ F.size( ) * k + l ] - d2OverlapdR_nldChim[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < gradChi.size( ); l++ ){
+
+                    d3OverlapdR_nldGradChidGradChi_answer[ j ][ gradChi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdR_nldGradChip[ j ][ gradChi.size( ) * k + l ] - d2OverlapdR_nldGradChim[ j ][ gradChi.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < F.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < F.size( ); l++ ){
+
+                    d3OverlapdFdFdGradChi_answer[ j ][ F.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdFdFp[ j ][ F.size( ) * k + l ] - d2OverlapdFdFm[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < chi.size( ); l++ ){
+
+                    d3OverlapdFdChidGradChi_answer[ j ][ chi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdFdChip[ j ][ F.size( ) * k + l ] - d2OverlapdFdChim[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < gradChi.size( ); l++ ){
+
+                    d3OverlapdFdGradChidGradChi_answer[ j ][ gradChi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdFdGradChip[ j ][ gradChi.size( ) * k + l ] - d2OverlapdFdGradChim[ j ][ gradChi.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < chi.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < chi.size( ); l++ ){
+
+                    d3OverlapdChidChidGradChi_answer[ j ][ chi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdChidChip[ j ][ chi.size( ) * k + l ] - d2OverlapdChidChim[ j ][ F.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+                for ( unsigned int l = 0; l < gradChi.size( ); l++ ){
+
+                    d3OverlapdChidGradChidGradChi_answer[ j ][ gradChi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdChidGradChip[ j ][ gradChi.size( ) * k + l ] - d2OverlapdChidChim[ j ][ gradChi.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+            for ( unsigned int k = 0; k < gradChi.size( ); k++ ){
+
+                for ( unsigned int l = 0; l < gradChi.size( ); l++ ){
+
+                    d3OverlapdGradChidGradChidGradChi_answer[ j ][ gradChi.size( ) * gradChi.size( ) * k + gradChi.size( ) * l + i ]
+                        = ( d2OverlapdGradChidGradChip[ j ][ gradChi.size( ) * k + l ] - d2OverlapdGradChidGradChim[ j ][ gradChi.size( ) * k + l ] ) / ( 2 * delta[ i ] );
+
+                }
+
+            }
+
+        }
+
     }
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdGradChi, dOverlapdGradChi_answer ) );
@@ -5134,5 +5339,47 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlap ){
     BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidGradChi, d2OverlapdChidGradChi_answer ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdGradChidGradChi, d2OverlapdGradChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dXi_1dGradChi, d3OverlapdXi_1dXi_1dGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1ddXdGradChi, d3OverlapdXi_1ddXdGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dR_nldGradChi, d3OverlapdXi_1dR_nldGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dFdGradChi, d3OverlapdXi_1dFdGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dChidGradChi, d3OverlapdXi_1dChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdXi_1dGradChidGradChi, d3OverlapdXi_1dGradChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXddXdGradChi, d3OverlapddXddXdGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXdR_nldGradChi, d3OverlapddXdR_nldGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXdFdGradChi, d3OverlapddXdFdGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXdChidGradChi, d3OverlapddXdChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapddXdGradChidGradChi, d3OverlapddXdGradChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdR_nldR_nldGradChi, d3OverlapdR_nldR_nldGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdR_nldFdGradChi, d3OverlapdR_nldFdGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdR_nldChidGradChi, d3OverlapdR_nldChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdR_nldGradChidGradChi, d3OverlapdR_nldGradChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdFdFdGradChi, d3OverlapdFdFdGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdFdChidGradChi, d3OverlapdFdChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdFdGradChidGradChi, d3OverlapdFdGradChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdChidChidGradChi, d3OverlapdChidChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdChidGradChidGradChi, d3OverlapdChidGradChidGradChi_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d3OverlapdGradChidGradChidGradChi, d3OverlapdGradChidGradChidGradChi_answer ) );
 
 }

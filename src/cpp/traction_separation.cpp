@@ -1972,7 +1972,62 @@ namespace tractionSeparation{
          * \param &d2OverlapdChidGradChi: The second gradient of the overlap w.r.t. the micro-deformation tensor and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdGradChidGradChi: The second gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
          * 
-         * \param &d3OverlapdXi_1dXi_1dXi_1: The second gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d3OverlapdXi_1dXi_1dXi_1: The third gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d3OverlapdXi_1dXi_1ddX: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the reference center-to-center vector
+         * \param &d3OverlapdXi_1dXi_1dR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the non-local reference radius
+         * \param &d3OverlapdXi_1dXi_1dF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the deformation gradient
+         * \param &d3OverlapdXi_1dXi_1dChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dXi_1dGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1ddXddX: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the reference center-to-center vector twice
+         * \param &d3OverlapdXi_1ddXdR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the non-local reference radius
+         * \param &d3OverlapdXi_1ddXdF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the deformation gradient
+         * \param &d3OverlapdXi_1ddXdChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1ddXdGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dR_nldR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d3OverlapdXi_1dR_nldF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the deformation gradient
+         * \param &d3OverlapdXi_1dR_nldChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dR_nldGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dFdF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient twice
+         * \param &d3OverlapdXi_1dFdChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dFdGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dChidChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor twice
+         * \param &d3OverlapdXi_1dChidGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dGradChidGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapddXddXddX: The third gradient of the overlap w.r.t. the reference center-to-center vector
+         * \param &d3OverlapddXddXdR_nl: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the non-local reference radius
+         * \param &d3OverlapddXddXdF: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the deformation gradient
+         * \param &d3OverlapddXddXdChi: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the micro-deformation tensor
+         * \param &d3OverlapddXddXdGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdR_nldR_nl: The third gradient of the overlap w.r.t. the local center-to-center vector and the non-local reference radius twice
+         * \param &d3OverlapddXdR_nldF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the deformation gradient
+         * \param &d3OverlapddXdR_nldChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the micro-deformation tensor
+         * \param &d3OverlapddXdR_nldGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdFdF: The third gradient of the overlap w.r.t. the local center-to-center vector and the deformation gradient twice
+         * \param &d3OverlapddXdFdChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapddXdFdGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdChidChi: The third gradient of the overlap w.r.t. the local center-to-center vector and the micro-deformation tensor twice
+         * \param &d3OverlapddXdChidGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdGradChidGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdR_nldR_nldR_nl: The third gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d3OverlapdR_nldR_nldF: The third gradient of the overlap w.r.t. the the non-local reference radius twice and the deformation gradient
+         * \param &d3OverlapdR_nldR_nldChi: The third gradient of the overlap w.r.t. the non-local reference radius twice and the micro-deformation tensor
+         * \param &d3OverlapdR_nldR_nldGradChi: The third gradient of the overlap w.r.t. the non-local reference radius twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldFdF: The third gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient twice
+         * \param &d3OverlapdR_nldFdChi: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapdR_nldFdGradChi: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldChidChi: The third gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor twice
+         * \param &d3OverlapdR_nldChidGradChi: The third gradient of the overlap w.r.t. the non-local reference radius, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldGradChidGradChi: The third gradient of the overlap w.r.t. the non-local reference radius and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdFdFdF: The third gradient of the overlap w.r.t. the deformation gradient
+         * \param &d3OverlapdFdFdChi: The third gradient of the overlap w.r.t. the deformation gradient twice and the micro-deformation tensor
+         * \param &d3OverlapdFdFdGradChi: The third gradient of the overlap w.r.t. the deformation gradient twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdFdChidChi: The third gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor twice
+         * \param &d3OverlapdFdChidGradChi: The third gradient of the overlap w.r.t. the deformation gradient, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdFdGradChidGradChi: The third gradient of the overlap w.r.t. the deformation gradient and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdChidChidChi: The third gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d3OverlapdChidChidGradChi: The third gradient of the overlap w.r.t. the micro-deformation tensor twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdChidGradChidGradChi: The third gradient of the overlap w.r.t. the micro-deformation tensor and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdGradChidGradChidGradChi: The third gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
          */
 
         if ( Xi_1.size( ) != dX.size( ) ){
@@ -2385,6 +2440,8 @@ namespace tractionSeparation{
 
             d3OverlapdR_nldR_nldF = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tdF );
 
+            d3OverlapdR_nldR_nldChi = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tdchi ) + vectorTools::dot( d3Overlapdchi_nldR_nldR_nl, dchi_nldchi );
+
             for ( unsigned int I = 0; I < overlap.size( ); I++ ){
 
                 for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
@@ -2450,6 +2507,9 @@ namespace tractionSeparation{
                                         d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
                                             += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tdF[ C ][ L ];
 
+                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
                                     }
                                     for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
 
@@ -2458,6 +2518,9 @@ namespace tractionSeparation{
 
                                         d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
 
                                     }
 
@@ -2477,6 +2540,23 @@ namespace tractionSeparation{
 
                                 }
 
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdXi_1dXi_1dGradChi[ I ][ Xi_1.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapdXi_1ddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                }
+
                             }
 
                             for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
@@ -2487,6 +2567,7 @@ namespace tractionSeparation{
 
                                 d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ]
                                                                             + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ];
+
                                 d3OverlapddXddXdR_nl[ I ][ dX.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ]
                                                                                  + d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ];
 
@@ -2529,11 +2610,19 @@ namespace tractionSeparation{
                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdF[ C ][ L ]
                                              + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ C ][ L ];
 
+                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdchi[ C ][ L ]
+                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ C ][ L ];
+
                                     }
                                     for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
 
                                         d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                             += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * C + xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldchi[ C ][ L ]
+                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dchi_nldchi[ C ][ L ];
 
                                     }
 
@@ -2543,6 +2632,28 @@ namespace tractionSeparation{
                                     d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
                                         += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * J + L ] * dchi_nlddX[ B ][ K ]
                                          + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * K + L ] * dchi_nlddX[ B ][ J ];
+
+                                }
+
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdXi_1ddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ]
+                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                    d3OverlapdXi_1ddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * K + L ];
+
+                                    d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * K + L ]
+                                         + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ K ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * J + L ];
 
                                 }
 
@@ -2583,7 +2694,32 @@ namespace tractionSeparation{
                                         d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
                                             += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdF[ C ][ L ];
 
+                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
                                     }
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                    }
+
+                                }
+
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                    d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + L ] * dchi_nlddX[ B ][ K ]
+                                         + d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * K + L ];
 
                                 }
 
@@ -2614,6 +2750,9 @@ namespace tractionSeparation{
                                 d3OverlapdXi_1dR_nldChi[ I ][ chi.size( ) * J + K ]
                                     += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ];
 
+                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
+                                    += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ];
+
                                 for ( unsigned int L = 0; L < F.size( ); L++ ){
 
                                     d3OverlapddXdFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
@@ -2625,6 +2764,9 @@ namespace tractionSeparation{
 
                                     d3OverlapdXi_1dFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                         += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dxi_tdF[ B ][ K ];
+
+                                    d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dxi_tdchi[ B ][ L ];
 
                                     for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
 
@@ -2640,6 +2782,12 @@ namespace tractionSeparation{
                                         d3OverlapdXi_1dFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                             += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdchi[ C ][ L ];
 
+                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
                                     }
 
                                     for ( unsigned int C = 0; C < chi.size( ); C++ ){
@@ -2650,10 +2798,30 @@ namespace tractionSeparation{
                                         d3OverlapdXi_1dFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldchi[ C ][ L ];
 
+                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
                                     }
 
                                     d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                         += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dxi_tdchi[ B ][ K ];
+
+                                }
+
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdXi_1dFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
 
                                 }
 
@@ -2677,7 +2845,13 @@ namespace tractionSeparation{
                                 d3OverlapdXi_1dR_nldChi[ I ][ chi.size( ) * J + K ]
                                     += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldchi[ B ][ K ];
 
+                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
+                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
+
                                 for ( unsigned int L = 0; L < F.size( ); L++ ){
+
+                                    d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dchi_nldchi[ B ][ L ];
 
                                     d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                         += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ] * dchi_nldchi[ B ][ L ];
@@ -2690,6 +2864,13 @@ namespace tractionSeparation{
                                         d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ C ][ L ];
 
+                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ] * dxi_tdchi[ C ][ L ]
+                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
                                     }
 
                                     for ( unsigned int C = 0; C < chi.size( ); C++ ){
@@ -2697,10 +2878,31 @@ namespace tractionSeparation{
                                         d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                             += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dchi_nldchi[ C ][ L ];
 
+                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) *K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ C ][ L ]
+                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
                                     }
 
                                     d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
                                         += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dchi_nldchi[ B ][ K ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ];
+
+                                }
+
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                    d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
 
                                 }
 
@@ -2710,9 +2912,37 @@ namespace tractionSeparation{
 
                         for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
 
+                            for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+
+                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
+                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dxi_tdchi[ B ][ K ];
+
+                            }
+
                             for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
 
                                 d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * B + A ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
+
+                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
+                                    += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
+
+                                for ( unsigned int L = 0; L < chi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+
+                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                    }
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                    }
+
+                                }
 
                             }
 
@@ -2729,6 +2959,19 @@ namespace tractionSeparation{
                                 d2OverlapdXi_1dGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
 
                                 d2OverlapddXdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+
+                                d3OverlapdXi_1dR_nldGradChi[ I ][ gradChi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdXi_1dGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                }
 
                             }
 
@@ -2758,18 +3001,44 @@ namespace tractionSeparation{
 
                                 d2OverlapdFdF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ];
 
-                                d2OverlapdFdChi[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ];
+                                d2OverlapdFdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ];
 
                                 d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ];
 
                                 d3OverlapdR_nldFdF[ I ][ F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ];
+
+                                d3OverlapdR_nldFdChi[ I ][ chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ];
+
+                                d3OverlapdR_nldChidChi[ I ][ chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ];
 
                                 for ( unsigned int L = 0; L < F.size( ); L++ ){
 
                                     for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
 
                                         d3OverlapdFdFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            +=  d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdF[ C ][ L ];
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdF[ C ][ L ];
+
+                                        d3OverlapdFdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                        d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                    }
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                         d3OverlapdFdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                         d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                         d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
 
                                     }
 
@@ -2779,10 +3048,41 @@ namespace tractionSeparation{
                             
                             for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
 
-                                d2OverlapdFdChi[ I ][ F.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ];
+                                d2OverlapdFdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ];
 
                                 d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ]
                                                                                + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ];
+
+                                d3OverlapdR_nldFdChi[ I ][ chi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ];
+
+                                d3OverlapdR_nldChidChi[ I ][ chi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ]
+                                                                                    + d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ];
+
+                                for ( unsigned int L = 0; L < chi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+
+                                        d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ]
+                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ] * dxi_tdchi[ C ][ L ];
+
+                                    }
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ]
+                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size () * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ] * dchi_nldchi[ C ][ L ];
+
+                                    }
+
+                                }
 
                             }
 
@@ -2793,6 +3093,26 @@ namespace tractionSeparation{
                             for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
 
                                 d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * B + A ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ];
+
+                                d3OverlapdR_nldChidChi[ I ][ chi.size( ) * J + K ] += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * B + A ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ];
+
+                                for ( unsigned int L = 0; L < chi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+
+                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
+
+                                    }
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+
+                                    }
+
+                                }
 
                             }
 
