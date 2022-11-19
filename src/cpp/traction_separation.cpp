@@ -2821,6 +2821,12 @@ namespace tractionSeparation{
                                         d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
 
+                                        d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
                                     }
 
                                 }
@@ -2899,10 +2905,26 @@ namespace tractionSeparation{
                                         d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
                                             += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ C ][ L ];
 
+                                        d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ] * dchi_nldGradChi[ C ][ L ]
+                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
                                     }
 
                                     d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
                                         += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
+
+                                    d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
+
+                                    d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * J + L ] * dxi_tdF[ A ][ K ];
+
+                                    d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * J + L ] * dxi_tdchi[ A ][ K ];
 
                                 }
 
@@ -2944,6 +2966,20 @@ namespace tractionSeparation{
 
                                 }
 
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                    d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                        += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * B + A ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + L ] * dchi_nldchi[ B ][ K ];
+
+                                }
+
                             }
 
                         }
@@ -2962,12 +2998,18 @@ namespace tractionSeparation{
 
                                 d3OverlapdXi_1dR_nldGradChi[ I ][ gradChi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
 
+                                d3OverlapddXdR_nldGradChi[ I ][ gradChi.size( ) * J + K ]
+                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+
                                 for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
 
                                     for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
 
                                         d3OverlapdXi_1dGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
                                             += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                        d3OverlapddXdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
 
                                     }
 
@@ -2979,9 +3021,30 @@ namespace tractionSeparation{
 
                         for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
 
+                            d3OverlapddXdR_nldGradChi[ I ][ gradChi.size( ) * J + K ]
+                                += d2Overlapdchi_nldR_nl[ I ][ A ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + K ];
+
                             for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
 
                                 d2OverlapddXdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+
+                                d3OverlapddXdR_nldGradChi[ I ][ gradChi.size( ) * J + K ]
+                                    += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+
+                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+
+                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+
+                                        d3OverlapddXdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
+                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+
+                                    }
+
+                                    d3OverlapddXdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( )* K + L ]
+                                        += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + L ] * dchi_nldGradChi[ B ][ K ]
+                                         + d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
+
+                                }
 
                             }
 
