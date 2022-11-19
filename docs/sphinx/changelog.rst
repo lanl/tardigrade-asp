@@ -17,4 +17,11 @@ New Features
 - Added the calculation of the linear traction separation energy (:merge:`4`). By `Nathan Miller`_.
 - Added the calculation of the gradients of the traction separation energy w.r.t. the parameters (:merge:`5`). By `Nathan Miller`_.
 - Added the calculation of the traction separation traction - Cauchy stress traction constraint equation (:merge:`6`). By `Nathan Miller`_.
-- Added the calculation of Nanson's relation for mapping reference areas to the current configuration (:marge:`7`). By `Nathan Miller`_.
+- Added the calculation of Nanson's relation for mapping reference areas to the current configuration (:merge:`7`). By `Nathan Miller`_.
+- Added the calculation of the Lagrangian for the overlap particle (:merge:`8`). By `Nathan Miller`_.
+- Extended the Lagrangian for the overlap particle to have a radius other than 1 (:merge:`8`). By `Nathan Miller`_.
+- Extended the number of gradients computed in the Lagrangian for the overlap particle (:merge:`8`). By `Nathan Miller`_.
+- Added the calculation of the amount of overlap of a non-local and local particles (:merge:`8`). By `Nathan Miller`_.
+- Added the calculation of the gradients for the local and non-local particles (:merge:`8`). By `Nathan Miller`_.
+- Added the calculation of the fourth-order gradients for the Lagrangian for the overlap particle. This is required for the constraint equation. (:merge:`8`). `Nathan Miller`_.
+- Added the calculation of the third-order gradients for the solution of the overlap distance. This is required for the constraint equation. (:merge:`8`). `Nathan Miller`_.

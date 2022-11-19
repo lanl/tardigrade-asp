@@ -93,6 +93,129 @@ namespace tractionSeparation{
                                      floatMatrix &ddandF, floatMatrix &ddanddAN,
                                      floatMatrix &d2dandFdF, floatMatrix &d2dandFddAN );
 
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap );
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdGradChi );
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdGradChi,
+                                     floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dGradChi,
+                                     floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdGradChi,
+                                     floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldGradChi,
+                                     floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdGradChi,
+                                     floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidGradChi,
+                                     floatMatrix &d2OverlapdGradChidGradChi );
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdGradChi,
+                                     floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dGradChi,
+                                     floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdGradChi,
+                                     floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldGradChi,
+                                     floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdGradChi,
+                                     floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidGradChi,
+                                     floatMatrix &d2OverlapdGradChidGradChi,
+                                     floatMatrix &d3OverlapdXi_1dXi_1dXi_1, floatMatrix &d3OverlapdXi_1dXi_1ddX, floatMatrix &d3OverlapdXi_1dXi_1dR_nl, floatMatrix &d3OverlapdXi_1dXi_1dF, floatMatrix &d3OverlapdXi_1dXi_1dChi, floatMatrix &d3OverlapdXi_1dXi_1dGradChi,
+                                     floatMatrix &d3OverlapdXi_1ddXddX, floatMatrix &d3OverlapdXi_1ddXdR_nl, floatMatrix &d3OverlapdXi_1ddXdF, floatMatrix &d3OverlapdXi_1ddXdChi, floatMatrix &d3OverlapdXi_1ddXdGradChi,
+                                     floatMatrix &d3OverlapdXi_1dR_nldR_nl, floatMatrix &d3OverlapdXi_1dR_nldF, floatMatrix &d3OverlapdXi_1dR_nldChi, floatMatrix &d3OverlapdXi_1dR_nldGradChi,
+                                     floatMatrix &d3OverlapdXi_1dFdF, floatMatrix &d3OverlapdXi_1dFdChi, floatMatrix &d3OverlapdXi_1dFdGradChi,
+                                     floatMatrix &d3OverlapdXi_1dChidChi, floatMatrix &d3OverlapdXi_1dChidGradChi,
+                                     floatMatrix &d3OverlapdXi_1dGradChidGradChi,
+                                     floatMatrix &d3OverlapddXddXddX, floatMatrix &d3OverlapddXddXdR_nl, floatMatrix &d3OverlapddXddXdF, floatMatrix &d3OverlapddXddXdChi, floatMatrix &d3OverlapddXddXdGradChi,
+                                     floatMatrix &d3OverlapddXdR_nldR_nl, floatMatrix &d3OverlapddXdR_nldF, floatMatrix &d3OverlapddXdR_nldChi, floatMatrix &d3OverlapddXdR_nldGradChi,
+                                     floatMatrix &d3OverlapddXdFdF, floatMatrix &d3OverlapddXdFdChi, floatMatrix &d3OverlapddXdFdGradChi,
+                                     floatMatrix &d3OverlapddXdChidChi, floatMatrix &d3OverlapddXdChidGradChi,
+                                     floatMatrix &d3OverlapddXdGradChidGradChi,
+                                     floatVector &d3OverlapdR_nldR_nldR_nl, floatMatrix &d3OverlapdR_nldR_nldF, floatMatrix &d3OverlapdR_nldR_nldChi, floatMatrix &d3OverlapdR_nldR_nldGradChi,
+                                     floatMatrix &d3OverlapdR_nldFdF, floatMatrix &d3OverlapdR_nldFdChi, floatMatrix &d3OverlapdR_nldFdGradChi,
+                                     floatMatrix &d3OverlapdR_nldChidChi, floatMatrix &d3OverlapdR_nldChidGradChi,
+                                     floatMatrix &d3OverlapdR_nldGradChidGradChi,
+                                     floatMatrix &d3OverlapdFdFdF, floatMatrix &d3OverlapdFdFdChi, floatMatrix &d3OverlapdFdFdGradChi,
+                                     floatMatrix &d3OverlapdFdChidChi, floatMatrix &d3OverlapdFdChidGradChi,
+                                     floatMatrix &d3OverlapdFdGradChidGradChi,
+                                     floatMatrix &d3OverlapdChidChidChi, floatMatrix &d3OverlapdChidChidGradChi,
+                                     floatMatrix &d3OverlapdChidGradChidGradChi,
+                                     floatMatrix &d3OverlapdGradChidGradChidGradChi );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
+                                               floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
+                                               floatType &d2LdR_nldR_nl );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
+                                               floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
+                                               floatType &d2LdR_nldR_nl,
+                                               floatVector &d3LdXdXdX, floatVector &d3LdXdXdchi_nl, floatVector &d3LdXdchi_nldchi_nl,
+                                               floatVector &d3LdXdXdxi_t, floatVector &d3LdXdchi_nldxi_t,
+                                               floatVector &d3LdXdXdR_nl, floatVector &d3LdXdchi_nldR_nl,
+                                               floatVector &d3LdXdxi_tdxi_t, floatVector &d3LdXdxi_tdR_nl,
+                                               floatVector &d3LdXdR_nldR_nl );
+
+    errorOut computeOverlapDistanceLagrangian( const floatVector &X, const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatType &L,
+                                               floatVector &dLdX, floatVector &dLdchi_nl, floatVector &dLdxi_t, floatType &dLdR_nl,
+                                               floatVector &d2LdXdX, floatVector &d2LdXdchi_nl, floatVector &d2LdXdxi_t, floatVector &d2LdXdR_nl,
+                                               floatVector &d2Ldchi_nldchi_nl, floatVector &d2Ldchi_nldxi_t, floatVector &d2Ldchi_nldR_nl,
+                                               floatVector &d2Ldxi_tdxi_t, floatVector &d2Ldxi_tdR_nl,
+                                               floatType &d2LdR_nldR_nl,
+                                               floatVector &d3LdXdXdX, floatVector &d3LdXdXdchi_nl, floatVector &d3LdXdchi_nldchi_nl,
+                                               floatVector &d3LdXdXdxi_t, floatVector &d3LdXdchi_nldxi_t,
+                                               floatVector &d3LdXdXdR_nl, floatVector &d3LdXdchi_nldR_nl,
+                                               floatVector &d3LdXdxi_tdxi_t, floatVector &d3LdXdxi_tdR_nl,
+                                               floatVector &d3LdXdR_nldR_nl,
+                                               floatVector &d4LdXdXdchi_nldchi_nl );
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
+                                   const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
+                                   const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
+                                   const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
+                                   floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
+                                   floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
+                                   floatVector &d2ddR_nldR_nl,
+                                   const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
+                                   const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
+
+    errorOut solveOverlapDistance( const floatVector &chi_nl, const floatVector &xi_t, const floatType &R_nl, floatVector &d,
+                                   floatMatrix &dddchi_nl, floatMatrix &dddxi_t, floatVector &dddR_nl,
+                                   floatMatrix &d2ddchi_nldchi_nl, floatMatrix &d2ddchi_nldxi_t, floatMatrix &d2ddchi_nldR_nl,
+                                   floatMatrix &d2ddxi_tdxi_t, floatMatrix &d2ddxi_tdR_nl,
+                                   floatVector &d2ddR_nldR_nl,
+                                   floatMatrix &d3ddchi_nldchi_nldchi_nl, floatMatrix &d3ddchi_nldchi_nldxi_t, floatMatrix &d3ddchi_nldchi_nldR_nl,
+                                   floatMatrix &d3ddchi_nldxi_tdxi_t, floatMatrix &d3ddchi_nldxi_tdR_nl,
+                                   floatMatrix &d3ddchi_nldR_nldR_nl,
+                                   floatMatrix &d3ddxi_tdxi_tdxi_t, floatMatrix &d3ddxi_tdxi_tdR_nl,
+                                   floatMatrix &d3ddxi_tdR_nldR_nl,
+                                   floatVector &d3ddR_nldR_nldR_nl,
+                                   const floatType tolr = 1e-9, const floatType tola = 1e-9, const unsigned int max_iteration = 20,
+                                   const unsigned int max_ls = 5, const floatType alpha_ls = 1e-4 );
+
 }
 
 #endif
