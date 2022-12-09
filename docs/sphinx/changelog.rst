@@ -9,6 +9,10 @@ Changelog
 0.0.1 (unreleased)
 ******************
 
+Breaking changes
+================
+- Remove linear elasticity, which now lives in stress tools (:issue:`1`, :merge:`9`). By `Kyle Brindley`_.
+
 New Features
 ============
 - Added linear elasticity for the internal particle (:merge:`3`). By `Nathan Miller`_.
