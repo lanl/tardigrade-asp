@@ -11,8 +11,7 @@ set(ABAQUS_TEST_PATH "${ABAQUS_SRC_PATH}/tests")
 set(DOXYGEN_SRC_PATH "docs/doxygen")
 set(SPHINX_SRC_PATH "docs/sphinx")
 # Set the internal support libraries
-set(INTERNAL_SUPPORT_LIBRARIES "linear_elasticity" "traction_separation" "constraint_equations")
-set(LINEAR_ELASTICITY_UPSTREAM_LIBRARIES "constitutive_tools")
+set(INTERNAL_SUPPORT_LIBRARIES "traction_separation" "constraint_equations")
 set(TRACTION_SEPARATION_UPSTREAM_LIBRARIES "constitutive_tools")
 set(CONSTRAINT_EQUATIONS_UPSTREAM_LIBRARIES "constitutive_tools")
 # Set some Abaqus integration variables
