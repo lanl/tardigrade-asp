@@ -95,3 +95,40 @@ BOOST_AUTO_TEST_CASE( test_rotatePoints ){
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_formSurfaceConnectivity ){
+
+    std::vector< unsigned int > surfaceIDs = {  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
+                                               17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                                               34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+                                               51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62 };
+
+    unsigned int n_elements_x = 3;
+
+    unsigned int n_elements_y = 4;
+
+    unsigned int index = 3;
+
+    std::vector< unsigned int > result( 15 * 9 + 1, 0 );
+
+    std::vector< unsigned int > answer = {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                            0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+                                            0,  0,  2, 16, 14,  1,  9, 15,  7,  8,  2,  4, 18,
+                                           16,  3, 11, 17,  9, 10,  4,  6, 20, 18,  5, 13, 19,
+                                           11, 12, 14, 16, 30, 28, 15, 23, 29, 21, 22, 16, 18,
+                                           32, 30, 17, 25, 31, 23, 24, 18, 20, 34, 32, 19, 27,
+                                           33, 25, 26, 28, 30, 44, 42, 29, 37, 43, 35, 36, 30,
+                                           32, 46, 44, 31, 39, 45, 37, 38, 32, 34, 48, 46, 33,
+                                           41, 47, 39, 40, 42, 44, 58, 56, 43, 51, 57, 49, 50,
+                                           44, 46, 60, 58, 45, 53, 59, 51, 52, 46, 48, 62, 60,
+                                           47, 55, 61, 53, 54,  0 };
+
+    unsigned int index_answer = 15;
+
+    BOOST_CHECK( !surfaceIntegration::formSurfaceConnectivity( surfaceIDs, n_elements_x, n_elements_y, index, result ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
+
+    BOOST_CHECK( index_answer == index ); 
+
+}

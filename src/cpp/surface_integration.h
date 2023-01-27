@@ -35,6 +35,10 @@ namespace surfaceIntegration{
                            const floatType &thetaX, const floatType &thetaY, const floatType &thetaZ,
                            floatVector &rotatedPoints );
 
+    errorOut formSurfaceConnectivity( const std::vector< unsigned int > &surfaceIDs,
+                                      const unsigned int &n_elements_x, const unsigned int &n_elements_y,
+                                      unsigned int &index, std::vector< unsigned int > &connectivity );
+
     template <class T>
     errorOut integrateProperty( const floatVector &points, const std::vector<unsigned int> &connectivity,
                                 const std::vector< T > &nodalData, T &answer );

@@ -151,4 +151,51 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut formSurfaceConnectivity( const std::vector< unsigned int > &surfaceIDs,
+                                      const unsigned int &n_elements_x, const unsigned int &n_elements_y,
+                                      unsigned int &index, std::vector< unsigned int > &connectivity ){
+        /*!
+         * Form the connectivity for a planar surface of quadratic elements
+         * 
+         * \param &surfaceIDs: The id numbers of the surface nodes
+         * \param &n_elements_x: The number of elements in the local x direction
+         * \param &n_elements_y: The number of elements in the local y direction
+         * \param &index: The most recent element number
+         * \param &connectivity: The connectivity array
+         */
+
+        if ( connectivity.size( ) < ( 9 * n_elements_x * n_elements_y + 9 * index ) ){
+
+            return new errorNode( __func__, "The connectivity array is too small for the expected number of elements" );
+
+        }
+
+        unsigned int delta_p = 3; // The number of nodes on each side of the element
+                                
+        for ( unsigned int j = 0; j < n_elements_y; j++ ){
+
+            for ( unsigned int i = 0; i < n_elements_x; i++ ){
+                
+                connectivity[ 9 * index + 0 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i ];
+                connectivity[ 9 * index + 1 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + 2 ];
+                connectivity[ 9 * index + 2 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + 2 * ( 2 * n_elements_x + 1 ) + 2 ];
+                connectivity[ 9 * index + 3 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + 2 * ( 2 * n_elements_x + 1 ) ];
+                
+                connectivity[ 9 * index + 4 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + 1 ];
+                connectivity[ 9 * index + 5 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + ( 2 * n_elements_x + 1 ) + 2 ];
+                connectivity[ 9 * index + 6 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + 2 * ( 2 * n_elements_x + 1 ) + 1 ];
+                connectivity[ 9 * index + 7 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + ( 2 * n_elements_x + 1 ) ];
+                
+                connectivity[ 9 * index + 8 ] = surfaceIDs[ 2 * ( 2 * n_elements_x + 1 ) * j + ( delta_p - 1 ) * i + ( 2 * n_elements_x + 1 ) + 1 ];
+                
+                index += 1;
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
 }
