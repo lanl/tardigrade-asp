@@ -23,8 +23,8 @@ namespace surfaceIntegration{
     typedef constitutiveTools::floatVector floatVector; //!< Define a vector of floats
     typedef constitutiveTools::floatMatrix floatMatrix; //!< Define a matrix of floats
 
-    errorOut decomposeSphere( const floatType &radius, unsigned int &elementCount,
-                              floatMatrix &points, std::vector<unsigned int> &connectivity );
+    errorOut decomposeSphere( const floatType &radius, const unsigned int &elementCount,
+                              floatVector &points, std::vector<unsigned int> &connectivity );
 
     errorOut buildSurfacePoints( const floatType &x0, const floatType &y0, const floatType &z0,
                                  const floatType &dx, const floatType &dy,

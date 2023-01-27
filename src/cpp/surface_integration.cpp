@@ -3,7 +3,7 @@
 
 namespace surfaceIntegration{
 
-    errorOut decomposeSphere( const floatType &radius, unsigned int &elementCount,
+    errorOut decomposeSphere( const floatType &radius, const unsigned int &elementCount,
                               floatVector &points, std::vector<unsigned int> &connectivity ){
         /*!
          * Decompose a sphere into quadratic elements for use in numeric integration
@@ -25,8 +25,42 @@ namespace surfaceIntegration{
          * \param &connectivity: The connectivity array for the elements (e1_1, e1_2, e1_3, e1_4, e1_5, e1_6, e1_7, e1_8, e1_9, e2_1, ...
          */
 
-        // Set the number of points on the unit cube face edges
-        unsigned int n_points_edge = 2 * elementCount + 1;
+        errorOut error;
+
+        // Form the base structure of the sphere
+        floatVector cubePoints;
+        error = formBaseCubePoints( elementCount, cubePoints );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error in the formation of the base cube" );
+            result->addNext( error );
+            return error;
+        }
+
+        // Re-scale the points to be a sphere
+        points = floatVector( cubePoints.size( ), 0 );
+        unsigned int n_points = cubePoints.size( ) / 3;
+
+        if ( n_points * 3 != cubePoints.size( ) ){
+            return new errorNode( __func__, "The length of cube points isn't consistent with a collection of 3D points\n  cubePoints.size( ): " + std::to_string( cubePoints.size( ) ) );
+        }
+
+        for ( unsigned int i = 0; i < n_points; i++ ){
+
+            floatType length = vectorTools::l2norm( floatVector( cubePoints.begin( ) + 3 * i, cubePoints.begin( ) + 3 * ( i + 1 ) ) );
+
+            points[ 3 * i + 0 ] = radius * cubePoints[ 3 * i + 0 ] / length;
+            points[ 3 * i + 1 ] = radius * cubePoints[ 3 * i + 1 ] / length;
+            points[ 3 * i + 2 ] = radius * cubePoints[ 3 * i + 2 ] / length;
+
+        }
+
+        // From the connectivity
+        error = formCubeConnectivity( elementCount, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error in the formation of the base cube connectivity" );
+            result->addNext( error );
+            return error;
+        }
 
         return NULL;
 
