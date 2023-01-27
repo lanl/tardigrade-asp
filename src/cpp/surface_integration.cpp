@@ -529,4 +529,102 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut evaluateQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatVector &shapeFunctions ){
+        /*!
+         * Evaluate the shape functions of a quadratic element
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &shapeFunctions: The resulting shape functions
+         */
+
+        floatMatrix localPoints = {
+                                      { -1, -1 },
+                                      {  1, -1 },
+                                      {  1,  1 },
+                                      { -1,  1 },
+                                      {  0, -1 },
+                                      {  1,  0 },
+                                      {  0,  1 },
+                                      { -1,  0 },
+                                      {  0,  0 }
+                                  };
+
+        shapeFunctions = floatVector( 9, 0 );
+
+        // Corner nodes
+        for ( unsigned int i = 0; i < 4; i++ ){
+            floatType xi_i  = localPoints[ i ][ 0 ];
+            floatType eta_i = localPoints[ i ][ 1 ];
+            shapeFunctions[ i ] = 0.25 * ( 1 + xi_i * xi ) * xi_i * xi * ( 1 + eta_i * eta ) * eta_i * eta;
+        }
+
+        // Midpoint nodes
+        shapeFunctions[ 4 ] = 0.5 * ( 1 -   xi * xi ) * ( 1 + localPoints[ 4 ][ 1 ] * eta ) * localPoints[ 4 ][ 1 ] * eta;
+        shapeFunctions[ 5 ] = 0.5 * ( 1 - eta * eta ) * ( 1 + localPoints[ 5 ][ 0 ] *  xi ) * localPoints[ 5 ][ 0 ] *  xi;
+        shapeFunctions[ 6 ] = 0.5 * ( 1 -   xi * xi ) * ( 1 + localPoints[ 6 ][ 1 ] * eta ) * localPoints[ 6 ][ 1 ] * eta;
+        shapeFunctions[ 7 ] = 0.5 * ( 1 - eta * eta ) * ( 1 + localPoints[ 7 ][ 0 ] *  xi ) * localPoints[ 7 ][ 0 ] *  xi;
+
+        // Center node
+        shapeFunctions[ 8 ] = ( 1 - xi * xi) * ( 1 - eta * eta );
+
+        return NULL;
+
+    }
+
+    errorOut evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions ){
+        /*!
+         * Evaluate the gradient of the shape functions w.r.t. the local coordinates
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &gradShapeFunctions: The gradient of the shape functions w.r.t. the local coordinates
+         */
+
+        floatMatrix localPoints = {
+                                      { -1, -1 },
+                                      {  1, -1 },
+                                      {  1,  1 },
+                                      { -1,  1 },
+                                      {  0, -1 },
+                                      {  1,  0 },
+                                      {  0,  1 },
+                                      { -1,  0 },
+                                      {  0,  0 }
+                                  };
+
+        gradShapeFunctions = floatMatrix( 9, floatVector( 2, 0 ) );
+
+        // Corner nodes
+        for ( unsigned int i = 0; i < 4; i++ ){
+            floatType xi_i  = localPoints[ i ][ 0 ];
+            floatType eta_i = localPoints[ i ][ 1 ];
+            gradShapeFunctions[ i ][ 0 ] = 0.25 * xi_i * xi_i * xi * (1 + eta_i * eta) * eta_i * eta
+                                         + 0.25 * (1 + xi_i * xi) * xi_i * (1 + eta_i * eta) * eta_i * eta;
+            gradShapeFunctions[ i ][ 1 ] = 0.25 * (1 + xi_i * xi) * xi_i * xi * eta_i * eta_i * eta
+                                         + 0.25 * (1 + xi_i * xi) * xi_i * xi * (1 + eta_i * eta) * eta_i;
+        }
+
+        // Midpoint nodes
+        gradShapeFunctions[ 4 ][ 0 ] = -xi * (1 + localPoints[4][1] * eta) * localPoints[4][1] * eta;
+        gradShapeFunctions[ 5 ][ 0 ] = 0.5 * (1 - eta * eta) * localPoints[5][0] * localPoints[5][0] *  xi
+                                     + 0.5 * (1 - eta * eta) * (1 + localPoints[5][0] *  xi) * localPoints[5][0];
+        gradShapeFunctions[ 6 ][ 0 ] = -xi * (1 + localPoints[6][1] * eta) * localPoints[6][1] * eta;
+        gradShapeFunctions[ 7 ][ 0 ] = 0.5 * (1 - eta * eta) * localPoints[7][0] * localPoints[7][0] *  xi
+                                     + 0.5 * (1 - eta * eta) * (1 + localPoints[7][0] *  xi) * localPoints[7][0];
+        gradShapeFunctions[ 4 ][ 1 ] = 0.5 * (1 -   xi * xi) * localPoints[4][1] * localPoints[4][1] * eta
+                                     + 0.5 * (1 -   xi * xi) * (1 + localPoints[4][1] * eta) * localPoints[4][1];
+        gradShapeFunctions[ 5 ][ 1 ] = -eta * (1 + localPoints[5][0] *  xi) * localPoints[5][0] *  xi;
+        gradShapeFunctions[ 6 ][ 1 ] = 0.5 * (1 -   xi * xi) * localPoints[6][1] * localPoints[6][1] * eta
+                                     + 0.5 * (1 -   xi * xi) * (1 + localPoints[6][1] * eta) * localPoints[6][1];
+        gradShapeFunctions[ 7 ][ 1 ] = -eta * (1 + localPoints[7][0] *  xi) * localPoints[7][0] *  xi;
+
+        // Center node
+        gradShapeFunctions[ 8 ][ 0 ] = -2 * xi * (1 - eta * eta);
+        gradShapeFunctions[ 8 ][ 1 ] = -2 * (1 - xi * xi) * eta;
+
+        return NULL;
+
+    }
+
 }

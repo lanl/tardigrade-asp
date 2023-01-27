@@ -43,6 +43,10 @@ namespace surfaceIntegration{
 
     errorOut formCubeConnectivity( const unsigned int &elementCount, std::vector< unsigned int > &connectivity );
 
+    errorOut evaluateQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatVector &shapeFunctions );
+
+    errorOut evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions );
+
     template <class T>
     errorOut integrateProperty( const floatVector &points, const std::vector<unsigned int> &connectivity,
                                 const std::vector< T > &nodalData, T &answer );

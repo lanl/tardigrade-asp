@@ -582,3 +582,115 @@ BOOST_AUTO_TEST_CASE( test_decomposeSphere ){
     BOOST_CHECK( vectorTools::fuzzyEquals( connectivityAnswer, connectivityResult ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_evaluateShapeFunctions ){
+
+    floatMatrix xi_test = { 
+                              {  0.39293837, -0.42772133 },
+                              { -0.54629709,  0.10262954 },
+                              {  0.43893794, -0.15378708 },
+                              {  0.9615284 ,  0.36965948 },
+                              { -0.0381362 , -0.21576496 },
+                              { -0.31364397,  0.45809941 },
+                              { -0.12285551, -0.88064421 },
+                              { -0.20391149,  0.47599081 },
+                              { -0.63501654, -0.64909649 },
+                              {  0.06310275,  0.06365517 }
+                          };
+
+    floatMatrix answer = {
+                             { -3.64167839e-02,  8.35604380e-02, -3.34938306e-02,
+                                1.45970703e-02,  2.58189779e-01,  2.23602860e-01,
+                               -1.03491137e-01, -9.74491903e-02,  6.90900794e-01 },
+                             { -1.94493899e-02,  5.70669425e-03, -7.01200888e-03,
+                                2.38981253e-02, -3.23056624e-02, -1.22622975e-01,
+                                3.96950637e-02,  4.17920068e-01,  6.94170085e-01 },
+                             { -1.09244493e-02,  2.80175861e-02, -2.05487162e-02,
+                                8.01223233e-03,  7.16256361e-02,  3.08333357e-01,
+                               -5.25318230e-02, -1.20223495e-01,  7.88239672e-01 },
+                             {  2.15486209e-03, -1.09868652e-01,  2.38732296e-01,
+                               -4.68227439e-03, -8.79188425e-03,  8.14168983e-01,
+                                1.91037814e-02, -1.59683572e-02,  6.51512450e-02 },
+                             {  2.59634424e-03, -2.40558951e-03,  1.55173708e-03,
+                               -1.67478434e-03,  1.30968987e-01, -1.74870613e-02,
+                               -8.44821748e-02,  1.88737234e-02,  9.52058818e-01 },
+                             { -2.55701915e-02,  1.33599785e-02, -3.59478794e-02,
+                                6.88020687e-02, -1.11911957e-01, -8.50478138e-02,
+                                3.01123055e-01,  1.62776376e-01,  7.12416364e-01 },
+                             {  5.71170341e-02, -4.46182890e-02,  2.83171652e-03,
+                               -3.62495409e-03,  8.15590468e-01, -1.20944446e-02,
+                               -5.17617564e-02,  1.54824136e-02,  2.21077812e-01 },
+                             { -1.53078337e-02,  1.01223310e-02, -2.85118426e-02,
+                                4.31179880e-02, -1.19526277e-01, -6.27762853e-02,
+                                3.36672887e-01,  9.49355381e-02,  7.41273495e-01 },
+                             {  2.77844959e-01, -6.20231124e-02,  1.31976074e-02,
+                               -5.91213265e-02,  3.19389523e-01, -6.70597620e-02,
+                               -6.79613996e-02,  3.00407640e-01,  3.45325872e-01 },
+                             {  8.80946978e-04, -9.99615647e-04,  1.13552863e-03,
+                               -1.00072514e-03, -2.96829278e-02,  3.34064392e-02,
+                                3.37187742e-02, -2.94406173e-02,  9.91982197e-01 }
+                         };
+
+    floatVector result_i;
+
+    for ( unsigned int i = 0; i < xi_test.size( ); i++ ){
+
+        BOOST_CHECK( !surfaceIntegration::evaluateQuadraticShapeFunctions( xi_test[ i ][ 0 ], xi_test[ i ][ 1 ], result_i ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( answer[ i ], result_i ) );
+
+    }
+
+}
+
+BOOST_AUTO_TEST_CASE( test_evaluateGradShapeFunctions ){
+
+    floatMatrix xi_test = { 
+                              {  0.39293837, -0.42772133 },
+                              { -0.54629709,  0.10262954 },
+                              {  0.43893794, -0.15378708 },
+                              {  0.9615284 ,  0.36965948 },
+                              { -0.0381362 , -0.21576496 },
+                              { -0.31364397,  0.45809941 },
+                              { -0.12285551, -0.88064421 },
+                              { -0.20391149,  0.47599081 },
+                              { -0.63501654, -0.64909649 },
+                              {  0.06310275,  0.06365517 }
+                          };
+
+    floatType eps = 1e-6;
+
+    for ( auto xi = xi_test.begin( ); xi != xi_test.end( ); xi++ ){
+
+        floatMatrix J( 9, floatVector( 2, 0 ) );
+
+        floatMatrix dNdxi;
+
+        BOOST_CHECK( !surfaceIntegration::evaluateGradQuadraticShapeFunctions( ( *xi )[ 0 ], ( *xi )[ 1 ], dNdxi ) );
+
+        for ( unsigned int i = 0; i < xi->size( ); i++ ){
+
+            floatVector delta( xi->size( ), 0 );
+            delta[ i ] = eps * std::fabs( ( *xi )[ i ] ) + eps;
+
+            floatVector Np, Nm;
+
+            BOOST_CHECK( !surfaceIntegration::evaluateQuadraticShapeFunctions( ( *xi )[ 0 ] + delta[ 0 ], ( *xi )[ 1 ] + delta[ 1 ], Np ) );
+
+            BOOST_CHECK( !surfaceIntegration::evaluateQuadraticShapeFunctions( ( *xi )[ 0 ] - delta[ 0 ], ( *xi )[ 1 ] - delta[ 1 ], Nm ) );
+
+            floatVector grad = ( Np - Nm ) / ( 2 * delta[ i ] );
+
+            for ( unsigned int j = 0; j < grad.size( ); j++ ){
+
+                J[ j ][ i ] = grad[ j ];
+
+            }
+
+        }
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( J, dNdxi ) );
+
+    }
+
+}
