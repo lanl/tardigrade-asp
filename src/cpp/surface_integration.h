@@ -17,11 +17,24 @@
 
 namespace surfaceIntegration{
 
+    typedef constitutiveTools::errorNode errorNode; //!< Redefinition for the error node
+    typedef constitutiveTools::errorOut errorOut; //!< Redefinition for a pointer to the error node
+    typedef constitutiveTools::floatType floatType; //!< Define the float values type.
+    typedef constitutiveTools::floatVector floatVector; //!< Define a vector of floats
+    typedef constitutiveTools::floatMatrix floatMatrix; //!< Define a matrix of floats
+
     errorOut decomposeSphere( const floatType &radius, unsigned int &elementCount,
-                              floatMatrix &points, std:vector<unsigned int> &connectivity );
+                              floatMatrix &points, std::vector<unsigned int> &connectivity );
+
+    errorOut buildSurfacePoints( const floatType &x0, const floatType &y0, const floatType &z0,
+                                 const floatType &dx, const floatType &dy,
+                                 const unsigned int n_points_x, const unsigned int n_points_y,
+                                 floatVector &points );
 
     template <class T>
-    errorOut integrateProperty( const floatMatrix &points, const std::vector<unsigned int> &connectivity,
+    errorOut integrateProperty( const floatVector &points, const std::vector<unsigned int> &connectivity,
                                 const std::vector< T > &nodalData, T &answer );
 
 }
+
+#endif
