@@ -81,4 +81,74 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut rotatePoints( const floatVector &points,
+                           const floatType &thetaX, const floatType &thetaY, const floatType &thetaZ,
+                           floatVector &rotatedPoints ){
+        /*!
+         * Rotate the vector of points in row-major vector form to a new configuration
+         * 
+         * \f$x_i' = R_{ij}^z R_{jk}^y R_{kl}^x x_l\f$
+         * 
+         * \param &points: The points in the initial configuration
+         * \param &thetaX: The rotation about the X axis
+         * \param &thetaY: The rotation about the Y axis
+         * \param &thetaZ: The rotation about the Z axis
+         * \param &rotatedPoints: The rotated points
+         */
+
+        unsigned int n_points = points.size( ) / 3;
+
+        if ( n_points * 3 != points.size( ) ){
+
+            return new errorNode( __func__, "The size of points is not a multiple of 3:\n  points.size( ) = " + std::to_string( points.size( ) ) );
+
+        }
+
+        floatType cx = std::cos( thetaX );
+        floatType sx = std::sin( thetaX );
+
+        floatType cy = std::cos( thetaY );
+        floatType sy = std::sin( thetaY );
+
+        floatType cz = std::cos( thetaZ );
+        floatType sz = std::sin( thetaZ );
+        
+        floatMatrix Rx = { 
+                             { 1,  0,   0 },
+                             { 0, cx, -sx },
+                             { 0, sx,  cx },
+                         };
+         
+        floatMatrix Ry = {
+                             { cy, 0, sy },
+                             {  0, 1,  0 },
+                             {-sy, 0, cy },
+                         };
+         
+        floatMatrix Rz = {
+                             { cz, -sz, 0 },
+                             { sz,  cz, 0 },
+                             {  0,   0, 1 }
+                         };
+         
+        floatMatrix R = vectorTools::dot( Rz, vectorTools::dot( Ry, Rx ) );
+
+        rotatedPoints = floatVector( points.size( ), 0 );
+
+        floatVector temp_vector;
+
+        for ( unsigned int index = 0; index < n_points; index++ ){
+
+            temp_vector = vectorTools::dot( R, floatVector( points.begin( ) + 3 * index, points.begin( ) + 3 * ( index + 1 ) ) );
+
+            rotatedPoints[ 3 * index + 0 ] = temp_vector[ 0 ];
+            rotatedPoints[ 3 * index + 1 ] = temp_vector[ 1 ];
+            rotatedPoints[ 3 * index + 2 ] = temp_vector[ 2 ];
+
+        }
+
+        return NULL;
+
+    }
+
 }
