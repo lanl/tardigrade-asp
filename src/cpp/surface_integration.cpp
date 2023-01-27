@@ -198,4 +198,301 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut formBaseCubePoints( const unsigned int &elementCount, floatVector &points ){
+        /*!
+         * Form the base cube points which will be used for integration using quadratic elements
+         * 
+         * \param &elementCount: The number of elements on each edge of the cube
+         * \param &points: The resulting points
+         */
+
+        errorOut error = NULL;
+        floatType pi = 3.141592653589793;
+        unsigned int n_points_edge = 2 * elementCount + 1;
+
+        floatType x = -1;
+        floatType y = -1;
+        floatType z =  1;
+
+        floatType dx = 1. / elementCount;
+        floatType dy = 1. / elementCount;
+
+        // Build the top surface
+        floatVector top_points;
+        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, top_points );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when building the top surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        // Build the back surface
+        floatVector temp;
+        floatVector back_points;
+        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when building the back surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        error = rotatePoints( temp, -0.5 * pi, 0, 0, back_points );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when rotating the back surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        // Build the bottom surface
+        floatVector bottom_points;
+        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when building the bottom surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        error = rotatePoints( temp, -pi, 0, 0, bottom_points );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when rotating the bottom surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        // Build the front surface
+        floatVector front_points;
+        error = buildSurfacePoints( x, y, z, dx, dy, n_points_edge, n_points_edge - 1, temp );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when building the front surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        error = rotatePoints( temp, -1.5 * pi, 0, 0, front_points );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when rotating the front surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        // Build the right surface
+        floatVector right_points;
+        error = buildSurfacePoints( x + dx, y + dy, z, dx, dy, n_points_edge - 2, n_points_edge - 2, temp );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when building the right surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        error = rotatePoints( temp, 0, 0.5 * pi, 0, right_points );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when rotating the right surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        // Build the left surface
+        floatVector left_points;
+        error = buildSurfacePoints( x + dx, y + dy, z, dx, dy, n_points_edge - 2, n_points_edge - 2, temp );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when building the left surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        error = rotatePoints( temp, 0, -0.5 * pi, 0, left_points );
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error when rotating the left surface" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        points = vectorTools::appendVectors( { top_points, back_points, bottom_points, front_points, right_points, left_points } );
+
+        return NULL;
+
+    }
+
+    errorOut formCubeConnectivity( const unsigned int &elementCount, std::vector< unsigned int > &connectivity ){
+        /*!
+         * Form the connectivity vector for the base cube defined through formBaseCubePoints
+         * 
+         * \param &elementCount: The number of elements along each edge of the base cube
+         * \param &connectivity: The connectivity vector for the quadratic elements
+         */
+
+        connectivity = std::vector< unsigned int >( 9 * 6 * elementCount * elementCount );
+        errorOut error;
+
+        unsigned int n_points_edge = 2 * elementCount + 1;
+
+        unsigned int index = 0;
+
+        // Define the top surface connectivity
+        std::vector< unsigned int > surfaceIDs( n_points_edge * n_points_edge );
+        std::iota( surfaceIDs.begin( ), surfaceIDs.end( ), 0 );
+        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
+            result->addNext( error );
+            return result;
+        }
+
+        // Define the back surface connectivity
+        std::iota( surfaceIDs.begin( ), surfaceIDs.end( ), n_points_edge * ( n_points_edge - 1 ) );
+        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
+            result->addNext( error );
+            return result;
+        }
+
+        // Define the bottom surface connectivity
+        std::iota( surfaceIDs.begin( ), surfaceIDs.end( ), 2 * n_points_edge * ( n_points_edge - 1 ) );
+        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
+            result->addNext( error );
+            return result;
+        }
+
+        // Define the front surface connectivity
+        std::iota( surfaceIDs.begin( ), surfaceIDs.end( ) - n_points_edge, 3 * n_points_edge * ( n_points_edge - 1 ) );
+        std::iota( surfaceIDs.end( ) - n_points_edge, surfaceIDs.end( ), 0 );
+        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when building the connectivity of the top surface" );
+            result->addNext( error );
+            return result;
+        }
+
+        // Define the right surface connectivity
+        unsigned int offset = 4 * n_points_edge * ( n_points_edge - 1 ) - 1;
+        std::vector< unsigned int > bottom_edge( n_points_edge );
+        bottom_edge[ 0 ] = n_points_edge - 1;
+        for ( unsigned int i = 1; i < bottom_edge.size( ); i++ ){
+            bottom_edge[ i ] = offset - n_points_edge * ( i - 1 );
+        }
+
+        offset = n_points_edge * ( n_points_edge - 1 );
+        std::vector< unsigned int > top_edge( n_points_edge );
+        for ( unsigned int i = 0; i < top_edge.size( ); i++ ){
+            top_edge[ i ] = offset + n_points_edge * i + ( n_points_edge - 1 );
+        }
+
+        std::vector< unsigned int > left_edge( n_points_edge - 2 );
+        for ( unsigned int i = 0; i < left_edge.size( ); i++ ){
+            left_edge[ i ] = n_points_edge * ( i + 1 ) + n_points_edge - 1;
+        }
+
+        std::vector< unsigned int > right_edge( n_points_edge - 2 );
+        offset = 3 * n_points_edge * ( n_points_edge - 1 ) - 1;
+        for ( unsigned int i = 0; i < left_edge.size( ); i++ ){
+            right_edge[ i ] = offset - n_points_edge * i;
+        }
+
+        offset = 4 * n_points_edge * ( n_points_edge - 1 );
+        std::vector< unsigned int > center( ( n_points_edge - 2 ) * ( n_points_edge - 2 ) );
+        std::iota( center.begin( ), center.end( ), offset );
+
+        for ( unsigned int i = 0; i < n_points_edge; i++ ){
+            surfaceIDs[ i ] = bottom_edge[ i ];
+            surfaceIDs[ n_points_edge * ( n_points_edge - 1 ) + i ] = top_edge[ i ];
+        }
+
+        for ( unsigned int i = 0; i < ( n_points_edge - 2 ); i++ ){
+
+            surfaceIDs[ n_points_edge * i + bottom_edge.size( ) ] = left_edge[ i ];
+
+            for ( unsigned int j = 0; j < ( n_points_edge - 2 ); j++ ){
+
+                surfaceIDs[ n_points_edge * i + bottom_edge.size( ) + j + 1 ] = center[ ( n_points_edge - 2 ) * i + j ];
+
+            }
+
+            surfaceIDs[ n_points_edge * i + bottom_edge.size( ) + n_points_edge - 1 ] = right_edge[ i ];
+
+        }
+        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when building the connectivity of the right surface" );
+            result->addNext( error );
+            return result;
+        }
+
+        // Define the left surface connectivity
+        offset = 3 * n_points_edge * ( n_points_edge - 1 );
+        for ( unsigned int i = 0; i < ( bottom_edge.size( ) - 1 ); i++ ){
+            bottom_edge[ i ] = offset + n_points_edge * i;
+        }
+        bottom_edge[ bottom_edge.size( ) - 1 ] = 0;
+
+        offset = 2 * n_points_edge * ( n_points_edge - 1 );
+        for ( unsigned int i = 0; i < top_edge.size( ); i++ ){
+            top_edge[ i ] = offset  - n_points_edge * i;
+        }
+        
+        for ( unsigned int i = 0; i < ( n_points_edge - 2 ); i++ ){
+            right_edge[ i ] = n_points_edge * ( i + 1 );
+        }
+
+        offset = 3 * n_points_edge * ( n_points_edge - 1 );
+        for ( unsigned int i = 0; i < ( n_points_edge - 2 ); i++ ){
+            left_edge[ i ] = offset - n_points_edge * ( i + 1 );
+        }
+
+        offset = 4 * n_points_edge * ( n_points_edge - 1 ) + ( n_points_edge - 2 ) * ( n_points_edge - 2 );
+        std::iota( center.begin( ), center.end( ), offset );
+
+        for ( unsigned int i = 0; i < n_points_edge; i++ ){
+            surfaceIDs[ i ] = bottom_edge[ i ];
+            surfaceIDs[ n_points_edge * ( n_points_edge - 1 ) + i ] = top_edge[ i ];
+        }
+
+        for ( unsigned int i = 0; i < ( n_points_edge - 2 ); i++ ){
+
+            surfaceIDs[ n_points_edge * i + bottom_edge.size( ) ] = left_edge[ i ];
+
+            for ( unsigned int j = 0; j < ( n_points_edge - 2 ); j++ ){
+
+                surfaceIDs[ n_points_edge * i + bottom_edge.size( ) + j + 1 ] = center[ ( n_points_edge - 2 ) * i + j ];
+
+            }
+
+            surfaceIDs[ n_points_edge * i + bottom_edge.size( ) + n_points_edge - 1 ] = right_edge[ i ];
+
+        }
+        error = formSurfaceConnectivity( surfaceIDs, elementCount, elementCount, index, connectivity );
+        if ( error ){
+            errorOut result = new errorNode( __func__, "Error when building the connectivity of the left surface" );
+            result->addNext( error );
+            return result;
+        }
+
+        return NULL;
+
+    }
+
 }

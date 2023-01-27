@@ -39,6 +39,10 @@ namespace surfaceIntegration{
                                       const unsigned int &n_elements_x, const unsigned int &n_elements_y,
                                       unsigned int &index, std::vector< unsigned int > &connectivity );
 
+    errorOut formBaseCubePoints( const unsigned int &elementCount, floatVector &points );
+
+    errorOut formCubeConnectivity( const unsigned int &elementCount, std::vector< unsigned int > &connectivity );
+
     template <class T>
     errorOut integrateProperty( const floatVector &points, const std::vector<unsigned int> &connectivity,
                                 const std::vector< T > &nodalData, T &answer );
