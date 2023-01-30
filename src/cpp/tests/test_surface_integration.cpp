@@ -694,3 +694,131 @@ BOOST_AUTO_TEST_CASE( test_evaluateGradShapeFunctions ){
     }
 
 }
+
+BOOST_AUTO_TEST_CASE( test_intepolateFunction ){
+
+    floatMatrix nodalValues = { { 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+
+    floatVector answer = { 1 };
+
+    floatVector result;
+
+    BOOST_CHECK( !surfaceIntegration::interpolateFunction( 0, 0, nodalValues, result ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
+
+    nodalValues = {
+                      { -0.96774159,  0.18886376,  0.11357038, -0.68208071, -0.69385897,
+                         0.39105906, -0.36246715,  0.38394059,  0.1087665 },
+                      { -0.22209885,  0.85026498,  0.68333999, -0.28520487, -0.91281707,
+                        -0.39046385, -0.20362864,  0.40991766,  0.99071696 },
+                      { -0.28817027,  0.52509563,  0.18635383,  0.3834036 , -0.6977451 ,
+                        -0.20224741, -0.5182882 , -0.31308797,  0.02625631 }
+                  };
+
+    answer = { -0.12194715,  0.1954298 , -0.17294434 };
+
+    BOOST_CHECK( !surfaceIntegration::interpolateFunction( 0.3, -0.6, nodalValues, result ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
+
+    nodalValues = { { 0.96 ,  2.288,  0.95 , -0.37 ,  1.67 ,  1.665,  0.34 ,  0.325, 1.023 } };
+
+    answer = { 1.51024256 };
+
+    BOOST_CHECK( !surfaceIntegration::interpolateFunction( 0.34, -0.40, nodalValues, result ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_localGradientFunction ){
+
+    floatMatrix nodalValues = { { 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+
+    floatMatrix J; 
+
+    floatMatrix dNVdxi;
+
+    BOOST_CHECK( !surfaceIntegration::localGradientFunction( 0, 0, nodalValues, dNVdxi ) );
+
+    J = floatMatrix( 1, floatVector( 2, 0 ) );
+
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < 2; i++ ){
+
+        floatVector delta( 2, 0 );
+        delta[ i ] = eps * std::fabs( 0 ) + eps;
+
+        floatVector fp, fm;
+
+        BOOST_CHECK( !surfaceIntegration::interpolateFunction( 0 + delta[ 0 ], 0 + delta[ 1 ], nodalValues, fp ) );
+
+        BOOST_CHECK( !surfaceIntegration::interpolateFunction( 0 - delta[ 0 ], 0 - delta[ 1 ], nodalValues, fm ) );
+
+        for ( unsigned int j = 0; j < fp.size( ); j++ ){
+
+            J[ j ][ i ] = ( fp[ j ] - fm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, dNVdxi ) );
+
+    nodalValues = {
+                      { -0.96774159,  0.18886376,  0.11357038, -0.68208071, -0.69385897,
+                         0.39105906, -0.36246715,  0.38394059,  0.1087665 },
+                      { -0.22209885,  0.85026498,  0.68333999, -0.28520487, -0.91281707,
+                        -0.39046385, -0.20362864,  0.40991766,  0.99071696 },
+                      { -0.28817027,  0.52509563,  0.18635383,  0.3834036 , -0.6977451 ,
+                        -0.20224741, -0.5182882 , -0.31308797,  0.02625631 }
+                  };
+
+    floatVector xi = { 0.3, -0.6 };
+
+    BOOST_CHECK( !surfaceIntegration::localGradientFunction( xi[ 0 ], xi[ 1 ], nodalValues, dNVdxi ) );
+
+    J = floatMatrix( 3, floatVector( 2, 0 ) );
+
+    for ( unsigned int i = 0; i < xi.size( ); i++ ){
+
+        floatVector delta( 2, 0 );
+        delta[ i ] = eps * std::fabs( xi[ i ] ) + eps;
+
+        floatVector fp, fm;
+
+        BOOST_CHECK( !surfaceIntegration::interpolateFunction( xi[ 0 ] + delta[ 0 ], xi[ 1 ] + delta[ 1 ], nodalValues, fp ) );
+
+        BOOST_CHECK( !surfaceIntegration::interpolateFunction( xi[ 0 ] - delta[ 0 ], xi[ 1 ] - delta[ 1 ], nodalValues, fm ) );
+
+        for ( unsigned int j = 0; j < fp.size( ); j++ ){
+
+            J[ j ][ i ] = ( fp[ j ] - fm[ j ] ) / ( 2 * delta[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( J, dNVdxi ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_localJacobian ){
+
+    floatMatrix points = {
+                             { 0.  , 1.  , 1.  , 0.  , 0.5 , 1.  , 0.5 , 0.  , 0.5  },
+                             { 0.  , 0.  , 0.5 , 0.5 , 0.  , 0.25, 0.5 , 0.25, 0.25 },
+                             { 0.  , 0.07, 0.1 , 0.05, 0.15, 0.2 , 0.2 , 0.1 , 0.22 }
+                         };
+
+    floatType answer = 0.12964720146998926;
+
+    floatType result;
+
+    BOOST_CHECK( !surfaceIntegration::localJacobian( 0.34, -0.40, points, result ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
+
+}

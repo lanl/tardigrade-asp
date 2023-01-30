@@ -627,4 +627,130 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut interpolateFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatVector &answer ){
+        /*!
+         * Interpolate a function using the quadratic shape functions
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &nodalValues: The values of the function at the nodes
+         * \param &answer: The interpolated function
+         */
+
+        floatVector Ns;
+
+        errorOut error;
+
+        error = evaluateQuadraticShapeFunctions( xi, eta, Ns );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the shape functions" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        if ( nodalValues.size( ) < 1 ){
+
+            return new errorNode( __func__, "The nodal values have no entries." );
+
+        }
+
+        if ( nodalValues[ 0 ].size( ) != Ns.size( ) ){
+
+            std::string message = "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( Ns.size( ) );
+            return new errorNode( __func__, message );
+
+        }
+
+        answer = vectorTools::dot( nodalValues, Ns );
+
+        return NULL;
+
+    }
+
+    errorOut localGradientFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatMatrix &answer ){
+        /*!
+         * Compute the gradient of the interpolated function w.r.t. the local coordinates
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &nodalValues: The values of the function at the nodes
+         * \param &answer: The resulting gradient of the function w.r.t. the local coordinates
+         */
+
+        floatMatrix dNdxi;
+
+        errorOut error;
+
+        error = evaluateGradQuadraticShapeFunctions( xi, eta, dNdxi );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the shape functions" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        if ( nodalValues.size( ) < 1 ){
+
+            return new errorNode( __func__, "The nodal values have no entries." );
+
+        }
+
+        if ( nodalValues[ 0 ].size( ) != dNdxi.size( ) ){
+
+            std::string message = "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( dNdxi.size( ) );
+            return new errorNode( __func__, message );
+
+        }
+
+        answer = vectorTools::dot( nodalValues, dNdxi );
+
+        return NULL;
+
+    }
+
+    errorOut localJacobian( const floatType &xi, const floatType &eta, floatMatrix &nodalPositions, floatType &jacobian ){
+        /*!
+         * Compute the local jacobian of the quadratic element
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &nodalPositions: The nodal positions
+         * \param &jacobian: The surface jacobian
+         */
+
+        floatMatrix dxdxi;
+
+        errorOut error;
+
+        error = localGradientFunction( xi, eta, nodalPositions, dxdxi );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the local gradient" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        if ( dxdxi.size( ) != 3 ){
+
+            return new errorNode( __func__, "The nodal positions should be in 3d but are of dimension " + std::to_string( dxdxi.size( ) ) );
+
+        }
+
+        floatVector cross_product = { dxdxi[ 1 ][ 0 ] * dxdxi[ 2 ][ 1 ] - dxdxi[ 2 ][ 0 ] * dxdxi[ 1 ][ 1 ],
+                                      dxdxi[ 2 ][ 0 ] * dxdxi[ 0 ][ 1 ] - dxdxi[ 0 ][ 0 ] * dxdxi[ 2 ][ 1 ],
+                                      dxdxi[ 0 ][ 0 ] * dxdxi[ 1 ][ 1 ] - dxdxi[ 1 ][ 0 ] * dxdxi[ 0 ][ 1 ] };
+
+        jacobian = vectorTools::l2norm( cross_product );
+
+        return NULL;
+
+    }
+
 }

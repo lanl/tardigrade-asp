@@ -47,9 +47,11 @@ namespace surfaceIntegration{
 
     errorOut evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions );
 
-    template <class T>
-    errorOut integrateProperty( const floatVector &points, const std::vector<unsigned int> &connectivity,
-                                const std::vector< T > &nodalData, T &answer );
+    errorOut interpolateFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatVector &answer );
+
+    errorOut localGradientFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatMatrix &answer );
+
+    errorOut localJacobian( const floatType &xi, const floatType &eta, floatMatrix &nodalPositions, floatType &jacobian );
 
 }
 
