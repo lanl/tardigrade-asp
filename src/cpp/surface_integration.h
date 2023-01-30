@@ -47,13 +47,16 @@ namespace surfaceIntegration{
 
     errorOut evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions );
 
-    errorOut interpolateFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatVector &answer );
+    errorOut interpolateFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatVector &answer );
 
-    errorOut localGradientFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatMatrix &answer );
+    errorOut localGradientFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatMatrix &answer );
 
-    errorOut localJacobian( const floatType &xi, const floatType &eta, floatMatrix &nodalPositions, floatType &jacobian );
+    errorOut localJacobian( const floatType &xi, const floatType &eta, const floatMatrix &nodalPositions, floatType &jacobian );
 
-    errorOut integrateFunction( floatMatrix &nodalPositions, floatMatrix &nodalValues, floatVector &answer );
+    errorOut integrateFunction( const floatMatrix &nodalPositions, const floatMatrix &nodalValues, floatVector &answer );
+
+    errorOut integrateMesh( const floatMatrix &nodalPositions, const std::vector< unsigned int > &connectivity,
+                            const floatMatrix &nodalValues, floatVector &answer );
 
 }
 

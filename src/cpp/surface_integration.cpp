@@ -627,7 +627,7 @@ namespace surfaceIntegration{
 
     }
 
-    errorOut interpolateFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatVector &answer ){
+    errorOut interpolateFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatVector &answer ){
         /*!
          * Interpolate a function using the quadratic shape functions
          * 
@@ -670,7 +670,7 @@ namespace surfaceIntegration{
 
     }
 
-    errorOut localGradientFunction( const floatType &xi, const floatType &eta, floatMatrix &nodalValues, floatMatrix &answer ){
+    errorOut localGradientFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatMatrix &answer ){
         /*!
          * Compute the gradient of the interpolated function w.r.t. the local coordinates
          * 
@@ -713,7 +713,7 @@ namespace surfaceIntegration{
 
     }
 
-    errorOut localJacobian( const floatType &xi, const floatType &eta, floatMatrix &nodalPositions, floatType &jacobian ){
+    errorOut localJacobian( const floatType &xi, const floatType &eta, const floatMatrix &nodalPositions, floatType &jacobian ){
         /*!
          * Compute the local jacobian of the quadratic element
          * 
@@ -753,7 +753,7 @@ namespace surfaceIntegration{
 
     }
 
-    errorOut integrateFunction( floatMatrix &nodalPositions, floatMatrix &nodalValues, floatVector &answer ){
+    errorOut integrateFunction( const floatMatrix &nodalPositions, const floatMatrix &nodalValues, floatVector &answer ){
         /*!
          * Integrate a function over a quadratic element
          * 
