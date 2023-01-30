@@ -529,4 +529,376 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut evaluateQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatVector &shapeFunctions ){
+        /*!
+         * Evaluate the shape functions of a quadratic element
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &shapeFunctions: The resulting shape functions
+         */
+
+        floatMatrix localPoints = {
+                                      { -1, -1 },
+                                      {  1, -1 },
+                                      {  1,  1 },
+                                      { -1,  1 },
+                                      {  0, -1 },
+                                      {  1,  0 },
+                                      {  0,  1 },
+                                      { -1,  0 },
+                                      {  0,  0 }
+                                  };
+
+        shapeFunctions = floatVector( 9, 0 );
+
+        // Corner nodes
+        for ( unsigned int i = 0; i < 4; i++ ){
+            floatType xi_i  = localPoints[ i ][ 0 ];
+            floatType eta_i = localPoints[ i ][ 1 ];
+            shapeFunctions[ i ] = 0.25 * ( 1 + xi_i * xi ) * xi_i * xi * ( 1 + eta_i * eta ) * eta_i * eta;
+        }
+
+        // Midpoint nodes
+        shapeFunctions[ 4 ] = 0.5 * ( 1 -   xi * xi ) * ( 1 + localPoints[ 4 ][ 1 ] * eta ) * localPoints[ 4 ][ 1 ] * eta;
+        shapeFunctions[ 5 ] = 0.5 * ( 1 - eta * eta ) * ( 1 + localPoints[ 5 ][ 0 ] *  xi ) * localPoints[ 5 ][ 0 ] *  xi;
+        shapeFunctions[ 6 ] = 0.5 * ( 1 -   xi * xi ) * ( 1 + localPoints[ 6 ][ 1 ] * eta ) * localPoints[ 6 ][ 1 ] * eta;
+        shapeFunctions[ 7 ] = 0.5 * ( 1 - eta * eta ) * ( 1 + localPoints[ 7 ][ 0 ] *  xi ) * localPoints[ 7 ][ 0 ] *  xi;
+
+        // Center node
+        shapeFunctions[ 8 ] = ( 1 - xi * xi) * ( 1 - eta * eta );
+
+        return NULL;
+
+    }
+
+    errorOut evaluateGradQuadraticShapeFunctions( const floatType &xi, const floatType &eta, floatMatrix &gradShapeFunctions ){
+        /*!
+         * Evaluate the gradient of the shape functions w.r.t. the local coordinates
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &gradShapeFunctions: The gradient of the shape functions w.r.t. the local coordinates
+         */
+
+        floatMatrix localPoints = {
+                                      { -1, -1 },
+                                      {  1, -1 },
+                                      {  1,  1 },
+                                      { -1,  1 },
+                                      {  0, -1 },
+                                      {  1,  0 },
+                                      {  0,  1 },
+                                      { -1,  0 },
+                                      {  0,  0 }
+                                  };
+
+        gradShapeFunctions = floatMatrix( 9, floatVector( 2, 0 ) );
+
+        // Corner nodes
+        for ( unsigned int i = 0; i < 4; i++ ){
+            floatType xi_i  = localPoints[ i ][ 0 ];
+            floatType eta_i = localPoints[ i ][ 1 ];
+            gradShapeFunctions[ i ][ 0 ] = 0.25 * xi_i * xi_i * xi * (1 + eta_i * eta) * eta_i * eta
+                                         + 0.25 * (1 + xi_i * xi) * xi_i * (1 + eta_i * eta) * eta_i * eta;
+            gradShapeFunctions[ i ][ 1 ] = 0.25 * (1 + xi_i * xi) * xi_i * xi * eta_i * eta_i * eta
+                                         + 0.25 * (1 + xi_i * xi) * xi_i * xi * (1 + eta_i * eta) * eta_i;
+        }
+
+        // Midpoint nodes
+        gradShapeFunctions[ 4 ][ 0 ] = -xi * (1 + localPoints[4][1] * eta) * localPoints[4][1] * eta;
+        gradShapeFunctions[ 5 ][ 0 ] = 0.5 * (1 - eta * eta) * localPoints[5][0] * localPoints[5][0] *  xi
+                                     + 0.5 * (1 - eta * eta) * (1 + localPoints[5][0] *  xi) * localPoints[5][0];
+        gradShapeFunctions[ 6 ][ 0 ] = -xi * (1 + localPoints[6][1] * eta) * localPoints[6][1] * eta;
+        gradShapeFunctions[ 7 ][ 0 ] = 0.5 * (1 - eta * eta) * localPoints[7][0] * localPoints[7][0] *  xi
+                                     + 0.5 * (1 - eta * eta) * (1 + localPoints[7][0] *  xi) * localPoints[7][0];
+        gradShapeFunctions[ 4 ][ 1 ] = 0.5 * (1 -   xi * xi) * localPoints[4][1] * localPoints[4][1] * eta
+                                     + 0.5 * (1 -   xi * xi) * (1 + localPoints[4][1] * eta) * localPoints[4][1];
+        gradShapeFunctions[ 5 ][ 1 ] = -eta * (1 + localPoints[5][0] *  xi) * localPoints[5][0] *  xi;
+        gradShapeFunctions[ 6 ][ 1 ] = 0.5 * (1 -   xi * xi) * localPoints[6][1] * localPoints[6][1] * eta
+                                     + 0.5 * (1 -   xi * xi) * (1 + localPoints[6][1] * eta) * localPoints[6][1];
+        gradShapeFunctions[ 7 ][ 1 ] = -eta * (1 + localPoints[7][0] *  xi) * localPoints[7][0] *  xi;
+
+        // Center node
+        gradShapeFunctions[ 8 ][ 0 ] = -2 * xi * (1 - eta * eta);
+        gradShapeFunctions[ 8 ][ 1 ] = -2 * (1 - xi * xi) * eta;
+
+        return NULL;
+
+    }
+
+    errorOut interpolateFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatVector &answer ){
+        /*!
+         * Interpolate a function using the quadratic shape functions
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &nodalValues: The values of the function at the nodes
+         * \param &answer: The interpolated function
+         */
+
+        floatVector Ns;
+
+        errorOut error;
+
+        error = evaluateQuadraticShapeFunctions( xi, eta, Ns );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the shape functions" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        if ( nodalValues.size( ) < 1 ){
+
+            return new errorNode( __func__, "The nodal values have no entries." );
+
+        }
+
+        if ( nodalValues[ 0 ].size( ) != Ns.size( ) ){
+
+            std::string message = "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( Ns.size( ) );
+            return new errorNode( __func__, message );
+
+        }
+
+        answer = vectorTools::dot( nodalValues, Ns );
+
+        return NULL;
+
+    }
+
+    errorOut localGradientFunction( const floatType &xi, const floatType &eta, const floatMatrix &nodalValues, floatMatrix &answer ){
+        /*!
+         * Compute the gradient of the interpolated function w.r.t. the local coordinates
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &nodalValues: The values of the function at the nodes
+         * \param &answer: The resulting gradient of the function w.r.t. the local coordinates
+         */
+
+        floatMatrix dNdxi;
+
+        errorOut error;
+
+        error = evaluateGradQuadraticShapeFunctions( xi, eta, dNdxi );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the shape functions" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        if ( nodalValues.size( ) < 1 ){
+
+            return new errorNode( __func__, "The nodal values have no entries." );
+
+        }
+
+        if ( nodalValues[ 0 ].size( ) != dNdxi.size( ) ){
+
+            std::string message = "The nodal values must be of shape N outputs x N shape functions. The shape is:\n  nodalValues: " + std::to_string( nodalValues.size( ) ) + " x " + std::to_string( nodalValues[ 0 ].size( ) ) + "\n  shapeFunctions.size( ): " + std::to_string( dNdxi.size( ) );
+            return new errorNode( __func__, message );
+
+        }
+
+        answer = vectorTools::dot( nodalValues, dNdxi );
+
+        return NULL;
+
+    }
+
+    errorOut localJacobian( const floatType &xi, const floatType &eta, const floatMatrix &nodalPositions, floatType &jacobian ){
+        /*!
+         * Compute the local jacobian of the quadratic element
+         * 
+         * \param &xi: Local xi coordinate
+         * \param &eta: Local eta coordinate
+         * \param &nodalPositions: The nodal positions
+         * \param &jacobian: The surface jacobian
+         */
+
+        floatMatrix dxdxi;
+
+        errorOut error;
+
+        error = localGradientFunction( xi, eta, nodalPositions, dxdxi );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in the computation of the local gradient" );
+            result->addNext( error );
+            return result;
+
+        }
+
+        if ( dxdxi.size( ) != 3 ){
+
+            return new errorNode( __func__, "The nodal positions should be in 3d but are of dimension " + std::to_string( dxdxi.size( ) ) );
+
+        }
+
+        floatVector cross_product = { dxdxi[ 1 ][ 0 ] * dxdxi[ 2 ][ 1 ] - dxdxi[ 2 ][ 0 ] * dxdxi[ 1 ][ 1 ],
+                                      dxdxi[ 2 ][ 0 ] * dxdxi[ 0 ][ 1 ] - dxdxi[ 0 ][ 0 ] * dxdxi[ 2 ][ 1 ],
+                                      dxdxi[ 0 ][ 0 ] * dxdxi[ 1 ][ 1 ] - dxdxi[ 1 ][ 0 ] * dxdxi[ 0 ][ 1 ] };
+
+        jacobian = vectorTools::l2norm( cross_product );
+
+        return NULL;
+
+    }
+
+    errorOut integrateFunction( const floatMatrix &nodalPositions, const floatMatrix &nodalValues, floatVector &answer ){
+        /*!
+         * Integrate a function over a quadratic element
+         * 
+         * \param &nodalPositions: The positions of the quadratic element's nodes (3 x 9)
+         * \param &nodalValues: The values of the function at the nodes (dim function x 9)
+         * \param &answer: The resulting integrated function
+         */
+
+        errorOut error;
+
+        floatVector gaussPoints_1D = { -1. / std::sqrt( 3 ), 1. / std::sqrt( 3 ) };
+
+        floatVector weights = { 1., 1. };
+
+        answer = floatVector( nodalValues.size( ), 0 );
+
+        floatType xi, eta, w, jac;
+
+        floatVector val;
+
+        for ( unsigned int i = 0; i < gaussPoints_1D.size( ); i++ ){
+
+            xi = gaussPoints_1D[ i ];
+
+            for ( unsigned int j = 0; j < gaussPoints_1D.size( ); j++ ){
+
+                eta = gaussPoints_1D[ j ];
+
+                w = weights[ i ] * weights[ j ];
+
+                error = localJacobian( xi, eta, nodalPositions, jac );
+
+                if ( error ){
+
+                    errorOut result = new errorNode( __func__, "Error when computing the local jacobian" );
+                    result->addNext( error );
+                    return result;
+
+                }
+
+                error = interpolateFunction( xi, eta, nodalValues, val );
+
+                if ( error ){
+
+                    errorOut result = new errorNode( __func__, "Error when interpolating the function" );
+                    result->addNext( error );
+                    return result;
+
+                }
+
+                answer += val * w * jac;
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut integrateMesh( const floatVector &nodalPositions, const std::vector< unsigned int > &connectivity,
+                            const floatVector &nodalValues, floatVector &answer ){
+        /*!
+         * Integrate the provided function over a full mesh
+         * 
+         * \param &nodalPositions: The positions of the nodes
+         * \param &connectivity: The connectivity array
+         * \param &nodalValues: The values of the function at the nodes
+         * \param &answer: The resulting integrated function
+         */
+
+        errorOut error;
+
+        unsigned int dim = 3;
+
+        unsigned int n_nodes = 9;
+
+        unsigned int n_points = nodalPositions.size( ) / dim;
+
+        if ( n_points * dim != nodalPositions.size( ) ){
+
+            return new errorNode( __func__, "The nodal positions size is not a multiple of three" );
+
+        }
+
+        unsigned int n_elements = connectivity.size( ) / n_nodes;
+
+        if ( n_elements * n_nodes != connectivity.size( ) ){
+
+            return new errorNode( __func__, "The connectivity size is not a multiple of nine" );
+
+        }
+
+        unsigned int function_dim = nodalValues.size( ) / n_points;
+
+        if ( function_dim * n_points != nodalValues.size( ) ){
+
+            return new errorNode( __func__, "The nodal values size is not a multiple of nine" );
+
+        }
+
+        floatMatrix nodalPositions_e( dim, floatVector( n_nodes, 0 ) );
+
+        floatMatrix nodalValues_e( function_dim, floatVector( n_nodes, 0 ) );
+
+        answer = floatVector( function_dim, 0 );
+
+        floatVector answer_e;
+
+        for ( unsigned int e = 0; e < n_elements; e++ ){
+
+            floatVector c( connectivity.begin( ) + n_nodes * e, connectivity.begin( ) + n_nodes * ( e + 1 ) );
+
+            for ( auto ci = c.begin( ); ci != c.end( ); ci++ ){
+
+                for ( unsigned int i = 0; i < dim; i++ ){
+
+                    nodalPositions_e[ i ][ ci - c.begin( ) ] = nodalPositions[ dim  * ( *ci ) + i ];
+
+                }
+
+                for ( unsigned int i = 0; i < function_dim; i++ ){
+
+                    nodalValues_e[ i ][ ci - c.begin( ) ] = nodalValues[ function_dim  * ( *ci ) + i ];
+
+                }
+
+            }
+
+            error = integrateFunction( nodalPositions_e, nodalValues_e, answer_e );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error in the integration of element " + std::to_string( e ) );
+                result->addNext( error );
+                return result;
+
+            }
+
+            answer += answer_e;
+
+        }
+
+        return NULL;
+
+    }
+
 }
