@@ -53,6 +53,8 @@ namespace surfaceIntegration{
 
     errorOut localJacobian( const floatType &xi, const floatType &eta, floatMatrix &nodalPositions, floatType &jacobian );
 
+    errorOut integrateFunction( floatMatrix &nodalPositions, floatMatrix &nodalValues, floatVector &answer );
+
 }
 
 #endif

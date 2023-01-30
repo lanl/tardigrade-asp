@@ -753,4 +753,65 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut integrateFunction( floatMatrix &nodalPositions, floatMatrix &nodalValues, floatVector &answer ){
+        /*!
+         * Integrate a function over a quadratic element
+         * 
+         * \param &nodalPositions: The positions of the quadratic element's nodes (3 x 9)
+         * \param &nodalValues: The values of the function at the nodes (dim function x 9)
+         * \param &answer: The resulting integrated function
+         */
+
+        errorOut error;
+
+        floatVector gaussPoints_1D = { -1. / std::sqrt( 3 ), 1. / std::sqrt( 3 ) };
+
+        floatVector weights = { 1., 1. };
+
+        answer = floatVector( nodalValues.size( ), 0 );
+
+        floatType xi, eta, w, jac;
+
+        floatVector val;
+
+        for ( unsigned int i = 0; i < gaussPoints_1D.size( ); i++ ){
+
+            xi = gaussPoints_1D[ i ];
+
+            for ( unsigned int j = 0; j < gaussPoints_1D.size( ); j++ ){
+
+                eta = gaussPoints_1D[ j ];
+
+                w = weights[ i ] * weights[ j ];
+
+                error = localJacobian( xi, eta, nodalPositions, jac );
+
+                if ( error ){
+
+                    errorOut result = new errorNode( __func__, "Error when computing the local jacobian" );
+                    result->addNext( error );
+                    return result;
+
+                }
+
+                error = interpolateFunction( xi, eta, nodalValues, val );
+
+                if ( error ){
+
+                    errorOut result = new errorNode( __func__, "Error when interpolating the function" );
+                    result->addNext( error );
+                    return result;
+
+                }
+
+                answer += val * w * jac;
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
 }

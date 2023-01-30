@@ -822,3 +822,23 @@ BOOST_AUTO_TEST_CASE( test_localJacobian ){
     BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_integrateFunction ){
+
+    floatMatrix points = {
+                             { 0.  , 1.  , 1.  , 0.  , 0.5 , 1.  , 0.5 , 0.  , 0.5  },
+                             { 0.  , 0.  , 0.5 , 0.5 , 0.  , 0.25, 0.5 , 0.25, 0.25 },
+                             { 0.  , 0.07, 0.1 , 0.05, 0.15, 0.2 , 0.2 , 0.1 , 0.22 }
+                         };
+
+    floatMatrix values = { { 0.96 ,  2.288,  0.95 , -0.37 ,  1.67 ,  1.665,  0.34 ,  0.325,  1.023 } };
+
+    floatVector answer = { 0.54068005 };
+
+    floatVector result;
+
+    BOOST_CHECK( !surfaceIntegration::integrateFunction( points, values, result ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( answer, result ) );
+
+}
