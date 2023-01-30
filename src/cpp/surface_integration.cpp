@@ -814,4 +814,91 @@ namespace surfaceIntegration{
 
     }
 
+    errorOut integrateMesh( const floatVector &nodalPositions, const std::vector< unsigned int > &connectivity,
+                            const floatVector &nodalValues, floatVector &answer ){
+        /*!
+         * Integrate the provided function over a full mesh
+         * 
+         * \param &nodalPositions: The positions of the nodes
+         * \param &connectivity: The connectivity array
+         * \param &nodalValues: The values of the function at the nodes
+         * \param &answer: The resulting integrated function
+         */
+
+        errorOut error;
+
+        unsigned int dim = 3;
+
+        unsigned int n_nodes = 9;
+
+        unsigned int n_points = nodalPositions.size( ) / dim;
+
+        if ( n_points * dim != nodalPositions.size( ) ){
+
+            return new errorNode( __func__, "The nodal positions size is not a multiple of three" );
+
+        }
+
+        unsigned int n_elements = connectivity.size( ) / n_nodes;
+
+        if ( n_elements * n_nodes != connectivity.size( ) ){
+
+            return new errorNode( __func__, "The connectivity size is not a multiple of nine" );
+
+        }
+
+        unsigned int function_dim = nodalValues.size( ) / n_points;
+
+        if ( function_dim * n_points != nodalValues.size( ) ){
+
+            return new errorNode( __func__, "The nodal values size is not a multiple of nine" );
+
+        }
+
+        floatMatrix nodalPositions_e( dim, floatVector( n_nodes, 0 ) );
+
+        floatMatrix nodalValues_e( function_dim, floatVector( n_nodes, 0 ) );
+
+        answer = floatVector( function_dim, 0 );
+
+        floatVector answer_e;
+
+        for ( unsigned int e = 0; e < n_elements; e++ ){
+
+            floatVector c( connectivity.begin( ) + n_nodes * e, connectivity.begin( ) + n_nodes * ( e + 1 ) );
+
+            for ( auto ci = c.begin( ); ci != c.end( ); ci++ ){
+
+                for ( unsigned int i = 0; i < dim; i++ ){
+
+                    nodalPositions_e[ i ][ ci - c.begin( ) ] = nodalPositions[ dim  * ( *ci ) + i ];
+
+                }
+
+                for ( unsigned int i = 0; i < function_dim; i++ ){
+
+                    nodalValues_e[ i ][ ci - c.begin( ) ] = nodalValues[ function_dim  * ( *ci ) + i ];
+
+                }
+
+            }
+
+            error = integrateFunction( nodalPositions_e, nodalValues_e, answer_e );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error in the integration of element " + std::to_string( e ) );
+                result->addNext( error );
+                return result;
+
+            }
+
+            answer += answer_e;
+
+        }
+
+        return NULL;
+
+    }
+
 }

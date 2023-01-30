@@ -55,8 +55,8 @@ namespace surfaceIntegration{
 
     errorOut integrateFunction( const floatMatrix &nodalPositions, const floatMatrix &nodalValues, floatVector &answer );
 
-    errorOut integrateMesh( const floatMatrix &nodalPositions, const std::vector< unsigned int > &connectivity,
-                            const floatMatrix &nodalValues, floatVector &answer );
+    errorOut integrateMesh( const floatVector &nodalPositions, const std::vector< unsigned int > &connectivity,
+                            const floatVector &nodalValues, floatVector &answer );
 
 }
 
