@@ -421,6 +421,37 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistance ){
 
 }
 
+BOOST_AUTO_TEST_CASE( test_computeCurrentDistanceGeneral ){
+    /*!
+     * Test the computation of a distance between two points in a more generalized fashion
+     */
+
+    floatVector Xi_1 = { 0.69646919, 0.28613933, 0.22685145 };
+    floatVector Xi_2 = { 0.55131477, 0.71946897, 0.42310646 };
+    floatVector D    = { 0.9807642 , 0.68482974, 0.4809319  };
+    
+    floatVector F    = { 0.39211752, 0.34317802, 0.72904971,
+                         0.43857224, 0.0596779 , 0.39804426,
+                         0.73799541, 0.18249173, 0.17545176 };
+
+    floatVector chi  = { 0.53155137, 0.53182759, 0.63440096,
+                         0.84943179, 0.72445532, 0.61102351,
+                         0.72244338, 0.32295891, 0.36178866 };
+
+    floatVector chiNL = { 0.88594794, 0.07791236, 0.97964616,
+                          0.24767146, 0.75288472, 0.52667564,
+                          0.90755375, 0.8840703 , 0.08926896 };
+
+    floatVector d_answer = { 1.02803094, 0.58567184, 1.42330265 };
+
+    floatVector d;
+
+    BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi, chiNL, d ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d, d_answer ) );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_decomposeVector ){
     /*!
      * Test the decomposition of a vector into normal and tangential parts

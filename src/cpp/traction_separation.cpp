@@ -12,6 +12,59 @@
 
 namespace tractionSeparation{
 
+    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+                                            const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
+                                            floatVector &d ){
+        /*!
+         * Compute the distance in the current configuration where
+         * 
+         * \f$d_i = dx_i - \xi_i^1 + \xi_i^2 \f$
+         * 
+         * \f$dx_i = F_{iI} dX_I \f$
+         * 
+         * \f$\xi_i^1 = \chi_{iI} \Xi_I^1 \f$
+         * 
+         * \f$\xi_i^2 = \left(\chi_{iI} + \chi_{iI,J} dX_J \right) \Xi_I^2 \f$
+         * 
+         * \f$dX_I = \Xi_I^1 + D_I - \Xi_I^2 \f$
+         * 
+         * \param &Xi_1: The micro-position vector for the local particle
+         * \param &Xi_2: The micro-position vector for the non-local particle
+         * \param &D: The initial separation between the particles
+         * \param &F: The deformation gradient \f$\frac{dx_i}{dX_I}\f$
+         * \param &chi: The micro-deformation
+         * \param &chiNL: the non-local micro-deformation at \f$\Xi_2\f$
+         * \param &d: The current separation between the particles
+         */
+
+        floatVector dX = Xi_1 + D - Xi_2;
+
+        floatVector dx( dX.size( ), 0 );
+
+        floatVector xi_1( dX.size( ), 0 );
+
+        floatVector xi_2( dX.size( ), 0 );
+
+        for ( unsigned int i = 0; i < dX.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                dx[ i ] += F[ dX.size( ) * i + I ] * dX[ I ];
+
+                xi_1[ i ] += chi[ dX.size( ) * i + I ] * Xi_1[ I ];
+
+                xi_2[ i ] += chiNL[ dX.size( ) * i + I ] * Xi_2[ I ];
+
+            }
+
+        }
+
+        d = dx - xi_1 + xi_2;
+
+        return NULL;
+
+    }
+
     errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &d ){
