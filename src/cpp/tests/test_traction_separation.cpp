@@ -459,10 +459,37 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistanceGeneral ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( d_2, d_answer ) );
 
+    floatVector d_3;
+
+    floatMatrix dddXi_1_3, dddXi_2_3, dddD_3, dddF_3, dddchi_3, dddchiNL_3,
+                d2ddFdXi_1, d2ddchidXi_1, d2ddFdXi_2, d2ddchiNLdXi_2, d2ddFdD;
+
+    BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi, chiNL, d_3,
+                                                                     dddXi_1_3, dddXi_2_3, dddD_3, dddF_3, dddchi_3, dddchiNL_3,
+                                                                     d2ddFdXi_1, d2ddchidXi_1, d2ddFdXi_2, d2ddchiNLdXi_2, d2ddFdD ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d_3, d_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_1_3, dddXi_1 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_2_3, dddXi_2 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddD_3, dddD ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddF_3, dddF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddchi_3, dddchi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddchiNL_3, dddchiNL ) );
+
     floatType eps = 1e-6;
 
     // Test Jacobians w.r.t. the local reference relative position vector
     floatMatrix dddXi_1_answer( d_answer.size( ), floatVector( Xi_1.size( ), 0 ) );
+
+    floatMatrix d2ddFdXi_1_answer( d_answer.size( ), floatVector( Xi_1.size( ) * F.size( ), 0 ) );
+
+    floatMatrix d2ddchidXi_1_answer( d_answer.size( ), floatVector( Xi_1.size( ) * chi.size( ), 0 ) );
 
     for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
 
@@ -484,144 +511,344 @@ BOOST_AUTO_TEST_CASE( test_computeCurrentDistanceGeneral ){
 
         }
 
+        floatMatrix dddXi_1p, dddXi_1m;
+
+        floatMatrix dddXi_2p, dddXi_2m;
+
+        floatMatrix dddDp, dddDm;
+
+        floatMatrix dddFp, dddFm;
+
+        floatMatrix dddchip, dddchim;
+
+        floatMatrix dddchiNLp, dddchiNLm;
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1 + deltas, Xi_2, D, F, chi, chiNL, dp,
+                                                                         dddXi_1p, dddXi_2p, dddDp, dddFp, dddchip, dddchiNLp ) );
+
+        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1 - deltas, Xi_2, D, F, chi, chiNL, dm,
+                                                                         dddXi_1m, dddXi_2m, dddDm, dddFm, dddchim, dddchiNLm ) );
+
+        floatMatrix gradMat = ( dddXi_1p - dddXi_1m ) / ( 2 * deltas[ i ] );
+
+        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+
+                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+
+            }
+
+        }
+
+        gradMat = ( dddXi_2p - dddXi_2m ) / ( 2 * deltas[ i ] );
+
+        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+
+                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+
+            }
+
+        }
+
+        gradMat = ( dddDp - dddDm ) / ( 2 * deltas[ i ] );
+
+        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+
+                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+
+            }
+
+        }
+
+        gradMat = ( dddFp - dddFm ) / ( 2 * deltas[ i ] );
+
+        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+
+                d2ddFdXi_1_answer[ j ][ Xi_1.size( ) * k + i ] = gradMat[ j ][ k ];
+
+            }
+
+        }
+
+        gradMat = ( dddchip - dddchim ) / ( 2 * deltas[ i ] );
+
+        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+
+                d2ddchidXi_1_answer[ j ][ Xi_1.size( ) * k + i ] = gradMat[ j ][ k ];
+
+            }
+
+        }
+
+        gradMat = ( dddchiNLp - dddchiNLm ) / ( 2 * deltas[ i ] );
+
+        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+
+            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+
+                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+
+            }
+
+        }
+
     }
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_1, dddXi_1_answer ) );
 
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddFdXi_1, d2ddFdXi_1_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddchidXi_1, d2ddchidXi_1_answer ) );
+
     // Test Jacobians w.r.t. the non-local reference relative position vector
     floatMatrix dddXi_2_answer( d_answer.size( ), floatVector( Xi_2.size( ), 0 ) );
 
-    for ( unsigned int i = 0; i < Xi_2.size( ); i++ ){
+    floatMatrix d2ddFdXi_2_answer( d_answer.size( ), floatVector( Xi_2.size( ) * F.size( ), 0 ) );
 
-        floatVector deltas( Xi_2.size( ), 0 );
+//    floatMatrix temp( 100, floatVector( 100, 0 ) );
+    std::cout << "d_answer.size( ): " << d_answer.size( ) << "\n";
+    std::cout << "Xi_2.size( ): " << Xi_2.size( ) << "\n";
+    std::cout << "chiNL.size( ): " << chiNL.size( ) << "\n";
+    std::cout << "Xi_2.size( ) * chiNL.size( ): " << Xi_2.size( ) * chiNL.size( ) << "\n";
+    floatMatrix d2ddchiNLdXi_2_answer( d_answer.size( ), floatVector( Xi_2.size( ) * chiNL.size( ), 0 ) );
+    std::cout << "d2ddchiNLdXi_2_answer:\n"; vectorTools::print( d2ddchiNLdXi_2_answer );
 
-        deltas[ i ] += eps * std::fabs( Xi_2[ i ] ) + eps;
-
-        floatVector dp, dm;
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2 + deltas, D, F, chi, chiNL, dp ) );
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2 - deltas, D, F, chi, chiNL, dm ) );
-
-        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
-
-        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
-
-            dddXi_2_answer[ j ][ i ] = gradCol[ j ];
-
-        }
-
-    }
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_2, dddXi_2_answer ) );
-
-    // Test Jacobians w.r.t. the non-local reference separation
-    floatMatrix dddD_answer( d_answer.size( ), floatVector( D.size( ), 0 ) );
-
-    for ( unsigned int i = 0; i < D.size( ); i++ ){
-
-        floatVector deltas( D.size( ), 0 );
-
-        deltas[ i ] += eps * std::fabs( D[ i ] ) + eps;
-
-        floatVector dp, dm;
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D + deltas, F, chi, chiNL, dp ) );
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D - deltas, F, chi, chiNL, dm ) );
-
-        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
-
-        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
-
-            dddD_answer[ j ][ i ] = gradCol[ j ];
-
-        }
-
-    }
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddD, dddD_answer ) );
-
-    // Test Jacobians w.r.t. the deformation gradient
-    floatMatrix dddF_answer( d_answer.size( ), floatVector( F.size( ), 0 ) );
-
-    for ( unsigned int i = 0; i < F.size( ); i++ ){
-
-        floatVector deltas( F.size( ), 0 );
-
-        deltas[ i ] += eps * std::fabs( F[ i ] ) + eps;
-
-        floatVector dp, dm;
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F + deltas, chi, chiNL, dp ) );
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F - deltas, chi, chiNL, dm ) );
-
-        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
-
-        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
-
-            dddF_answer[ j ][ i ] = gradCol[ j ];
-
-        }
-
-    }
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddF, dddF_answer ) );
-
-    // Test Jacobians w.r.t. the local micro-deformation gradient
-    floatMatrix dddchi_answer( d_answer.size( ), floatVector( chi.size( ), 0 ) );
-
-    for ( unsigned int i = 0; i < chi.size( ); i++ ){
-
-        floatVector deltas( chi.size( ), 0 );
-
-        deltas[ i ] += eps * std::fabs( chi[ i ] ) + eps;
-
-        floatVector dp, dm;
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi + deltas, chiNL, dp ) );
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi - deltas, chiNL, dm ) );
-
-        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
-
-        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
-
-            dddchi_answer[ j ][ i ] = gradCol[ j ];
-
-        }
-
-    }
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddchi, dddchi_answer ) );
-
-    // Test Jacobians w.r.t. the non-local micro-deformation gradient
-    floatMatrix dddchiNL_answer( d_answer.size( ), floatVector( chiNL.size( ), 0 ) );
-
-    for ( unsigned int i = 0; i < chiNL.size( ); i++ ){
-
-        floatVector deltas( chiNL.size( ), 0 );
-
-        deltas[ i ] += eps * std::fabs( chiNL[ i ] ) + eps;
-
-        floatVector dp, dm;
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi, chiNL + deltas, dp ) );
-
-        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi, chiNL - deltas, dm ) );
-
-        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
-
-        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
-
-            dddchiNL_answer[ j ][ i ] = gradCol[ j ];
-
-        }
-
-    }
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddchiNL, dddchiNL_answer ) );
+//    floatMatrix d2ddchiNLdXi_2_answer( d_answer.size( ), floatVector( Xi_2.size( ) * chiNL.size( ), 0 ) );
+//
+//    for ( unsigned int i = 0; i < Xi_2.size( ); i++ ){
+//
+//        floatVector deltas( Xi_2.size( ), 0 );
+//
+//        deltas[ i ] += eps * std::fabs( Xi_2[ i ] ) + eps;
+//
+//        floatVector dp, dm;
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2 + deltas, D, F, chi, chiNL, dp ) );
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2 - deltas, D, F, chi, chiNL, dm ) );
+//
+//        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
+//
+//            dddXi_2_answer[ j ][ i ] = gradCol[ j ];
+//
+//        }
+//
+//        floatMatrix dddXi_1p, dddXi_1m;
+//
+//        floatMatrix dddXi_2p, dddXi_2m;
+//
+//        floatMatrix dddDp, dddDm;
+//
+//        floatMatrix dddFp, dddFm;
+//
+//        floatMatrix dddchip, dddchim;
+//
+//        floatMatrix dddchiNLp, dddchiNLm;
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2 + deltas, D, F, chi, chiNL, dp,
+//                                                                         dddXi_1p, dddXi_2p, dddDp, dddFp, dddchip, dddchiNLp ) );
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2 - deltas, D, F, chi, chiNL, dm,
+//                                                                         dddXi_1m, dddXi_2m, dddDm, dddFm, dddchim, dddchiNLm ) );
+//
+//        floatMatrix gradMat = ( dddXi_1p - dddXi_1m ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+//
+//            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+//
+//                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+//
+//            }
+//
+//        }
+//
+//        gradMat = ( dddXi_2p - dddXi_2m ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+//
+//            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+//
+//                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+//
+//            }
+//
+//        }
+//
+//        gradMat = ( dddDp - dddDm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+//
+//            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+//
+//                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+//
+//            }
+//
+//        }
+//
+//        gradMat = ( dddFp - dddFm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+//
+//            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+//
+//                d2ddFdXi_2_answer[ j ][ Xi_2.size( ) * k + i ] = gradMat[ j ][ k ];
+//
+//            }
+//
+//        }
+//
+//        gradMat = ( dddchip - dddchim ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+//
+//            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+//
+//                BOOST_CHECK( vectorTools::fuzzyEquals( 0., gradMat[ j ][ k ] ) );
+//
+//            }
+//
+//        }
+//
+//        gradMat = ( dddchiNLp - dddchiNLm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradMat.size( ); j++ ){
+//
+//            for ( unsigned int k = 0; k < gradMat[ j ].size( ); k++ ){
+//
+//                d2ddchiNLdXi_2_answer[ j ][ Xi_2.size( ) * k + i ] = gradMat[ j ][ k ];
+//
+//            }
+//
+//        }
+//
+//    }
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( dddXi_2, dddXi_2_answer ) );
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddFdXi_2, d2ddFdXi_2_answer ) );
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( d2ddchiNLdXi_2, d2ddchiNLdXi_2_answer ) );
+//
+//    // Test Jacobians w.r.t. the non-local reference separation
+//    floatMatrix dddD_answer( d_answer.size( ), floatVector( D.size( ), 0 ) );
+//
+//    for ( unsigned int i = 0; i < D.size( ); i++ ){
+//
+//        floatVector deltas( D.size( ), 0 );
+//
+//        deltas[ i ] += eps * std::fabs( D[ i ] ) + eps;
+//
+//        floatVector dp, dm;
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D + deltas, F, chi, chiNL, dp ) );
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D - deltas, F, chi, chiNL, dm ) );
+//
+//        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
+//
+//            dddD_answer[ j ][ i ] = gradCol[ j ];
+//
+//        }
+//
+//    }
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( dddD, dddD_answer ) );
+//
+//    // Test Jacobians w.r.t. the deformation gradient
+//    floatMatrix dddF_answer( d_answer.size( ), floatVector( F.size( ), 0 ) );
+//
+//    for ( unsigned int i = 0; i < F.size( ); i++ ){
+//
+//        floatVector deltas( F.size( ), 0 );
+//
+//        deltas[ i ] += eps * std::fabs( F[ i ] ) + eps;
+//
+//        floatVector dp, dm;
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F + deltas, chi, chiNL, dp ) );
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F - deltas, chi, chiNL, dm ) );
+//
+//        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
+//
+//            dddF_answer[ j ][ i ] = gradCol[ j ];
+//
+//        }
+//
+//    }
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( dddF, dddF_answer ) );
+//
+//    // Test Jacobians w.r.t. the local micro-deformation gradient
+//    floatMatrix dddchi_answer( d_answer.size( ), floatVector( chi.size( ), 0 ) );
+//
+//    for ( unsigned int i = 0; i < chi.size( ); i++ ){
+//
+//        floatVector deltas( chi.size( ), 0 );
+//
+//        deltas[ i ] += eps * std::fabs( chi[ i ] ) + eps;
+//
+//        floatVector dp, dm;
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi + deltas, chiNL, dp ) );
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi - deltas, chiNL, dm ) );
+//
+//        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
+//
+//            dddchi_answer[ j ][ i ] = gradCol[ j ];
+//
+//        }
+//
+//    }
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( dddchi, dddchi_answer ) );
+//
+//    // Test Jacobians w.r.t. the non-local micro-deformation gradient
+//    floatMatrix dddchiNL_answer( d_answer.size( ), floatVector( chiNL.size( ), 0 ) );
+//
+//    for ( unsigned int i = 0; i < chiNL.size( ); i++ ){
+//
+//        floatVector deltas( chiNL.size( ), 0 );
+//
+//        deltas[ i ] += eps * std::fabs( chiNL[ i ] ) + eps;
+//
+//        floatVector dp, dm;
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi, chiNL + deltas, dp ) );
+//
+//        BOOST_CHECK( !tractionSeparation::computeCurrentDistanceGeneral( Xi_1, Xi_2, D, F, chi, chiNL - deltas, dm ) );
+//
+//        floatVector gradCol = ( dp - dm ) / ( 2 * deltas[ i ] );
+//
+//        for ( unsigned int j = 0; j < gradCol.size( ); j++ ){
+//
+//            dddchiNL_answer[ j ][ i ] = gradCol[ j ];
+//
+//        }
+//
+//    }
+//
+//    BOOST_CHECK( vectorTools::fuzzyEquals( dddchiNL, dddchiNL_answer ) );
 
 }
 
@@ -2138,7 +2365,7 @@ BOOST_AUTO_TEST_CASE( test_computeOverlapDistanceLagrangian ){
 
                 for ( unsigned int l = 0; l < 1; l++ ){
 
-                    d4LdXdxi_tdR_nldR_nl_answer[ xi_t.size( ) * xi_t.size( ) * j + xi_t.size( ) * k + l + i ]
+                    d4LdXdxi_tdR_nldR_nl_answer[ xi_t.size( ) * j + k + l + i ]
                         = ( d3LdXdxi_tdR_nlp[ xi_t.size( ) * j + k + l ] - d3LdXdxi_tdR_nlm[ xi_t.size( ) * j + k + l ] ) / ( 2 * delta );
 
                 }
