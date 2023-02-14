@@ -12,6 +12,275 @@
 
 namespace tractionSeparation{
 
+    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+                                            const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
+                                            floatVector &d ){
+        /*!
+         * Compute the distance in the current configuration where
+         * 
+         * \f$d_i = dx_i - \xi_i^1 + \xi_i^2 \f$
+         * 
+         * \f$dx_i = F_{iI} dX_I \f$
+         * 
+         * \f$\xi_i^1 = \chi_{iI} \Xi_I^1 \f$
+         * 
+         * \f$\xi_i^2 = \left(\chi_{iI} + \chi_{iI,J} dX_J \right) \Xi_I^2 \f$
+         * 
+         * \f$dX_I = \Xi_I^1 + D_I - \Xi_I^2 \f$
+         * 
+         * \param &Xi_1: The relative micro-position vector for the local particle
+         * \param &Xi_2: The relative micro-position vector for the non-local particle
+         * \param &D: The initial separation between the particles
+         * \param &F: The deformation gradient \f$\frac{dx_i}{dX_I}\f$
+         * \param &chi: The micro-deformation
+         * \param &chiNL: the non-local micro-deformation at \f$\Xi_2\f$
+         * \param &d: The current separation between the particles
+         */
+
+        floatVector dX = Xi_1 + D - Xi_2;
+
+        floatVector dx( dX.size( ), 0 );
+
+        floatVector xi_1( dX.size( ), 0 );
+
+        floatVector xi_2( dX.size( ), 0 );
+
+        for ( unsigned int i = 0; i < dX.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                dx[ i ] += F[ dX.size( ) * i + I ] * dX[ I ];
+
+                xi_1[ i ] += chi[ dX.size( ) * i + I ] * Xi_1[ I ];
+
+                xi_2[ i ] += chiNL[ dX.size( ) * i + I ] * Xi_2[ I ];
+
+            }
+
+        }
+
+        d = dx - xi_1 + xi_2;
+
+        return NULL;
+
+    }
+
+    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+                                            const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
+                                            floatVector &d,
+                                            floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
+                                            floatMatrix &dddF, floatMatrix &dddchi, floatMatrix &dddchiNL ){
+        /*!
+         * Compute the distance in the current configuration where
+         * 
+         * \f$d_i = dx_i - \xi_i^1 + \xi_i^2 \f$
+         * 
+         * \f$dx_i = F_{iI} dX_I \f$
+         * 
+         * \f$\xi_i^1 = \chi_{iI} \Xi_I^1 \f$
+         * 
+         * \f$\xi_i^2 = \left(\chi_{iI} + \chi_{iI,J} dX_J \right) \Xi_I^2 \f$
+         * 
+         * \f$dX_I = \Xi_I^1 + D_I - \Xi_I^2 \f$
+         * 
+         * \param &Xi_1: The reference micro-position vector for the local particle
+         * \param &Xi_2: The reference micro-position vector for the non-local particle
+         * \param &D: The initial separation between the particles
+         * \param &F: The deformation gradient \f$\frac{dx_i}{dX_I}\f$
+         * \param &chi: The micro-deformation
+         * \param &chiNL: the non-local micro-deformation at \f$\Xi_2\f$
+         * \param &d: The current separation between the particles
+         * \param &dddXi_1: The gradient of d w.r.t. the local reference relative position vector
+         * \param &dddXi_2: The gradient of d w.r.t. the non-local reference relative position vector
+         * \param &dddD: The gradient of d w.r.t. the reference distance vector
+         * \param &dddF: The gradient of d w.r.t. the deformation gradient
+         * \param &dddchi: The gradient of d w.r.t. the local micro-deformation tensor
+         * \param &dddchiNL: The gradient of d w.r.t. the non-local micro-deformation tensor
+         */
+        floatVector dX = Xi_1 + D - Xi_2;
+
+        floatVector dx( dX.size( ), 0 );
+
+        floatVector xi_1( dX.size( ), 0 );
+
+        floatVector xi_2( dX.size( ), 0 );
+
+        dddXi_1  = floatMatrix( dX.size( ), floatVector( dX.size( ), 0 ) );
+
+        dddXi_2  = floatMatrix( dX.size( ), floatVector( dX.size( ), 0 ) );
+
+        dddD     = floatMatrix( dX.size( ), floatVector( dX.size( ), 0 ) );
+
+        dddF     = floatMatrix( dX.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
+
+        dddchi   = floatMatrix( dX.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
+
+        dddchiNL = floatMatrix( dX.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
+
+        floatVector eye( dX.size( ) * dX.size( ), 0 );
+
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < dX.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                dx[ i ] += F[ dX.size( ) * i + I ] * dX[ I ];
+
+                xi_1[ i ] += chi[ dX.size( ) * i + I ] * Xi_1[ I ];
+
+                xi_2[ i ] += chiNL[ dX.size( ) * i + I ] * Xi_2[ I ];
+
+                dddXi_1[ i ][ I ] =  F[ dX.size( ) * i + I ] - chi[ dX.size( ) * i + I ];
+
+                dddXi_2[ i ][ I ] = -F[ dX.size( ) * i + I ] + chiNL[ dX.size( ) * i + I ];
+
+                dddD[ i ][ I ] = F[ dX.size( ) * i + I ];
+
+                for ( unsigned int A = 0; A < dX.size( ); A++ ){
+
+                    dddF[ i ][ dX.size( ) * I + A ]     =  eye[ dX.size( ) * i + I ] * dX[ A ];
+
+                    dddchi[ i ][ dX.size( ) * I + A ]   = -eye[ dX.size( ) * i + I ] * Xi_1[ A ];
+
+                    dddchiNL[ i ][ dX.size( ) * I + A ] =  eye[ dX.size( ) * i + I ] * Xi_2[ A ];
+
+                }
+
+            }
+
+        }
+
+        d = dx - xi_1 + xi_2;
+
+        return NULL;
+
+    }
+
+    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+                                            const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
+                                            floatVector &d,
+                                            floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
+                                            floatMatrix &dddF, floatMatrix &dddchi, floatMatrix &dddchiNL,
+                                            floatMatrix &d2ddFdXi_1, floatMatrix &d2ddchidXi_1,
+                                            floatMatrix &d2ddFdXi_2, floatMatrix &d2ddchiNLdXi_2,
+                                            floatMatrix &d2ddFdD ){
+        /*!
+         * Compute the distance in the current configuration where
+         * 
+         * \f$d_i = dx_i - \xi_i^1 + \xi_i^2 \f$
+         * 
+         * \f$dx_i = F_{iI} dX_I \f$
+         * 
+         * \f$\xi_i^1 = \chi_{iI} \Xi_I^1 \f$
+         * 
+         * \f$\xi_i^2 = \left(\chi_{iI} + \chi_{iI,J} dX_J \right) \Xi_I^2 \f$
+         * 
+         * \f$dX_I = \Xi_I^1 + D_I - \Xi_I^2 \f$
+         * 
+         * \param &Xi_1: The reference micro-position vector for the local particle
+         * \param &Xi_2: The reference micro-position vector for the non-local particle
+         * \param &D: The initial separation between the particles
+         * \param &F: The deformation gradient \f$\frac{dx_i}{dX_I}\f$
+         * \param &chi: The micro-deformation
+         * \param &chiNL: the non-local micro-deformation at \f$\Xi_2\f$
+         * \param &d: The current separation between the particles
+         * \param &dddXi_1: The gradient of d w.r.t. the local reference relative position vector
+         * \param &dddXi_2: The gradient of d w.r.t. the non-local reference relative position vector
+         * \param &dddD: The gradient of d w.r.t. the reference distance vector
+         * \param &dddF: The gradient of d w.r.t. the deformation gradient
+         * \param &dddchi: The gradient of d w.r.t. the local micro-deformation tensor
+         * \param &dddchiNL: The gradient of d w.r.t. the non-local micro-deformation tensor,
+         * \param &d2ddXi_1dF: The second gradient of d w.r.t. the deformation gradient and the local reference relative position vector
+         * \param &d2ddXi_1dchi: The second gradient of d w.r.t. the local micro-deformation tensor and the local reference relative position vector
+         * \param &d2ddXi_2dF: The second gradient of d w.r.t. the deformation gradient and the non-local reference relative position vector
+         * \param &d2ddXi_2dchiNL: The second gradient of d w.r.t. the non-local micro-deformation tensor and the non-local reference relative position vector
+         * \param &d2ddDdF: The second gradient of d w.r.t. the deformation gradient and the non-local reference distance vector
+         */
+        floatVector dX = Xi_1 + D - Xi_2;
+
+        floatVector dx( dX.size( ), 0 );
+
+        floatVector xi_1( dX.size( ), 0 );
+
+        floatVector xi_2( dX.size( ), 0 );
+
+        dddXi_1  = floatMatrix( dX.size( ), floatVector( dX.size( ), 0 ) );
+
+        dddXi_2  = floatMatrix( dX.size( ), floatVector( dX.size( ), 0 ) );
+
+        dddD     = floatMatrix( dX.size( ), floatVector( dX.size( ), 0 ) );
+
+        dddF     = floatMatrix( dX.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
+
+        dddchi   = floatMatrix( dX.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
+
+        dddchiNL = floatMatrix( dX.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
+
+        d2ddFdXi_1     = floatMatrix( dX.size( ), floatVector( dX.size( ) * F.size( ), 0 ) );
+
+        d2ddchidXi_1   = floatMatrix( dX.size( ), floatVector( dX.size( ) * chi.size( ), 0 ) );
+
+        d2ddFdXi_2     = floatMatrix( dX.size( ), floatVector( dX.size( ) * F.size( ), 0 ) );
+
+        d2ddchiNLdXi_2 = floatMatrix( dX.size( ), floatVector( dX.size( ) * chi.size( ), 0 ) );
+
+        d2ddFdD        = floatMatrix( dX.size( ), floatVector( dX.size( ) * F.size( ), 0 ) );
+
+        floatVector eye( dX.size( ) * dX.size( ), 0 );
+
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < dX.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                dx[ i ] += F[ dX.size( ) * i + I ] * dX[ I ];
+
+                xi_1[ i ] += chi[ dX.size( ) * i + I ] * Xi_1[ I ];
+
+                xi_2[ i ] += chiNL[ dX.size( ) * i + I ] * Xi_2[ I ];
+
+                dddXi_1[ i ][ I ] =  F[ dX.size( ) * i + I ] - chi[ dX.size( ) * i + I ];
+
+                dddXi_2[ i ][ I ] = -F[ dX.size( ) * i + I ] + chiNL[ dX.size( ) * i + I ];
+
+                dddD[ i ][ I ] = F[ dX.size( ) * i + I ];
+
+                for ( unsigned int A = 0; A < dX.size( ); A++ ){
+
+                    dddF[ i ][ dX.size( ) * I + A ]     =  eye[ dX.size( ) * i + I ] * dX[ A ];
+
+                    dddchi[ i ][ dX.size( ) * I + A ]   = -eye[ dX.size( ) * i + I ] * Xi_1[ A ];
+
+                    dddchiNL[ i ][ dX.size( ) * I + A ] =  eye[ dX.size( ) * i + I ] * Xi_2[ A ];
+
+                    for ( unsigned int a = 0; a < dX.size( ); a++ ){
+
+                        d2ddFdXi_1[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * A + a ]     +=  eye[ dX.size( ) * i + I ] * eye[ dX.size( ) * A + a ];
+
+                        d2ddchidXi_1[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * A + a ]   += -eye[ dX.size( ) * i + I ] * eye[ dX.size( ) * A + a ];
+
+                        d2ddFdXi_2[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * A + a ]     += -eye[ dX.size( ) * i + I ] * eye[ dX.size( ) * A + a ];
+
+                        d2ddchiNLdXi_2[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * A + a ] += eye[ dX.size( ) * i + I ] * eye[ dX.size( ) * A + a ];
+
+                        d2ddFdD[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * A + a ]        +=  eye[ dX.size( ) * i + I ] * eye[ dX.size( ) * A + a ];
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        d = dx - xi_1 + xi_2;
+
+        return NULL;
+
+    }
+
     errorOut computeCurrentDistance( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
                                      const floatVector &F,    const floatVector &chi,  const floatVector &gradChi,
                                      floatVector &d ){

@@ -31,3 +31,4 @@ New Features
 - Added the calculation of the third-order gradients for the solution of the overlap distance. This is required for the constraint equation. (:merge:`8`). `Nathan Miller`_.
 - Added the decomposition of a sphere for the purposes of integration and contact detection. (:merge:`10`). `Nathan Miller`_.
 - Added the capability to integrate 2D quadratic elements and surface meshes composed of quadratic elements. (:merge:`11`). `Nathan Miller`_.
+- Added a more general form of the distance calculation to support random deformations. (:merge:`12`). `Nathan Miller`_.
