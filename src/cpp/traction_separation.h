@@ -53,6 +53,15 @@ namespace tractionSeparation{
                                             floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
                                             floatMatrix &dddF, floatMatrix &dddchi, floatMatrix &dddchiNL );
 
+    errorOut computeCurrentDistanceGeneral( const floatVector &Xi_1, const floatVector &Xi_2, const floatVector &D,
+                                            const floatVector &F,    const floatVector &chi,  const floatVector &chiNL,
+                                            floatVector &d,
+                                            floatMatrix &dddXi_1, floatMatrix &dddXi_2, floatMatrix &dddD,
+                                            floatMatrix &dddF, floatMatrix &dddchi, floatMatrix &dddchiNL,
+                                            floatMatrix &d2ddFdXi_1, floatMatrix &d2ddchidXi_1,
+                                            floatMatrix &d2ddFdXi_2, floatMatrix &d2ddchiNLdXi_2,
+                                            floatMatrix &d2ddFdD );
+
     errorOut decomposeVector( const floatVector &d, const floatVector &n,
                               floatVector &dn, floatVector &dt );
 
