@@ -78,6 +78,35 @@ namespace asp{
                              const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
                              const std::vector< int > &jstep, const int &KINC );
 
+    class aspBase{
+        /*!
+         * The base class for all Anisotropic Stochastic Particle (ASP) models.
+         */
+
+        public:
+
+            // Public parameters
+
+            // Constructors
+            aspBase( );
+
+            // Public member functions
+            virtual errorOut computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                                const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                                const floatType &currentTemperature, const floatType &previousTemperature,
+                                                                const floatVector &previousStateVariables,
+                                                                const floatVector &parameters,
+                                                                floatType &energy, floatVector &cauchyStress );
+
+            virtual errorOut computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                                const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                                const floatType &currentTemperature, const floatType &previousTemperature,
+                                                                const floatVector &previousStateVariables,
+                                                                const floatVector &parameters,
+                                                                floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
+
+    };
+
 }
 
 #endif

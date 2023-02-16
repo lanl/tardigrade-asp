@@ -14,6 +14,9 @@
 
 typedef errorTools::Node errorNode; //!< Redefinition for the error node
 typedef errorNode* errorOut; //!< Redefinition for a pointer to the error node
+typedef asp::floatType floatType; //!< Redefinition of the float type
+typedef asp::floatVector floatVector; //!< Redefinition of a vector of floats
+typedef asp::floatMatrix floatMatrix; //!< Redefinition of a matrix of floats
 
 struct cout_redirect{
     cout_redirect( std::streambuf * new_buffer)
@@ -178,5 +181,60 @@ BOOST_AUTO_TEST_CASE( testAbaqusInterface ){
            DFGRD1, NOEL,   NPT,    LAYER,           KSPT,
            JSTEP,  KINC ),
         std::exception );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeLocalParticleEnergyDensity ){
+    /*
+     * Test the default implementation of the computation of the local particle's energy density
+     */
+
+    floatType previousTime = 1.2;
+
+    floatType deltaTime = 0.4;
+
+    floatVector currentDeformationGradient = { 1, 2, 3,
+                                               4, 5, 6,
+                                               7, 8, 9 };
+
+    floatVector previousDeformationGradient = { .1, .2, .3,
+                                                .4, .5, .6,
+                                                .7, .8, .9 };
+
+    floatType currentTemperature = 295.4;
+
+    floatType previousTemperature = 0.43;
+
+    floatVector previousStateVariables;
+
+    floatVector parameters = { 30., 20. };
+
+    floatType energy = 0;
+
+    floatVector cauchyStress;
+
+    asp::aspBase asp;
+
+    BOOST_CHECK( !asp.computeLocalParticleEnergyDensity( previousTime, deltaTime, currentDeformationGradient, previousDeformationGradient,
+                                                         currentTemperature, previousTemperature, previousStateVariables, parameters, energy, cauchyStress ) );
+
+    BOOST_CHECK( !vectorTools::fuzzyEquals( energy, 0. ) );
+
+    BOOST_CHECK( cauchyStress.size( ) == currentDeformationGradient.size( ) );
+
+    energy = 0;
+
+    cauchyStress.clear( );
+
+    floatType logProbabilityRatio = 3.4;
+
+    BOOST_CHECK( !asp.computeLocalParticleEnergyDensity( previousTime, deltaTime, currentDeformationGradient, previousDeformationGradient,
+                                                         currentTemperature, previousTemperature, previousStateVariables, parameters, energy, cauchyStress, logProbabilityRatio ) );
+
+    BOOST_CHECK( !vectorTools::fuzzyEquals( energy, 0. ) );
+
+    BOOST_CHECK( cauchyStress.size( ) == currentDeformationGradient.size( ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( logProbabilityRatio, 0. ) );
 
 }
