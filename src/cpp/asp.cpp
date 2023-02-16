@@ -7,12 +7,94 @@
   */
 
 #include<asp.h>
+#include<stress_tools.h>
 
 namespace asp{
 
     //Define asp global constants in a place that Doxygen can pick up for documentation
     /** \brief Define the expected number of tensor spatial dimensions for the Abaqus interface. */
     const int spatialDimensions = 3;
+
+    aspBase::aspBase( ){
+        /*!
+         * The default constructor for ASP
+         */
+
+    }
+
+    errorOut aspBase::computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                         const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                         const floatType &currentTemperature, const floatType &previousTemperature,
+                                                         const floatVector &previousStateVariables,
+                                                         const floatVector &parameters,
+                                                         floatType &energy, floatVector &cauchyStress ){
+        /*!
+         * Default function for computing the local particle's energy per unit current volume
+         * Defaults to a linear-elastic solid with parameters defined in the reference configuration.
+         * 
+         * \param &previousTime: The previous value of the time
+         * \param &deltaTime: The change in time
+         * \param &currentMicroDeformation: The current value of the micro-deformation tensor \f$\chi\f$
+         * \param &previousMicroDeformation: The previous value of the micro-deformation tensor \f$\chi\f$
+         * \param &currentTemperature: The current value of the temperature
+         * \param &previousTemperature: The previous value of the temperature
+         * \param &parameters: The parameters for the model
+         * \param &energy: The current value of the Helmholtz free energy per unit current volume
+         * \param &cauchyStress: The current value of the Cauchy stress
+         */
+
+        errorOut error = stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energy, cauchyStress );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in linear elasticity" );
+
+            result->addNext( error );
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                         const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                         const floatType &currentTemperature, const floatType &previousTemperature,
+                                                         const floatVector &previousStateVariables,
+                                                         const floatVector &parameters,
+                                                         floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio ){
+        /*!
+         * Default function for computing the local particle's energy per unit current volume
+         * Defaults to a linear-elastic solid with parameters defined in the reference configuration.
+         * 
+         * \param &previousTime: The previous value of the time
+         * \param &deltaTime: The change in time
+         * \param &currentMicroDeformation: The current value of the micro-deformation tensor \f$\chi\f$
+         * \param &previousMicroDeformation: The previous value of the micro-deformation tensor \f$\chi\f$
+         * \param &currentTemperature: The current value of the temperature
+         * \param &previousTemperature: The previous value of the temperature
+         * \param &parameters: The parameters for the model
+         * \param &energy: The current value of the Helmholtz free energy per unit current volume
+         * \param &cauchyStress: The current value of the Cauchy stress
+         * \param &logProbabilityRatio: The natural logarithm of the probability ratio between the new
+         *     probability density and the previous value.
+         */
+
+        errorOut error = stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energy, cauchyStress );
+
+        if ( error ){
+
+            errorOut result = new errorNode( __func__, "Error in linear elasticity" );
+
+            result->addNext( error );
+
+        }
+
+        logProbabilityRatio = 0.;
+
+        return NULL;
+
+    }
 
     /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
     const int nStateVariables = 2;
