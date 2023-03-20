@@ -24,6 +24,7 @@ requirements:
     - abaqus_tools>=0.3
     - vector_tools
     - constitutive_tools
+    - stress_tools
     - boost >=1.59  # TODO: Separate the package/test configuration to make BOOST an optional build dependency
     - setuptools_scm >=6.2
   host:
@@ -39,6 +40,7 @@ requirements:
     - abaqus_tools>=0.3
     - vector_tools
     - constitutive_tools
+    - stress_tools
 
 test:
   requires:
