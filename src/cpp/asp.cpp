@@ -8,6 +8,8 @@
 
 #include<asp.h>
 #include<stress_tools.h>
+#include<traction_separation.h>
+#include<surface_integration.h>
 
 namespace asp{
 
@@ -19,6 +21,33 @@ namespace asp{
         /*!
          * The default constructor for ASP
          */
+
+        // Initialize surface integral pairs
+        _localReferenceRadius = std::make_pair( false, 0 );
+
+        _nonlocalReferenceRadius = std::make_pair( false, 0 );
+
+        _unitSpherePoints = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _localReferenceNormal = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _localSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _nonlocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _referenceDistanceVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _localReferenceParticleSpacing = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _localDeformationGradient = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _localMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _nonlocalMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _currentDistanceVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+
+        _localCurrentNormal = std::make_pair( false, floatVector( _dimension, 0 ) );
 
     }
 
@@ -91,6 +120,803 @@ namespace asp{
         }
 
         logProbabilityRatio = 0.;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::initializeUnitSphere( ){
+        /*!
+         * Initialize the unit sphere (i.e. a sphere of radius 1) to integrate over
+         */
+
+        surfaceIntegration::decomposeSphere( 1.0, _surfaceElementCount, _unitSpherePoints.second, _unitSphereConnectivity.second );
+
+        _unitSpherePoints.first = true;
+
+        _unitSphereConnectivity.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalReferenceNormal( ){
+        /*!
+         * Set the local reference normal vector
+         * 
+         * Because we have a unit sphere centered on zero as a basis the normal vector is the same
+         * as any position vector on the surface of the sphere.
+         */
+
+        errorOut error;
+
+        if ( ! _unitSpherePoints.first ){
+
+            error = initializeUnitSphere( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when initializing the unit sphere" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        if ( _dimension * ( _localIndex + 1 ) > _unitSpherePoints.second.size( ) ){
+
+            std::string message = "The requested index is greater than the number of points available on the unit sphere.\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+            message            += "  number of points:      " + std::to_string( _unitSpherePoints.second.size( ) / _dimension );
+
+            return new errorNode( __func__, message );
+
+        }
+
+        _localReferenceNormal.second = floatVector( _unitSpherePoints.second.begin( ) + _dimension * _localSurfaceNodeIndex,
+                                                    _unitSpherePoints.second.begin( ) + _dimension * ( _localSurfaceNodeIndex + 1 ) );
+
+        _localReferenceNormal.second /= vectorTools::l2norm( _localReferenceNormal.second );
+
+        _localReferenceNormal.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalSurfaceReferenceRelativePositionVector( ){
+        /*!
+         * Set the local surface relative position vector
+         * 
+         * \f$\Xi_I = R^{local} N_I\f$
+         * 
+         * where \f$R^{local}\f$ is the local radius and \f$N_I\f$ is the local reference normal.
+         */
+
+        errorOut error;
+
+        if ( ! _localReferenceNormal.first ){
+
+            error = setLocalReferenceNormal( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when initializing the local reference normal vector" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        if ( ! _localReferenceRadius.first ){
+
+            error = setLocalReferenceRadius ( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when initializing the local reference radius" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        _localSurfaceReferenceRelativePositionVector.second = _localReferenceRadius.second * _localReferenceNormal.second;
+
+        _localSurfaceReferenceRelativePositionVector.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setNonLocalSurfaceReferenceRelativePositionVector( ){
+        /*!
+         * Set the non-local relative position vector
+         * 
+         * \f$\Xi_I^{non-local} = -R^{non-local} N_I\f$
+         * 
+         * where \f$R^{non-local}\f$ is the non-local radius and \f$N_I\f$ is the local reference normal.
+         */
+
+        errorOut error;
+
+        if ( ! _localReferenceNormal.first ){
+
+            error = setLocalReferenceNormal( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when initializing the local reference normal vector" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        if ( ! _nonlocalReferenceRadius.first ){
+
+            error = setNonLocalReferenceRadius( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when initializing the non-local reference radius" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        _nonlocalSurfaceReferenceRelativePositionVector.second = -_nonlocalReferenceRadius.second * _localReferenceNormal.second;
+
+        _nonlocalSurfaceReferenceRelativePositionVector.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalReferenceRadius( ){
+        /*!
+         * Set the local reference radius
+         */
+
+        _localReferenceRadius.second = _radius;
+
+        _localReferenceRadius.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setNonLocalReferenceRadius( ){
+        /*!
+         * Set the non-local reference radius
+         */
+
+        _nonlocalReferenceRadius.second = _radius;
+
+        _nonlocalReferenceRadius.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalDeformationGradient( ){
+        /*!
+         * Set the local deformation gradient
+         */
+
+        _localDeformationGradient.second = _deformationGradient;
+
+        _localDeformationGradient.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalMicroDeformation( ){
+        /*!
+         * Set the local micro deformation
+         */
+
+        _localMicroDeformation.second = _microDeformation;
+
+        _localMicroDeformation.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalReferenceParticleSpacing( ){
+        /*!
+         * Set the local particle spacing
+         * 
+         * \f$dX_I = \Xi_I^{local} + D_I - \Xi_I^{non-local}\f$
+         */
+
+        errorOut error;
+
+        if ( ! _localSurfaceReferenceRelativePositionVector.first ){
+
+            error = setLocalSurfaceReferenceRelativePositionVector( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error while building the local surface relative position vector" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        if ( ! _nonlocalSurfaceReferenceRelativePositionVector.first ){
+
+            error = setNonLocalSurfaceReferenceRelativePositionVector( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error while building the non-local surface relative position vector" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        if ( ! _referenceDistanceVector.first ){
+
+            error = setReferenceDistanceVector( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error while building the reference distance vector" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        _localReferenceParticleSpacing.second = _localSurfaceReferenceRelativePositionVector.second
+                                              + _referenceDistanceVector.second
+                                              - _nonlocalSurfaceReferenceRelativePositionVector.second;
+
+        _localReferenceParticleSpacing.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setNonLocalMicroDeformation( ){
+        /*!
+         * Set the non-local micro deformation
+         * 
+         * \f$ \chi_{iI}^{non-local} = \chi_{iI} + \chi_{iI,J} dX_J\f$
+         */
+
+        errorOut error;
+
+        if ( ! _localReferenceParticleSpacing.first ){
+
+            error = setLocalReferenceParticleSpacing( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the refernece relative particle spacing" );
+
+                result->addNext( error );
+
+                return result; 
+
+            }
+
+        }
+
+        _nonlocalMicroDeformation.second = _microDeformation;
+
+        for ( unsigned int i = 0; i < _dimension; i++ ){
+
+            for ( unsigned int I = 0; I < _dimension; I++ ){
+
+                for ( unsigned int J = 0; J < _dimension; J++ ){
+
+                    _nonlocalMicroDeformation.second[ _dimension * i + I ]
+                        += _gradientMicroDeformation[ _dimension * _dimension * i + _dimension * I + J ]
+                         * _localReferenceParticleSpacing.second[ J ];
+
+                }
+
+            }
+
+        }
+
+        _nonlocalMicroDeformation.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setCurrentDistance( ){
+        /*!
+         * Set the current distance vector
+         */
+
+        errorOut error;
+
+        if ( ! _localSurfaceReferenceRelativePositionVector.first ){
+
+            error = setLocalSurfaceReferenceRelativePositionVector( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the local reference surface relative position vector" );
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
+        }
+
+        if ( ! _nonlocalSurfaceReferenceRelativePositionVector.first ){
+
+            error = setNonLocalSurfaceReferenceRelativePositionVector( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the non-local reference surface relative position vector" );
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
+        }
+
+        if ( ! _referenceDistanceVector.first ){
+
+            error = setReferenceDistanceVector( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing distance vector in the reference configuration" );
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
+        }
+
+        if ( ! _localDeformationGradient.first ){
+
+            error = setLocalDeformationGradient( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the local deformation gradient" );
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
+        }
+
+        if ( ! _localMicroDeformation.first ){
+
+            error = setLocalMicroDeformation( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the local micro deformation" );
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
+        }
+
+        if ( ! _nonlocalMicroDeformation.first ){
+
+            error = setNonLocalMicroDeformation( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the non-local micro deformation" );
+    
+                result->addNext( error );
+    
+                return result;
+
+            }
+
+        }
+
+        // Compute the current distance
+        error = tractionSeparation::computeCurrentDistanceGeneral( _localSurfaceReferenceRelativePositionVector.second,
+                                                                   _nonlocalSurfaceReferenceRelativePositionVector.second,
+                                                                   _referenceDistanceVector.second,
+                                                                   _localDeformationGradient.second,
+                                                                   _localMicroDeformation.second,
+                                                                   _nonlocalMicroDeformation.second,
+                                                                   _currentDistanceVector.second );
+
+        if ( error ){
+
+            std::string message = "Error when computing the current distance";
+            
+            errorOut result = new errorNode( __func__, message );
+
+            return result;
+
+        }
+
+        _currentDistanceVector.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setLocalCurrentNormal( ){
+        /*!
+         * Set the current local normal
+         */
+
+        errorOut error;
+
+        if ( ! _localReferenceNormal.first ){
+
+            error = setLocalReferenceNormal( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the local reference normal" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        if ( ! _localMicroDeformation.first ){
+
+            error = setLocalMicroDeformation( );
+
+            if ( error ){
+
+                errorOut result = new errorNode( __func__, "Error when computing the local micro deformation" );
+
+                result->addNext( error );
+
+                return result;
+
+            }
+
+        }
+
+        // Compute the current normal
+        error = tractionSeparation::computeNansonsRelation( _localMicroDeformation.second, _localReferenceNormal.second,
+                                                            _localCurrentNormal.second );
+
+        if ( error ){
+
+            std::string message = "Error when computing the current normal";
+            
+            errorOut result = new errorNode( __func__, message );
+
+            return result;
+
+        }
+
+        _localCurrentNormal.second /= vectorTools::l2norm( _localCurrentNormal.second );
+
+        _localCurrentNormal.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::initializeSurfaceIntegrandQuantities( ){
+        /*!
+         * Initialize the surface integrand quantities
+         */
+
+        errorOut error;
+
+        error = setLocalReferenceNormal( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the local reference normal\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setLocalSurfaceReferenceRelativePositionVector( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the local surface relative position vector\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setNonLocalSurfaceReferenceRelativePositionVector( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the non-local surface relative position vector\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  nonlocalIndex:         " + std::to_string( _nonlocalIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setReferenceDistanceVector( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the reference distance vector\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  nonlocalIndex:         " + std::to_string( _nonlocalIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setLocalDeformationGradient( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the local deformation gradient\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setLocalMicroDeformation( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the local micro-deformation tensor\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setNonLocalMicroDeformation( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the non-local micro-deformation tensor\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  nonlocalIndex:         " + std::to_string( _nonlocalIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setCurrentDistance( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the current distance\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  nonlocalIndex:         " + std::to_string( _nonlocalIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setLocalCurrentNormal( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the local normal vector\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        error = setSurfaceParameters( );
+
+        if ( error ){
+
+            std::string message = "Error in setting the surface parameters vector\n";
+            message            += "  localIndex:            " + std::to_string( _localIndex ) + "\n";
+            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
+
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::setSurfaceParameters( ){
+        /*!
+         * Set the surface parameters for the integrand
+         */
+
+        _surfaceParameters.first = true;
+
+        return NULL;
+    }
+
+    errorOut aspBase::setReferenceDistanceVector( ){
+        /*!
+         * Set the initial distance between two particles
+         */
+
+        _referenceDistanceVector.second = floatVector( _dimension, 0. );
+
+        _referenceDistanceVector.first = true;
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::resetSurface( ){
+        /*!
+         * Reset the surface to the base state
+         */
+
+        _localReferenceRadius = std::make_pair( false, 0. );
+
+        _nonlocalReferenceRadius = std::make_pair( false, 0. );
+
+        _localReferenceNormal = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _localSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _nonlocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _referenceDistanceVector = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _localReferenceParticleSpacing = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _localDeformationGradient = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _localMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _nonlocalMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _currentDistanceVector = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _localCurrentNormal = std::make_pair( false, floatVector( 0, 0 ) );
+
+        _surfaceParameters = std::make_pair( false, floatVector( 0, 0 ) );
+
+        return NULL;
+
+    }
+
+    errorOut aspBase::computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
+        /*!
+         * Compute the surface energy density in the current configuration ( energy / da )
+         */
+
+        errorOut error;
+
+        // Decompose the traction into normal and tangential directions
+        floatVector dn, dt;
+        error = tractionSeparation::decomposeVector( _currentDistanceVector.second, _localCurrentNormal.second, dn, dt );
+
+        if ( error ){
+
+            std::string message = "Error when decomposing the distance";
+            
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        floatType energyDensity;
+        error = tractionSeparation::computeLinearTractionEnergy( dn, dt, _surfaceParameters.second, energyDensity );
+
+        if ( error ){
+
+            std::string message = "Error when computing the surface traction energy density";
+            
+            errorOut result = new errorNode( __func__, message );
+
+            result->addNext( error );
+
+            return result;
+
+        }
+
+        surfaceEnergyDensity = energyDensity * vectorTools::l2norm( dn );
 
         return NULL;
 
