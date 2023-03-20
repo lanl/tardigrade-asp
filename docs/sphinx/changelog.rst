@@ -13,6 +13,10 @@ Breaking changes
 ================
 - Remove linear elasticity, which now lives in stress tools (:issue:`1`, :merge:`9`). By `Kyle Brindley`_.
 
+Internal Changes
+================
+- Change the build system to more closely mimic the current state of cpp_stub (:merge:`15`). By `Nathan Miller`_.
+
 New Features
 ============
 - Added linear elasticity for the internal particle (:merge:`3`). By `Nathan Miller`_.
@@ -27,9 +31,10 @@ New Features
 - Extended the number of gradients computed in the Lagrangian for the overlap particle (:merge:`8`). By `Nathan Miller`_.
 - Added the calculation of the amount of overlap of a non-local and local particles (:merge:`8`). By `Nathan Miller`_.
 - Added the calculation of the gradients for the local and non-local particles (:merge:`8`). By `Nathan Miller`_.
-- Added the calculation of the fourth-order gradients for the Lagrangian for the overlap particle. This is required for the constraint equation. (:merge:`8`). `Nathan Miller`_.
-- Added the calculation of the third-order gradients for the solution of the overlap distance. This is required for the constraint equation. (:merge:`8`). `Nathan Miller`_.
-- Added the decomposition of a sphere for the purposes of integration and contact detection. (:merge:`10`). `Nathan Miller`_.
-- Added the capability to integrate 2D quadratic elements and surface meshes composed of quadratic elements. (:merge:`11`). `Nathan Miller`_.
-- Added a more general form of the distance calculation to support random deformations. (:merge:`12`). `Nathan Miller`_.
-- Initial commit of the asp base class with a linear elastic local particle energy definition. (:merge:`14`). `Nathan Miller`_.
+- Added the calculation of the fourth-order gradients for the Lagrangian for the overlap particle. This is required for the constraint equation. (:merge:`8`). By `Nathan Miller`_.
+- Added the calculation of the third-order gradients for the solution of the overlap distance. This is required for the constraint equation. (:merge:`8`). By `Nathan Miller`_.
+- Added the decomposition of a sphere for the purposes of integration and contact detection. (:merge:`10`). By `Nathan Miller`_.
+- Added the capability to integrate 2D quadratic elements and surface meshes composed of quadratic elements. (:merge:`11`). By `Nathan Miller`_.
+- Added a more general form of the distance calculation to support random deformations. (:merge:`12`). By `Nathan Miller`_.
+- Initial commit of the asp base class with a linear elastic local particle energy definition. (:merge:`14`). By `Nathan Miller`_.
+- Added the computation of the traction separation energy at a single surface point. (:merge:`15`). By `Nathan Miller`_.
