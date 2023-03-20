@@ -1,7 +1,7 @@
 # Project
 add_library (${PROJECT_NAME} SHARED "${PROJECT_NAME}.cpp" "${PROJECT_NAME}.h" ${PROJECT_SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${PROJECT_NAME}.h)
-target_link_libraries(${PROJECT_NAME} error_tools stress_tools ${INTERNAL_SUPPORT_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} error_tools stress_tools ${PROJECT_LINK_LIBRARIES})
 target_compile_options(${PROJECT_NAME} PUBLIC)
 
 # Abaqus UMAT interface
