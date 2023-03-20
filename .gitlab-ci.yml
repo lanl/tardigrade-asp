@@ -76,7 +76,7 @@ environment:
     # place the common modulefiles in an accessible location
     - cp ${PWD}/modulefiles/* ${aea_modulefiles}
   tags:
-    - shell-aea
+    - sstbigbird-shell-aea
 
 microbump:
   stage: version
@@ -112,7 +112,7 @@ microbump:
     - git tag -a ${developer_version} -m "developer pre-release ${developer_version}" ${last_merge_hash} || true
     - git push oauth2-origin --tags
   tags:
-    - shell-aea
+    - sstbigbird-shell-aea
 
 fast-test:
   stage: test
@@ -138,7 +138,7 @@ fast-test:
     paths:
       - build/results.txt
   tags:
-    - shell-aea
+    - sstbigbird-shell-aea
 
 conda-build:
   stage: build
@@ -169,7 +169,7 @@ conda-build:
     paths:
       - conda-build-artifacts/linux-64/asp-*-*.tar.bz2
   tags:
-    - shell-aea
+    - sstbigbird-shell-aea
 
 deploy:
   stage: deploy
@@ -195,7 +195,7 @@ deploy:
     - mamba index ${aea_conda_channel}
     - mamba search --channel file://${aea_conda_channel}/ --override-channels asp
   tags:
-    - shell-aea
+    - sstbigbird-shell-aea
 
 # It MUST be called pages
 pages:
@@ -222,4 +222,4 @@ pages:
       # It MUST be called public
       - public
   tags:
-    - shell-aea
+    - sstbigbird-shell-aea
