@@ -1,7 +1,6 @@
 # Project
 add_library (${PROJECT_NAME} SHARED "${PROJECT_NAME}.cpp" "${PROJECT_NAME}.h")
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 11
-                                                 PUBLIC_HEADER ${PROJECT_NAME}.h)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${PROJECT_NAME}.h)
 target_link_libraries(${PROJECT_NAME} error_tools stress_tools ${INTERNAL_SUPPORT_LIBRARIES})
 target_compile_options(${PROJECT_NAME} PUBLIC)
 
@@ -9,15 +8,14 @@ target_compile_options(${PROJECT_NAME} PUBLIC)
 foreach(support_library ${INTERNAL_SUPPORT_LIBRARIES})
     string(TOUPPER ${support_library} library_uppercase)
     add_library (${support_library} SHARED "${support_library}.cpp" "${support_library}.h")
-    set_target_properties(${support_library} PROPERTIES CXX_STANDARD 11
-                                                     PUBLIC_HEADER ${support_library}.h)
+    set_target_properties(${support_library} PROPERTIES PUBLIC_HEADER ${support_library}.h)
     target_link_libraries(${support_library} error_tools "${${library_uppercase}_UPSTREAM_LIBRARIES}")
-    target_compile_options(${support_library} PUBLIC)
+    target_compile_options(${support_library} PRIVATE)
 endforeach(support_library)
 
 # Abaqus UMAT interface
 add_library(${UMAT} SHARED "${UMAT}.cpp" "${UMAT}.h")
-set_target_properties(${UMAT} PROPERTIES CXX_STANDARD 11
+set_target_properties(${UMAT} PROPERTIES
                               PUBLIC_HEADER ${UMAT}.h
                               PREFIX ""
                               SUFFIX ".o")
@@ -34,7 +32,7 @@ if(NOT cmake_build_type_lower STREQUAL "release")
                                "${vector_tools_SOURCE_DIR}/${CPP_SRC_PATH}")
 endif()
 
-foreach(package ${PROJECT_NAME} ${UMAT} ${INTERNAL_SUPPORT_LIBRARIES})
+foreach(package ${PROJECT_NAME} ${UMAT})
     install(TARGETS ${package}
             EXPORT ${package}_Targets
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

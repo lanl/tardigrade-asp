@@ -1,0 +1,65 @@
+package:
+  name: asp
+  # TODO: setup and use pyproject.toml and a Conda build Jinja template
+  version: {{ VERSION }}
+
+source:
+  path: '..'
+
+build:
+  script:
+    - mkdir build-package
+    - cd build-package
+    - cmake .. -DCMAKE_BUILD_TYPE=Release
+    - cmake --build . --target asp asp_umat
+    - cmake --install . --prefix ${PREFIX}
+  ignore_run_exports:
+    - python_abi
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - eigen >=3.3.7
+    - error_tools>=0.4
+    - abaqus_tools>=0.3
+    - vector_tools
+    - constitutive_tools
+    - boost >=1.59  # TODO: Separate the package/test configuration to make BOOST an optional build dependency
+    - setuptools_scm >=6.2
+  host:
+    - {{ compiler('cxx') }}
+    - python
+    - cmake >=3.18
+    - doxygen  # TODO: Separate the package/documentation configuration to make Doxygen an optional build dependency
+    - sphinx  # TODO: Separate the package/documentation configuration to make Sphinx an optional build dependency
+  run:
+    - {{ compiler('cxx') }}
+    - eigen >=3.3.7
+    - error_tools>=0.4
+    - abaqus_tools>=0.3
+    - vector_tools
+    - constitutive_tools
+
+test:
+  requires:
+    - cmake >=3.18
+    - boost >=1.59
+    - doxygen  # TODO: Separate the package/documentation configuration to make Doxygen an optional build dependency
+    - sphinx  # TODO: Separate the package/documentation configuration to make Sphinx an optional build dependency
+  source_files:
+    - CMakeLists.txt
+    - src/cpp/tests/CMakeLists.txt
+    - src/cpp/tests/test_asp.cpp
+    - src/cpp/tests/test_constraint_equations.cpp
+    - src/cpp/tests/test_surface_integration.cpp
+    - src/cpp/tests/test_traction_separation.cpp
+    - src/abaqus/CMakeLists.txt
+    - src/abaqus/single_element_c3d8.inp
+    - src/abaqus/tests/CMakeLists.txt
+    - src/abaqus/tests/test_abaqus.sh
+  commands:
+    - mkdir build-tests
+    - cd build-tests
+    - cmake .. -DCMAKE_BUILD_TYPE=conda-test
+    - cmake --build . --verbose
+    - ctest --output-on-failure
