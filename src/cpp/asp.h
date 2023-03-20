@@ -17,6 +17,10 @@
 
 namespace asp{
 
+    namespace unit_test{
+        class aspBaseTester;
+    }
+
     constexpr const char* str_end(const char *str) {
         /*! Recursively search string for last character
          * \param *str: pointer to string START of UNIX path like string
@@ -104,6 +108,99 @@ namespace asp{
                                                                 const floatVector &previousStateVariables,
                                                                 const floatVector &parameters,
                                                                 floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
+
+        protected:
+
+            // Protected parameters
+            unsigned int _dimension = 3;
+
+            unsigned int _surfaceElementCount = 1;
+
+        private:
+            // Friend classes
+            friend class unit_test::aspBaseTester;
+
+            // Private parameters
+            unsigned int _localIndex = 0;
+
+            unsigned int _nonlocalIndex = 0;
+
+            unsigned int _localSurfaceNodeIndex = 0;
+
+            floatType   _radius;
+
+            floatVector _deformationGradient;
+
+            floatVector _microDeformation;
+
+            floatVector _gradientMicroDeformation;
+
+            // ALL OF THESE MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
+            std::pair< bool, floatType > _localReferenceRadius;
+
+            std::pair< bool, floatType > _nonlocalReferenceRadius;
+
+            std::pair< bool, std::vector< unsigned int > > _unitSphereConnectivity;
+
+            std::pair< bool, floatVector > _unitSpherePoints;
+
+            std::pair< bool, floatVector > _localReferenceNormal;
+
+            std::pair< bool, floatVector > _localSurfaceReferenceRelativePositionVector;
+
+            std::pair< bool, floatVector > _nonlocalSurfaceReferenceRelativePositionVector;
+
+            std::pair< bool, floatVector > _referenceDistanceVector;
+
+            std::pair< bool, floatVector > _localReferenceParticleSpacing;
+
+            std::pair< bool, floatVector > _localDeformationGradient;
+
+            std::pair< bool, floatVector > _localMicroDeformation;
+
+            std::pair< bool, floatVector > _nonlocalMicroDeformation;
+
+            std::pair< bool, floatVector > _currentDistanceVector;
+
+            std::pair< bool, floatVector > _localCurrentNormal;
+
+            std::pair< bool, floatVector > _surfaceParameters;
+            // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
+
+            // Private member functions
+            virtual errorOut initializeUnitSphere( );
+
+            virtual errorOut setLocalReferenceRadius( );
+
+            virtual errorOut setNonLocalReferenceRadius( );
+
+            virtual errorOut setLocalReferenceNormal( );
+
+            virtual errorOut setLocalSurfaceReferenceRelativePositionVector( );
+
+            virtual errorOut setNonLocalSurfaceReferenceRelativePositionVector( );
+
+            virtual errorOut setReferenceDistanceVector( );
+
+            virtual errorOut setLocalDeformationGradient( );
+
+            virtual errorOut setLocalMicroDeformation( );
+
+            virtual errorOut setNonLocalMicroDeformation( );
+
+            virtual errorOut setLocalCurrentNormal( );
+
+            virtual errorOut setLocalReferenceParticleSpacing( );
+
+            virtual errorOut setCurrentDistance( );
+
+            virtual errorOut setSurfaceParameters( );
+
+            virtual errorOut initializeSurfaceIntegrandQuantities( );
+
+            virtual errorOut computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity );
+
+            virtual errorOut resetSurface( );
 
     };
 
