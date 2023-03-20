@@ -191,7 +191,19 @@ namespace asp{
 
                 static errorOut initializeSurfaceIntegrandQuantities( asp::aspBase &asp ){
 
-                    BOOST_CHECK( !asp.initializeSurfacenIntegrandQuantities( ) );
+                    BOOST_CHECK( !asp.initializeSurfaceIntegrandQuantities( ) );
+
+                    return NULL;
+
+                }
+
+                static errorOut computeSurfaceEnergyDensity( asp::aspBase &asp, floatType &surfaceEnergyDensity ){
+
+                    errorOut error = asp.computeSurfaceEnergyDensity( surfaceEnergyDensity );
+
+                    if ( error ){
+                        error->print( );
+                    }
 
                     return NULL;
 
@@ -362,7 +374,28 @@ namespace asp{
                     asp._surfaceParameters.first = true;
                     asp._surfaceParameters.second = surfaceParameters;
 
+                    return NULL;
+
                 }
+
+                static errorOut set_currentDistance( asp::aspBase &asp, const floatVector &currentDistance ){
+
+                    asp._currentDistanceVector.first = true;
+                    asp._currentDistanceVector.second = currentDistance;
+
+                    return NULL;
+
+                }
+
+                static errorOut set_localCurrentNormal( asp::aspBase &asp, const floatVector &localCurrentNormal ){
+
+                    asp._localCurrentNormal.first = true;
+                    asp._localCurrentNormal.second = localCurrentNormal;
+
+                    return NULL;
+
+                }
+
 
                 // Read functions for checking for errors
                 static std::pair< bool, floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
@@ -371,15 +404,15 @@ namespace asp{
 
                 }
 
-                static std::pair< bool, floatVector > getLocalSurfaceRelativePositionVector( asp::aspBase &asp ){
+                static std::pair< bool, floatVector > getLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp ){
 
-                    return asp._localSurfaceRelativePositionVector;
+                    return asp._localSurfaceReferenceRelativePositionVector;
 
                 }
 
-                static std::pair< bool, floatVector > getNonLocalSurfaceRelativePostiionVector( asp::aspBase &asp ){
+                static std::pair< bool, floatVector > getNonLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp ){
 
-                    return asp._nonlocalSurfaceRelativePositionVector;
+                    return asp._nonlocalSurfaceReferenceRelativePositionVector;
 
                 }
 
@@ -409,7 +442,7 @@ namespace asp{
 
                 static std::pair< bool, floatVector > getCurrentDistance( asp::aspBase &asp ){
 
-                    return asp._currentDistance;
+                    return asp._currentDistanceVector;
 
                 }
 
@@ -419,9 +452,9 @@ namespace asp{
 
                 }
 
-                static std::pair< bool, floatVector > getSurfaceParameters( asp::aspBaes &asp ){
+                static std::pair< bool, floatVector > getSurfaceParameters( asp::aspBase &asp ){
 
-                    return asp._surfaceParamters;
+                    return asp._surfaceParameters;
 
                 }
 
@@ -1180,7 +1213,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
 
         public:
 
-            floatVector referenceNormalAnswer = { 1, 2, 3};
+            floatVector localReferenceNormalAnswer = { 1, 2, 3};
 
             floatVector localSurfaceReferenceRelativePositionVectorAnswer = { 4, 5, 6 };
 
@@ -1210,7 +1243,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
 
             virtual errorOut setLocalReferenceNormal( ){
     
-                asp::unit_test::aspBaseTester::set_localReferenceNormal( *this, referenceNormalAnswer );
+                asp::unit_test::aspBaseTester::set_localReferenceNormal( *this, localReferenceNormalAnswer );
 
                 return NULL;
     
@@ -1288,7 +1321,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
 
             }
 
-    }
+    };
 
     aspBaseMock asp;
 
@@ -1298,8 +1331,98 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
 
     result = asp::unit_test::aspBaseTester::getLocalReferenceNormal( asp );
 
-    BOOST_CHECK( result->first );
+    BOOST_CHECK( result.first );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( result->second, asp.localReferenceNormalAnswer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localReferenceNormalAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getLocalSurfaceReferenceRelativePositionVector( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localSurfaceReferenceRelativePositionVectorAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getNonLocalSurfaceReferenceRelativePositionVector( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.nonlocalSurfaceReferenceRelativePositionVectorAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getReferenceDistanceVector( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.referenceDistanceVectorAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getLocalDeformationGradient( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localDeformationGradientAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getLocalMicroDeformation( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localMicroDeformationAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getNonLocalMicroDeformation( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.nonlocalMicroDeformationAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getCurrentDistance( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.currentDistanceAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getLocalCurrentNormal( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localCurrentNormalAnswer ) );
+
+    result = asp::unit_test::aspBaseTester::getSurfaceParameters( asp );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.surfaceParametersAnswer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector distanceVector = { 1, 2, 3 };
+
+            floatVector localCurrentNormal = { 0.45584231, 0.56980288, 0.68376346 };
+
+            floatVector surfaceParameters = { 12.3, 45.6 };
+
+            aspBaseMock( ){
+
+                asp::unit_test::aspBaseTester::set_currentDistance( *this, distanceVector );
+
+                asp::unit_test::aspBaseTester::set_localCurrentNormal( *this, localCurrentNormal );
+
+                asp::unit_test::aspBaseTester::set_surfaceParameters( *this, surfaceParameters );
+
+            }
+
+    };
+    
+    aspBaseMock asp;
+
+    floatType answer = 356.565771656861;
+
+    floatType result;
+
+    asp::unit_test::aspBaseTester::computeSurfaceEnergyDensity( asp, result );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
 }

@@ -895,6 +895,8 @@ namespace asp{
             
             errorOut result = new errorNode( __func__, message );
 
+            result->addNext( error );
+
             return result;
 
         }
@@ -908,11 +910,13 @@ namespace asp{
             
             errorOut result = new errorNode( __func__, message );
 
+            result->addNext( error );
+
             return result;
 
         }
 
-        surfaceEnergyDensity = energyDensity * vectorTools::l2norm( _currentDistanceVector.second );
+        surfaceEnergyDensity = energyDensity * vectorTools::l2norm( dn );
 
         return NULL;
 
