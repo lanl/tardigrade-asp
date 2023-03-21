@@ -31,6 +31,19 @@ struct cout_redirect{
         std::streambuf * old;
 };
 
+struct cerr_redirect{
+    cerr_redirect( std::streambuf * new_buffer )
+        : old( std::cerr.rdbuf( new_buffer ) )
+    { }
+
+    ~cerr_redirect( ) {
+        std::cerr.rdbuf( old );
+    }
+
+    private:
+        std::streambuf * old;
+};
+
 // Unit tester to open private members of aspBase for unit testing
 namespace asp{
 
@@ -1426,5 +1439,37 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
     result = asp.getSurfaceEnergyDensity( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+}
+
+bool correctMessage( const std::logic_error &ex ){ return true; }
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        private:
+
+            virtual errorOut computeSurfaceEnergyDensity( ){
+
+                return new errorNode( __func__, "This should throw an error" );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    //Setup redirect variables for stderr
+    std::stringbuf buffer;
+    cerr_redirect rd( &buffer );
+
+    BOOST_REQUIRE_THROW( asp.getSurfaceEnergyDensity( ), std::logic_error ); 
+
+    BOOST_CHECK( buffer.str( ).find( "This should throw an error" ) != std::string::npos );
+
+    BOOST_CHECK( buffer.str( ).find( "getSurfaceEnergyDensity" ) != std::string::npos );
+
+    BOOST_CHECK( buffer.str( ).find( "setSurfaceEnergyDensity" ) != std::string::npos );
 
 }

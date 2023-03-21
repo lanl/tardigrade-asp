@@ -11,6 +11,40 @@
 #include<traction_separation.h>
 #include<surface_integration.h>
 
+//TODO Move this to error_tools
+#include<boost/stacktrace.hpp>
+#include<boost/exception/all.hpp>
+
+typedef boost::error_info<struct tag_stacktrace, boost::stacktrace::stacktrace> traced;
+
+template <class E>
+void throw_with_trace(const E& e) {
+    throw boost::enable_error_info(e)
+        << traced(boost::stacktrace::stacktrace());
+}
+
+void throw_errorOut_error( const asp::errorOut &e, std::string message ){
+    if ( e ){
+        e->print( );
+        std::cerr << "Backtrace:\n" << boost::stacktrace::stacktrace( ) << "\n";
+        throw_with_trace( std::logic_error( message ) );
+    }
+}
+
+namespace boost {
+    inline void assertion_failed_msg(char const* expr, char const* msg, char const* function, char const* /*file*/, long /*line*/) {
+        std::cerr << "Expression '" << expr << "' is false in function '" << function << "': " << (msg ? msg : "<...>") << ".\n"
+            << "Backtrace:\n" << boost::stacktrace::stacktrace() << '\n';
+
+        std::abort();
+    }
+
+    inline void assertion_failed(char const* expr, char const* function, char const* file, long line) {
+        ::boost::assertion_failed_msg(expr, 0 /*nullptr*/, function, file, line);
+    }
+} // namespace boost
+//END move this to error_tools
+
 namespace asp{
 
     //Define asp global constants in a place that Doxygen can pick up for documentation
@@ -930,15 +964,11 @@ namespace asp{
          * Get the surface energy density
          */
 
-        errorOut error = NULL;
-
         if ( !_surfaceEnergyDensity.first ){
 
-            error = setSurfaceEnergyDensity( );
+            throw_errorOut_error( setSurfaceEnergyDensity( ), "Error when setting surface energy density" );
 
         }
-
-        //TODO: Catch this error using boost::stacktrace
 
         return _surfaceEnergyDensity.second;
 
@@ -953,7 +983,7 @@ namespace asp{
 
         if ( !_surfaceEnergyDensity.first ){
 
-            error = computeSurfaceEnergyDensity( );
+            throw_errorOut_error( computeSurfaceEnergyDensity( ), "Error in computation of surface energy density" );
 
         }
 
