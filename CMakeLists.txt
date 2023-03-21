@@ -136,7 +136,7 @@ endif()
 # Only add tests and documentation for current project builds. Protects downstream project builds.
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Find Boost. Required for tests
-    find_package(Boost 1.53.0 REQUIRED COMPONENTS unit_test_framework)
+    find_package(Boost 1.65.0 REQUIRED COMPONENTS unit_test_framework)
     # Add c++ tests and docs
     add_subdirectory(${CPP_TEST_PATH})
     add_subdirectory(${ABAQUS_SRC_PATH})
