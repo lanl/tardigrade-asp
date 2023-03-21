@@ -197,9 +197,9 @@ namespace asp{
 
                 }
 
-                static errorOut computeSurfaceEnergyDensity( asp::aspBase &asp, floatType &surfaceEnergyDensity ){
+                static errorOut computeSurfaceEnergyDensity( asp::aspBase &asp ){
 
-                    errorOut error = asp.computeSurfaceEnergyDensity( surfaceEnergyDensity );
+                    errorOut error = asp.computeSurfaceEnergyDensity( );
 
                     if ( error ){
                         error->print( );
@@ -1421,7 +1421,9 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
 
     floatType result;
 
-    asp::unit_test::aspBaseTester::computeSurfaceEnergyDensity( asp, result );
+    asp::unit_test::aspBaseTester::computeSurfaceEnergyDensity( asp );
+
+    result = asp.getSurfaceEnergyDensity( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 

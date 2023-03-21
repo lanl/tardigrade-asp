@@ -6,7 +6,7 @@ Changelog
 #########
 
 ******************
-0.0.1 (unreleased)
+0.1.0 (unreleased)
 ******************
 
 Breaking changes
@@ -38,3 +38,4 @@ New Features
 - Added a more general form of the distance calculation to support random deformations. (:merge:`12`). By `Nathan Miller`_.
 - Initial commit of the asp base class with a linear elastic local particle energy definition. (:merge:`14`). By `Nathan Miller`_.
 - Added the computation of the traction separation energy at a single surface point. (:merge:`15`). By `Nathan Miller`_.
+- Changed the interface to the surface energy such that it sets an internal variable rather than returning a value (:merge:`16`). By `Nathan Miller`_.

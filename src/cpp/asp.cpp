@@ -878,9 +878,12 @@ namespace asp{
 
     }
 
-    errorOut aspBase::computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
+    errorOut aspBase::computeSurfaceEnergyDensity( ){
         /*!
          * Compute the surface energy density in the current configuration ( energy / da )
+         * 
+         * It is expected that the user will use the function `setSurfaceEnergyDensity` to
+         * set the current value of the surface energy density.
          */
 
         errorOut error;
@@ -916,7 +919,58 @@ namespace asp{
 
         }
 
-        surfaceEnergyDensity = energyDensity * vectorTools::l2norm( dn );
+        setSurfaceEnergyDensity( energyDensity * vectorTools::l2norm( dn ) );
+
+        return NULL;
+
+    }
+
+    floatType aspBase::getSurfaceEnergyDensity( ){
+        /*!
+         * Get the surface energy density
+         */
+
+        errorOut error = NULL;
+
+        if ( !_surfaceEnergyDensity.first ){
+
+            error = setSurfaceEnergyDensity( );
+
+        }
+
+        //TODO: Catch this error using boost::stacktrace
+
+        return _surfaceEnergyDensity.second;
+
+    }
+
+    errorOut aspBase::setSurfaceEnergyDensity( ){
+        /*!
+         * Set the surface energy density if required.
+         */
+
+        errorOut error;
+
+        if ( !_surfaceEnergyDensity.first ){
+
+            error = computeSurfaceEnergyDensity( );
+
+        }
+
+        return error;
+
+    }
+
+    errorOut aspBase::setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity ){
+        /*!
+         * Set the surface energy density with a new value
+         * 
+         * \param &surfaceEnergyDensity: The value of the surface energy density in the current configuration ( e / da )
+         */
+
+        _surfaceEnergyDensity.first = true;
+
+        _surfaceEnergyDensity.second = surfaceEnergyDensity;
 
         return NULL;
 
