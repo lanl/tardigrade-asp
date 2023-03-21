@@ -4,7 +4,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${PROJECT_NAME}.h
 message("CMAKE_DL_LIBS: ${CMAKE_DL_LIBS}")
 target_link_libraries(${PROJECT_NAME} error_tools stress_tools ${PROJECT_LINK_LIBRARIES} ${CMAKE_DL_LIBS})
 target_compile_options(${PROJECT_NAME} PUBLIC)
-set_property(TARGET your_target PROPERTY ENABLE_EXPORTS ON)
+set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)
 
 # Abaqus UMAT interface
 add_library(${UMAT} SHARED "${UMAT}.cpp" "${UMAT}.h")
