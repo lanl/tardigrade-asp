@@ -1,5 +1,5 @@
 abaqus_tools>=0.3
-boost>=1.59
+boost>=1.65
 breathe>=4.30.0
 cmake>=3.18
 constitutive_tools

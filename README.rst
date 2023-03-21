@@ -1,5 +1,5 @@
 .. _Anaconda Documentation: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
-.. _BOOST: https://www.boost.org/doc/libs/1_53_0/
+.. _BOOST: https://www.boost.org/doc/libs/1_65_0/
 .. _CMake: https://cmake.org/cmake/help/v3.14/
 .. _CMake add_custom_target: https://cmake.org/cmake/help/latest/command/add_custom_target.html
 .. _Doxygen: https://www.doxygen.nl/manual/docblocks.html
@@ -130,7 +130,7 @@ C++ Libraries
     management.
 
 * `Eigen`_ >= 3.3.7
-* `BOOST`_ >= 1.59.0
+* `BOOST`_ >= 1.65.0
 * error\_tools: https://re-git.lanl.gov/aea/material-models/error_tools
 * vector\_tools: https://re-git.lanl.gov/aea/material-models/vector_tools
 * abaqus\_tools: https://re-git.lanl.gov/aea/material-models/abaqus_tools
