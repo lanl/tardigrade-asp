@@ -64,12 +64,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Set the c++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -no-pie -fno-pie")
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lrt -ggdb")
 endif()
-
-add_compile_definitions(BOOST_STACKTRACE_USE_ADDR2LINE)
 
 # Enable CTest
 enable_testing()
@@ -101,6 +99,19 @@ if(ABAQUS_PROGRAM)
 else()
     message(STATUS "Abaqus not found. ${MISSING_INTEGRATION_DEPS_MESSAGE}")
 endif()
+
+# Find addr2line required for boost stacktrace
+find_program(ADDR2LINE_PROGRAM REQUIRED
+             NAMES addr2line
+             # AEA environment path
+             HINTS  /projects/nathanm/python_environments/${PROJECT_NAME}-env/bin/
+            )
+if(ADDR2LINE_PROGRAM)
+    message (STATUS "Found addr2line ${ADDR2LINE_PROGRAM}")
+endif()
+
+add_compile_definitions(BOOST_STACKTRACE_USE_ADDR2LINE)
+add_compile_definitions(BOOST_STACKTRACE_ADDR2LINE_LOCATION=${ADDR2LINE_PROGRAM})
 
 # Find related, but external, projects in installed environment
 include(FetchContent)
