@@ -17,7 +17,7 @@ Internal Changes
 ================
 - Change the build system to more closely mimic the current state of cpp_stub (:merge:`15`). By `Nathan Miller`_.
 - Change the project to use boost 1.65 (:merge:`17`). By `Nathan Miller`_.
-- Initial test of the boost::stacktrace capability (:merge:`18`). By `Nathan Miller`_.
+- Begin incorporation of new error_tools stack trace capability (:merge:`18`). By `Nathan Miller`_.
 
 New Features
 ============

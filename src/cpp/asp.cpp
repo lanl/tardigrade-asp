@@ -11,40 +11,6 @@
 #include<traction_separation.h>
 #include<surface_integration.h>
 
-//TODO Move this to error_tools
-#include<boost/stacktrace.hpp>
-#include<boost/exception/all.hpp>
-
-typedef boost::error_info<struct tag_stacktrace, boost::stacktrace::stacktrace> traced;
-
-template <class E>
-void throw_with_trace(const E& e) {
-    throw boost::enable_error_info(e)
-        << traced(boost::stacktrace::stacktrace());
-}
-
-void throw_errorOut_error( const asp::errorOut &e, std::string message ){
-    if ( e ){
-        e->print( );
-        std::cerr << "Backtrace:\n" << boost::stacktrace::stacktrace( ) << "\n";
-        throw_with_trace( std::logic_error( message ) );
-    }
-}
-
-namespace boost {
-    inline void assertion_failed_msg(char const* expr, char const* msg, char const* function, char const* /*file*/, long /*line*/) {
-        std::cerr << "Expression '" << expr << "' is false in function '" << function << "': " << (msg ? msg : "<...>") << ".\n"
-            << "Backtrace:\n" << boost::stacktrace::stacktrace() << '\n';
-
-        std::abort();
-    }
-
-    inline void assertion_failed(char const* expr, char const* function, char const* file, long line) {
-        ::boost::assertion_failed_msg(expr, 0 /*nullptr*/, function, file, line);
-    }
-} // namespace boost
-//END move this to error_tools
-
 namespace asp{
 
     //Define asp global constants in a place that Doxygen can pick up for documentation
@@ -920,38 +886,12 @@ namespace asp{
          * set the current value of the surface energy density.
          */
 
-        errorOut error;
-
         // Decompose the traction into normal and tangential directions
         floatVector dn, dt;
-        error = tractionSeparation::decomposeVector( _currentDistanceVector.second, _localCurrentNormal.second, dn, dt );
-
-        if ( error ){
-
-            std::string message = "Error when decomposing the distance";
-            
-            errorOut result = new errorNode( __func__, message );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( _currentDistanceVector.second, _localCurrentNormal.second, dn, dt ) );
 
         floatType energyDensity;
-        error = tractionSeparation::computeLinearTractionEnergy( dn, dt, _surfaceParameters.second, energyDensity );
-
-        if ( error ){
-
-            std::string message = "Error when computing the surface traction energy density";
-            
-            errorOut result = new errorNode( __func__, message );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, _surfaceParameters.second, energyDensity ) );
 
         setSurfaceEnergyDensity( energyDensity * vectorTools::l2norm( dn ) );
 
@@ -966,7 +906,7 @@ namespace asp{
 
         if ( !_surfaceEnergyDensity.first ){
 
-            throw_errorOut_error( setSurfaceEnergyDensity( ), "Error when setting surface energy density" );
+            ERROR_TOOLS_CATCH( setSurfaceEnergyDensity( ) );
 
         }
 
@@ -979,15 +919,13 @@ namespace asp{
          * Set the surface energy density if required.
          */
 
-        errorOut error;
-
         if ( !_surfaceEnergyDensity.first ){
 
-            throw_errorOut_error( computeSurfaceEnergyDensity( ), "Error in computation of surface energy density" );
+            ERROR_TOOLS_CATCH( computeSurfaceEnergyDensity( ) );
 
         }
 
-        return error;
+        return NULL;
 
     }
 

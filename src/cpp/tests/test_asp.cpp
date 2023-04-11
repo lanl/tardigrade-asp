@@ -1442,8 +1442,6 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
 
 }
 
-bool correctMessage( const std::logic_error &ex ){ return true; }
-
 BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
 
     class aspBaseMock : public asp::aspBase{
@@ -1465,6 +1463,8 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
     cerr_redirect rd( &buffer );
 
     BOOST_REQUIRE_THROW( asp.getSurfaceEnergyDensity( ), std::logic_error ); 
+
+    std::cout << "buffer:\n" << buffer.str( ) << "\n";
 
     BOOST_CHECK( buffer.str( ).find( "This should throw an error" ) != std::string::npos );
 
