@@ -188,13 +188,10 @@ namespace asp{
         floatVector localReferenceNormal;
         ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
-        if ( ! _localReferenceRadius.first ){
+        floatType localReferenceRadius;
+        ERROR_TOOLS_CATCH( localReferenceRadius = getLocalReferenceRadius( ) );
 
-            ERROR_TOOLS_CATCH( setLocalReferenceRadius ( ) );
-
-        }
-
-        _localSurfaceReferenceRelativePositionVector.second = _localReferenceRadius.second * localReferenceNormal;
+        _localSurfaceReferenceRelativePositionVector.second = localReferenceRadius * localReferenceNormal;
 
         _localSurfaceReferenceRelativePositionVector.first = true;
 
@@ -229,13 +226,10 @@ namespace asp{
         floatVector localReferenceNormal;
         ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
-        if ( ! _nonlocalReferenceRadius.first ){
+        floatType nonlocalReferenceRadius;
+        ERROR_TOOLS_CATCH( nonlocalReferenceRadius = getNonLocalReferenceRadius( ) );
 
-            ERROR_TOOLS_CATCH( setNonLocalReferenceRadius( ) );
-
-        }
-
-        _nonlocalSurfaceReferenceRelativePositionVector.second = -_nonlocalReferenceRadius.second * localReferenceNormal;
+        _nonlocalSurfaceReferenceRelativePositionVector.second = -nonlocalReferenceRadius * localReferenceNormal;
 
         _nonlocalSurfaceReferenceRelativePositionVector.first = true;
 
@@ -271,6 +265,21 @@ namespace asp{
 
     }
 
+    floatType aspBase::getLocalReferenceRadius( ){
+        /*!
+         * Get the local reference radius
+         */
+
+        if ( !_localReferenceRadius.first ){
+
+            ERROR_TOOLS_CATCH( setLocalReferenceRadius( ) );
+
+        }
+
+        return _localReferenceRadius.second;
+
+    }
+
     void aspBase::setNonLocalReferenceRadius( ){
         /*!
          * Set the non-local reference radius
@@ -283,6 +292,22 @@ namespace asp{
         return;
 
     }
+
+    floatType aspBase::getNonLocalReferenceRadius( ){
+        /*!
+         * Get the local reference radius
+         */
+
+        if ( !_nonlocalReferenceRadius.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalReferenceRadius( ) );
+
+        }
+
+        return _nonlocalReferenceRadius.second;
+
+    }
+
 
     void aspBase::setLocalDeformationGradient( ){
         /*!

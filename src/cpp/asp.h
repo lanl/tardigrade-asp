@@ -114,6 +114,10 @@ namespace asp{
             // Getter functions
             floatType getSurfaceEnergyDensity( );
 
+            floatType getLocalReferenceRadius( );
+
+            floatType getNonLocalReferenceRadius( );
+
             floatVector getLocalReferenceNormal( );
 
             floatVector getLocalSurfaceReferenceRelativePositionVector( );

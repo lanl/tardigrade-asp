@@ -730,6 +730,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceRadius ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, radius.second ) );
 
+    aspBaseMock aspGet( radiusAnswer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, aspGet.getLocalReferenceRadius( ) ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalReferenceRadius ){
@@ -757,6 +761,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalReferenceRadius ){
     BOOST_CHECK( radius.first );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, radius.second ) );
+
+    aspBaseMock aspGet( radiusAnswer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, aspGet.getNonLocalReferenceRadius( ) ) );
 
 }
 
