@@ -51,12 +51,12 @@ namespace asp{
 
     }
 
-    errorOut aspBase::computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
-                                                         const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
-                                                         const floatType &currentTemperature, const floatType &previousTemperature,
-                                                         const floatVector &previousStateVariables,
-                                                         const floatVector &parameters,
-                                                         floatType &energy, floatVector &cauchyStress ){
+    void aspBase::computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                     const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                     const floatType &currentTemperature, const floatType &previousTemperature,
+                                                     const floatVector &previousStateVariables,
+                                                     const floatVector &parameters,
+                                                     floatType &energy, floatVector &cauchyStress ){
         /*!
          * Default function for computing the local particle's energy per unit current volume
          * Defaults to a linear-elastic solid with parameters defined in the reference configuration.
@@ -74,16 +74,16 @@ namespace asp{
 
         ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energy, cauchyStress ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
-                                                         const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
-                                                         const floatType &currentTemperature, const floatType &previousTemperature,
-                                                         const floatVector &previousStateVariables,
-                                                         const floatVector &parameters,
-                                                         floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio ){
+    void aspBase::computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                     const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                     const floatType &currentTemperature, const floatType &previousTemperature,
+                                                     const floatVector &previousStateVariables,
+                                                     const floatVector &parameters,
+                                                     floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio ){
         /*!
          * Default function for computing the local particle's energy per unit current volume
          * Defaults to a linear-elastic solid with parameters defined in the reference configuration.
@@ -105,11 +105,11 @@ namespace asp{
 
         logProbabilityRatio = 0.;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::initializeUnitSphere( ){
+    void aspBase::initializeUnitSphere( ){
         /*!
          * Initialize the unit sphere (i.e. a sphere of radius 1) to integrate over
          */
@@ -120,11 +120,11 @@ namespace asp{
 
         _unitSphereConnectivity.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalReferenceNormal( ){
+    void aspBase::setLocalReferenceNormal( ){
         /*!
          * Set the local reference normal vector
          * 
@@ -144,7 +144,7 @@ namespace asp{
             message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
             message            += "  number of points:      " + std::to_string( _unitSpherePoints.second.size( ) / _dimension );
 
-            return new errorNode( __func__, message );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( message ) );
 
         }
 
@@ -155,11 +155,11 @@ namespace asp{
 
         _localReferenceNormal.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalSurfaceReferenceRelativePositionVector( ){
+    void aspBase::setLocalSurfaceReferenceRelativePositionVector( ){
         /*!
          * Set the local surface relative position vector
          * 
@@ -184,11 +184,11 @@ namespace asp{
 
         _localSurfaceReferenceRelativePositionVector.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setNonLocalSurfaceReferenceRelativePositionVector( ){
+    void aspBase::setNonLocalSurfaceReferenceRelativePositionVector( ){
         /*!
          * Set the non-local relative position vector
          * 
@@ -213,11 +213,11 @@ namespace asp{
 
         _nonlocalSurfaceReferenceRelativePositionVector.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalReferenceRadius( ){
+    void aspBase::setLocalReferenceRadius( ){
         /*!
          * Set the local reference radius
          */
@@ -226,11 +226,11 @@ namespace asp{
 
         _localReferenceRadius.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setNonLocalReferenceRadius( ){
+    void aspBase::setNonLocalReferenceRadius( ){
         /*!
          * Set the non-local reference radius
          */
@@ -239,11 +239,11 @@ namespace asp{
 
         _nonlocalReferenceRadius.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalDeformationGradient( ){
+    void aspBase::setLocalDeformationGradient( ){
         /*!
          * Set the local deformation gradient
          */
@@ -252,11 +252,11 @@ namespace asp{
 
         _localDeformationGradient.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalMicroDeformation( ){
+    void aspBase::setLocalMicroDeformation( ){
         /*!
          * Set the local micro deformation
          */
@@ -265,11 +265,11 @@ namespace asp{
 
         _localMicroDeformation.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalReferenceParticleSpacing( ){
+    void aspBase::setLocalReferenceParticleSpacing( ){
         /*!
          * Set the local particle spacing
          * 
@@ -300,11 +300,11 @@ namespace asp{
 
         _localReferenceParticleSpacing.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setNonLocalMicroDeformation( ){
+    void aspBase::setNonLocalMicroDeformation( ){
         /*!
          * Set the non-local micro deformation
          * 
@@ -337,11 +337,11 @@ namespace asp{
 
         _nonlocalMicroDeformation.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setCurrentDistance( ){
+    void aspBase::setCurrentDistance( ){
         /*!
          * Set the current distance vector
          */
@@ -393,11 +393,11 @@ namespace asp{
 
         _currentDistanceVector.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setLocalCurrentNormal( ){
+    void aspBase::setLocalCurrentNormal( ){
         /*!
          * Set the current local normal
          */
@@ -422,11 +422,11 @@ namespace asp{
 
         _localCurrentNormal.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::initializeSurfaceIntegrandQuantities( ){
+    void aspBase::initializeSurfaceIntegrandQuantities( ){
         /*!
          * Initialize the surface integrand quantities
          */
@@ -451,21 +451,21 @@ namespace asp{
 
         ERROR_TOOLS_CATCH( setSurfaceParameters( ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setSurfaceParameters( ){
+    void aspBase::setSurfaceParameters( ){
         /*!
          * Set the surface parameters for the integrand
          */
 
         _surfaceParameters.first = true;
 
-        return NULL;
+        return;
     }
 
-    errorOut aspBase::setReferenceDistanceVector( ){
+    void aspBase::setReferenceDistanceVector( ){
         /*!
          * Set the initial distance between two particles
          */
@@ -474,11 +474,11 @@ namespace asp{
 
         _referenceDistanceVector.first = true;
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::resetSurface( ){
+    void aspBase::resetSurface( ){
         /*!
          * Reset the surface to the base state
          */
@@ -509,11 +509,11 @@ namespace asp{
 
         _surfaceParameters = std::make_pair( false, floatVector( 0, 0 ) );
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::computeSurfaceEnergyDensity( ){
+    void aspBase::computeSurfaceEnergyDensity( ){
         /*!
          * Compute the surface energy density in the current configuration ( energy / da )
          * 
@@ -530,7 +530,7 @@ namespace asp{
 
         ERROR_TOOLS_CATCH( setSurfaceEnergyDensity( 0.5 * energyDensity * vectorTools::l2norm( dn ) ) );
 
-        return NULL;
+        return;
 
     }
 
@@ -549,7 +549,7 @@ namespace asp{
 
     }
 
-    errorOut aspBase::setSurfaceEnergyDensity( ){
+    void aspBase::setSurfaceEnergyDensity( ){
         /*!
          * Set the surface energy density if required.
          */
@@ -560,11 +560,11 @@ namespace asp{
 
         }
 
-        return NULL;
+        return;
 
     }
 
-    errorOut aspBase::setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity ){
+    void aspBase::setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity ){
         /*!
          * Set the surface energy density with a new value
          * 
@@ -575,7 +575,7 @@ namespace asp{
 
         _surfaceEnergyDensity.second = surfaceEnergyDensity;
 
-        return NULL;
+        return;
 
     }
 
