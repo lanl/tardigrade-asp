@@ -95,27 +95,27 @@ namespace asp{
             aspBase( );
 
             // Public member functions
-            virtual errorOut computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
-                                                                const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
-                                                                const floatType &currentTemperature, const floatType &previousTemperature,
-                                                                const floatVector &previousStateVariables,
-                                                                const floatVector &parameters,
-                                                                floatType &energy, floatVector &cauchyStress );
+            virtual void computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                            const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                            const floatType &currentTemperature, const floatType &previousTemperature,
+                                                            const floatVector &previousStateVariables,
+                                                            const floatVector &parameters,
+                                                            floatType &energy, floatVector &cauchyStress );
 
-            virtual errorOut computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
-                                                                const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
-                                                                const floatType &currentTemperature, const floatType &previousTemperature,
-                                                                const floatVector &previousStateVariables,
-                                                                const floatVector &parameters,
-                                                                floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
+            virtual void computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                            const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                            const floatType &currentTemperature, const floatType &previousTemperature,
+                                                            const floatVector &previousStateVariables,
+                                                            const floatVector &parameters,
+                                                            floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
 
-            virtual errorOut computeSurfaceEnergyDensity( );
+            virtual void computeSurfaceEnergyDensity( );
 
             // Getter functions
             floatType getSurfaceEnergyDensity( );
 
             // Setter functions
-            errorOut setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity );
+            void setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity );
 
         protected:
 
@@ -178,39 +178,39 @@ namespace asp{
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
-            virtual errorOut initializeUnitSphere( );
+            virtual void initializeUnitSphere( );
 
-            virtual errorOut setLocalReferenceRadius( );
+            virtual void setLocalReferenceRadius( );
 
-            virtual errorOut setNonLocalReferenceRadius( );
+            virtual void setNonLocalReferenceRadius( );
 
-            virtual errorOut setLocalReferenceNormal( );
+            virtual void setLocalReferenceNormal( );
 
-            virtual errorOut setLocalSurfaceReferenceRelativePositionVector( );
+            virtual void setLocalSurfaceReferenceRelativePositionVector( );
 
-            virtual errorOut setNonLocalSurfaceReferenceRelativePositionVector( );
+            virtual void setNonLocalSurfaceReferenceRelativePositionVector( );
 
-            virtual errorOut setReferenceDistanceVector( );
+            virtual void setReferenceDistanceVector( );
 
-            virtual errorOut setLocalDeformationGradient( );
+            virtual void setLocalDeformationGradient( );
 
-            virtual errorOut setLocalMicroDeformation( );
+            virtual void setLocalMicroDeformation( );
 
-            virtual errorOut setNonLocalMicroDeformation( );
+            virtual void setNonLocalMicroDeformation( );
 
-            virtual errorOut setLocalCurrentNormal( );
+            virtual void setLocalCurrentNormal( );
 
-            virtual errorOut setLocalReferenceParticleSpacing( );
+            virtual void setLocalReferenceParticleSpacing( );
 
-            virtual errorOut setCurrentDistance( );
+            virtual void setCurrentDistance( );
 
-            virtual errorOut setSurfaceParameters( );
+            virtual void setSurfaceParameters( );
 
-            virtual errorOut initializeSurfaceIntegrandQuantities( );
+            virtual void initializeSurfaceIntegrandQuantities( );
 
-            virtual errorOut setSurfaceEnergyDensity( );
+            virtual void setSurfaceEnergyDensity( );
 
-            virtual errorOut resetSurface( );
+            virtual void resetSurface( );
 
     };
 
