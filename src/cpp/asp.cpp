@@ -243,6 +243,21 @@ namespace asp{
 
     }
 
+    floatVector aspBase::getNonLocalSurfaceReferenceRelativePositionVector( ){
+        /*!
+         * Get the non-local surface reference relative position vector
+         */
+
+        if ( !_nonlocalSurfaceReferenceRelativePositionVector.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalSurfaceReferenceRelativePositionVector( ) );
+
+        }
+
+        return _nonlocalSurfaceReferenceRelativePositionVector.second;
+
+    }
+
     void aspBase::setLocalReferenceRadius( ){
         /*!
          * Set the local reference radius
@@ -302,17 +317,11 @@ namespace asp{
          * \f$dX_I = \Xi_I^{local} + D_I - \Xi_I^{non-local}\f$
          */
 
-        if ( ! _localSurfaceReferenceRelativePositionVector.first ){
+        floatVector localSurfaceReferenceRelativePositionVector;
+        ERROR_TOOLS_CATCH( localSurfaceReferenceRelativePositionVector = getLocalSurfaceReferenceRelativePositionVector( ) );
 
-            ERROR_TOOLS_CATCH( setLocalSurfaceReferenceRelativePositionVector( ) );
-
-        }
-
-        if ( ! _nonlocalSurfaceReferenceRelativePositionVector.first ){
-
-            ERROR_TOOLS_CATCH( setNonLocalSurfaceReferenceRelativePositionVector( ) );
-
-        }
+        floatVector nonlocalSurfaceReferenceRelativePositionVector;
+        ERROR_TOOLS_CATCH( nonlocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
 
         if ( ! _referenceDistanceVector.first ){
 
@@ -320,9 +329,9 @@ namespace asp{
 
         }
 
-        _localReferenceParticleSpacing.second = _localSurfaceReferenceRelativePositionVector.second
+        _localReferenceParticleSpacing.second = localSurfaceReferenceRelativePositionVector
                                               + _referenceDistanceVector.second
-                                              - _nonlocalSurfaceReferenceRelativePositionVector.second;
+                                              - nonlocalSurfaceReferenceRelativePositionVector;
 
         _localReferenceParticleSpacing.first = true;
 
@@ -372,17 +381,11 @@ namespace asp{
          * Set the current distance vector
          */
 
-        if ( ! _localSurfaceReferenceRelativePositionVector.first ){
+        floatVector localSurfaceReferenceRelativePositionVector;
+        ERROR_TOOLS_CATCH( localSurfaceReferenceRelativePositionVector = getLocalSurfaceReferenceRelativePositionVector( ) );
 
-            ERROR_TOOLS_CATCH( setLocalSurfaceReferenceRelativePositionVector( ) );
-
-        }
-
-        if ( ! _nonlocalSurfaceReferenceRelativePositionVector.first ){
-
-            ERROR_TOOLS_CATCH( setNonLocalSurfaceReferenceRelativePositionVector( ) );
-
-        }
+        floatVector nonlocalSurfaceReferenceRelativePositionVector;
+        ERROR_TOOLS_CATCH( nonlocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
 
         if ( ! _referenceDistanceVector.first ){
 
@@ -409,8 +412,8 @@ namespace asp{
         }
 
         // Compute the current distance
-        ERROR_TOOLS_CATCH( tractionSeparation::computeCurrentDistanceGeneral( _localSurfaceReferenceRelativePositionVector.second,
-                                                                              _nonlocalSurfaceReferenceRelativePositionVector.second,
+        ERROR_TOOLS_CATCH( tractionSeparation::computeCurrentDistanceGeneral( localSurfaceReferenceRelativePositionVector,
+                                                                              nonlocalSurfaceReferenceRelativePositionVector,
                                                                               _referenceDistanceVector.second,
                                                                               _localDeformationGradient.second,
                                                                               _localMicroDeformation.second,

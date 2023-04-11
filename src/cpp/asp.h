@@ -118,6 +118,8 @@ namespace asp{
 
             floatVector getLocalSurfaceReferenceRelativePositionVector( );
 
+            floatVector getNonLocalSurfaceReferenceRelativePositionVector( );
+
         protected:
 
             // Protected parameters

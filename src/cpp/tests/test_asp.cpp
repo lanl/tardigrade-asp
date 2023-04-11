@@ -910,6 +910,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalSurfaceReferenceRelativePositionVe
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getNonLocalSurfaceReferenceRelativePositionVector( ), answer ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setLocalDeformationGradient ){
