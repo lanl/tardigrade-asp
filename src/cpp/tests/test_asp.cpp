@@ -1490,6 +1490,8 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
 
                 setSurfaceEnergyDensity( 123 );
 
+                return NULL;
+
             }
 
     };
@@ -1500,6 +1502,6 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
     std::stringbuf buffer;
     cerr_redirect rd( &buffer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( asp.getSurfaceEnergyDensity( ), 123 ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( asp.getSurfaceEnergyDensity( ), 123. ) );
 
 }
