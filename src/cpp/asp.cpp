@@ -893,7 +893,7 @@ namespace asp{
         floatType energyDensity;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, _surfaceParameters.second, energyDensity ) );
 
-        setSurfaceEnergyDensity( energyDensity * vectorTools::l2norm( dn ) );
+        ERROR_TOOLS_CATCH( setSurfaceEnergyDensity( 0.5 * energyDensity * vectorTools::l2norm( dn ) ) );
 
         return NULL;
 
