@@ -109,13 +109,14 @@ namespace asp{
                                                             const floatVector &parameters,
                                                             floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
 
-            virtual void computeSurfaceEnergyDensity( );
+            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity );
 
             // Getter functions
             floatType getSurfaceEnergyDensity( );
 
-            // Setter functions
-            void setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity );
+            floatVector getLocalReferenceNormal( );
+
+            floatVector getLocalSurfaceReferenceRelativePositionVector( );
 
         protected:
 

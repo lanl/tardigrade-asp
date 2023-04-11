@@ -210,14 +210,6 @@ namespace asp{
 
                 }
 
-                static void computeSurfaceEnergyDensity( asp::aspBase &asp ){
-
-                    asp.computeSurfaceEnergyDensity( );
-
-                    return;
-
-                }
-
                 // Direct write functions for mocking
                 static void set_indices( asp::aspBase &asp,
                                             unsigned int localIndex, unsigned int nonlocalIndex, unsigned int localSurfaceNodeIndex ){
@@ -822,6 +814,12 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceNormal ){
 
         BOOST_CHECK( vectorTools::fuzzyEquals( result.second, normalAnswers[ i ] ) );
 
+        aspBaseMock aspGet;
+
+        asp::unit_test::aspBaseTester::set_indices( aspGet, localIndex, nonlocalIndex, i );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalReferenceNormal( ), normalAnswers[ i ] ) );
+
     }
 
 }
@@ -865,6 +863,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalSurfaceReferenceRelativePositionVecto
     BOOST_CHECK( result.first );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalSurfaceReferenceRelativePositionVector( ), answer ) );
 
 }
 
@@ -1430,7 +1432,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
 
     floatType result;
 
-    asp::unit_test::aspBaseTester::computeSurfaceEnergyDensity( asp );
+    asp.computeSurfaceEnergyDensity( result );
 
     result = asp.getSurfaceEnergyDensity( );
 
@@ -1444,7 +1446,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity_error ){
 
         private:
 
-            virtual void computeSurfaceEnergyDensity( ){
+            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
 
                 throw std::runtime_error( "This should throw an error" );
 
@@ -1482,9 +1484,9 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
 
         private:
 
-            virtual void computeSurfaceEnergyDensity( ){
+            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
 
-                setSurfaceEnergyDensity( 123 );
+                surfaceEnergyDensity = 123;
 
                 return;
 

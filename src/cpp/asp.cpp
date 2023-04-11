@@ -159,6 +159,23 @@ namespace asp{
 
     }
 
+    floatVector aspBase::getLocalReferenceNormal( ){
+        /*!
+         * Get the local reference normal vector
+         * 
+         * Get the local reference normal vector or set it and return it if necessary
+         */
+
+        if ( !_localReferenceNormal.first ){
+
+            ERROR_TOOLS_CATCH( setLocalReferenceNormal( ) );
+
+        }
+
+        return _localReferenceNormal.second;
+
+    }
+
     void aspBase::setLocalSurfaceReferenceRelativePositionVector( ){
         /*!
          * Set the local surface relative position vector
@@ -168,11 +185,8 @@ namespace asp{
          * where \f$R^{local}\f$ is the local radius and \f$N_I\f$ is the local reference normal.
          */
 
-        if ( ! _localReferenceNormal.first ){
-
-            ERROR_TOOLS_CATCH( setLocalReferenceNormal( ) );
-
-        }
+        floatVector localReferenceNormal;
+        ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
         if ( ! _localReferenceRadius.first ){
 
@@ -180,11 +194,26 @@ namespace asp{
 
         }
 
-        _localSurfaceReferenceRelativePositionVector.second = _localReferenceRadius.second * _localReferenceNormal.second;
+        _localSurfaceReferenceRelativePositionVector.second = _localReferenceRadius.second * localReferenceNormal;
 
         _localSurfaceReferenceRelativePositionVector.first = true;
 
         return;
+
+    }
+
+    floatVector aspBase::getLocalSurfaceReferenceRelativePositionVector( ){
+        /*!
+         * Get the value of the local surface reference relative position vector
+         */
+
+        if ( !_localSurfaceReferenceRelativePositionVector.first ){
+
+            ERROR_TOOLS_CATCH( setLocalSurfaceReferenceRelativePositionVector( ) );
+
+        }
+
+        return _localSurfaceReferenceRelativePositionVector.second;
 
     }
 
@@ -197,11 +226,8 @@ namespace asp{
          * where \f$R^{non-local}\f$ is the non-local radius and \f$N_I\f$ is the local reference normal.
          */
 
-        if ( ! _localReferenceNormal.first ){
-
-            ERROR_TOOLS_CATCH( setLocalReferenceNormal( ) );
-
-        }
+        floatVector localReferenceNormal;
+        ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
         if ( ! _nonlocalReferenceRadius.first ){
 
@@ -209,7 +235,7 @@ namespace asp{
 
         }
 
-        _nonlocalSurfaceReferenceRelativePositionVector.second = -_nonlocalReferenceRadius.second * _localReferenceNormal.second;
+        _nonlocalSurfaceReferenceRelativePositionVector.second = -_nonlocalReferenceRadius.second * localReferenceNormal;
 
         _nonlocalSurfaceReferenceRelativePositionVector.first = true;
 
@@ -402,11 +428,8 @@ namespace asp{
          * Set the current local normal
          */
 
-        if ( ! _localReferenceNormal.first ){
-
-            ERROR_TOOLS_CATCH( setLocalReferenceNormal( ) );
-
-        }
+        floatVector localReferenceNormal;
+        ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
         if ( ! _localMicroDeformation.first ){
 
@@ -415,7 +438,7 @@ namespace asp{
         }
 
         // Compute the current normal
-        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( _localMicroDeformation.second, _localReferenceNormal.second,
+        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( _localMicroDeformation.second, localReferenceNormal,
                                                                        _localCurrentNormal.second ) );
 
         _localCurrentNormal.second /= vectorTools::l2norm( _localCurrentNormal.second );
@@ -513,7 +536,7 @@ namespace asp{
 
     }
 
-    void aspBase::computeSurfaceEnergyDensity( ){
+    void aspBase::computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
         /*!
          * Compute the surface energy density in the current configuration ( energy / da )
          * 
@@ -528,7 +551,7 @@ namespace asp{
         floatType energyDensity;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, _surfaceParameters.second, energyDensity ) );
 
-        ERROR_TOOLS_CATCH( setSurfaceEnergyDensity( 0.5 * energyDensity * vectorTools::l2norm( dn ) ) );
+        surfaceEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
 
         return;
 
@@ -554,26 +577,9 @@ namespace asp{
          * Set the surface energy density if required.
          */
 
-        if ( !_surfaceEnergyDensity.first ){
-
-            ERROR_TOOLS_CATCH( computeSurfaceEnergyDensity( ) );
-
-        }
-
-        return;
-
-    }
-
-    void aspBase::setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity ){
-        /*!
-         * Set the surface energy density with a new value
-         * 
-         * \param &surfaceEnergyDensity: The value of the surface energy density in the current configuration ( e / da )
-         */
+        ERROR_TOOLS_CATCH( computeSurfaceEnergyDensity( _surfaceEnergyDensity.second ) );
 
         _surfaceEnergyDensity.first = true;
-
-        _surfaceEnergyDensity.second = surfaceEnergyDensity;
 
         return;
 
