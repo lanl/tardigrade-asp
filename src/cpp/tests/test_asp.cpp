@@ -1430,7 +1430,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
     
     aspBaseMock asp;
 
-    floatType answer = 356.565771656861;
+    floatType answer = 178.2828858284305;
 
     floatType result;
 
@@ -1442,7 +1442,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
 
 }
 
-BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
+BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity_error ){
 
     class aspBaseMock : public asp::aspBase{
 
@@ -1450,7 +1450,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
 
             virtual errorOut computeSurfaceEnergyDensity( ){
 
-                return new errorNode( __func__, "This should throw an error" );
+                throw std::runtime_error( "This should throw an error" );
 
             }
 
@@ -1462,14 +1462,44 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
     std::stringbuf buffer;
     cerr_redirect rd( &buffer );
 
-    BOOST_REQUIRE_THROW( asp.getSurfaceEnergyDensity( ), std::logic_error ); 
-
-    std::cout << "buffer:\n" << buffer.str( ) << "\n";
+    BOOST_REQUIRE_THROW(
+        try{
+            asp.getSurfaceEnergyDensity( );
+        }
+        catch(std::exception &e){
+            errorTools::printNestedExceptions( e );
+            throw;
+        }
+    , std::exception );
 
     BOOST_CHECK( buffer.str( ).find( "This should throw an error" ) != std::string::npos );
 
     BOOST_CHECK( buffer.str( ).find( "getSurfaceEnergyDensity" ) != std::string::npos );
 
     BOOST_CHECK( buffer.str( ).find( "setSurfaceEnergyDensity" ) != std::string::npos );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        private:
+
+            virtual errorOut computeSurfaceEnergyDensity( ){
+
+                setSurfaceEnergyDensity( 123 );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    //Setup redirect variables for stderr
+    std::stringbuf buffer;
+    cerr_redirect rd( &buffer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( asp.getSurfaceEnergyDensity( ), 123 ) );
 
 }
