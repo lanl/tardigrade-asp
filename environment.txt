@@ -5,7 +5,7 @@ cmake>=3.18
 constitutive_tools
 doxygen>=1.9
 eigen>=3.3.7
-error_tools>=0.4
+error_tools>=0.5.1
 compilers
 mamba
 setuptools_scm>=6.2
