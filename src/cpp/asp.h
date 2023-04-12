@@ -109,13 +109,40 @@ namespace asp{
                                                             const floatVector &parameters,
                                                             floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
 
-            virtual void computeSurfaceEnergyDensity( );
+            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity );
 
             // Getter functions
             floatType getSurfaceEnergyDensity( );
 
-            // Setter functions
-            void setSurfaceEnergyDensity( const floatType &surfaceEnergyDensity );
+            floatType getLocalReferenceRadius( );
+
+            floatType getNonLocalReferenceRadius( );
+
+            floatVector getLocalReferenceNormal( );
+
+            floatVector getLocalSurfaceReferenceRelativePositionVector( );
+
+            floatVector getNonLocalSurfaceReferenceRelativePositionVector( );
+
+            floatVector getLocalDeformationGradient( );
+
+            floatVector getLocalMicroDeformation( );
+
+            floatVector getLocalReferenceParticleSpacing( );
+
+            floatVector getNonLocalMicroDeformation( );
+
+            floatVector getCurrentDistanceVector( );
+
+            floatVector getLocalCurrentNormal( );
+
+            floatVector getSurfaceParameters( );
+
+            floatVector getReferenceDistanceVector( );
+
+            floatVector getUnitSpherePoints( );
+
+            std::vector< unsigned int > getUnitSphereConnectivity( );
 
         protected:
 
@@ -202,7 +229,7 @@ namespace asp{
 
             virtual void setLocalReferenceParticleSpacing( );
 
-            virtual void setCurrentDistance( );
+            virtual void setCurrentDistanceVector( );
 
             virtual void setSurfaceParameters( );
 
