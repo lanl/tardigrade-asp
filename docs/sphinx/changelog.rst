@@ -12,6 +12,7 @@ Changelog
 Breaking changes
 ================
 - Remove linear elasticity, which now lives in stress tools (:issue:`1`, :merge:`9`). By `Kyle Brindley`_.
+- Changed the getter functions to use constant pointers rather than copied values (:merge:`21`). By `Nathan Miller`_.
 
 Internal Changes
 ================

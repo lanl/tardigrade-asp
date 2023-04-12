@@ -705,9 +705,9 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeUnitSphere ){
     asp::aspBase aspGet1;
     asp::aspBase aspGet2;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet1.getUnitSpherePoints( ), unitSpherePoints.second ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet1.getUnitSpherePoints( ), unitSpherePoints.second ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet2.getUnitSphereConnectivity( ), unitSphereConnectivity.second ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet2.getUnitSphereConnectivity( ), unitSphereConnectivity.second ) );
 
 }
 
@@ -739,7 +739,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceRadius ){
 
     aspBaseMock aspGet( radiusAnswer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, aspGet.getLocalReferenceRadius( ) ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, *aspGet.getLocalReferenceRadius( ) ) );
 
 }
 
@@ -771,7 +771,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalReferenceRadius ){
 
     aspBaseMock aspGet( radiusAnswer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, aspGet.getNonLocalReferenceRadius( ) ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( radiusAnswer, *aspGet.getNonLocalReferenceRadius( ) ) );
 
 }
 
@@ -833,7 +833,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceNormal ){
 
         asp::unit_test::aspBaseTester::set_indices( aspGet, localIndex, nonlocalIndex, i );
 
-        BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalReferenceNormal( ), normalAnswers[ i ] ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalReferenceNormal( ), normalAnswers[ i ] ) );
 
     }
 
@@ -881,7 +881,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalSurfaceReferenceRelativePositionVecto
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalSurfaceReferenceRelativePositionVector( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalSurfaceReferenceRelativePositionVector( ), answer ) );
 
 }
 
@@ -927,7 +927,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalSurfaceReferenceRelativePositionVe
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getNonLocalSurfaceReferenceRelativePositionVector( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalSurfaceReferenceRelativePositionVector( ), answer ) );
 
 }
 
@@ -955,7 +955,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalDeformationGradient ){
 
     asp::unit_test::aspBaseTester::set_deformationGradient( aspGet, answer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalDeformationGradient( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalDeformationGradient( ), answer ) );
 
 }
 
@@ -983,7 +983,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalMicroDeformation ){
 
     asp::unit_test::aspBaseTester::set_microDeformation( aspGet, answer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalMicroDeformation( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalMicroDeformation( ), answer ) );
 
 }
 
@@ -1007,7 +1007,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setReferenceDistanceVector ){
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getReferenceDistanceVector( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getReferenceDistanceVector( ), answer ) );
 
 }
 
@@ -1061,7 +1061,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceParticleSpacing ){
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalReferenceParticleSpacing( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalReferenceParticleSpacing( ), answer ) );
 
 }
 
@@ -1113,7 +1113,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
 
     asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspGet, gradientMicroDeformation );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getNonLocalMicroDeformation( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalMicroDeformation( ), answer ) );
 
 }
 
@@ -1159,7 +1159,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormal ){
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalCurrentNormal( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalCurrentNormal( ), answer ) );
 
 }
 
@@ -1249,7 +1249,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVector ){
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getCurrentDistanceVector( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getCurrentDistanceVector( ), answer ) );
 
 }
 
@@ -1284,7 +1284,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceParameters ){
 
     aspBaseMock aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getSurfaceParameters( ), answer ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getSurfaceParameters( ), answer ) );
 
 }
 
@@ -1504,7 +1504,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
 
     asp.computeSurfaceEnergyDensity( result );
 
-    result = asp.getSurfaceEnergyDensity( );
+    result = *asp.getSurfaceEnergyDensity( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
@@ -1570,6 +1570,6 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
     std::stringbuf buffer;
     cerr_redirect rd( &buffer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( asp.getSurfaceEnergyDensity( ), 123. ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getSurfaceEnergyDensity( ), 123. ) );
 
 }

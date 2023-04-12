@@ -112,37 +112,37 @@ namespace asp{
             virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity );
 
             // Getter functions
-            floatType getSurfaceEnergyDensity( );
+            const floatType* getSurfaceEnergyDensity( );
 
-            floatType getLocalReferenceRadius( );
+            const floatType* getLocalReferenceRadius( );
 
-            floatType getNonLocalReferenceRadius( );
+            const floatType* getNonLocalReferenceRadius( );
 
-            floatVector getLocalReferenceNormal( );
+            const floatVector* getLocalReferenceNormal( );
 
-            floatVector getLocalSurfaceReferenceRelativePositionVector( );
+            const floatVector* getLocalSurfaceReferenceRelativePositionVector( );
 
-            floatVector getNonLocalSurfaceReferenceRelativePositionVector( );
+            const floatVector* getNonLocalSurfaceReferenceRelativePositionVector( );
 
-            floatVector getLocalDeformationGradient( );
+            const floatVector* getLocalDeformationGradient( );
 
-            floatVector getLocalMicroDeformation( );
+            const floatVector* getLocalMicroDeformation( );
 
-            floatVector getLocalReferenceParticleSpacing( );
+            const floatVector* getLocalReferenceParticleSpacing( );
 
-            floatVector getNonLocalMicroDeformation( );
+            const floatVector* getNonLocalMicroDeformation( );
 
-            floatVector getCurrentDistanceVector( );
+            const floatVector* getCurrentDistanceVector( );
 
-            floatVector getLocalCurrentNormal( );
+            const floatVector* getLocalCurrentNormal( );
 
-            floatVector getSurfaceParameters( );
+            const floatVector* getSurfaceParameters( );
 
-            floatVector getReferenceDistanceVector( );
+            const floatVector* getReferenceDistanceVector( );
 
-            floatVector getUnitSpherePoints( );
+            const floatVector* getUnitSpherePoints( );
 
-            std::vector< unsigned int > getUnitSphereConnectivity( );
+            const std::vector< unsigned int >* getUnitSphereConnectivity( );
 
         protected:
 
