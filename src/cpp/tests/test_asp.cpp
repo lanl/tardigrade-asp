@@ -180,10 +180,10 @@ namespace asp{
 
                 }
 
-                static void setCurrentDistance( asp::aspBase &asp,
+                static void setCurrentDistanceVector( asp::aspBase &asp,
                                                     std::pair< bool, floatVector > &currentDistance ){
 
-                    BOOST_CHECK_NO_THROW( asp.setCurrentDistance( ) );
+                    BOOST_CHECK_NO_THROW( asp.setCurrentDistanceVector( ) );
 
                     currentDistance = asp._currentDistanceVector;
 
@@ -702,6 +702,13 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeUnitSphere ){
 
     BOOST_CHECK( ( *it ) == ( npoints - 1 ) );
 
+    asp::aspBase aspGet1;
+    asp::aspBase aspGet2;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet1.getUnitSpherePoints( ), unitSpherePoints.second ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet2.getUnitSphereConnectivity( ), unitSphereConnectivity.second ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceRadius ){
@@ -944,6 +951,12 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalDeformationGradient ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
+    aspBaseMock aspGet;
+
+    asp::unit_test::aspBaseTester::set_deformationGradient( aspGet, answer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalDeformationGradient( ), answer ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setLocalMicroDeformation ){
@@ -966,6 +979,12 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalMicroDeformation ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
+    aspBaseMock aspGet;
+
+    asp::unit_test::aspBaseTester::set_microDeformation( aspGet, answer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalMicroDeformation( ), answer ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setReferenceDistanceVector ){
@@ -985,6 +1004,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setReferenceDistanceVector ){
     BOOST_CHECK( result.first );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getReferenceDistanceVector( ), answer ) );
 
 }
 
@@ -1036,6 +1059,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceParticleSpacing ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalReferenceParticleSpacing( ), answer ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
@@ -1080,6 +1107,14 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
+    aspBaseMock aspGet;
+
+    asp::unit_test::aspBaseTester::set_microDeformation( aspGet, microDeformation );
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspGet, gradientMicroDeformation );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getNonLocalMicroDeformation( ), answer ) );
+
 }
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormal ){
@@ -1122,9 +1157,13 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormal ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getLocalCurrentNormal( ), answer ) );
+
 }
 
-BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistance ){
+BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVector ){
 
     class aspBaseMock : public asp::aspBase{
 
@@ -1202,11 +1241,15 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistance ){
 
     std::pair< bool, floatVector > result;
 
-    asp::unit_test::aspBaseTester::setCurrentDistance( asp, result );
+    asp::unit_test::aspBaseTester::setCurrentDistanceVector( asp, result );
 
     BOOST_CHECK( result.first );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getCurrentDistanceVector( ), answer ) );
 
 }
 
@@ -1214,11 +1257,22 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceParameters ){
 
     class aspBaseMock : public asp::aspBase{
 
+        public:
+
+            floatVector surfaceParametersAnswer = { 1, 2, 3 };
+
+        private:
+
+            virtual void setSurfaceParameters( ){
+
+                asp::unit_test::aspBaseTester::set_surfaceParameters( *this, surfaceParametersAnswer );
+
+            }
     };
 
     aspBaseMock asp;
 
-    floatVector answer( 0, 0 );
+    floatVector answer = { 1, 2, 3 };
 
     std::pair< bool, floatVector > result;
 
@@ -1227,6 +1281,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceParameters ){
     BOOST_CHECK( result.first );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    aspBaseMock aspGet;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( aspGet.getSurfaceParameters( ), answer ) );
 
 }
 
@@ -1320,7 +1378,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
 
             }
 
-            virtual void setCurrentDistance( ){
+            virtual void setCurrentDistanceVector( ){
 
                 asp::unit_test::aspBaseTester::set_currentDistance( *this, currentDistanceAnswer );
 

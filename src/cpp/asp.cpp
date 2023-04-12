@@ -124,6 +124,36 @@ namespace asp{
 
     }
 
+    floatVector aspBase::getUnitSpherePoints( ){
+        /*!
+         * Get the points on the unit sphere
+         */
+
+        if ( !_unitSpherePoints.first ){
+
+            ERROR_TOOLS_CATCH( initializeUnitSphere( ) );
+
+        }
+
+        return _unitSpherePoints.second;
+
+    }
+
+    std::vector< unsigned int > aspBase::getUnitSphereConnectivity( ){
+        /*!
+         * Get the points on the unit sphere
+         */
+
+        if ( !_unitSphereConnectivity.first ){
+
+            ERROR_TOOLS_CATCH( initializeUnitSphere( ) );
+
+        }
+
+        return _unitSphereConnectivity.second;
+
+    }
+
     void aspBase::setLocalReferenceNormal( ){
         /*!
          * Set the local reference normal vector
@@ -132,24 +162,24 @@ namespace asp{
          * as any position vector on the surface of the sphere.
          */
 
-        if ( ! _unitSpherePoints.first ){
+        floatVector unitSpherePoints;
+        ERROR_TOOLS_CATCH( unitSpherePoints = getUnitSpherePoints( ) );
 
-            ERROR_TOOLS_CATCH( initializeUnitSphere( ) );
+        std::vector< unsigned int > unitSphereConnectivity;
+        ERROR_TOOLS_CATCH( unitSphereConnectivity = getUnitSphereConnectivity( ) );
 
-        }
-
-        if ( _dimension * ( _localIndex + 1 ) > _unitSpherePoints.second.size( ) ){
+        if ( _dimension * ( _localIndex + 1 ) > unitSpherePoints.size( ) ){
 
             std::string message = "The requested index is greater than the number of points available on the unit sphere.\n";
             message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
-            message            += "  number of points:      " + std::to_string( _unitSpherePoints.second.size( ) / _dimension );
+            message            += "  number of points:      " + std::to_string( unitSpherePoints.size( ) / _dimension );
 
             ERROR_TOOLS_CATCH( throw std::runtime_error( message ) );
 
         }
 
-        _localReferenceNormal.second = floatVector( _unitSpherePoints.second.begin( ) + _dimension * _localSurfaceNodeIndex,
-                                                    _unitSpherePoints.second.begin( ) + _dimension * ( _localSurfaceNodeIndex + 1 ) );
+        _localReferenceNormal.second = floatVector( unitSpherePoints.begin( ) + _dimension * _localSurfaceNodeIndex,
+                                                    unitSpherePoints.begin( ) + _dimension * ( _localSurfaceNodeIndex + 1 ) );
 
         _localReferenceNormal.second /= vectorTools::l2norm( _localReferenceNormal.second );
 
@@ -322,6 +352,21 @@ namespace asp{
 
     }
 
+    floatVector aspBase::getLocalDeformationGradient( ){
+        /*!
+         * Get the local deformation gradient
+         */
+
+        if ( !_localDeformationGradient.first ){
+
+            ERROR_TOOLS_CATCH( setLocalDeformationGradient( ) );
+
+        }
+
+        return _localDeformationGradient.second;
+
+    }
+
     void aspBase::setLocalMicroDeformation( ){
         /*!
          * Set the local micro deformation
@@ -332,6 +377,21 @@ namespace asp{
         _localMicroDeformation.first = true;
 
         return;
+
+    }
+
+    floatVector aspBase::getLocalMicroDeformation( ){
+        /*!
+         * Get the local micro deformation
+         */
+
+        if ( !_localMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setLocalMicroDeformation( ) );
+
+        }
+
+        return _localMicroDeformation.second;
 
     }
 
@@ -348,19 +408,31 @@ namespace asp{
         floatVector nonlocalSurfaceReferenceRelativePositionVector;
         ERROR_TOOLS_CATCH( nonlocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
 
-        if ( ! _referenceDistanceVector.first ){
-
-            ERROR_TOOLS_CATCH( setReferenceDistanceVector( ) );
-
-        }
+        floatVector referenceDistanceVector;
+        ERROR_TOOLS_CATCH( referenceDistanceVector = getReferenceDistanceVector( ) );
 
         _localReferenceParticleSpacing.second = localSurfaceReferenceRelativePositionVector
-                                              + _referenceDistanceVector.second
+                                              + referenceDistanceVector
                                               - nonlocalSurfaceReferenceRelativePositionVector;
 
         _localReferenceParticleSpacing.first = true;
 
         return;
+
+    }
+
+    floatVector aspBase::getLocalReferenceParticleSpacing( ){
+        /*!
+         * Get the local reference particle spacing
+         */
+
+        if ( !_localReferenceParticleSpacing.first ){
+
+            ERROR_TOOLS_CATCH( setLocalReferenceParticleSpacing( ) );
+
+        }
+
+        return _localReferenceParticleSpacing.second;
 
     }
 
@@ -371,11 +443,8 @@ namespace asp{
          * \f$ \chi_{iI}^{non-local} = \chi_{iI} + \chi_{iI,J} dX_J\f$
          */
 
-        if ( ! _localReferenceParticleSpacing.first ){
-
-            ERROR_TOOLS_CATCH( setLocalReferenceParticleSpacing( ) );
-
-        }
+        floatVector localReferenceParticleSpacing;
+        ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacing( ) );
 
         _nonlocalMicroDeformation.second = _microDeformation;
 
@@ -387,7 +456,7 @@ namespace asp{
 
                     _nonlocalMicroDeformation.second[ _dimension * i + I ]
                         += _gradientMicroDeformation[ _dimension * _dimension * i + _dimension * I + J ]
-                         * _localReferenceParticleSpacing.second[ J ];
+                         * localReferenceParticleSpacing[ J ];
 
                 }
 
@@ -401,7 +470,22 @@ namespace asp{
 
     }
 
-    void aspBase::setCurrentDistance( ){
+    floatVector aspBase::getNonLocalMicroDeformation( ){
+        /*!
+         * Get the non-local micro deformation tensor
+         */
+
+        if ( !_nonlocalMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalMicroDeformation( ) );
+
+        }
+
+        return _nonlocalMicroDeformation.second;
+
+    }
+
+    void aspBase::setCurrentDistanceVector( ){
         /*!
          * Set the current distance vector
          */
@@ -412,42 +496,45 @@ namespace asp{
         floatVector nonlocalSurfaceReferenceRelativePositionVector;
         ERROR_TOOLS_CATCH( nonlocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
 
-        if ( ! _referenceDistanceVector.first ){
+        floatVector referenceDistanceVector;
+        ERROR_TOOLS_CATCH( referenceDistanceVector = getReferenceDistanceVector( ) );
 
-            ERROR_TOOLS_CATCH( setReferenceDistanceVector( ) );
+        floatVector localDeformationGradient;
+        ERROR_TOOLS_CATCH( localDeformationGradient = getLocalDeformationGradient( ) );
 
-        }
+        floatVector localMicroDeformation;
+        ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        if ( ! _localDeformationGradient.first ){
-
-            ERROR_TOOLS_CATCH( setLocalDeformationGradient( ) );
-
-        }
-
-        if ( ! _localMicroDeformation.first ){
-
-            ERROR_TOOLS_CATCH( setLocalMicroDeformation( ) );
-
-        }
-
-        if ( ! _nonlocalMicroDeformation.first ){
-
-            ERROR_TOOLS_CATCH( setNonLocalMicroDeformation( ) );
-
-        }
+        floatVector nonlocalMicroDeformation;
+        ERROR_TOOLS_CATCH( nonlocalMicroDeformation = getNonLocalMicroDeformation( ) );
 
         // Compute the current distance
         ERROR_TOOLS_CATCH( tractionSeparation::computeCurrentDistanceGeneral( localSurfaceReferenceRelativePositionVector,
                                                                               nonlocalSurfaceReferenceRelativePositionVector,
-                                                                              _referenceDistanceVector.second,
-                                                                              _localDeformationGradient.second,
-                                                                              _localMicroDeformation.second,
-                                                                              _nonlocalMicroDeformation.second,
+                                                                              referenceDistanceVector,
+                                                                              localDeformationGradient,
+                                                                              localMicroDeformation,
+                                                                              nonlocalMicroDeformation,
                                                                               _currentDistanceVector.second ) );
 
         _currentDistanceVector.first = true;
 
         return;
+
+    }
+
+    floatVector aspBase::getCurrentDistanceVector( ){
+        /*!
+         * Get the current distance vector
+         */
+
+        if ( !_currentDistanceVector.first ){
+
+            ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+        }
+
+        return _currentDistanceVector.second;
 
     }
 
@@ -459,14 +546,11 @@ namespace asp{
         floatVector localReferenceNormal;
         ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
-        if ( ! _localMicroDeformation.first ){
-
-            ERROR_TOOLS_CATCH( setLocalMicroDeformation( ) );
-
-        }
+        floatVector localMicroDeformation;
+        ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
         // Compute the current normal
-        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( _localMicroDeformation.second, localReferenceNormal,
+        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( localMicroDeformation, localReferenceNormal,
                                                                        _localCurrentNormal.second ) );
 
         _localCurrentNormal.second /= vectorTools::l2norm( _localCurrentNormal.second );
@@ -474,6 +558,21 @@ namespace asp{
         _localCurrentNormal.first = true;
 
         return;
+
+    }
+
+    floatVector aspBase::getLocalCurrentNormal( ){
+        /*!
+         * Get the local current normal vector
+         */
+
+        if ( !_localCurrentNormal.first ){
+
+            ERROR_TOOLS_CATCH( setLocalCurrentNormal( ) );
+
+        }
+
+        return _localCurrentNormal.second;
 
     }
 
@@ -496,7 +595,7 @@ namespace asp{
 
         ERROR_TOOLS_CATCH( setNonLocalMicroDeformation( ) );
 
-        ERROR_TOOLS_CATCH( setCurrentDistance( ) );
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
 
         ERROR_TOOLS_CATCH( setLocalCurrentNormal( ) );
 
@@ -516,6 +615,21 @@ namespace asp{
         return;
     }
 
+    floatVector aspBase::getSurfaceParameters( ){
+        /*!
+         * Get the surface parameters
+         */
+
+        if ( !_surfaceParameters.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceParameters( ) );
+
+        }
+
+        return _surfaceParameters.second;
+
+    }
+
     void aspBase::setReferenceDistanceVector( ){
         /*!
          * Set the initial distance between two particles
@@ -526,6 +640,21 @@ namespace asp{
         _referenceDistanceVector.first = true;
 
         return;
+
+    }
+
+    floatVector aspBase::getReferenceDistanceVector( ){
+        /*!
+         * Get the initial distance between two particles
+         */
+
+        if ( !_referenceDistanceVector.first ){
+
+            ERROR_TOOLS_CATCH( setReferenceDistanceVector( ) );
+
+        }
+
+        return _referenceDistanceVector.second;
 
     }
 
@@ -572,12 +701,21 @@ namespace asp{
          * set the current value of the surface energy density.
          */
 
+        floatVector currentDistanceVector;
+        ERROR_TOOLS_CATCH( currentDistanceVector = getCurrentDistanceVector( ) );
+
+        floatVector localCurrentNormal;
+        ERROR_TOOLS_CATCH( localCurrentNormal = getLocalCurrentNormal( ) );
+
+        floatVector surfaceParameters;
+        ERROR_TOOLS_CATCH( surfaceParameters = getSurfaceParameters( ) );
+
         // Decompose the traction into normal and tangential directions
         floatVector dn, dt;
-        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( _currentDistanceVector.second, _localCurrentNormal.second, dn, dt ) );
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( currentDistanceVector, localCurrentNormal, dn, dt ) );
 
         floatType energyDensity;
-        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, _surfaceParameters.second, energyDensity ) );
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, surfaceParameters, energyDensity ) );
 
         surfaceEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
 

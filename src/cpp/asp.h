@@ -124,6 +124,26 @@ namespace asp{
 
             floatVector getNonLocalSurfaceReferenceRelativePositionVector( );
 
+            floatVector getLocalDeformationGradient( );
+
+            floatVector getLocalMicroDeformation( );
+
+            floatVector getLocalReferenceParticleSpacing( );
+
+            floatVector getNonLocalMicroDeformation( );
+
+            floatVector getCurrentDistanceVector( );
+
+            floatVector getLocalCurrentNormal( );
+
+            floatVector getSurfaceParameters( );
+
+            floatVector getReferenceDistanceVector( );
+
+            floatVector getUnitSpherePoints( );
+
+            std::vector< unsigned int > getUnitSphereConnectivity( );
+
         protected:
 
             // Protected parameters
@@ -209,7 +229,7 @@ namespace asp{
 
             virtual void setLocalReferenceParticleSpacing( );
 
-            virtual void setCurrentDistance( );
+            virtual void setCurrentDistanceVector( );
 
             virtual void setSurfaceParameters( );
 
