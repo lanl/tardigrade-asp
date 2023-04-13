@@ -1472,7 +1472,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
 
 }
 
-BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity ){
 
     class aspBaseMock : public asp::aspBase{
 
@@ -1502,21 +1502,21 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceEnergyDensity ){
 
     floatType result;
 
-    asp.computeSurfaceEnergyDensity( result );
+    asp.computeSurfaceAdhesionEnergyDensity( result );
 
-    result = *asp.getSurfaceEnergyDensity( );
+    result = *asp.getSurfaceAdhesionEnergyDensity( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
 }
 
-BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity_error ){
+BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceAdhesionEnergyDensity_error ){
 
     class aspBaseMock : public asp::aspBase{
 
         private:
 
-            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
+            virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity ){
 
                 throw std::runtime_error( "This should throw an error" );
 
@@ -1532,7 +1532,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity_error ){
 
     BOOST_REQUIRE_THROW(
         try{
-            asp.getSurfaceEnergyDensity( );
+            asp.getSurfaceAdhesionEnergyDensity( );
         }
         catch(std::exception &e){
             errorTools::printNestedExceptions( e );
@@ -1542,21 +1542,21 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity_error ){
 
     BOOST_CHECK( buffer.str( ).find( "This should throw an error" ) != std::string::npos );
 
-    BOOST_CHECK( buffer.str( ).find( "getSurfaceEnergyDensity" ) != std::string::npos );
+    BOOST_CHECK( buffer.str( ).find( "getSurfaceAdhesionEnergyDensity" ) != std::string::npos );
 
-    BOOST_CHECK( buffer.str( ).find( "setSurfaceEnergyDensity" ) != std::string::npos );
+    BOOST_CHECK( buffer.str( ).find( "setSurfaceAdhesionEnergyDensity" ) != std::string::npos );
 
 }
 
-BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
+BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceAdhesionEnergyDensity ){
 
     class aspBaseMock : public asp::aspBase{
 
         private:
 
-            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
+            virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity ){
 
-                surfaceEnergyDensity = 123;
+                surfaceAdhesionEnergyDensity = 123;
 
                 return;
 
@@ -1570,6 +1570,6 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceEnergyDensity ){
     std::stringbuf buffer;
     cerr_redirect rd( &buffer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getSurfaceEnergyDensity( ), 123. ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getSurfaceAdhesionEnergyDensity( ), 123. ) );
 
 }

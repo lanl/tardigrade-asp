@@ -109,10 +109,10 @@ namespace asp{
                                                             const floatVector &parameters,
                                                             floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
 
-            virtual void computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity );
+            virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceEnergyDensity );
 
             // Getter functions
-            const floatType* getSurfaceEnergyDensity( );
+            const floatType* getSurfaceAdhesionEnergyDensity( );
 
             const floatType* getLocalReferenceRadius( );
 
@@ -201,7 +201,7 @@ namespace asp{
 
             std::pair< bool, floatVector > _surfaceParameters;
 
-            std::pair< bool, floatType > _surfaceEnergyDensity;
+            std::pair< bool, floatType > _surfaceAdhesionEnergyDensity;
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
@@ -235,7 +235,7 @@ namespace asp{
 
             virtual void initializeSurfaceIntegrandQuantities( );
 
-            virtual void setSurfaceEnergyDensity( );
+            virtual void setSurfaceAdhesionEnergyDensity( );
 
             virtual void resetSurface( );
 

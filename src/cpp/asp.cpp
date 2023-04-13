@@ -690,12 +690,11 @@ namespace asp{
 
     }
 
-    void aspBase::computeSurfaceEnergyDensity( floatType &surfaceEnergyDensity ){
+    void aspBase::computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity ){
         /*!
-         * Compute the surface energy density in the current configuration ( energy / da )
+         * Compute the surface adhesion energy density in the current configuration ( energy / da )
          * 
-         * It is expected that the user will use the function `setSurfaceEnergyDensity` to
-         * set the current value of the surface energy density.
+         * \param &surfaceAdhesionEnergyDensity: The surface adhesion energy density i.e., the energy bonding the local and non-local particles together
          */
 
         const floatVector* currentDistanceVector;
@@ -714,35 +713,35 @@ namespace asp{
         floatType energyDensity;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, *surfaceParameters, energyDensity ) );
 
-        surfaceEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
+        surfaceAdhesionEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
 
         return;
 
     }
 
-    const floatType* aspBase::getSurfaceEnergyDensity( ){
+    const floatType* aspBase::getSurfaceAdhesionEnergyDensity( ){
         /*!
          * Get the surface energy density
          */
 
-        if ( !_surfaceEnergyDensity.first ){
+        if ( !_surfaceAdhesionEnergyDensity.first ){
 
-            ERROR_TOOLS_CATCH( setSurfaceEnergyDensity( ) );
+            ERROR_TOOLS_CATCH( setSurfaceAdhesionEnergyDensity( ) );
 
         }
 
-        return &_surfaceEnergyDensity.second;
+        return &_surfaceAdhesionEnergyDensity.second;
 
     }
 
-    void aspBase::setSurfaceEnergyDensity( ){
+    void aspBase::setSurfaceAdhesionEnergyDensity( ){
         /*!
          * Set the surface energy density if required.
          */
 
-        ERROR_TOOLS_CATCH( computeSurfaceEnergyDensity( _surfaceEnergyDensity.second ) );
+        ERROR_TOOLS_CATCH( computeSurfaceAdhesionEnergyDensity( _surfaceAdhesionEnergyDensity.second ) );
 
-        _surfaceEnergyDensity.first = true;
+        _surfaceAdhesionEnergyDensity.first = true;
 
         return;
 
