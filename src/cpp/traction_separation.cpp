@@ -1259,6 +1259,72 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          */
 
+        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi;
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                }
+
+            }
+
+        }
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                           floatVector &overlap ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl: The non-local micro deformation tensor
+         * \param &overlap: The overlap vector
+         */
+
         if ( Xi_1.size( ) != dX.size( ) ){
 
             ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
@@ -1277,9 +1343,9 @@ namespace tractionSeparation{
 
         }
 
-        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
@@ -1309,23 +1375,6 @@ namespace tractionSeparation{
 
         // Compute the representation of xi_1 in the non-local particle's reference frame
         floatVector xi_t = xi_1 - dx;
-
-        // Compute the non-local micro-deformation tensor
-        floatVector chi_nl = chi;
-
-        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
-
-            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
-
-                for ( unsigned int J = 0; J < dX.size( ); J++ ){
-
-                    chi_nl[ xi_t.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
-
-                }
-
-            }
-
-        }
 
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
