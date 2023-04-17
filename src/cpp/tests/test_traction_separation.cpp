@@ -6243,15 +6243,15 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlapChi_nl ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( overlap, overlap_answer ) );
 
-//    floatMatrix dOverlapdXi_1, dOverlapddX, dOverlapdF, dOverlapdChi, dOverlapdGradChi;
-//
-//    floatVector dOverlapdR_nl;
-//
-//    BOOST_CHECK( !tractionSeparation::computeParticleOverlap( Xi_1, dX, R_nl, F, chi, gradChi, overlap,
-//                                                              dOverlapdXi_1, dOverlapddX, dOverlapdR_nl, dOverlapdF, dOverlapdChi, dOverlapdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( overlap, overlap_answer ) );
-//
+    floatMatrix dOverlapdXi_1, dOverlapddX, dOverlapdF, dOverlapdChi, dOverlapdChi_nl;
+
+    floatVector dOverlapdR_nl;
+
+    BOOST_CHECK( !tractionSeparation::computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap,
+                                                                    dOverlapdXi_1, dOverlapddX, dOverlapdR_nl, dOverlapdF, dOverlapdChi, dOverlapdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( overlap, overlap_answer ) );
+
 //    floatVector overlap_2;
 //
 //    floatMatrix dOverlapdXi_1_2, dOverlapddX_2, dOverlapdF_2, dOverlapdChi_2, dOverlapdGradChi_2;
