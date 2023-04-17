@@ -1355,17 +1355,7 @@ namespace tractionSeparation{
         }
         else{
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap ) );
 
         }
 
@@ -1578,17 +1568,7 @@ namespace tractionSeparation{
 
             floatMatrix dOverlapdchi_nl, dOverlapdxi_t;
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
@@ -1911,20 +1891,10 @@ namespace tractionSeparation{
             floatMatrix d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
                         d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl;
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
-                                                   d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
-                                                   d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
-                                                   d2OverlapdR_nldR_nl );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
+                                                     d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
+                                                     d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
+                                                     d2OverlapdR_nldR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
@@ -2656,26 +2626,16 @@ namespace tractionSeparation{
                         d3Overlapdxi_tdxi_tdxi_t, d3Overlapdxi_tdxi_tdR_nl,
                         d3Overlapdxi_tdR_nldR_nl;
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
-                                                   d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
-                                                   d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
-                                                   d2OverlapdR_nldR_nl,
-                                                   d3Overlapdchi_nldchi_nldchi_nl, d3Overlapdchi_nldchi_nldxi_t, d3Overlapdchi_nldchi_nldR_nl,
-                                                   d3Overlapdchi_nldxi_tdxi_t, d3Overlapdchi_nldxi_tdR_nl,
-                                                   d3Overlapdchi_nldR_nldR_nl,
-                                                   d3Overlapdxi_tdxi_tdxi_t, d3Overlapdxi_tdxi_tdR_nl,
-                                                   d3Overlapdxi_tdR_nldR_nl,
-                                                   d3OverlapdR_nldR_nldR_nl );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
+                                                     d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
+                                                     d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
+                                                     d2OverlapdR_nldR_nl,
+                                                     d3Overlapdchi_nldchi_nldchi_nl, d3Overlapdchi_nldchi_nldxi_t, d3Overlapdchi_nldchi_nldR_nl,
+                                                     d3Overlapdchi_nldxi_tdxi_t, d3Overlapdchi_nldxi_tdR_nl,
+                                                     d3Overlapdchi_nldR_nldR_nl,
+                                                     d3Overlapdxi_tdxi_tdxi_t, d3Overlapdxi_tdxi_tdR_nl,
+                                                     d3Overlapdxi_tdR_nldR_nl,
+                                                     d3OverlapdR_nldR_nldR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
@@ -4323,22 +4283,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -4358,22 +4308,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -4383,22 +4323,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -4491,22 +4421,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -4526,22 +4446,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -4551,22 +4461,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-    
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -4747,22 +4647,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -4782,22 +4672,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -4807,22 +4687,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-    
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -4867,26 +4737,16 @@ namespace tractionSeparation{
         floatVector d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl, d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
                     d3LdXdXdR_nl, d3LdXdchi_nldR_nl, d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl, d3LdXdR_nldR_nl;
 
-        error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                  d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                  d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                  d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                  d2LdR_nldR_nl,
-                                                  d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
-                                                  d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
-                                                  d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
-                                                  d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
-                                                  d3LdXdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "An error occurred when computing the overlap distance lagrangian for second gradients" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl,
+                                                             d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
+                                                             d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
+                                                             d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
+                                                             d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
+                                                             d3LdXdR_nldR_nl ) );
 
         // Compute the first order derivatives
 
@@ -5291,22 +5151,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -5326,22 +5176,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -5351,22 +5191,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-    
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -5412,27 +5242,17 @@ namespace tractionSeparation{
                     d3LdXdXdR_nl, d3LdXdchi_nldR_nl, d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl, d3LdXdR_nldR_nl,
                     d4LdXdXdchi_nldchi_nl;
 
-        error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                  d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                  d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                  d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                  d2LdR_nldR_nl,
-                                                  d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
-                                                  d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
-                                                  d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
-                                                  d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
-                                                  d3LdXdR_nldR_nl,
-                                                  d4LdXdXdchi_nldchi_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "An error occurred when computing the overlap distance lagrangian for second gradients" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl,
+                                                             d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
+                                                             d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
+                                                             d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
+                                                             d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
+                                                             d3LdXdR_nldR_nl,
+                                                             d4LdXdXdchi_nldchi_nl ) );
 
         // Compute the first order derivatives
 
