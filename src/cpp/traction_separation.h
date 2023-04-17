@@ -171,12 +171,12 @@ namespace tractionSeparation{
                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
                                           floatVector &overlap );
 
-//    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
-//                                          const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
-//                                          floatVector &overlap,
-//                                          floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
-//                                          floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_nl );
-//
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                          const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                          floatVector &overlap,
+                                          floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                          floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_nl );
+
 //    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
 //                                          const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
 //                                          floatVector &overlap,

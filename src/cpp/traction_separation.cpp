@@ -1305,7 +1305,7 @@ namespace tractionSeparation{
          * 
          * and for the non-local particle
          * 
-         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I\f$
          * 
          * where
          * 
@@ -1451,6 +1451,113 @@ namespace tractionSeparation{
          * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
          */
 
+        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi;
+
+        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
+
+        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                dchi_nldchi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * i + I ] = 1.;
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl;
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi += vectorTools::dot( dOverlapdChi_nl, dchi_nldchi );
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                           floatVector &overlap,
+                                           floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                           floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_nl ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl: The non-local micro deformation tensor
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdChi_nl: The gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         */
+
         if ( Xi_1.size( ) != dX.size( ) ){
 
             ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
@@ -1469,9 +1576,9 @@ namespace tractionSeparation{
 
         }
 
-        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
@@ -1538,43 +1645,6 @@ namespace tractionSeparation{
 
         floatMatrix dxi_tdF = -ddxdF;
 
-        // Compute the non-local micro-deformation tensor
-        floatVector chi_nl = chi;
-
-        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
-
-        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
-
-        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
-
-        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
-
-            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
-
-                dchi_nldchi[ xi_t.size( ) * i + I ][ xi_t.size( ) * i + I ] = 1.;
-
-                for ( unsigned int J = 0; J < dX.size( ); J++ ){
-
-                    chi_nl[ xi_t.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
-
-                    dchi_nlddX[ xi_t.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
-
-                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
-
-                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
-
-                            dchi_nldGradChi[ xi_t.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
@@ -1610,24 +1680,22 @@ namespace tractionSeparation{
 
             dOverlapdChi = floatMatrix( overlap.size( ), floatVector( chi.size( ), 0 ) );
 
-            dOverlapdGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+            dOverlapdChi_nl = floatMatrix( overlap.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         }
         else{
 
-            floatMatrix dOverlapdchi_nl, dOverlapdxi_t;
+            floatMatrix dOverlapdxi_t;
 
-            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl ) );
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdChi_nl, dOverlapdxi_t, dOverlapdR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
-            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX ) + vectorTools::dot( dOverlapdchi_nl, dchi_nlddX );
+            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX );
 
             dOverlapdF    = vectorTools::dot( dOverlapdxi_t, dxi_tdF );
 
-            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi ) + vectorTools::dot( dOverlapdchi_nl, dchi_nldchi );
-
-            dOverlapdGradChi = vectorTools::dot( dOverlapdchi_nl, dchi_nldGradChi );
+            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi );
 
         }
 
