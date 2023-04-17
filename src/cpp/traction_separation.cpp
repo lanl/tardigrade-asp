@@ -687,7 +687,7 @@ namespace tractionSeparation{
          */
 
         if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
         }
 
         dn = vectorTools::dot( d, n ) * n;
@@ -720,7 +720,7 @@ namespace tractionSeparation{
          */
 
         if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
         }
 
         dn = vectorTools::dot( d, n ) * n;
@@ -771,7 +771,7 @@ namespace tractionSeparation{
          */
 
         if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
         }
 
         dn = vectorTools::dot( d, n ) * n;
@@ -834,7 +834,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -866,7 +866,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -907,7 +907,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -954,7 +954,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -1002,7 +1002,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -1066,7 +1066,7 @@ namespace tractionSeparation{
 
         if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
 
-            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
 
         }
 
@@ -1108,7 +1108,7 @@ namespace tractionSeparation{
 
         if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
 
-            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
 
         }
 
@@ -1169,7 +1169,7 @@ namespace tractionSeparation{
 
         if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
 
-            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
 
         }
 
@@ -1261,25 +1261,25 @@ namespace tractionSeparation{
 
         if ( Xi_1.size( ) != dX.size( ) ){
 
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
 
         }
 
         if ( F.size( ) != dX.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
 
         }
 
         if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
 
         }
 
@@ -1330,7 +1330,7 @@ namespace tractionSeparation{
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -1414,25 +1414,25 @@ namespace tractionSeparation{
 
         if ( Xi_1.size( ) != dX.size( ) ){
 
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
 
         }
 
         if ( F.size( ) != dX.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
 
         }
 
         if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
 
         }
 
@@ -1539,7 +1539,7 @@ namespace tractionSeparation{
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -1674,25 +1674,25 @@ namespace tractionSeparation{
 
         if ( Xi_1.size( ) != dX.size( ) ){
 
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
 
         }
 
         if ( F.size( ) != dX.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
 
         }
 
         if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
 
         }
 
@@ -1827,7 +1827,7 @@ namespace tractionSeparation{
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -2301,25 +2301,25 @@ namespace tractionSeparation{
 
         if ( Xi_1.size( ) != dX.size( ) ){
 
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
 
         }
 
         if ( F.size( ) != dX.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
 
         }
 
         if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
 
         }
 
@@ -2454,7 +2454,7 @@ namespace tractionSeparation{
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -3621,13 +3621,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -3674,13 +3674,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -3765,13 +3765,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -3922,13 +3922,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -4121,13 +4121,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -4408,7 +4408,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -4422,7 +4422,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -4576,7 +4576,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -4590,7 +4590,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -4832,7 +4832,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -4846,7 +4846,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -5376,7 +5376,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -5390,7 +5390,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
