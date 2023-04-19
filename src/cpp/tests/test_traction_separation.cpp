@@ -6383,79 +6383,79 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlapChi_nl ){
 
     floatVector d3OverlapdR_nldR_nldR_nl;
 
-//    BOOST_CHECK( !tractionSeparation::computeParticleOverlap( Xi_1, dX, R_nl, F, chi, gradChi, overlap_3,
-//                                                              dOverlapdXi_1_3, dOverlapddX_3, dOverlapdR_nl_3, dOverlapdF_3, dOverlapdChi_3, dOverlapdGradChi_3,
-//                                                              d2OverlapdXi_1dXi_1_3, d2OverlapdXi_1ddX_3, d2OverlapdXi_1dR_nl_3, d2OverlapdXi_1dF_3, d2OverlapdXi_1dChi_3, d2OverlapdXi_1dGradChi_3,
-//                                                              d2OverlapddXddX_3, d2OverlapddXdR_nl_3, d2OverlapddXdF_3, d2OverlapddXdChi_3, d2OverlapddXdGradChi_3,
-//                                                              d2OverlapdR_nldR_nl_3, d2OverlapdR_nldF_3, d2OverlapdR_nldChi_3, d2OverlapdR_nldGradChi_3,
-//                                                              d2OverlapdFdF_3, d2OverlapdFdChi_3, d2OverlapdFdGradChi_3,
-//                                                              d2OverlapdChidChi_3, d2OverlapdChidGradChi_3,
-//                                                              d2OverlapdGradChidGradChi_3,
-//                                                              d3OverlapdXi_1dXi_1dXi_1, d3OverlapdXi_1dXi_1ddX, d3OverlapdXi_1dXi_1dR_nl, d3OverlapdXi_1dXi_1dF, d3OverlapdXi_1dXi_1dChi, d3OverlapdXi_1dXi_1dGradChi,
-//                                                              d3OverlapdXi_1ddXddX, d3OverlapdXi_1ddXdR_nl, d3OverlapdXi_1ddXdF, d3OverlapdXi_1ddXdChi, d3OverlapdXi_1ddXdGradChi,
-//                                                              d3OverlapdXi_1dR_nldR_nl, d3OverlapdXi_1dR_nldF, d3OverlapdXi_1dR_nldChi, d3OverlapdXi_1dR_nldGradChi,
-//                                                              d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdChi, d3OverlapdXi_1dFdGradChi,
-//                                                              d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidGradChi,
-//                                                              d3OverlapdXi_1dGradChidGradChi,
-//                                                              d3OverlapddXddXddX, d3OverlapddXddXdR_nl, d3OverlapddXddXdF, d3OverlapddXddXdChi, d3OverlapddXddXdGradChi,
-//                                                              d3OverlapddXdR_nldR_nl, d3OverlapddXdR_nldF, d3OverlapddXdR_nldChi, d3OverlapddXdR_nldGradChi,
-//                                                              d3OverlapddXdFdF, d3OverlapddXdFdChi, d3OverlapddXdFdGradChi,
-//                                                              d3OverlapddXdChidChi, d3OverlapddXdChidGradChi,
-//                                                              d3OverlapddXdGradChidGradChi,
-//                                                              d3OverlapdR_nldR_nldR_nl, d3OverlapdR_nldR_nldF, d3OverlapdR_nldR_nldChi, d3OverlapdR_nldR_nldGradChi,
-//                                                              d3OverlapdR_nldFdF, d3OverlapdR_nldFdChi, d3OverlapdR_nldFdGradChi,
-//                                                              d3OverlapdR_nldChidChi, d3OverlapdR_nldChidGradChi,
-//                                                              d3OverlapdR_nldGradChidGradChi,
-//                                                              d3OverlapdFdFdF, d3OverlapdFdFdChi, d3OverlapdFdFdGradChi,
-//                                                              d3OverlapdFdChidChi, d3OverlapdFdChidGradChi,
-//                                                              d3OverlapdFdGradChidGradChi,
-//                                                              d3OverlapdChidChidChi, d3OverlapdChidChidGradChi,
-//                                                              d3OverlapdChidGradChidGradChi,
-//                                                              d3OverlapdGradChidGradChidGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( overlap_3, overlap_answer ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdXi_1_3, dOverlapdXi_1 ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapddX_3, dOverlapddX ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdR_nl_3, dOverlapdR_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdF_3, dOverlapdF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_3, dOverlapdChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdGradChi_3, dOverlapdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXddX_3, d2OverlapddXddX ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdR_nl_3, d2OverlapddXdR_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdF_3, d2OverlapddXdF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdChi_3, d2OverlapddXdChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdGradChi_3, d2OverlapddXdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldR_nl_3, d2OverlapdR_nldR_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldF_3, d2OverlapdR_nldF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldChi_3, d2OverlapdR_nldChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldGradChi_3, d2OverlapdR_nldGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdF_3, d2OverlapdFdF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdChi_3, d2OverlapdFdChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdGradChi_3, d2OverlapdFdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidChi_3, d2OverlapdChidChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidGradChi_3, d2OverlapdChidGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdGradChidGradChi_3, d2OverlapdGradChidGradChi ) );
+    BOOST_CHECK( !tractionSeparation::computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap_3,
+                                                                    dOverlapdXi_1_3, dOverlapddX_3, dOverlapdR_nl_3, dOverlapdF_3, dOverlapdChi_3, dOverlapdChi_nl_3,
+                                                                    d2OverlapdXi_1dXi_1_3, d2OverlapdXi_1ddX_3, d2OverlapdXi_1dR_nl_3, d2OverlapdXi_1dF_3, d2OverlapdXi_1dChi_3, d2OverlapdXi_1dChi_nl_3,
+                                                                    d2OverlapddXddX_3, d2OverlapddXdR_nl_3, d2OverlapddXdF_3, d2OverlapddXdChi_3, d2OverlapddXdChi_nl_3,
+                                                                    d2OverlapdR_nldR_nl_3, d2OverlapdR_nldF_3, d2OverlapdR_nldChi_3, d2OverlapdR_nldChi_nl_3,
+                                                                    d2OverlapdFdF_3, d2OverlapdFdChi_3, d2OverlapdFdChi_nl_3,
+                                                                    d2OverlapdChidChi_3, d2OverlapdChidChi_nl_3,
+                                                                    d2OverlapdChi_nldChi_nl_3,
+                                                                    d3OverlapdXi_1dXi_1dXi_1, d3OverlapdXi_1dXi_1ddX, d3OverlapdXi_1dXi_1dR_nl, d3OverlapdXi_1dXi_1dF, d3OverlapdXi_1dXi_1dChi, d3OverlapdXi_1dXi_1dChi_nl,
+                                                                    d3OverlapdXi_1ddXddX, d3OverlapdXi_1ddXdR_nl, d3OverlapdXi_1ddXdF, d3OverlapdXi_1ddXdChi, d3OverlapdXi_1ddXdChi_nl,
+                                                                    d3OverlapdXi_1dR_nldR_nl, d3OverlapdXi_1dR_nldF, d3OverlapdXi_1dR_nldChi, d3OverlapdXi_1dR_nldChi_nl,
+                                                                    d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdChi, d3OverlapdXi_1dFdChi_nl,
+                                                                    d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidChi_nl,
+                                                                    d3OverlapdXi_1dChi_nldChi_nl,
+                                                                    d3OverlapddXddXddX, d3OverlapddXddXdR_nl, d3OverlapddXddXdF, d3OverlapddXddXdChi, d3OverlapddXddXdChi_nl,
+                                                                    d3OverlapddXdR_nldR_nl, d3OverlapddXdR_nldF, d3OverlapddXdR_nldChi, d3OverlapddXdR_nldChi_nl,
+                                                                    d3OverlapddXdFdF, d3OverlapddXdFdChi, d3OverlapddXdFdChi_nl,
+                                                                    d3OverlapddXdChidChi, d3OverlapddXdChidChi_nl,
+                                                                    d3OverlapddXdChi_nldChi_nl,
+                                                                    d3OverlapdR_nldR_nldR_nl, d3OverlapdR_nldR_nldF, d3OverlapdR_nldR_nldChi, d3OverlapdR_nldR_nldChi_nl,
+                                                                    d3OverlapdR_nldFdF, d3OverlapdR_nldFdChi, d3OverlapdR_nldFdChi_nl,
+                                                                    d3OverlapdR_nldChidChi, d3OverlapdR_nldChidChi_nl,
+                                                                    d3OverlapdR_nldChi_nldChi_nl,
+                                                                    d3OverlapdFdFdF, d3OverlapdFdFdChi, d3OverlapdFdFdChi_nl,
+                                                                    d3OverlapdFdChidChi, d3OverlapdFdChidChi_nl,
+                                                                    d3OverlapdFdChi_nldChi_nl,
+                                                                    d3OverlapdChidChidChi, d3OverlapdChidChidChi_nl,
+                                                                    d3OverlapdChidChi_nldChi_nl,
+                                                                    d3OverlapdChi_nldChi_nldChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( overlap_3, overlap_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdXi_1_3, dOverlapdXi_1 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapddX_3, dOverlapddX ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdR_nl_3, dOverlapdR_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdF_3, dOverlapdF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_3, dOverlapdChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_nl_3, dOverlapdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXddX_3, d2OverlapddXddX ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdR_nl_3, d2OverlapddXdR_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdF_3, d2OverlapddXdF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdChi_3, d2OverlapddXdChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdChi_nl_3, d2OverlapddXdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldR_nl_3, d2OverlapdR_nldR_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldF_3, d2OverlapdR_nldF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldChi_3, d2OverlapdR_nldChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldChi_nl_3, d2OverlapdR_nldChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdF_3, d2OverlapdFdF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdChi_3, d2OverlapdFdChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdChi_nl_3, d2OverlapdFdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidChi_3, d2OverlapdChidChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidChi_nl_3, d2OverlapdChidChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChi_nldChi_nl_3, d2OverlapdChi_nldChi_nl ) );
 
     floatMatrix d3OverlapdXi_1dXi_1dXi_1_answer( Xi_1.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * Xi_1.size( ), 0 ) );
 
@@ -7605,80 +7605,80 @@ BOOST_AUTO_TEST_CASE( test_computeParticleOverlapChi_nl ){
     BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_2, dOverlapdChi ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_nl_2, dOverlapdChi_nl ) );
-//
-//    BOOST_CHECK( !tractionSeparation::computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, gradChi, overlap_3,
-//                                                              dOverlapdXi_1_3, dOverlapddX_3, dOverlapdR_nl_3, dOverlapdF_3, dOverlapdChi_3, dOverlapdChi_nl_3,
-//                                                              d2OverlapdXi_1dXi_1_3, d2OverlapdXi_1ddX_3, d2OverlapdXi_1dR_nl_3, d2OverlapdXi_1dF_3, d2OverlapdXi_1dChi_3, d2OverlapdXi_1dChi_nl_3,
-//                                                              d2OverlapddXddX_3, d2OverlapddXdR_nl_3, d2OverlapddXdF_3, d2OverlapddXdChi_3, d2OverlapddXdChi_nl_3,
-//                                                              d2OverlapdR_nldR_nl_3, d2OverlapdR_nldF_3, d2OverlapdR_nldChi_3, d2OverlapdR_nldChi_nl_3,
-//                                                              d2OverlapdFdF_3, d2OverlapdFdChi_3, d2OverlapdFdChi_nl_3,
-//                                                              d2OverlapdChidChi_3, d2OverlapdChidChi_nl_3,
-//                                                              d2OverlapdChi_nldChi_nl_3,
-//                                                              d3OverlapdXi_1dXi_1dXi_1, d3OverlapdXi_1dXi_1ddX, d3OverlapdXi_1dXi_1dR_nl, d3OverlapdXi_1dXi_1dF, d3OverlapdXi_1dXi_1dChi, d3OverlapdXi_1dXi_1dChi_nl,
-//                                                              d3OverlapdXi_1ddXddX, d3OverlapdXi_1ddXdR_nl, d3OverlapdXi_1ddXdF, d3OverlapdXi_1ddXdChi, d3OverlapdXi_1ddXdChi_nl,
-//                                                              d3OverlapdXi_1dR_nldR_nl, d3OverlapdXi_1dR_nldF, d3OverlapdXi_1dR_nldChi, d3OverlapdXi_1dR_nldChi_nl,
-//                                                              d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdChi, d3OverlapdXi_1dFdChi_nl,
-//                                                              d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidChi_nl,
-//                                                              d3OverlapdXi_1dChi_nldChi_nl,
-//                                                              d3OverlapddXddXddX, d3OverlapddXddXdR_nl, d3OverlapddXddXdF, d3OverlapddXddXdChi, d3OverlapddXddXdChi_nl,
-//                                                              d3OverlapddXdR_nldR_nl, d3OverlapddXdR_nldF, d3OverlapddXdR_nldChi, d3OverlapddXdR_nldChi_nl,
-//                                                              d3OverlapddXdFdF, d3OverlapddXdFdChi, d3OverlapddXdFdChi_nl,
-//                                                              d3OverlapddXdChidChi, d3OverlapddXdChidChi_nl,
-//                                                              d3OverlapddXdChi_nldChi_nl,
-//                                                              d3OverlapdR_nldR_nldR_nl, d3OverlapdR_nldR_nldF, d3OverlapdR_nldR_nldChi, d3OverlapdR_nldR_nldChi_nl,
-//                                                              d3OverlapdR_nldFdF, d3OverlapdR_nldFdChi, d3OverlapdR_nldFdChi_nl,
-//                                                              d3OverlapdR_nldChidChi, d3OverlapdR_nldChidChi_nl,
-//                                                              d3OverlapdR_nldChi_nldChi_nl,
-//                                                              d3OverlapdFdFdF, d3OverlapdFdFdChi, d3OverlapdFdFdChi_nl,
-//                                                              d3OverlapdFdChidChi, d3OverlapdFdChidChi_nl,
-//                                                              d3OverlapdFdChi_nldChi_nl,
-//                                                              d3OverlapdChidChidChi, d3OverlapdChidChidChi_nl,
-//                                                              d3OverlapdChidChi_nldChi_nl,
-//                                                              d3OverlapdChi_nldChi_nldChi_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( overlap_3, overlap_answer ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdXi_1_3, dOverlapdXi_1 ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapddX_3, dOverlapddX ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdR_nl_3, dOverlapdR_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdF_3, dOverlapdF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_3, dOverlapdChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdGradChi_3, dOverlapdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXddX_3, d2OverlapddXddX ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdR_nl_3, d2OverlapddXdR_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdF_3, d2OverlapddXdF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdChi_3, d2OverlapddXdChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdGradChi_3, d2OverlapddXdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldR_nl_3, d2OverlapdR_nldR_nl ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldF_3, d2OverlapdR_nldF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldChi_3, d2OverlapdR_nldChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldGradChi_3, d2OverlapdR_nldGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdF_3, d2OverlapdFdF ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdChi_3, d2OverlapdFdChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdGradChi_3, d2OverlapdFdGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidChi_3, d2OverlapdChidChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidGradChi_3, d2OverlapdChidGradChi ) );
-//
-//    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdGradChidGradChi_3, d2OverlapdGradChidGradChi ) );
+
+    BOOST_CHECK( !tractionSeparation::computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap_3,
+                                                                    dOverlapdXi_1_3, dOverlapddX_3, dOverlapdR_nl_3, dOverlapdF_3, dOverlapdChi_3, dOverlapdChi_nl_3,
+                                                                    d2OverlapdXi_1dXi_1_3, d2OverlapdXi_1ddX_3, d2OverlapdXi_1dR_nl_3, d2OverlapdXi_1dF_3, d2OverlapdXi_1dChi_3, d2OverlapdXi_1dChi_nl_3,
+                                                                    d2OverlapddXddX_3, d2OverlapddXdR_nl_3, d2OverlapddXdF_3, d2OverlapddXdChi_3, d2OverlapddXdChi_nl_3,
+                                                                    d2OverlapdR_nldR_nl_3, d2OverlapdR_nldF_3, d2OverlapdR_nldChi_3, d2OverlapdR_nldChi_nl_3,
+                                                                    d2OverlapdFdF_3, d2OverlapdFdChi_3, d2OverlapdFdChi_nl_3,
+                                                                    d2OverlapdChidChi_3, d2OverlapdChidChi_nl_3,
+                                                                    d2OverlapdChi_nldChi_nl_3,
+                                                                    d3OverlapdXi_1dXi_1dXi_1, d3OverlapdXi_1dXi_1ddX, d3OverlapdXi_1dXi_1dR_nl, d3OverlapdXi_1dXi_1dF, d3OverlapdXi_1dXi_1dChi, d3OverlapdXi_1dXi_1dChi_nl,
+                                                                    d3OverlapdXi_1ddXddX, d3OverlapdXi_1ddXdR_nl, d3OverlapdXi_1ddXdF, d3OverlapdXi_1ddXdChi, d3OverlapdXi_1ddXdChi_nl,
+                                                                    d3OverlapdXi_1dR_nldR_nl, d3OverlapdXi_1dR_nldF, d3OverlapdXi_1dR_nldChi, d3OverlapdXi_1dR_nldChi_nl,
+                                                                    d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdChi, d3OverlapdXi_1dFdChi_nl,
+                                                                    d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidChi_nl,
+                                                                    d3OverlapdXi_1dChi_nldChi_nl,
+                                                                    d3OverlapddXddXddX, d3OverlapddXddXdR_nl, d3OverlapddXddXdF, d3OverlapddXddXdChi, d3OverlapddXddXdChi_nl,
+                                                                    d3OverlapddXdR_nldR_nl, d3OverlapddXdR_nldF, d3OverlapddXdR_nldChi, d3OverlapddXdR_nldChi_nl,
+                                                                    d3OverlapddXdFdF, d3OverlapddXdFdChi, d3OverlapddXdFdChi_nl,
+                                                                    d3OverlapddXdChidChi, d3OverlapddXdChidChi_nl,
+                                                                    d3OverlapddXdChi_nldChi_nl,
+                                                                    d3OverlapdR_nldR_nldR_nl, d3OverlapdR_nldR_nldF, d3OverlapdR_nldR_nldChi, d3OverlapdR_nldR_nldChi_nl,
+                                                                    d3OverlapdR_nldFdF, d3OverlapdR_nldFdChi, d3OverlapdR_nldFdChi_nl,
+                                                                    d3OverlapdR_nldChidChi, d3OverlapdR_nldChidChi_nl,
+                                                                    d3OverlapdR_nldChi_nldChi_nl,
+                                                                    d3OverlapdFdFdF, d3OverlapdFdFdChi, d3OverlapdFdFdChi_nl,
+                                                                    d3OverlapdFdChidChi, d3OverlapdFdChidChi_nl,
+                                                                    d3OverlapdFdChi_nldChi_nl,
+                                                                    d3OverlapdChidChidChi, d3OverlapdChidChidChi_nl,
+                                                                    d3OverlapdChidChi_nldChi_nl,
+                                                                    d3OverlapdChi_nldChi_nldChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( overlap_3, overlap_answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdXi_1_3, dOverlapdXi_1 ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapddX_3, dOverlapddX ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdR_nl_3, dOverlapdR_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdF_3, dOverlapdF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_3, dOverlapdChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dOverlapdChi_nl_3, dOverlapdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXddX_3, d2OverlapddXddX ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdR_nl_3, d2OverlapddXdR_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdF_3, d2OverlapddXdF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdChi_3, d2OverlapddXdChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapddXdChi_nl_3, d2OverlapddXdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldR_nl_3, d2OverlapdR_nldR_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldF_3, d2OverlapdR_nldF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldChi_3, d2OverlapdR_nldChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdR_nldChi_nl_3, d2OverlapdR_nldChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdF_3, d2OverlapdFdF ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdChi_3, d2OverlapdFdChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdFdChi_nl_3, d2OverlapdFdChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidChi_3, d2OverlapdChidChi ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChidChi_nl_3, d2OverlapdChidChi_nl ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( d2OverlapdChi_nldChi_nl_3, d2OverlapdChi_nldChi_nl ) );
 
     dOverlapdXi_1_answer    = floatMatrix( overlap_answer.size( ), floatVector( Xi_1.size( ), 0 ) );
 
