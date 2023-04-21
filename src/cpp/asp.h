@@ -153,9 +153,9 @@ namespace asp{
 
             const floatVector* getNonLocalCurrentSurfacePoints( );
 
-            const floatMatrix* getLocalParticleBoundingBox( );
+            const floatMatrix* getLocalParticleCurrentBoundingBox( );
 
-            const floatMatrix* getNonLocalParticleBoundingBox( );
+            const floatMatrix* getNonLocalParticleCurrentBoundingBox( );
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
 
@@ -185,7 +185,7 @@ namespace asp{
 
             floatVector _gradientMicroDeformation;
 
-            std::pair< bool, floatMatrix > _localParticleBoundingBox;
+            std::pair< bool, floatMatrix > _localParticleCurrentBoundingBox;
 
             std::pair< bool, floatVector > _localReferenceSurfacePoints;
 
@@ -228,7 +228,7 @@ namespace asp{
 
             std::pair< bool, floatVector > _nonLocalCurrentSurfacePoints;
 
-            std::pair< bool, floatMatrix > _nonLocalParticleBoundingBox;
+            std::pair< bool, floatMatrix > _nonLocalParticleCurrentBoundingBox;
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
@@ -264,9 +264,9 @@ namespace asp{
 
             virtual void setSurfaceAdhesionEnergyDensity( );
 
-            virtual void setLocalParticleBoundingBox( );
+            virtual void setLocalParticleCurrentBoundingBox( );
 
-            virtual void setNonLocalParticleBoundingBox( );
+            virtual void setNonLocalParticleCurrentBoundingBox( );
 
             virtual void setLocalReferenceSurfacePoints( );
 

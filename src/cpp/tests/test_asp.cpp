@@ -415,6 +415,24 @@ namespace asp{
 
                 }
 
+                static void set_localCurrentSurfacePoints( asp::aspBase &asp, const floatVector &localCurrentSurfacePoints ){
+
+                    asp._localCurrentSurfacePoints.first = true;
+                    asp._localCurrentSurfacePoints.second = localCurrentSurfacePoints;
+
+                    return;
+
+                }
+
+                static void set_nonLocalCurrentSurfacePoints( asp::aspBase &asp, const floatVector &nonLocalCurrentSurfacePoints ){
+
+                    asp._nonLocalCurrentSurfacePoints.first = true;
+                    asp._nonLocalCurrentSurfacePoints.second = nonLocalCurrentSurfacePoints;
+
+                    return;
+
+                }
+
                 // Read functions for checking for errors
                 static std::pair< bool, floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
 
@@ -1734,5 +1752,61 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalCurrentSurfacePoints ){
                            6.8, 16.7, 26.6};
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalCurrentSurfacePoints( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleCurrentBoundingBox ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+        private:
+
+            virtual void setLocalCurrentSurfacePoints( ){
+
+                asp::unit_test::aspBaseTester::set_localCurrentSurfacePoints( *this, points );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatMatrix answer = { { 1, 10 },
+                           { 2, 11 },
+                           { 3, 12 } };
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalParticleCurrentBoundingBox( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalParticleCurrentBoundingBox ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+        private:
+
+            virtual void setNonLocalCurrentSurfacePoints( ){
+
+                asp::unit_test::aspBaseTester::set_nonLocalCurrentSurfacePoints( *this, points );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatMatrix answer = { { 1, 10 },
+                           { 2, 11 },
+                           { 3, 12 } };
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalParticleCurrentBoundingBox( ), answer ) );
 
 }

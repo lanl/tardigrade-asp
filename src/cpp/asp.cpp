@@ -837,9 +837,9 @@ namespace asp{
         const floatVector *localMicroDeformation;
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        _localCurrentSurfacePoints.second = vectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
-                                                                         localReferenceSurfacePoints->size( ) / _dimension,
-                                                                         _dimension, _dimension, _dimension, false, true );
+        ERROR_TOOLS_CATCH( _localCurrentSurfacePoints.second = vectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
+                                                                                            localReferenceSurfacePoints->size( ) / _dimension,
+                                                                                            _dimension, _dimension, _dimension, false, true ) );
 
         _localCurrentSurfacePoints.first = true;
 
@@ -871,9 +871,9 @@ namespace asp{
         const floatVector *nonLocalMicroDeformation;
         ERROR_TOOLS_CATCH( nonLocalMicroDeformation = getNonLocalMicroDeformation( ) );
 
-        _nonLocalCurrentSurfacePoints.second = vectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
-                                                                            nonLocalReferenceSurfacePoints->size( ) / _dimension,
-                                                                            _dimension, _dimension, _dimension, false, true );
+        ERROR_TOOLS_CATCH( _nonLocalCurrentSurfacePoints.second = vectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
+                                                                                               nonLocalReferenceSurfacePoints->size( ) / _dimension,
+                                                                                               _dimension, _dimension, _dimension, false, true ) );
 
         _nonLocalCurrentSurfacePoints.first = true;
 
@@ -894,57 +894,99 @@ namespace asp{
 
     }
 
-    void aspBase::setLocalParticleBoundingBox( ){
+    void aspBase::setLocalParticleCurrentBoundingBox( ){
         /*!
-         * Set the bounding box of the local particle
+         * Set the bounding box of the local particle (dimension, (lower bound, upper bound))
          */
 
-        const floatVector *microDeformation;
-        ERROR_TOOLS_CATCH( microDeformation = getLocalMicroDeformation( ) );
+        const floatVector *localCurrentSurfacePoints;
+        ERROR_TOOLS_CATCH( localCurrentSurfacePoints = getLocalCurrentSurfacePoints( ) ); 
+
+        if ( localCurrentSurfacePoints->size( ) < _dimension ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local current surface points need at least one point" ) );
+
+        }
+
+        _localParticleCurrentBoundingBox.second = { { ( *localCurrentSurfacePoints )[ 0 ], ( *localCurrentSurfacePoints )[ 0 ] },
+                                                    { ( *localCurrentSurfacePoints )[ 1 ], ( *localCurrentSurfacePoints )[ 1 ] },
+                                                    { ( *localCurrentSurfacePoints )[ 2 ], ( *localCurrentSurfacePoints )[ 2 ] } };
+
+        for ( unsigned int i = _dimension; i < localCurrentSurfacePoints->size( ); i += _dimension ){
+
+            for ( unsigned int j = 0; j < _dimension; j++ ){
+
+                _localParticleCurrentBoundingBox.second[ j ][ 0 ] = std::fmin( _localParticleCurrentBoundingBox.second[ j ][ 0 ], ( *localCurrentSurfacePoints )[ i + j ] );
+                _localParticleCurrentBoundingBox.second[ j ][ 1 ] = std::fmax( _localParticleCurrentBoundingBox.second[ j ][ 1 ], ( *localCurrentSurfacePoints )[ i + j ] );
+
+            }
+
+        }
 
         return;
 
     }
 
-    const floatMatrix* aspBase::getLocalParticleBoundingBox( ){
+    const floatMatrix* aspBase::getLocalParticleCurrentBoundingBox( ){
         /*!
          * Get the local particle's bounding box
          */
 
-        if ( !_localParticleBoundingBox.first ){
+        if ( !_localParticleCurrentBoundingBox.first ){
 
-            ERROR_TOOLS_CATCH( setLocalParticleBoundingBox( ) );
+            ERROR_TOOLS_CATCH( setLocalParticleCurrentBoundingBox( ) );
 
         }
 
-        return &_localParticleBoundingBox.second;
+        return &_localParticleCurrentBoundingBox.second;
 
     }
 
-    void aspBase::setNonLocalParticleBoundingBox( ){
+    void aspBase::setNonLocalParticleCurrentBoundingBox( ){
         /*!
-         * Set the bounding box of the local particle
+         * Set the bounding box of the non-local particle (dimension, (lower bound, upper bound))
          */
 
-        const floatVector *microDeformation;
-        ERROR_TOOLS_CATCH( microDeformation = getLocalMicroDeformation( ) );
+        const floatVector *nonLocalCurrentSurfacePoints;
+        ERROR_TOOLS_CATCH( nonLocalCurrentSurfacePoints = getNonLocalCurrentSurfacePoints( ) ); 
+
+        if ( nonLocalCurrentSurfacePoints->size( ) < _dimension ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local current surface points need at least one point" ) );
+
+        }
+
+        _nonLocalParticleCurrentBoundingBox.second = { { ( *nonLocalCurrentSurfacePoints )[ 0 ], ( *nonLocalCurrentSurfacePoints )[ 0 ] },
+                                                       { ( *nonLocalCurrentSurfacePoints )[ 1 ], ( *nonLocalCurrentSurfacePoints )[ 1 ] },
+                                                       { ( *nonLocalCurrentSurfacePoints )[ 2 ], ( *nonLocalCurrentSurfacePoints )[ 2 ] } };
+
+        for ( unsigned int i = _dimension; i < nonLocalCurrentSurfacePoints->size( ); i += _dimension ){
+
+            for ( unsigned int j = 0; j < _dimension; j++ ){
+
+                _nonLocalParticleCurrentBoundingBox.second[ j ][ 0 ] = std::fmin( _nonLocalParticleCurrentBoundingBox.second[ j ][ 0 ], ( *nonLocalCurrentSurfacePoints )[ i + j ] );
+                _nonLocalParticleCurrentBoundingBox.second[ j ][ 1 ] = std::fmax( _nonLocalParticleCurrentBoundingBox.second[ j ][ 1 ], ( *nonLocalCurrentSurfacePoints )[ i + j ] );
+
+            }
+
+        }
 
         return;
 
     }
 
-    const floatMatrix* aspBase::getNonLocalParticleBoundingBox( ){
+    const floatMatrix* aspBase::getNonLocalParticleCurrentBoundingBox( ){
         /*!
          * Get the local particle's bounding box
          */
 
-        if ( !_nonLocalParticleBoundingBox.first ){
+        if ( !_nonLocalParticleCurrentBoundingBox.first ){
 
-            ERROR_TOOLS_CATCH( setNonLocalParticleBoundingBox( ) );
+            ERROR_TOOLS_CATCH( setNonLocalParticleCurrentBoundingBox( ) );
 
         }
 
-        return &_nonLocalParticleBoundingBox.second;
+        return &_nonLocalParticleCurrentBoundingBox.second;
 
     }
 
