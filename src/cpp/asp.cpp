@@ -719,6 +719,17 @@ namespace asp{
 
     }
 
+    void aspBase::computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity ){
+        /*!
+         * Compute the surface overlap energy density for the local particle and a given interaction
+         * 
+         * \param &surfaceOverlapEnergyDensities: The index is the index of the local points which may be overlapping with a neighboring particle and the values are the overlap energies. It is not a scalar because two particles could be overlapping at multiple points
+         */
+
+        return;
+
+    }
+
     const floatType* aspBase::getSurfaceAdhesionEnergyDensity( ){
         /*!
          * Get the surface energy density
@@ -744,6 +755,196 @@ namespace asp{
         _surfaceAdhesionEnergyDensity.first = true;
 
         return;
+
+    }
+
+    void aspBase::setLocalReferenceSurfacePoints( ){
+        /*!
+         * Set the collection of points which are on the surface of the local particle in the reference configuration
+         */
+
+        const floatVector *unitSpherePoints;
+        ERROR_TOOLS_CATCH( unitSpherePoints = getUnitSpherePoints( ) );
+
+        const floatType *localReferenceRadius;
+        ERROR_TOOLS_CATCH( localReferenceRadius = getLocalReferenceRadius( ) );
+
+        _localReferenceSurfacePoints.second = ( *localReferenceRadius ) * ( *unitSpherePoints );
+
+        _localReferenceSurfacePoints.first = true;
+
+        return;
+
+    }
+
+    const floatVector* aspBase::getLocalReferenceSurfacePoints( ){
+        /*!
+         * Get the local reference surface points
+         */
+
+        if ( !_localReferenceSurfacePoints.first ){
+
+            ERROR_TOOLS_CATCH( setLocalReferenceSurfacePoints( ) );
+
+        }
+
+        return &_localReferenceSurfacePoints.second;
+
+    }
+
+    void aspBase::setNonLocalReferenceSurfacePoints( ){
+        /*!
+         * Set the collection of points which are on the surface of the non-local particle in the reference configuration
+         */
+
+        const floatVector *unitSpherePoints;
+        ERROR_TOOLS_CATCH( unitSpherePoints = getUnitSpherePoints( ) );
+
+        const floatType *nonLocalReferenceRadius;
+        ERROR_TOOLS_CATCH( nonLocalReferenceRadius = getNonLocalReferenceRadius( ) );
+
+        _nonLocalReferenceSurfacePoints.second = ( *nonLocalReferenceRadius ) * ( *unitSpherePoints );
+
+        _nonLocalReferenceSurfacePoints.first = true;
+
+        return;
+
+    }
+
+    const floatVector* aspBase::getNonLocalReferenceSurfacePoints( ){
+        /*!
+         * Get the non-local reference surface points
+         */
+
+        if ( !_nonLocalReferenceSurfacePoints.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalReferenceSurfacePoints( ) );
+
+        }
+
+        return &_nonLocalReferenceSurfacePoints.second;
+
+    }
+
+    void aspBase::setLocalCurrentSurfacePoints( ){
+        /*!
+         * Set the collection of points on the surface of the local particle in the current configuration
+         */
+
+        const floatVector *localReferenceSurfacePoints;
+        ERROR_TOOLS_CATCH( localReferenceSurfacePoints = getLocalReferenceSurfacePoints( ) );
+
+        const floatVector *localMicroDeformation;
+        ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
+
+        _localCurrentSurfacePoints.second = vectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
+                                                                         localReferenceSurfacePoints->size( ) / _dimension,
+                                                                         _dimension, _dimension, _dimension, false, true );
+
+        _localCurrentSurfacePoints.first = true;
+
+    }
+
+    const floatVector* aspBase::getLocalCurrentSurfacePoints( ){
+        /*!
+         * Get the collection of points on the surface of the local particle in the current configuration
+         */
+
+        if ( !_localCurrentSurfacePoints.first ){
+
+            ERROR_TOOLS_CATCH( setLocalCurrentSurfacePoints( ) );
+
+        }
+
+        return &_localCurrentSurfacePoints.second;
+
+    }
+
+    void aspBase::setNonLocalCurrentSurfacePoints( ){
+        /*!
+         * Set the collection of points on the surface of the non-local particle in the current configuration
+         */
+
+        const floatVector *nonLocalReferenceSurfacePoints;
+        ERROR_TOOLS_CATCH( nonLocalReferenceSurfacePoints = getNonLocalReferenceSurfacePoints( ) );
+
+        const floatVector *nonLocalMicroDeformation;
+        ERROR_TOOLS_CATCH( nonLocalMicroDeformation = getNonLocalMicroDeformation( ) );
+
+        _nonLocalCurrentSurfacePoints.second = vectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
+                                                                            nonLocalReferenceSurfacePoints->size( ) / _dimension,
+                                                                            _dimension, _dimension, _dimension, false, true );
+
+        _nonLocalCurrentSurfacePoints.first = true;
+
+    }
+
+    const floatVector* aspBase::getNonLocalCurrentSurfacePoints( ){
+        /*!
+         * Get the collection of points on the surface of the non-local particle in the current configuration
+         */
+
+        if ( !_nonLocalCurrentSurfacePoints.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalCurrentSurfacePoints( ) );
+
+        }
+
+        return &_nonLocalCurrentSurfacePoints.second;
+
+    }
+
+    void aspBase::setLocalParticleBoundingBox( ){
+        /*!
+         * Set the bounding box of the local particle
+         */
+
+        const floatVector *microDeformation;
+        ERROR_TOOLS_CATCH( microDeformation = getLocalMicroDeformation( ) );
+
+        return;
+
+    }
+
+    const floatMatrix* aspBase::getLocalParticleBoundingBox( ){
+        /*!
+         * Get the local particle's bounding box
+         */
+
+        if ( !_localParticleBoundingBox.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleBoundingBox( ) );
+
+        }
+
+        return &_localParticleBoundingBox.second;
+
+    }
+
+    void aspBase::setNonLocalParticleBoundingBox( ){
+        /*!
+         * Set the bounding box of the local particle
+         */
+
+        const floatVector *microDeformation;
+        ERROR_TOOLS_CATCH( microDeformation = getLocalMicroDeformation( ) );
+
+        return;
+
+    }
+
+    const floatMatrix* aspBase::getNonLocalParticleBoundingBox( ){
+        /*!
+         * Get the local particle's bounding box
+         */
+
+        if ( !_nonLocalParticleBoundingBox.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalParticleBoundingBox( ) );
+
+        }
+
+        return &_nonLocalParticleBoundingBox.second;
 
     }
 

@@ -12,6 +12,7 @@
 #include<sstream>
 
 #include<error_tools.h>
+#define USE_EIGEN
 #include<vector_tools.h>
 #include<abaqus_tools.h>
 
@@ -109,7 +110,9 @@ namespace asp{
                                                             const floatVector &parameters,
                                                             floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
 
-            virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceEnergyDensity );
+            virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity );
+
+            virtual void computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity );
 
             // Getter functions
             const floatType* getSurfaceAdhesionEnergyDensity( );
@@ -142,6 +145,18 @@ namespace asp{
 
             const floatVector* getUnitSpherePoints( );
 
+            const floatVector* getLocalReferenceSurfacePoints( );
+
+            const floatVector* getNonLocalReferenceSurfacePoints( );
+
+            const floatVector* getLocalCurrentSurfacePoints( );
+
+            const floatVector* getNonLocalCurrentSurfacePoints( );
+
+            const floatMatrix* getLocalParticleBoundingBox( );
+
+            const floatMatrix* getNonLocalParticleBoundingBox( );
+
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
 
         protected:
@@ -169,6 +184,12 @@ namespace asp{
             floatVector _microDeformation;
 
             floatVector _gradientMicroDeformation;
+
+            std::pair< bool, floatMatrix > _localParticleBoundingBox;
+
+            std::pair< bool, floatVector > _localReferenceSurfacePoints;
+
+            std::pair< bool, floatVector > _localCurrentSurfacePoints;
 
             // ALL OF THESE MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
             std::pair< bool, floatType > _localReferenceRadius;
@@ -202,6 +223,12 @@ namespace asp{
             std::pair< bool, floatVector > _surfaceParameters;
 
             std::pair< bool, floatType > _surfaceAdhesionEnergyDensity;
+
+            std::pair< bool, floatVector > _nonLocalReferenceSurfacePoints;
+
+            std::pair< bool, floatVector > _nonLocalCurrentSurfacePoints;
+
+            std::pair< bool, floatMatrix > _nonLocalParticleBoundingBox;
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
@@ -236,6 +263,18 @@ namespace asp{
             virtual void initializeSurfaceIntegrandQuantities( );
 
             virtual void setSurfaceAdhesionEnergyDensity( );
+
+            virtual void setLocalParticleBoundingBox( );
+
+            virtual void setNonLocalParticleBoundingBox( );
+
+            virtual void setLocalReferenceSurfacePoints( );
+
+            virtual void setNonLocalReferenceSurfacePoints( );
+
+            virtual void setLocalCurrentSurfacePoints( );
+
+            virtual void setNonLocalCurrentSurfacePoints( );
 
             virtual void resetSurface( );
 

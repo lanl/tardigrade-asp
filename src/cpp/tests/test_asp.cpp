@@ -397,6 +397,23 @@ namespace asp{
 
                 }
 
+                static void set_localReferenceSurfacePoints( asp::aspBase &asp, const floatVector &localReferenceSurfacePoints ){
+
+                    asp._localReferenceSurfacePoints.first = true;
+                    asp._localReferenceSurfacePoints.second = localReferenceSurfacePoints;
+
+                    return;
+
+                }
+
+                static void set_nonLocalReferenceSurfacePoints( asp::aspBase &asp, const floatVector &nonLocalReferenceSurfacePoints ){
+
+                    asp._nonLocalReferenceSurfacePoints.first = true;
+                    asp._nonLocalReferenceSurfacePoints.second = nonLocalReferenceSurfacePoints;
+
+                    return;
+
+                }
 
                 // Read functions for checking for errors
                 static std::pair< bool, floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
@@ -1571,5 +1588,151 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getSurfaceAdhesionEnergyDensity ){
     cerr_redirect rd( &buffer );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getSurfaceAdhesionEnergyDensity( ), 123. ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalReferenceSurfacePoints ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            std::vector< unsigned int > connectivity = { 1, 2, 3 };
+
+            floatType radius = 1.3;
+
+        private:
+
+            virtual void initializeUnitSphere( ){
+
+                asp::unit_test::aspBaseTester::set_unitSphere( *this, points, connectivity );
+
+            }
+
+            virtual void setLocalReferenceRadius( ){
+
+                asp::unit_test::aspBaseTester::set_localReferenceRadius( *this, radius );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector answer = asp.points * asp.radius;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalReferenceSurfacePoints( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalReferenceSurfacePoints ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            std::vector< unsigned int > connectivity = { 1, 2, 3 };
+
+            floatType radius = 1.3;
+
+        private:
+
+            virtual void initializeUnitSphere( ){
+
+                asp::unit_test::aspBaseTester::set_unitSphere( *this, points, connectivity );
+
+            }
+
+            virtual void setNonLocalReferenceRadius( ){
+
+                asp::unit_test::aspBaseTester::set_nonlocalReferenceRadius( *this, radius );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector answer = asp.points * asp.radius;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalReferenceSurfacePoints( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalCurrentSurfacePoints ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+            floatVector microDeformation = { .1, .2, .3, .4, .5, .6, .7, .8, .9 };
+
+        private:
+
+            virtual void setLocalReferenceSurfacePoints( ){
+
+                asp::unit_test::aspBaseTester::set_localReferenceSurfacePoints( *this, points );
+
+            }
+
+            virtual void setLocalMicroDeformation( ){
+
+                asp::unit_test::aspBaseTester::set_localMicroDeformation( *this, microDeformation );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector answer = { 1.4,  3.2,  5. ,
+                           3.2,  7.7, 12.2,
+                           5. , 12.2, 19.4,
+                           6.8, 16.7, 26.6};
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalCurrentSurfacePoints( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalCurrentSurfacePoints ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+            floatVector microDeformation = { .1, .2, .3, .4, .5, .6, .7, .8, .9 };
+
+        private:
+
+            virtual void setNonLocalReferenceSurfacePoints( ){
+
+                asp::unit_test::aspBaseTester::set_nonLocalReferenceSurfacePoints( *this, points );
+
+            }
+
+            virtual void setNonLocalMicroDeformation( ){
+
+                asp::unit_test::aspBaseTester::set_nonlocalMicroDeformation( *this, microDeformation );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector answer = { 1.4,  3.2,  5. ,
+                           3.2,  7.7, 12.2,
+                           5. , 12.2, 19.4,
+                           6.8, 16.7, 26.6};
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalCurrentSurfacePoints( ), answer ) );
 
 }

@@ -46,3 +46,4 @@ New Features
 - Initial commit of the asp base class with a linear elastic local particle energy definition. (:merge:`14`). By `Nathan Miller`_.
 - Added the computation of the traction separation energy at a single surface point. (:merge:`15`). By `Nathan Miller`_.
 - Changed the interface to the surface energy such that it sets an internal variable rather than returning a value (:merge:`16`). By `Nathan Miller`_.
+- Added the computation of the points on the surface of the local and non-local particles in the reference and current configurations (:merge:`25`). By `Nathan Miller`_.
