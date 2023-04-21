@@ -12,7 +12,8 @@ Changelog
 Breaking changes
 ================
 - Remove linear elasticity, which now lives in stress tools (:issue:`1`, :merge:`9`). By `Kyle Brindley`_.
-- Changed the getter functions to use constant pointers rather than copied values (:merge:`21`). By `Nathan Miller`_.
+- Changed the getter functions to use constant pointers rather than copied values (:merge:`22`). By `Nathan Miller`_.
+- Re-named surface energy density functions to surface adhesion energy density (:merge:`23`). By `Nathan Miller`_.
 
 Internal Changes
 ================
@@ -20,6 +21,8 @@ Internal Changes
 - Change the project to use boost 1.65 (:merge:`17`). By `Nathan Miller`_.
 - Change the project to use error_tools > 0.5.1 (:merge:`19`). By `Nathan Miller`_.
 - Begin incorporation of new error_tools stack trace capability (:merge:`20`). By `Nathan Miller`_.
+- Added getter and setter functions for the private variables (:merge:`21`). By `Nathan Miller`_.
+- Added a function for the particle overlap calculation which uses a non-local micro-deformation rather than the gradient of the micro deformation (:merge:`24`). By `Nathan Miller`_.
 
 New Features
 ============

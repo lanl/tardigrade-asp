@@ -687,7 +687,7 @@ namespace tractionSeparation{
          */
 
         if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
         }
 
         dn = vectorTools::dot( d, n ) * n;
@@ -720,7 +720,7 @@ namespace tractionSeparation{
          */
 
         if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
         }
 
         dn = vectorTools::dot( d, n ) * n;
@@ -771,7 +771,7 @@ namespace tractionSeparation{
          */
 
         if ( !vectorTools::fuzzyEquals( vectorTools::l2norm( n ), 1. ) ){
-            return new errorNode( __func__, "The normal vector isn't a unit vector!" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The normal vector isn't a unit vector!" ) );
         }
 
         dn = vectorTools::dot( d, n ) * n;
@@ -834,7 +834,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -866,7 +866,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -907,7 +907,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -954,7 +954,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -1002,7 +1002,7 @@ namespace tractionSeparation{
 
         if ( parameters.size( ) != 2 ){
 
-            return new errorNode( __func__, "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
 
         }
 
@@ -1066,7 +1066,7 @@ namespace tractionSeparation{
 
         if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
 
-            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
 
         }
 
@@ -1108,7 +1108,7 @@ namespace tractionSeparation{
 
         if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
 
-            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
 
         }
 
@@ -1169,7 +1169,7 @@ namespace tractionSeparation{
 
         if ( deformationGradient.size( ) != ( dAN.size( ) * dAN.size( ) ) ){
 
-            return new errorNode( __func__, "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient must have " + std::to_string( dAN.size( ) * dAN.size( ) ) + " terms and has " + std::to_string( deformationGradient.size( ) ) ) );
 
         }
 
@@ -1259,27 +1259,93 @@ namespace tractionSeparation{
          * \param &overlap: The overlap vector
          */
 
-        if ( Xi_1.size( ) != dX.size( ) ){
+        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
 
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
-
-        }
-
-        if ( F.size( ) != dX.size( ) * dX.size( ) ){
-
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
-
-        }
-
-        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
-
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi;
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                }
+
+            }
+
+        }
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                           floatVector &overlap ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl: The non-local micro deformation tensor
+         * \param &overlap: The overlap vector
+         */
+
+        if ( Xi_1.size( ) != dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
+
+        }
+
+        if ( F.size( ) != dX.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
+
+        }
+
+        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
@@ -1310,27 +1376,10 @@ namespace tractionSeparation{
         // Compute the representation of xi_1 in the non-local particle's reference frame
         floatVector xi_t = xi_1 - dx;
 
-        // Compute the non-local micro-deformation tensor
-        floatVector chi_nl = chi;
-
-        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
-
-            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
-
-                for ( unsigned int J = 0; J < dX.size( ); J++ ){
-
-                    chi_nl[ xi_t.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
-
-                }
-
-            }
-
-        }
-
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -1355,17 +1404,7 @@ namespace tractionSeparation{
         }
         else{
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap ) );
 
         }
 
@@ -1412,27 +1451,134 @@ namespace tractionSeparation{
          * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
          */
 
-        if ( Xi_1.size( ) != dX.size( ) ){
+        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
 
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
-
-        }
-
-        if ( F.size( ) != dX.size( ) * dX.size( ) ){
-
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
-
-        }
-
-        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
-
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi;
+
+        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
+
+        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                dchi_nldchi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * i + I ] = 1.;
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl;
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi += vectorTools::dot( dOverlapdChi_nl, dchi_nldchi );
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                           floatVector &overlap,
+                                           floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                           floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_nl ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl: The non-local micro deformation tensor
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdChi_nl: The gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         */
+
+        if ( Xi_1.size( ) != dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
+
+        }
+
+        if ( F.size( ) != dX.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
+
+        }
+
+        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
@@ -1499,47 +1645,10 @@ namespace tractionSeparation{
 
         floatMatrix dxi_tdF = -ddxdF;
 
-        // Compute the non-local micro-deformation tensor
-        floatVector chi_nl = chi;
-
-        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
-
-        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
-
-        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
-
-        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
-
-            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
-
-                dchi_nldchi[ xi_t.size( ) * i + I ][ xi_t.size( ) * i + I ] = 1.;
-
-                for ( unsigned int J = 0; J < dX.size( ); J++ ){
-
-                    chi_nl[ xi_t.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
-
-                    dchi_nlddX[ xi_t.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
-
-                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
-
-                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
-
-                            dchi_nldGradChi[ xi_t.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -1571,34 +1680,22 @@ namespace tractionSeparation{
 
             dOverlapdChi = floatMatrix( overlap.size( ), floatVector( chi.size( ), 0 ) );
 
-            dOverlapdGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+            dOverlapdChi_nl = floatMatrix( overlap.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         }
         else{
 
-            floatMatrix dOverlapdchi_nl, dOverlapdxi_t;
+            floatMatrix dOverlapdxi_t;
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdChi_nl, dOverlapdxi_t, dOverlapdR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
-            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX ) + vectorTools::dot( dOverlapdchi_nl, dchi_nlddX );
+            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX );
 
             dOverlapdF    = vectorTools::dot( dOverlapdxi_t, dxi_tdF );
 
-            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi ) + vectorTools::dot( dOverlapdchi_nl, dchi_nldchi );
-
-            dOverlapdGradChi = vectorTools::dot( dOverlapdchi_nl, dchi_nldGradChi );
+            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi );
 
         }
 
@@ -1672,27 +1769,390 @@ namespace tractionSeparation{
          * \param &d2OverlapdGradChidGradChi: The second gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
          */
 
-        if ( Xi_1.size( ) != dX.size( ) ){
-
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
-
-        }
-
-        if ( F.size( ) != dX.size( ) * dX.size( ) ){
-
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
-
-        }
-
         if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi;
+
+        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
+
+        floatMatrix dchi_nlddX( chi_nl.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi_nl.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatMatrix d2chi_nlddXdGradChi( chi_nl.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                dchi_nldchi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * i + I ] = 1.;
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            for ( unsigned int M = 0; M < dX.size( ); M++ ){
+
+                                dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                                d2chi_nlddXdGradChi[ Xi_1.size( ) * i + I ][ gradChi.size( ) * J + Xi_1.size( ) * Xi_1.size( ) * K + Xi_1.size( ) * L + M ] = eye[ Xi_1.size( ) * i + K ] * eye[ Xi_1.size( ) * I + L ] * eye[ Xi_1.size( ) * J + M ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl;
+
+        floatMatrix d2OverlapdXi_1dChi_nl, d2OverlapddXdChi_nl, d2OverlapdR_nldChi_nl, d2OverlapdFdChi_nl, d2OverlapdChidChi_nl,
+                    d2OverlapdChi_nldChi_nl;
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl,
+                                                         d2OverlapdXi_1dXi_1, d2OverlapdXi_1ddX, d2OverlapdXi_1dR_nl, d2OverlapdXi_1dF, d2OverlapdXi_1dChi, d2OverlapdXi_1dChi_nl,
+                                                         d2OverlapddXddX, d2OverlapddXdR_nl, d2OverlapddXdF, d2OverlapddXdChi, d2OverlapddXdChi_nl,
+                                                         d2OverlapdR_nldR_nl, d2OverlapdR_nldF, d2OverlapdR_nldChi, d2OverlapdR_nldChi_nl,
+                                                         d2OverlapdFdF, d2OverlapdFdChi, d2OverlapdFdChi_nl,
+                                                         d2OverlapdChidChi, d2OverlapdChidChi_nl,
+                                                         d2OverlapdChi_nldChi_nl ) );
+
+        d2OverlapdXi_1dGradChi    = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapddXdGradChi      = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdFdGradChi       = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdChidGradChi     = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdGradChidGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdR_nldGradChi    = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi += vectorTools::dot( dOverlapdChi_nl, dchi_nldchi );
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        for ( unsigned int i = 0; i < overlap.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1ddX[ i ][ dX.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1dChi[ i ][ chi.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1dGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                    + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapddXdR_nl[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nlddX[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdF[ i ][ chi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                      + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ]
+                                                                              + dOverlapdChi_nl[ i ][ a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < F.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdFdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdFdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < chi.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapdR_nldChi[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nldchi[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChidChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ]
+                                                                       + d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ I ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdChidChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < gradChi.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapdR_nldGradChi[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nldGradChi[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdGradChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                           floatVector &overlap,
+                                           floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                           floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_nl,
+                                           floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dChi_nl,
+                                           floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdChi_nl,
+                                           floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldChi_nl,
+                                           floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdChi_nl,
+                                           floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidChi_nl,
+                                           floatMatrix &d2OverlapdChi_nldChi_nl ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl: The non-local micro deformation tensor
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdChi_nl: The gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         * \param &d2OverlapdXi_1dXi_1: The second gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d2OverlapdXi_1ddX: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the particle reference center-to-center vector
+         * \param &d2OverlapdXi_1dR_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d2OverlapdXi_1dF: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient
+         * \param &d2OverlapdXi_1dChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor
+         * \param &d2OverlapdXi_1dChi_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local micro-deformation tensor
+         * \param &d2OverlapddXddX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
+         * \param &d2OverlapddXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
+         * \param &d2OverlapddXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
+         * \param &d2OverlapddXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
+         * \param &d2OverlapddXdChi_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local micro-deformation tensor
+         * \param &d2OverlapdR_nldR_nl: The second gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d2OverlapdR_nldF: The second gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient
+         * \param &d2OverlapdR_nldChi: The second gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor
+         * \param &d2OverlapdR_nldChi_nl: The second gradient of the overlap w.r.t. the non-local reference radius and the non-local micro-deformation tensor
+         * \param &d2OverlapdFdF: The second gradient of the overlap w.r.t. the deformation gradient
+         * \param &d2OverlapdFdChi: The second gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor
+         * \param &d2OverlapdFdChi_nl: The second gradient of the overlap w.r.t. the deformation gradient and the non-local micro-deformation tensor
+         * \param &d2OverlapdChidChi: The second gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d2OverlapdChidChi_nl: The second gradient of the overlap w.r.t. the micro-deformation tensor and the non-local micro-deformation tensor
+         * \param &d2OverlapdChi_nldChi_nl: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         */
+
+        if ( Xi_1.size( ) != dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
+
+        }
+
+        if ( F.size( ) != dX.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
+
+        }
+
+        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
@@ -1779,55 +2239,10 @@ namespace tractionSeparation{
 
         floatMatrix d2xi_tddXdF = -d2dxddXdF;
 
-        // Compute the non-local micro-deformation tensor
-        floatVector chi_nl = chi;
-
-        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
-
-        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
-
-        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
-
-        floatMatrix d2chi_nlddXdGradChi( chi.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
-
-        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
-
-            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
-
-                dchi_nldchi[ xi_t.size( ) * i + I ][ xi_t.size( ) * i + I ] = 1.;
-
-                for ( unsigned int J = 0; J < dX.size( ); J++ ){
-
-                    chi_nl[ xi_t.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
-
-                    dchi_nlddX[ xi_t.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
-
-                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
-
-                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
-
-                            for ( unsigned int M = 0; M < dX.size( ); M++ ){
-
-                                dchi_nldGradChi[ xi_t.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
-
-                                d2chi_nlddXdGradChi[ xi_t.size( ) * i + I ][ gradChi.size( ) * J + xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * L + M ] = eye[ xi_t.size( ) * i + K ] * eye[ xi_t.size( ) * I + L ] * eye[ xi_t.size( ) * J + M ];
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -1855,7 +2270,7 @@ namespace tractionSeparation{
 
         d2OverlapdXi_1dChi     = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapdXi_1dGradChi = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdXi_1dChi_nl  = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi_nl.size( ), 0 ) );
 
         d2OverlapddXddX        = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
 
@@ -1865,7 +2280,7 @@ namespace tractionSeparation{
 
         d2OverlapddXdChi       = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapddXdGradChi   = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapddXdChi_nl    = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi_nl.size( ), 0 ) );
 
         d2OverlapdR_nldR_nl    = floatVector( xi_t.size( ), 0 );
 
@@ -1873,19 +2288,19 @@ namespace tractionSeparation{
 
         d2OverlapdR_nldChi     = floatMatrix( xi_t.size( ), floatVector( chi.size( ), 0 ) );
 
-        d2OverlapdR_nldGradChi = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ), 0 ) );
+        d2OverlapdR_nldChi_nl  = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         d2OverlapdFdF       = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ), 0 ) );
 
         d2OverlapdFdChi     = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapdFdGradChi = floatMatrix( xi_t.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdFdChi_nl  = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi_nl.size( ), 0 ) );
 
         d2OverlapdChidChi     = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapdChidGradChi = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdChidChi_nl  = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d2OverlapdGradChidGradChi = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdChi_nldChi_nl = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         if ( vectorTools::dot( Xi_t, Xi_t ) > ( R_nl * R_nl ) ){
 
@@ -1901,91 +2316,52 @@ namespace tractionSeparation{
 
             dOverlapdChi = floatMatrix( overlap.size( ), floatVector( chi.size( ), 0 ) );
 
-            dOverlapdGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+            dOverlapdChi_nl = floatMatrix( overlap.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         }
         else{
 
-            floatMatrix dOverlapdchi_nl, dOverlapdxi_t;
+            floatMatrix dOverlapdxi_t;
 
-            floatMatrix d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
+            floatMatrix d2Overlapdchi_nldxi_t,
                         d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl;
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
-                                                   d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
-                                                   d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
-                                                   d2OverlapdR_nldR_nl );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdChi_nl, dOverlapdxi_t, dOverlapdR_nl,
+                                                     d2OverlapdChi_nldChi_nl, d2Overlapdchi_nldxi_t, d2OverlapdR_nldChi_nl,
+                                                     d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
+                                                     d2OverlapdR_nldR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
-            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX ) + vectorTools::dot( dOverlapdchi_nl, dchi_nlddX );
+            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX );
 
             dOverlapdF    = vectorTools::dot( dOverlapdxi_t, dxi_tdF );
 
-            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi ) + vectorTools::dot( dOverlapdchi_nl, dchi_nldchi );
-
-            dOverlapdGradChi = vectorTools::dot( dOverlapdchi_nl, dchi_nldGradChi );
+            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi );
 
             d2OverlapdXi_1dR_nl = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdXi_1 );
 
-            d2OverlapddXdR_nl = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tddX ) + vectorTools::dot( d2Overlapdchi_nldR_nl, dchi_nlddX );
+            d2OverlapddXdR_nl = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tddX );
 
             d2OverlapdR_nldF = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdF );
 
-            d2OverlapdR_nldChi = vectorTools::dot( d2Overlapdchi_nldR_nl, dchi_nldchi ) + vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdchi );
-
-            d2OverlapdR_nldGradChi = vectorTools::dot( d2Overlapdchi_nldR_nl, dchi_nldGradChi );
+            d2OverlapdR_nldChi = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdchi );
 
             d2OverlapddXdF = vectorTools::dot( dOverlapdxi_t, d2xi_tddXdF );
 
             d2OverlapdXi_1dChi = vectorTools::dot( dOverlapdxi_t, d2xi_tdXi_1dChi );
 
-            d2OverlapddXdGradChi = vectorTools::dot( dOverlapdchi_nl, d2chi_nlddXdGradChi );
+            for ( unsigned int i = 0; i < overlap.size( ); i++ ){
 
-            for ( unsigned int I = 0; I < overlap.size( ); I++ ){
+                for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
 
-                for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
+                    for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
 
-                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                        for ( unsigned int L = 0; L < xi_t.size( ); L++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                            for ( unsigned int M = 0; M < xi_t.size( ); M++ ){
-
-                                d2OverlapdXi_1dXi_1[ I ][ Xi_1.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdXi_1[ L ][ J ] * dxi_tdXi_1[ M ][ K ];
-
-                                d2OverlapdXi_1ddX[ I ][ dX.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdXi_1[ L ][ J ] * dxi_tddX[ M ][ K ];
-
-                                d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tddX[ L ][ J ] * dxi_tddX[ M ][ K ];
-
-                            }
-
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
-
-                                d2OverlapdXi_1ddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdXi_1[ L ][ J ] * dchi_nlddX[ M ][ K ];
-
-                                d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tddX[ L ][ J ] * dchi_nlddX[ M ][ K ]
-                                                                            + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tddX[ L ][ K ] * dchi_nlddX[ M ][ J ];
-
-                            }
-
-                        }
-
-                        for ( unsigned int L = 0; L < chi_nl.size( ); L++ ){
-
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
-
-                                d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * L + M ] * dchi_nlddX[ L ][ J ] * dchi_nlddX[ M ][ K ];
+                                d2OverlapdXi_1dXi_1[ i ][ Xi_1.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ];
 
                             }
 
@@ -1993,40 +2369,13 @@ namespace tractionSeparation{
 
                     }
 
-                    for ( unsigned int K = 0; K < F.size( ); K++ ){
+                    for ( unsigned int J = 0; J < dX.size( ); J++ ){
 
-                        for ( unsigned int L = 0; L < xi_t.size( ); L++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int M = 0; M < xi_t.size( ); M++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdXi_1dF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdXi_1[ L ][ J ] * dxi_tdF[ M ][ K ];
-
-                                d2OverlapdXi_1dChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdXi_1[ L ][ J ] * dxi_tdchi[ M ][ K ];
-
-                                d2OverlapddXdF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tddX[ L ][ J ] * dxi_tdF[ M ][ K ];
-
-                                d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tddX[ L ][ J ] * dxi_tdchi[ M ][ K ];
-
-                            }
-
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
-
-                                d2OverlapddXdF[ I ][ F.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dchi_nlddX[ M ][ J ] * dxi_tdF[ L ][ K ];
-
-                                d2OverlapdXi_1dChi[ I ][ F.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dchi_nldchi[ M ][ K ] * dxi_tdXi_1[ L ][ J ];
-
-                                d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dchi_nlddX[ M ][ J ] * dxi_tdchi[ L ][ K ]
-                                                                              + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tddX[ L ][ J ] * dchi_nldchi[ M ][ K ];
-
-                            }
-
-                        }
-
-                        for ( unsigned int L = 0; L < chi_nl.size( ); L++ ){
-
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
-
-                                d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * M + L ] * dchi_nlddX[ L ][ J ] * dchi_nldchi[ M ][ K ];
+                                d2OverlapdXi_1ddX[ i ][ dX.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ];
 
                             }
 
@@ -2034,27 +2383,39 @@ namespace tractionSeparation{
 
                     }
 
-                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+                    for ( unsigned int J = 0; J < F.size( ); J++ ){
 
-                        for ( unsigned int L = 0; L < xi_t.size( ); L++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdXi_1dGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdXi_1[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
-
-                                d2OverlapddXdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tddX[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
+                                d2OverlapdXi_1dF[ i ][ F.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdF[ b ][ J ];
 
                             }
 
                         }
 
-                        for ( unsigned int L = 0; L < chi_nl.size( ); L++ ){
+                    }
 
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
 
-                                d2OverlapddXdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * L + M ] * dchi_nlddX[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                                d2OverlapdXi_1dChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
                             }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tdXi_1[ a ][ I ];
 
                         }
 
@@ -2062,38 +2423,15 @@ namespace tractionSeparation{
 
                 }
 
-                for ( unsigned int J = 0; J < F.size( ); J++ ){
+                for ( unsigned int I = 0; I < dX.size( ); I++ ){
 
-                    for ( unsigned int K = 0; K < F.size( ); K++ ){
+                    for ( unsigned int J = 0; J < dX.size( ); J++ ){
 
-                        for ( unsigned int L = 0; L < xi_t.size( ); L++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int M = 0; M < xi_t.size( ); M++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdFdF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdF[ L ][ J ] * dxi_tdF[ M ][ K ];
-
-                                d2OverlapdFdChi[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdF[ L ][ J ] * dxi_tdchi[ M ][ K ];
-
-                                d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * L + M ] * dxi_tdchi[ L ][ J ] * dxi_tdchi[ M ][ K ];
-
-                            }
-                            
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
-
-                                d2OverlapdFdChi[ I ][ F.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdF[ L ][ J ] * dchi_nldchi[ M ][ K ];
-
-                                d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdchi[ L ][ J ] * dchi_nldchi[ M ][ K ]
-                                                                               + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdchi[ L ][ K ] * dchi_nldchi[ M ][ J ];
-
-                            }
-
-                        }
-
-                        for ( unsigned int L = 0; L < chi_nl.size( ); L++ ){
-
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
-
-                                d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * M + L ] * dchi_nldchi[ L ][ J ] * dchi_nldchi[ M ][ K ];
+                                d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ];
 
                             }
 
@@ -2101,45 +2439,110 @@ namespace tractionSeparation{
 
                     }
 
-                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+                    for ( unsigned int J = 0; J < F.size( ); J++ ){
 
-                        for ( unsigned int L = 0; L < xi_t.size( ); L++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdFdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdF[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
-
-                                d2OverlapdChidGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * M + L ] * dxi_tdchi[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
+                                d2OverlapddXdF[ i ][ F.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdF[ b ][ J ];
 
                             }
 
                         }
 
-                        for ( unsigned int L = 0; L < chi_nl.size( ); L++ ){
+                    }
 
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
 
-                                d2OverlapdChidGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * L + M ] * dchi_nldchi[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                                d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
                             }
 
                         }
-                    
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tddX[ a ][ I ];
+
+                        }
+
+
                     }
 
                 }
 
-                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+                for ( unsigned int I = 0; I < F.size( ); I++ ){
 
-                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+                    for ( unsigned int J = 0; J < F.size( ); J++ ){
 
-                        for ( unsigned int L = 0; L < chi_nl.size( ); L++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int M = 0; M < chi_nl.size( ); M++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdGradChidGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * L + M ] * dchi_nldGradChi[ L ][ J ] * dchi_nldGradChi[ M ][ K ];
+                                d2OverlapdFdF[ i ][ F.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdF[ b ][ J ];
 
                             }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                                d2OverlapdFdChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdchi[ b ][ J ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tdF[ a ][ I ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int I = 0; I < chi.size( ); I++ ){
+
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                                d2OverlapdChidChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdchi[ a ][ I ] * dxi_tdchi[ b ][ J ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tdchi[ a ][ I ];
 
                         }
 
@@ -2299,27 +2702,1074 @@ namespace tractionSeparation{
          * \param &d3OverlapdGradChidGradChidGradChi: The third gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
          */
 
-        if ( Xi_1.size( ) != dX.size( ) ){
-
-            return new errorNode( __func__, "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) );
-
-        }
-
-        if ( F.size( ) != dX.size( ) * dX.size( ) ){
-
-            return new errorNode( __func__, "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) );
-
-        }
-
         if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
 
-            return new errorNode( __func__, "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
         if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
 
-            return new errorNode( __func__, "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi;
+
+        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
+
+        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatMatrix d2chi_nlddXdGradChi( chi.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                dchi_nldchi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * i + I ] = 1.;
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                            for ( unsigned int M = 0; M < dX.size( ); M++ ){
+
+                                d2chi_nlddXdGradChi[ Xi_1.size( ) * i + I ][ gradChi.size( ) * J + Xi_1.size( ) * Xi_1.size( ) * K + Xi_1.size( ) * L + M ] = eye[ Xi_1.size( ) * i + K ] * eye[ Xi_1.size( ) * I + L ] * eye[ Xi_1.size( ) * J + M ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl, d2OverlapdXi_1dChi_nl, d2OverlapddXdChi_nl, d2OverlapdR_nldChi_nl, d2OverlapdFdChi_nl,
+                    d2OverlapdChidChi_nl, d2OverlapdChi_nldChi_nl;
+
+        floatMatrix d3OverlapdXi_1dXi_1dChi_nl, d3OverlapdXi_1ddXdChi_nl, d3OverlapdXi_1dR_nldChi_nl, d3OverlapdXi_1dFdChi_nl,
+                    d3OverlapdXi_1dChidChi_nl, d3OverlapdXi_1dChi_nldChi_nl, d3OverlapddXddXdChi_nl, d3OverlapddXdR_nldChi_nl,
+                    d3OverlapddXdFdChi_nl, d3OverlapddXdChidChi_nl, d3OverlapddXdChi_nldChi_nl, d3OverlapdR_nldR_nldChi_nl,
+                    d3OverlapdR_nldFdChi_nl, d3OverlapdR_nldChidChi_nl, d3OverlapdR_nldChi_nldChi_nl, d3OverlapdFdFdChi_nl,
+                    d3OverlapdFdChidChi_nl, d3OverlapdFdChi_nldChi_nl, d3OverlapdChidChidChi_nl, d3OverlapdChidChi_nldChi_nl,
+                    d3OverlapdChi_nldChi_nldChi_nl; 
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX,  R_nl,
+                                                         F,    chi,  chi_nl,
+                                                         overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl,
+                                                         d2OverlapdXi_1dXi_1, d2OverlapdXi_1ddX, d2OverlapdXi_1dR_nl, d2OverlapdXi_1dF, d2OverlapdXi_1dChi, d2OverlapdXi_1dChi_nl,
+                                                         d2OverlapddXddX, d2OverlapddXdR_nl, d2OverlapddXdF, d2OverlapddXdChi, d2OverlapddXdChi_nl,
+                                                         d2OverlapdR_nldR_nl, d2OverlapdR_nldF, d2OverlapdR_nldChi, d2OverlapdR_nldChi_nl,
+                                                         d2OverlapdFdF, d2OverlapdFdChi, d2OverlapdFdChi_nl,
+                                                         d2OverlapdChidChi, d2OverlapdChidChi_nl,
+                                                         d2OverlapdChi_nldChi_nl,
+                                                         d3OverlapdXi_1dXi_1dXi_1, d3OverlapdXi_1dXi_1ddX, d3OverlapdXi_1dXi_1dR_nl, d3OverlapdXi_1dXi_1dF, d3OverlapdXi_1dXi_1dChi, d3OverlapdXi_1dXi_1dChi_nl,
+                                                         d3OverlapdXi_1ddXddX, d3OverlapdXi_1ddXdR_nl, d3OverlapdXi_1ddXdF, d3OverlapdXi_1ddXdChi, d3OverlapdXi_1ddXdChi_nl,
+                                                         d3OverlapdXi_1dR_nldR_nl, d3OverlapdXi_1dR_nldF, d3OverlapdXi_1dR_nldChi, d3OverlapdXi_1dR_nldChi_nl,
+                                                         d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdChi, d3OverlapdXi_1dFdChi_nl,
+                                                         d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidChi_nl,
+                                                         d3OverlapdXi_1dChi_nldChi_nl,
+                                                         d3OverlapddXddXddX, d3OverlapddXddXdR_nl, d3OverlapddXddXdF, d3OverlapddXddXdChi, d3OverlapddXddXdChi_nl,
+                                                         d3OverlapddXdR_nldR_nl, d3OverlapddXdR_nldF, d3OverlapddXdR_nldChi, d3OverlapddXdR_nldChi_nl,
+                                                         d3OverlapddXdFdF, d3OverlapddXdFdChi, d3OverlapddXdFdChi_nl,
+                                                         d3OverlapddXdChidChi, d3OverlapddXdChidChi_nl,
+                                                         d3OverlapddXdChi_nldChi_nl,
+                                                         d3OverlapdR_nldR_nldR_nl, d3OverlapdR_nldR_nldF, d3OverlapdR_nldR_nldChi, d3OverlapdR_nldR_nldChi_nl,
+                                                         d3OverlapdR_nldFdF, d3OverlapdR_nldFdChi, d3OverlapdR_nldFdChi_nl,
+                                                         d3OverlapdR_nldChidChi, d3OverlapdR_nldChidChi_nl,
+                                                         d3OverlapdR_nldChi_nldChi_nl,
+                                                         d3OverlapdFdFdF, d3OverlapdFdFdChi, d3OverlapdFdFdChi_nl,
+                                                         d3OverlapdFdChidChi, d3OverlapdFdChidChi_nl,
+                                                         d3OverlapdFdChi_nldChi_nl,
+                                                         d3OverlapdChidChidChi, d3OverlapdChidChidChi_nl,
+                                                         d3OverlapdChidChi_nldChi_nl,
+                                                         d3OverlapdChi_nldChi_nldChi_nl ) );
+
+        d2OverlapdXi_1dGradChi    = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapddXdGradChi      = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdFdGradChi       = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdChidGradChi     = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdGradChidGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdR_nldGradChi    = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dXi_1dGradChi       = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1ddXdGradChi         = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * dX.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dR_nldGradChi       = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dFdGradChi          = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dChidGradChi        = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dGradChidGradChi    = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXddXdGradChi           = floatMatrix( overlap.size( ), floatVector( dX.size( ) * dX.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdR_nldGradChi         = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdFdGradChi            = floatMatrix( overlap.size( ), floatVector( dX.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdChidGradChi          = floatMatrix( overlap.size( ), floatVector( dX.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdGradChidGradChi      = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldR_nldGradChi       = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldFdGradChi          = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldChidGradChi        = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldGradChidGradChi    = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdFdGradChi             = floatMatrix( overlap.size( ), floatVector( F.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdChidGradChi           = floatMatrix( overlap.size( ), floatVector( F.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdGradChidGradChi       = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChidChidGradChi         = floatMatrix( overlap.size( ), floatVector( chi.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChidGradChidGradChi     = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdGradChidGradChidGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi += vectorTools::dot( dOverlapdChi_nl, dchi_nldchi );
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        for ( unsigned int i = 0; i < overlap.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dXi_1ddX[ i ][ Xi_1.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdXi_1dXi_1dChi_nl[ i ][ Xi_1.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ K ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dXi_1dChi[ i ][ Xi_1.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dXi_1dChi_nl[ i ][ Xi_1.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dXi_1dGradChi[ i ][ Xi_1.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dXi_1dChi_nl[ i ][ Xi_1.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+
+                }
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1ddX[ i ][ dX.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ]
+                                                                                                           + d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1ddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nlddX[ b ][ K ];
+
+                            }
+
+                        }
+
+                        d3OverlapdXi_1ddXdR_nl[ i ][ dX.size( ) * I + J ] += d3OverlapdXi_1dR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapdXi_1dFdChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ]
+                                                                                                              + d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1ddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nldchi[ b ][ K ];
+
+                            }
+
+                        }
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdXi_1dChi_nl[ i ][ chi.size( ) * I + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * J + K ]
+                                                                                                                          + d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1ddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1dChi[ i ][ chi.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                        d3OverlapdXi_1dR_nldChi[ i ][ chi.size( ) * I + J ] += d3OverlapdXi_1dR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                            d3OverlapdXi_1dChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nldchi[ a ][ J ]
+                                                                                                                + d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1dChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldchi[ b ][ K ];
+
+                            }
+
+                        }
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapdXi_1dChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+ 
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1dChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1dGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdXi_1dR_nldGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdXi_1dR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1dGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                    + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        d3OverlapddXddXdR_nl[ i ][ dX.size( ) * I + J ] += d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                         + d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                            d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                         + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ]
+                                                                                                         + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ K ];
+
+                        }
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            d3OverlapddXddXdR_nl[ i ][ dX.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                                d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nlddX[ b ][ K ]
+                                                                                                             + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ K ]
+                                                                                                             + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+ 
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+    
+                                    d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ] * dchi_nlddX[ c ][ K ];
+    
+                                }
+    
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                      + d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                            + d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ]
+                                                                                                            + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ]
+                                                                                                                + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ K ]
+                                                                                                                + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nldchi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ] * dchi_nldchi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                        + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * J + K ]
+                                                                                                                        + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * ( d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ] * dchi_nlddX[ b ][ J ] + dchi_nlddX[ a ][ I ] * d2chi_nlddXdGradChi[ b ][ gradChi.size( ) * J + K ] )
+                                                                                                                            + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ]
+                                                                                                                            + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapddXdR_nl[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nlddX[ a ][ I ];
+
+                    d3OverlapddXdR_nldR_nl[ i ][ I ] += d3OverlapdR_nldR_nldChi_nl[ i ][ a ] * dchi_nlddX[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdF[ i ][ chi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                        d3OverlapddXdR_nldF[ i ][ F.size( ) * I + J ] += d3OverlapdR_nldFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                        for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                            d3OverlapddXdFdF[ i ][ F.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapdFdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                            d3OverlapddXdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                          + d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ K ];
+
+                            }
+
+                        }
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapddXdFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                      + d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                      + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                        d3OverlapddXdR_nldChi[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                           + d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ J ];
+
+                            d3OverlapddXdR_nldChi[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChidChi[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                                             + d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nldchi[ a ][ J ]
+                                                                                                                             + d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdChidChi[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ J ]
+                                                                                                                                 + d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ K ]
+                                                                                                                                 + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldchi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXdChidChi[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ J ] * dchi_nldchi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                          + d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ] * dchi_nldchi[ b ][ J ]
+                                                                                                                              + d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ]
+                                                                                                                              + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nldchi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ]
+                                                                              + dOverlapdChi_nl[ i ][ a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ];
+
+                        d3OverlapddXdR_nldGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ]
+                                                                                   + d2OverlapdR_nldChi_nl[ i ][ a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                            d3OverlapddXdR_nldGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                    d3OverlapddXdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ] * dchi_nldGradChi[ b ][ J ]
+                                                                                                                                          + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ]
+                                                                                                                                          + d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ] * dchi_nldGradChi[ b ][ K ];
+    
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+        
+                                }
+    
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < F.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdFdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdFdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                        d3OverlapdR_nldFdChi[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nldchi[ a ][ J ]
+                                                                                                             + d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdFdChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldchi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdFdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdFdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdR_nldFdGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdFdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < chi.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapdR_nldChi[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nldchi[ a ][ I ];
+
+                    d3OverlapdR_nldR_nldChi[ i ][ I ] += d3OverlapdR_nldR_nldChi_nl[ i ][ a ] * dchi_nldchi[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChidChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ]
+                                                                       + d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ I ];
+
+                        d3OverlapdR_nldChidChi[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldchi[ a ][ J ]
+                                                                            + d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ I ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdChidChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ J ];
+
+                            d3OverlapdR_nldChidChi[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdChidChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nldchi[ a ][ I ]
+                                                                                                               + d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nldchi[ a ][ J ]
+                                                                                                               + d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldchi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdChidChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ J ]
+                                                                                                                   + d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ K ]
+                                                                                                                   + d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldchi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapdChidChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ J ] * dchi_nldchi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdChidChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdChidChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ K ]
+                                                                                                                               + d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapdChidChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nldchi[ a ][ I ] * dchi_nldchi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdR_nldChidGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                            d3OverlapdR_nldChidGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdChidGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapdChidGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < gradChi.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapdR_nldGradChi[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nldGradChi[ a ][ I ];
+
+                    d3OverlapdR_nldR_nldGradChi[ i ][ I ] += d3OverlapdR_nldR_nldChi_nl[ i ][ a ] * dchi_nldGradChi[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdGradChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                            d3OverlapdR_nldGradChidGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapdGradChidGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                           const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
+                                           floatVector &overlap,
+                                           floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                           floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_nl,
+                                           floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dChi_nl,
+                                           floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdChi_nl,
+                                           floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldChi_nl,
+                                           floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdChi_nl,
+                                           floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidChi_nl,
+                                           floatMatrix &d2OverlapdChi_nldChi_nl,
+                                           floatMatrix &d3OverlapdXi_1dXi_1dXi_1, floatMatrix &d3OverlapdXi_1dXi_1ddX, floatMatrix &d3OverlapdXi_1dXi_1dR_nl, floatMatrix &d3OverlapdXi_1dXi_1dF, floatMatrix &d3OverlapdXi_1dXi_1dChi, floatMatrix &d3OverlapdXi_1dXi_1dChi_nl,
+                                           floatMatrix &d3OverlapdXi_1ddXddX, floatMatrix &d3OverlapdXi_1ddXdR_nl, floatMatrix &d3OverlapdXi_1ddXdF, floatMatrix &d3OverlapdXi_1ddXdChi, floatMatrix &d3OverlapdXi_1ddXdChi_nl,
+                                           floatMatrix &d3OverlapdXi_1dR_nldR_nl, floatMatrix &d3OverlapdXi_1dR_nldF, floatMatrix &d3OverlapdXi_1dR_nldChi, floatMatrix &d3OverlapdXi_1dR_nldChi_nl,
+                                           floatMatrix &d3OverlapdXi_1dFdF, floatMatrix &d3OverlapdXi_1dFdChi, floatMatrix &d3OverlapdXi_1dFdChi_nl,
+                                           floatMatrix &d3OverlapdXi_1dChidChi, floatMatrix &d3OverlapdXi_1dChidChi_nl,
+                                           floatMatrix &d3OverlapdXi_1dChi_nldChi_nl,
+                                           floatMatrix &d3OverlapddXddXddX, floatMatrix &d3OverlapddXddXdR_nl, floatMatrix &d3OverlapddXddXdF, floatMatrix &d3OverlapddXddXdChi, floatMatrix &d3OverlapddXddXdChi_nl,
+                                           floatMatrix &d3OverlapddXdR_nldR_nl, floatMatrix &d3OverlapddXdR_nldF, floatMatrix &d3OverlapddXdR_nldChi, floatMatrix &d3OverlapddXdR_nldChi_nl,
+                                           floatMatrix &d3OverlapddXdFdF, floatMatrix &d3OverlapddXdFdChi, floatMatrix &d3OverlapddXdFdChi_nl,
+                                           floatMatrix &d3OverlapddXdChidChi, floatMatrix &d3OverlapddXdChidChi_nl,
+                                           floatMatrix &d3OverlapddXdChi_nldChi_nl,
+                                           floatVector &d3OverlapdR_nldR_nldR_nl, floatMatrix &d3OverlapdR_nldR_nldF, floatMatrix &d3OverlapdR_nldR_nldChi, floatMatrix &d3OverlapdR_nldR_nldChi_nl,
+                                           floatMatrix &d3OverlapdR_nldFdF, floatMatrix &d3OverlapdR_nldFdChi, floatMatrix &d3OverlapdR_nldFdChi_nl,
+                                           floatMatrix &d3OverlapdR_nldChidChi, floatMatrix &d3OverlapdR_nldChidChi_nl,
+                                           floatMatrix &d3OverlapdR_nldChi_nldChi_nl,
+                                           floatMatrix &d3OverlapdFdFdF, floatMatrix &d3OverlapdFdFdChi, floatMatrix &d3OverlapdFdFdChi_nl,
+                                           floatMatrix &d3OverlapdFdChidChi, floatMatrix &d3OverlapdFdChidChi_nl,
+                                           floatMatrix &d3OverlapdFdChi_nldChi_nl,
+                                           floatMatrix &d3OverlapdChidChidChi, floatMatrix &d3OverlapdChidChidChi_nl,
+                                           floatMatrix &d3OverlapdChidChi_nldChi_nl,
+                                           floatMatrix &d3OverlapdChi_nldChi_nldChi_nl ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl: The non-local micro deformation tensor
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdChi_nl: The gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         * \param &d2OverlapdXi_1dXi_1: The second gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d2OverlapdXi_1ddX: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the particle reference center-to-center vector
+         * \param &d2OverlapdXi_1dR_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d2OverlapdXi_1dF: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient
+         * \param &d2OverlapdXi_1dChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor
+         * \param &d2OverlapdXi_1dChi_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local micro-deformation tensor
+         * \param &d2OverlapddXddX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
+         * \param &d2OverlapddXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
+         * \param &d2OverlapddXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
+         * \param &d2OverlapddXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
+         * \param &d2OverlapddXdChi_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local micro-deformation tensor
+         * \param &d2OverlapdR_nldR_nl: The second gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d2OverlapdR_nldF: The second gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient
+         * \param &d2OverlapdR_nldChi: The second gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor
+         * \param &d2OverlapdR_nldChi_nl: The second gradient of the overlap w.r.t. the non-local reference radius and the non-local micro-deformation tensor
+         * \param &d2OverlapdFdF: The second gradient of the overlap w.r.t. the deformation gradient
+         * \param &d2OverlapdFdChi: The second gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor
+         * \param &d2OverlapdFdChi_nl: The second gradient of the overlap w.r.t. the deformation gradient and the non-local micro-deformation tensor
+         * \param &d2OverlapdChidChi: The second gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d2OverlapdChidChi_nl: The second gradient of the overlap w.r.t. the micro-deformation tensor and the non-local micro-deformation tensor
+         * \param &d2OverlapdChi_nldChi_nl: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         * 
+         * \param &d3OverlapdXi_1dXi_1dXi_1: The third gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d3OverlapdXi_1dXi_1ddX: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the reference center-to-center vector
+         * \param &d3OverlapdXi_1dXi_1dR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the non-local reference radius
+         * \param &d3OverlapdXi_1dXi_1dF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the deformation gradient
+         * \param &d3OverlapdXi_1dXi_1dChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dXi_1dChi_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the non-local micro-deformation tensor
+         * \param &d3OverlapdXi_1ddXddX: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the reference center-to-center vector twice
+         * \param &d3OverlapdXi_1ddXdR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the non-local reference radius
+         * \param &d3OverlapdXi_1ddXdF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the deformation gradient
+         * \param &d3OverlapdXi_1ddXdChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1ddXdChi_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the non-local micro-deformation tensor
+         * \param &d3OverlapdXi_1dR_nldR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d3OverlapdXi_1dR_nldF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the deformation gradient
+         * \param &d3OverlapdXi_1dR_nldChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dR_nldChi_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the non-local micro-deformation tensor
+         * \param &d3OverlapdXi_1dFdF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient twice
+         * \param &d3OverlapdXi_1dFdChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dFdChi_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the non-local micro-deformation tensor
+         * \param &d3OverlapdXi_1dChidChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor twice
+         * \param &d3OverlapdXi_1dChidChi_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the micro-deformation tensor, and the non-local micro-deformation tensor
+         * \param &d3OverlapdXi_1dChi_nldChi_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local micro-deformation tensor twice
+         * \param &d3OverlapddXddXddX: The third gradient of the overlap w.r.t. the reference center-to-center vector
+         * \param &d3OverlapddXddXdR_nl: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the non-local reference radius
+         * \param &d3OverlapddXddXdF: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the deformation gradient
+         * \param &d3OverlapddXddXdChi: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the micro-deformation tensor
+         * \param &d3OverlapddXddXdChi_nl: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the non-local micro-deformation tensor
+         * \param &d3OverlapddXdR_nldR_nl: The third gradient of the overlap w.r.t. the local center-to-center vector and the non-local reference radius twice
+         * \param &d3OverlapddXdR_nldF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the deformation gradient
+         * \param &d3OverlapddXdR_nldChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the micro-deformation tensor
+         * \param &d3OverlapddXdR_nldChi_nl: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the non-local micro-deformation tensor
+         * \param &d3OverlapddXdFdF: The third gradient of the overlap w.r.t. the local center-to-center vector and the deformation gradient twice
+         * \param &d3OverlapddXdFdChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapddXdFdChi_nl: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the non-local micro-deformation tensor
+         * \param &d3OverlapddXdChidChi: The third gradient of the overlap w.r.t. the local center-to-center vector and the micro-deformation tensor twice
+         * \param &d3OverlapddXdChidChi_nl: The third gradient of the overlap w.r.t. the local center-to-center vector, the micro-deformation tensor, and the non-local micro-deformation tensor
+         * \param &d3OverlapddXdChi_nldChi_nl: The third gradient of the overlap w.r.t. the local center-to-center vector and the non-local micro-deformation tensor twice
+         * \param &d3OverlapdR_nldR_nldR_nl: The third gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d3OverlapdR_nldR_nldF: The third gradient of the overlap w.r.t. the the non-local reference radius twice and the deformation gradient
+         * \param &d3OverlapdR_nldR_nldChi: The third gradient of the overlap w.r.t. the non-local reference radius twice and the micro-deformation tensor
+         * \param &d3OverlapdR_nldR_nldChi_nl: The third gradient of the overlap w.r.t. the non-local reference radius twice and the non-local micro-deformation tensor
+         * \param &d3OverlapdR_nldFdF: The third gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient twice
+         * \param &d3OverlapdR_nldFdChi: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapdR_nldFdChi_nl: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the non-local micro-deformation tensor
+         * \param &d3OverlapdR_nldChidChi: The third gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor twice
+         * \param &d3OverlapdR_nldChidChi_nl: The third gradient of the overlap w.r.t. the non-local reference radius, the micro-deformation tensor, and the non-local micro-deformation tensor
+         * \param &d3OverlapdR_nldChi_nldChi_nl: The third gradient of the overlap w.r.t. the non-local reference radius and the non-local micro-deformation tensor twice
+         * \param &d3OverlapdFdFdF: The third gradient of the overlap w.r.t. the deformation gradient
+         * \param &d3OverlapdFdFdChi: The third gradient of the overlap w.r.t. the deformation gradient twice and the micro-deformation tensor
+         * \param &d3OverlapdFdFdChi_nl: The third gradient of the overlap w.r.t. the deformation gradient twice and the non-local micro-deformation tensor
+         * \param &d3OverlapdFdChidChi: The third gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor twice
+         * \param &d3OverlapdFdChidChi_nl: The third gradient of the overlap w.r.t. the deformation gradient, the micro-deformation tensor, and the non-local micro-deformation tensor
+         * \param &d3OverlapdFdChi_nldChi_nl: The third gradient of the overlap w.r.t. the deformation gradient and the non-local micro-deformation tensor twice
+         * \param &d3OverlapdChidChidChi: The third gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d3OverlapdChidChidChi_nl: The third gradient of the overlap w.r.t. the micro-deformation tensor twice and the non-local micro-deformation tensor
+         * \param &d3OverlapdChidChi_nldChi_nl: The third gradient of the overlap w.r.t. the micro-deformation tensor and the non-local micro-deformation tensor twice
+         * \param &d3OverlapdChi_nldChi_nldChi_nl: The third gradient of the overlap w.r.t. the non-local micro-deformation tensor
+         */
+        if ( Xi_1.size( ) != dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local micro relative position vector and the inter-particle spacing should have the same dimension\n\tXi_1: " + std::to_string( Xi_1.size( ) ) + "\n\tdX: " + std::to_string( dX.size( ) ) ) );
+
+        }
+
+        if ( F.size( ) != dX.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The deformation gradient is not the expected dimension.\n\tF: " + std::to_string( F.size( ) ) + "\n\texpected: " + std::to_string( dX.size( ) * dX.size( ) ) ) );
+
+        }
+
+        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi_nl.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
 
         }
 
@@ -2406,55 +3856,10 @@ namespace tractionSeparation{
 
         floatMatrix d2xi_tddXdF = -d2dxddXdF;
 
-        // Compute the non-local micro-deformation tensor
-        floatVector chi_nl = chi;
-
-        floatMatrix dchi_nldchi( chi_nl.size( ), floatVector( chi.size( ), 0 ) );
-
-        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
-
-        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
-
-        floatMatrix d2chi_nlddXdGradChi( chi.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
-
-        for ( unsigned int i = 0; i < xi_t.size( ); i++ ){
-
-            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
-
-                dchi_nldchi[ xi_t.size( ) * i + I ][ xi_t.size( ) * i + I ] = 1.;
-
-                for ( unsigned int J = 0; J < dX.size( ); J++ ){
-
-                    chi_nl[ xi_t.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
-
-                    dchi_nlddX[ xi_t.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
-
-                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
-
-                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
-
-                            dchi_nldGradChi[ xi_t.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
-
-                            for ( unsigned int M = 0; M < dX.size( ); M++ ){
-
-                                d2chi_nlddXdGradChi[ xi_t.size( ) * i + I ][ gradChi.size( ) * J + xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * L + M ] = eye[ xi_t.size( ) * i + K ] * eye[ xi_t.size( ) * I + L ] * eye[ xi_t.size( ) * J + M ];
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
         // Compute the inverse of the non-local micro-deformation tensor
         if ( vectorTools::determinant( chi_nl, xi_t.size( ), Xi_1.size( ) ) <= 0 ){
 
-            return new errorNode( __func__, "The non-local micro deformation gradient has a determinant less than or equal to zero" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The non-local micro deformation gradient has a determinant less than or equal to zero" ) );
 
         }
 
@@ -2482,7 +3887,7 @@ namespace tractionSeparation{
 
         d2OverlapdXi_1dChi                = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapdXi_1dGradChi            = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdXi_1dChi_nl             = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi_nl.size( ), 0 ) );
 
         d2OverlapddXddX                   = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * dX.size( ), 0 ) );
 
@@ -2492,7 +3897,7 @@ namespace tractionSeparation{
 
         d2OverlapddXdChi                  = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapddXdGradChi              = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapddXdChi_nl               = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi_nl.size( ), 0 ) );
 
         d2OverlapdR_nldR_nl               = floatVector( xi_t.size( ), 0 );
 
@@ -2500,19 +3905,19 @@ namespace tractionSeparation{
 
         d2OverlapdR_nldChi                = floatMatrix( xi_t.size( ), floatVector( chi.size( ), 0 ) );
 
-        d2OverlapdR_nldGradChi            = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ), 0 ) );
+        d2OverlapdR_nldChi_nl             = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         d2OverlapdFdF                     = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ), 0 ) );
 
         d2OverlapdFdChi                   = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapdFdGradChi               = floatMatrix( xi_t.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdFdChi_nl                = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi_nl.size( ), 0 ) );
 
         d2OverlapdChidChi                 = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi.size( ), 0 ) );
 
-        d2OverlapdChidGradChi             = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdChidChi_nl              = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d2OverlapdGradChidGradChi         = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+        d2OverlapdChi_nldChi_nl           = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdXi_1dXi_1dXi_1          = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * Xi_1.size( ), 0 ) );
 
@@ -2524,7 +3929,7 @@ namespace tractionSeparation{
 
         d3OverlapdXi_1dXi_1dChi           = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdXi_1dXi_1dGradChi       = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdXi_1dXi_1dChi_nl        = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdXi_1ddXddX              = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * dX.size( ) * dX.size( ), 0 ) );
 
@@ -2534,7 +3939,7 @@ namespace tractionSeparation{
 
         d3OverlapdXi_1ddXdChi             = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * dX.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdXi_1ddXdGradChi         = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * dX.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdXi_1ddXdChi_nl          = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * dX.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdXi_1dR_nldR_nl          = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ), 0 ) );
 
@@ -2542,19 +3947,19 @@ namespace tractionSeparation{
 
         d3OverlapdXi_1dR_nldChi           = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdXi_1dR_nldGradChi       = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdXi_1dR_nldChi_nl        = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdXi_1dFdF                = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * F.size( ) * F.size( ), 0 ) );
 
         d3OverlapdXi_1dFdChi              = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * F.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdXi_1dFdGradChi          = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdXi_1dFdChi_nl           = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * F.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdXi_1dChidChi            = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdXi_1dChidGradChi        = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdXi_1dChidChi_nl         = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d3OverlapdXi_1dGradChidGradChi    = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdXi_1dChi_nldChi_nl      = floatMatrix( xi_t.size( ), floatVector( Xi_1.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapddXddXddX                = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * dX.size( ) * dX.size( ), 0 ) );
 
@@ -2564,7 +3969,7 @@ namespace tractionSeparation{
 
         d3OverlapddXddXdChi               = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * dX.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapddXddXdGradChi           = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * dX.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapddXddXdChi_nl            = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * dX.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapddXdR_nldR_nl            = floatMatrix( xi_t.size( ), floatVector( dX.size( ), 0 ) );
 
@@ -2572,19 +3977,19 @@ namespace tractionSeparation{
 
         d3OverlapddXdR_nldChi             = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapddXdR_nldGradChi         = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapddXdR_nldChi_nl          = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapddXdFdF                  = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * F.size( ) * F.size( ), 0 ) );
 
         d3OverlapddXdFdChi                = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * F.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapddXdFdGradChi            = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapddXdFdChi_nl             = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * F.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapddXdChidChi              = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapddXdChidGradChi          = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapddXdChidChi_nl           = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d3OverlapddXdGradChidGradChi      = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapddXdChi_nldChi_nl        = floatMatrix( xi_t.size( ), floatVector( dX.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdR_nldR_nldR_nl          = floatVector( xi_t.size( ), 0 );
 
@@ -2592,39 +3997,39 @@ namespace tractionSeparation{
 
         d3OverlapdR_nldR_nldChi           = floatMatrix( xi_t.size( ), floatVector( chi.size( ), 0 ) );
 
-        d3OverlapdR_nldR_nldGradChi       = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ), 0 ) );
+        d3OverlapdR_nldR_nldChi_nl        = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         d3OverlapdR_nldFdF                = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ), 0 ) );
 
         d3OverlapdR_nldFdChi              = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdR_nldFdGradChi          = floatMatrix( xi_t.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdR_nldFdChi_nl           = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdR_nldChidChi            = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdR_nldChidGradChi        = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdR_nldChidChi_nl         = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d3OverlapdR_nldGradChidGradChi    = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdR_nldChi_nldChi_nl      = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdFdFdF                   = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ) * F.size( ), 0 ) );
 
         d3OverlapdFdFdChi                 = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdFdFdGradChi             = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdFdFdChi_nl              = floatMatrix( xi_t.size( ), floatVector( F.size( ) * F.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdFdChidChi               = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdFdChidGradChi           = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdFdChidChi_nl            = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d3OverlapdFdGradChidGradChi       = floatMatrix( xi_t.size( ), floatVector( F.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdFdChi_nldChi_nl         = floatMatrix( xi_t.size( ), floatVector( F.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         d3OverlapdChidChidChi             = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi.size( ) * chi.size( ), 0 ) );
 
-        d3OverlapdChidChidGradChi         = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdChidChidChi_nl          = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi.size( ) * chi_nl.size( ), 0 ) );
 
-        d3OverlapdChidGradChidGradChi     = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdChidChi_nldChi_nl       = floatMatrix( xi_t.size( ), floatVector( chi.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
-        d3OverlapdGradChidGradChidGradChi = floatMatrix( xi_t.size( ), floatVector( gradChi.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+        d3OverlapdChi_nldChi_nldChi_nl    = floatMatrix( xi_t.size( ), floatVector( chi_nl.size( ) * chi_nl.size( ) * chi_nl.size( ), 0 ) );
 
         if ( vectorTools::dot( Xi_t, Xi_t ) > ( R_nl * R_nl ) ){
 
@@ -2640,357 +4045,179 @@ namespace tractionSeparation{
 
             dOverlapdChi = floatMatrix( overlap.size( ), floatVector( chi.size( ), 0 ) );
 
-            dOverlapdGradChi = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+            dOverlapdChi_nl = floatMatrix( overlap.size( ), floatVector( chi_nl.size( ), 0 ) );
 
         }
         else{
 
             floatMatrix dOverlapdchi_nl, dOverlapdxi_t;
 
-            floatMatrix d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
+            floatMatrix d2Overlapdchi_nldxi_t,
                         d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl;
 
-            floatMatrix d3Overlapdchi_nldchi_nldchi_nl, d3Overlapdchi_nldchi_nldxi_t, d3Overlapdchi_nldchi_nldR_nl,
+            floatMatrix d3Overlapdchi_nldchi_nldxi_t,
                         d3Overlapdchi_nldxi_tdxi_t, d3Overlapdchi_nldxi_tdR_nl,
-                        d3Overlapdchi_nldR_nldR_nl,
                         d3Overlapdxi_tdxi_tdxi_t, d3Overlapdxi_tdxi_tdR_nl,
                         d3Overlapdxi_tdR_nldR_nl;
 
-            errorOut error = solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdchi_nl, dOverlapdxi_t, dOverlapdR_nl,
-                                                   d2Overlapdchi_nldchi_nl, d2Overlapdchi_nldxi_t, d2Overlapdchi_nldR_nl,
-                                                   d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
-                                                   d2OverlapdR_nldR_nl,
-                                                   d3Overlapdchi_nldchi_nldchi_nl, d3Overlapdchi_nldchi_nldxi_t, d3Overlapdchi_nldchi_nldR_nl,
-                                                   d3Overlapdchi_nldxi_tdxi_t, d3Overlapdchi_nldxi_tdR_nl,
-                                                   d3Overlapdchi_nldR_nldR_nl,
-                                                   d3Overlapdxi_tdxi_tdxi_t, d3Overlapdxi_tdxi_tdR_nl,
-                                                   d3Overlapdxi_tdR_nldR_nl,
-                                                   d3OverlapdR_nldR_nldR_nl );
-
-            if ( error ){
-
-                errorOut result = new errorNode( __func__, "Error when solving for overlap vector" );
-
-                result->addNext( error );
-
-                return result;
-
-            }
+            ERROR_TOOLS_CATCH( solveOverlapDistance( chi_nl, xi_t, R_nl, overlap, dOverlapdChi_nl, dOverlapdxi_t, dOverlapdR_nl,
+                                                     d2OverlapdChi_nldChi_nl, d2Overlapdchi_nldxi_t, d2OverlapdR_nldChi_nl,
+                                                     d2Overlapdxi_tdxi_t, d2Overlapdxi_tdR_nl,
+                                                     d2OverlapdR_nldR_nl,
+                                                     d3OverlapdChi_nldChi_nldChi_nl, d3Overlapdchi_nldchi_nldxi_t, d3OverlapdR_nldChi_nldChi_nl,
+                                                     d3Overlapdchi_nldxi_tdxi_t, d3Overlapdchi_nldxi_tdR_nl,
+                                                     d3OverlapdR_nldR_nldChi_nl,
+                                                     d3Overlapdxi_tdxi_tdxi_t, d3Overlapdxi_tdxi_tdR_nl,
+                                                     d3Overlapdxi_tdR_nldR_nl,
+                                                     d3OverlapdR_nldR_nldR_nl ) );
 
             dOverlapdXi_1 = vectorTools::dot( dOverlapdxi_t, dxi_tdXi_1 );
 
-            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX ) + vectorTools::dot( dOverlapdchi_nl, dchi_nlddX );
+            dOverlapddX   = vectorTools::dot( dOverlapdxi_t, dxi_tddX );
 
             dOverlapdF    = vectorTools::dot( dOverlapdxi_t, dxi_tdF );
 
-            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi ) + vectorTools::dot( dOverlapdchi_nl, dchi_nldchi );
-
-            dOverlapdGradChi = vectorTools::dot( dOverlapdchi_nl, dchi_nldGradChi );
+            dOverlapdChi  = vectorTools::dot( dOverlapdxi_t, dxi_tdchi );
 
             d2OverlapdXi_1dR_nl = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdXi_1 );
 
             d3OverlapdXi_1dR_nldR_nl = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tdXi_1 );
 
-            d2OverlapddXdR_nl = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tddX ) + vectorTools::dot( d2Overlapdchi_nldR_nl, dchi_nlddX );
+            d2OverlapddXdR_nl = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tddX );
 
-            d3OverlapddXdR_nldR_nl = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tddX ) + vectorTools::dot( d3Overlapdchi_nldR_nldR_nl, dchi_nlddX );
+            d3OverlapddXdR_nldF = vectorTools::dot( d2Overlapdxi_tdR_nl, d2xi_tddXdF );
+
+            d3OverlapddXdR_nldR_nl = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tddX );
 
             d2OverlapdR_nldF = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdF );
 
-            d2OverlapdR_nldChi = vectorTools::dot( d2Overlapdchi_nldR_nl, dchi_nldchi ) + vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdchi );
-
-            d2OverlapdR_nldGradChi = vectorTools::dot( d2Overlapdchi_nldR_nl, dchi_nldGradChi );
+            d2OverlapdR_nldChi = vectorTools::dot( d2Overlapdxi_tdR_nl, dxi_tdchi );
 
             d2OverlapddXdF = vectorTools::dot( dOverlapdxi_t, d2xi_tddXdF );
 
             d2OverlapdXi_1dChi = vectorTools::dot( dOverlapdxi_t, d2xi_tdXi_1dChi );
 
-            d2OverlapddXdGradChi = vectorTools::dot( dOverlapdchi_nl, d2chi_nlddXdGradChi );
-
             d3OverlapdR_nldR_nldF = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tdF );
 
-            d3OverlapdR_nldR_nldChi = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tdchi ) + vectorTools::dot( d3Overlapdchi_nldR_nldR_nl, dchi_nldchi );
+            d3OverlapdR_nldR_nldChi = vectorTools::dot( d3Overlapdxi_tdR_nldR_nl, dxi_tdchi );
 
-            d3OverlapdR_nldR_nldGradChi = vectorTools::dot( d3Overlapdchi_nldR_nldR_nl, dchi_nldGradChi );
+            for ( unsigned int i = 0; i < overlap.size( ); i++ ){
 
-            for ( unsigned int I = 0; I < overlap.size( ); I++ ){
+                for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
 
-                for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
+                    for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
 
-                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                        for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                            for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+                                d2OverlapdXi_1dXi_1[ i ][ Xi_1.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ];
 
-                                d2OverlapdXi_1dXi_1[ I ][ Xi_1.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ];
+                                for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
 
-                                d2OverlapdXi_1ddX[ I ][ dX.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                d3OverlapdXi_1ddXdR_nl[ I ][ dX.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ];
-
-                                d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ];
-
-                                d3OverlapddXddXdR_nl[ I ][ dX.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ];
-
-                                d3OverlapdXi_1dXi_1dR_nl[ I ][ Xi_1.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ];
-
-                                for ( unsigned int L = 0; L < Xi_1.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < Xi_t.size( ); C++ ){
-
-                                        d3OverlapdXi_1dXi_1dXi_1[ I ][ Xi_t.size( ) * Xi_1.size( ) * J + Xi_1.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dxi_tdXi_1[ C ][ L ];
-                                        d3OverlapdXi_1dXi_1ddX[ I ][ Xi_t.size( ) * dX.size( ) * J + dX.size( ) * K + L ] += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * dX.size( ) * A + dX.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dxi_tddX[ C ][ L ];
-
-                                        d3OverlapdXi_1ddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ] += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tddX[ C ][ L ];
-
-                                        d3OverlapddXddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ] += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tddX[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1dXi_1ddX[ I ][ Xi_t.size( ) * dX.size( ) * J + dX.size( ) * K + L ] += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + dX.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dchi_nlddX[ C ][ L ];
-
-                                        d3OverlapdXi_1ddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ] += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nlddX[ C ][ L ];
-
-                                        d3OverlapddXddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ] += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nlddX[ C ][ L ];
+                                        d3OverlapdXi_1dXi_1dXi_1[ i ][ Xi_1.size( ) * Xi_1.size( ) * I + Xi_1.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ] * dxi_tdXi_1[ c ][ K ];
 
                                     }
 
                                 }
 
-                                for ( unsigned int L = 0; L < F.size( ); L++ ){
+                                for ( unsigned int K = 0; K < dX.size( ); K++ ){
 
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                        d3OverlapdXi_1dXi_1dF[ I ][ Xi_1.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dxi_tdF[ C ][ L ];
-                                        d3OverlapdXi_1ddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tdF[ C ][ L ];
-                                        d3OverlapdXi_1dXi_1dChi[ I ][ Xi_1.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tdF[ C ][ L ];
-
-                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1dXi_1dChi[ I ][ Xi_1.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapdXi_1ddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * d2xi_tddXdF[ B ][ F.size( ) * K + L ];
-
-                                    d3OverlapdXi_1dXi_1dChi[ I ][ Xi_1.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dxi_tdXi_1[ B ][ K ]
-                                         + d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * d2xi_tdXi_1dChi[ B ][ chi.size( ) * K + L ];
-
-                                    d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dxi_tddX[ B ][ K ];
-
-                                    d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tddXdF[ A ][ F.size( ) * J + L ] * dxi_tddX[ B ][ K ]
-                                         + d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * d2xi_tddXdF[ B ][ F.size( ) * K + L ];
-
-                                }
-
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1dXi_1dGradChi[ I ][ Xi_1.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdXi_1[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapdXi_1ddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                        d3OverlapdXi_1dXi_1ddX[ i ][ Xi_1.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ] * dxi_tddX[ c ][ K ];
 
                                     }
 
                                 }
 
-                            }
+                                for ( unsigned int K = 0; K < F.size( ); K++ ){
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                d2OverlapdXi_1ddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ];
-
-                                d3OverlapdXi_1ddXdR_nl[ I ][ dX.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ];
-
-                                d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ]
-                                                                            + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ];
-
-                                d3OverlapddXddXdR_nl[ I ][ dX.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ]
-                                                                                 + d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ];
-
-                                for ( unsigned int L = 0; L < dX.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapdXi_1ddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tddX[ C ][ L ];
-                                        d3OverlapddXddXddX[ I ][ dX.size( )* dX.size( ) * J + dX.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tddX[ C ][ L ]
-                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dxi_tddX[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1ddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nlddX[ C ][ L ];
-
-                                        d3OverlapddXddXddX[ I ][ dX.size( )* dX.size( ) * J + dX.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nlddX[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dchi_nlddX[ C ][ L ];
+                                        d3OverlapdXi_1dXi_1dF[ i ][ Xi_1.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ] * dxi_tdF[ c ][ K ];
 
                                     }
 
                                 }
 
-                                for ( unsigned int L = 0; L < F.size( ); L++ ){
+                                d3OverlapdXi_1dXi_1dR_nl[ i ][ Xi_1.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ];
 
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                                        d3OverlapdXi_1ddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdF[ C ][ L ];
+                                    d3OverlapdXi_1dXi_1dChi[ i ][ Xi_1.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + K ] * dxi_tdXi_1[ b ][ J ]
+                                                                                                                          + d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * d2xi_tdXi_1dChi[ b ][ chi.size( ) * J + K ];
 
-                                        d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdchi[ C ][ L ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                        d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdF[ C ][ L ]
-                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ C ][ L ];
-
-                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdchi[ C ][ L ]
-                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ C ][ L ];
+                                        d3OverlapdXi_1dXi_1dChi[ i ][ Xi_1.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * C + xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldchi[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dchi_nldchi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapdXi_1ddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dchi_nlddX[ B ][ K ];
-
-                                    d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * J + L ] * dchi_nlddX[ B ][ K ]
-                                         + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * K + L ] * dchi_nlddX[ B ][ J ];
 
                                 }
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1ddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ K ] * dchi_nlddX[ B ][ J ] * dchi_nldGradChi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapdXi_1ddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * K + L ];
-
-                                    d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * K + L ]
-                                         + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ K ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * J + L ];
+                                    d3OverlapdXi_1dXi_1dChi_nl[ i ][ Xi_1.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdXi_1[ b ][ J ];
 
                                 }
+
 
                             }
 
                         }
 
-                        for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
+                    }
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                    for ( unsigned int J = 0; J < dX.size( ); J++ ){
 
-                                d2OverlapddXddX[ I ][ dX.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ];
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                                d3OverlapddXddXdR_nl[ I ][ dX.size( ) * J + K ] += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ];
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                for ( unsigned int L = 0; L < dX.size( ); L++ ){
+                                d2OverlapdXi_1ddX[ i ][ dX.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ];
 
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+                                for ( unsigned int K = 0; K < dX.size( ); K++ ){
 
-                                        d3OverlapddXddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tddX[ C ][ L ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapddXddXddX[ I ][ dX.size( ) * dX.size( ) * J + dX.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nlddX[ C ][ L ];
+                                        d3OverlapdXi_1ddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ] * dxi_tddX[ c ][ K ];
 
                                     }
 
                                 }
 
-                                for ( unsigned int L = 0; L < F.size( ); L++ ){
+                                d3OverlapdXi_1ddXdR_nl[ i ][ dX.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ];
 
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
+                                for ( unsigned int K = 0; K < F.size( ); K++ ){
 
-                                        d3OverlapddXddXdF[ I ][ dX.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdF[ C ][ L ];
+                                    d3OverlapdXi_1ddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * d2xi_tddXdF[ b ][ F.size( ) * J + K ];
 
-                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dxi_tdchi[ C ][ L ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapddXddXdChi[ I ][ dX.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldchi[ C ][ L ];
+                                        d3OverlapdXi_1ddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ] * dxi_tdF[ c ][ K ];
 
                                     }
 
                                 }
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+                                    d3OverlapdXi_1ddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + K ] * dxi_tddX[ b ][ J ];
 
-                                        d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nlddX[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapdXi_1ddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
 
-                                    d3OverlapddXddXdGradChi[ I ][ dX.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + L ] * dchi_nlddX[ B ][ K ]
-                                         + d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * K + L ];
+                                }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tddX[ b ][ J ];
 
                                 }
 
@@ -3000,254 +4227,41 @@ namespace tractionSeparation{
 
                     }
 
-                    for ( unsigned int K = 0; K < F.size( ); K++ ){
+                    for ( unsigned int J = 0; J < F.size( ); J++ ){
 
-                        for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdXi_1dF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ];
+                                d2OverlapdXi_1dF[ i ][ F.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdF[ b ][ J ];
 
-                                d2OverlapdXi_1dChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ];
+                                d3OverlapdXi_1dR_nldF[ i ][ F.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdF[ b ][ J ];
 
-                                d2OverlapddXdF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ];
+                                for ( unsigned int K = 0; K < F.size( ); K++ ){
 
-                                d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                d3OverlapdXi_1dR_nldF[ I ][ F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ];
-
-                                d3OverlapddXdR_nldF[ I ][ F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ];
-
-                                d3OverlapdXi_1dR_nldChi[ I ][ chi.size( ) * J + K ]
-                                    += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ];
-
-                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
-                                    += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ];
-
-                                for ( unsigned int L = 0; L < F.size( ); L++ ){
-
-                                    d3OverlapddXdFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dxi_tdF[ B ][ L ]
-                                         + d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tddXdF[ A ][ F.size( ) * J + L ] * dxi_tdF[ B ][ K ];
-
-                                    d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ] * dxi_tdchi[ B ][ L ];
-
-                                    d3OverlapdXi_1dFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dxi_tdF[ B ][ K ];
-
-                                    d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dxi_tdchi[ B ][ L ];
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapdXi_1dFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdF[ C ][ L ];
-
-                                        d3OverlapddXdFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdF[ C ][ L ];
-
-                                        d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapdXi_1dFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi.size( ); C++ ){
-
-                                        d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapdXi_1dFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ] * dxi_tdchi[ B ][ K ];
-
-                                }
-
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1dFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tddX[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                        d3OverlapdXi_1dFdF[ i ][ F.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdF[ b ][ J ] * dxi_tdF[ c ][ K ];
 
                                     }
 
                                 }
 
-                            }
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                            d3OverlapddXdR_nldF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdR_nl[ I ][ A ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ];
+                                    d3OverlapdXi_1dFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + K ] * dxi_tdF[ b ][ J ];
 
-                            d3OverlapdXi_1dR_nldChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdR_nl[ I ][ A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
-
-                                d2OverlapddXdF[ I ][ F.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ];
-
-                                d2OverlapdXi_1dChi[ I ][ F.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ];
-
-                                d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ]
-                                                                              + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                d3OverlapddXdR_nldF[ I ][ F.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ];
-
-                                d3OverlapdXi_1dR_nldChi[ I ][ chi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                for ( unsigned int L = 0; L < F.size( ); L++ ){
-
-                                    d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dchi_nldchi[ B ][ L ];
-
-                                    d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ] * dchi_nldchi[ B ][ L ];
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapddXdFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dxi_tdF[ C ][ L ];
-
-                                        d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ] * dxi_tdchi[ C ][ L ]
-                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi.size( ); C++ ){
-
-                                        d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapddXdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) *K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapdXi_1dChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dchi_nldchi[ B ][ K ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + L ];
-
-                                }
-
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nldchi[ B ][ K ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdF[ A ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dchi_nlddX[ B ][ J ] * dxi_tdchi[ A ][ K ] * dchi_nldGradChi[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapdXi_1dChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tdXi_1dChi[ A ][ chi.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
-
-                                    d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2xi_tddXdF[ A ][ F.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
-
-                                    d3OverlapddXdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * J + L ] * dxi_tdF[ A ][ K ];
-
-                                    d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * d2chi_nlddXdGradChi[ B ][ gradChi.size( ) * J + L ] * dxi_tdchi[ A ][ K ];
-
-                                }
-
-                            }
-
-                        }
-
-                        for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
-
-                            for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
-
-                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dxi_tdchi[ B ][ K ];
-
-                            }
-
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
-
-                                d2OverlapddXdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * B + A ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                d3OverlapddXdR_nldChi[ I ][ chi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                for ( unsigned int L = 0; L < chi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapddXdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+                                        d3OverlapdXi_1dFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdF[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
 
                                 }
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nlddX[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                    }
-
-                                    d3OverlapddXdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                        += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * B + A ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + L ] * dchi_nldchi[ B ][ K ];
+                                    d3OverlapdXi_1dFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdF[ b ][ J ];
 
                                 }
 
@@ -3257,32 +4271,116 @@ namespace tractionSeparation{
 
                     }
 
-                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
 
-                        for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                            d3OverlapdXi_1dR_nldChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdR_nl[ i ][ a ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + J ];
 
-                                d2OverlapdXi_1dGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                            for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
 
-                                d2OverlapddXdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * K + a ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + J ];
 
-                                d3OverlapdXi_1dR_nldGradChi[ I ][ gradChi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                            }
 
-                                d3OverlapddXdR_nldGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                                d2OverlapdXi_1dChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+                                d3OverlapdXi_1dR_nldChi[ i ][ chi.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
-                                        d3OverlapdXi_1dGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdXi_1[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                                        d3OverlapddXdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                    d3OverlapdXi_1dChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + K ] * dxi_tdchi[ b ][ J ]
+                                                                                                                        + d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tdXi_1dChi[ a ][ chi.size( ) * I + J ] * dxi_tdchi[ b ][ K ];
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapdXi_1dChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdXi_1[ a ][ I ] * dxi_tdchi[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
+
+                                }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tdXi_1[ a ][ I ] * dxi_tdchi[ b ][ J ];
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tdXi_1[ a ][ I ];
+
+                            d3OverlapdXi_1dR_nldChi_nl[ i ][ chi_nl.size( ) * I + J ] += d3Overlapdchi_nldxi_tdR_nl[ i ][ xi_t.size( ) * J + a ] * dxi_tdXi_1[ a ][ I ];
+
+                            for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+    
+                                d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldchi_nldxi_t[ i ][ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * K + a ] * dxi_tdXi_1[ a ][ I ];
+    
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                    for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                                d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ];
+
+                                for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ] * dxi_tddX[ c ][ K ];
+
+                                    }
+
+                                }
+
+                                d3OverlapddXddXdR_nl[ i ][ dX.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ];
+
+                                for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                                    d3OverlapddXddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tddXdF[ a ][ F.size( ) * I + K ] * dxi_tddX[ b ][ J ]
+                                                                                                              + d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * d2xi_tddXdF[ b ][ F.size( ) * J + K ];
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapddXddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ] * dxi_tdF[ c ][ K ];
+
+                                    }
+
+                                }
+
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapddXddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ] * dxi_tdchi[ c ][ K ];
+
+                                    }
+
+                                }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tddX[ b ][ J ];
 
                                 }
 
@@ -3290,32 +4388,105 @@ namespace tractionSeparation{
 
                         }
 
-                        for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
+                    }
 
-                            d3OverlapddXdR_nldGradChi[ I ][ gradChi.size( ) * J + K ]
-                                += d2Overlapdchi_nldR_nl[ I ][ A ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + K ];
+                    for ( unsigned int J = 0; J < F.size( ); J++ ){
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                                d2OverlapddXdGradChi[ I ][ gradChi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                            for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+    
+                                d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * K + a ] * d2xi_tddXdF[ a ][ F.size( ) * I + J ];
+    
+                            }
 
-                                d3OverlapddXdR_nldGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nlddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+                                d2OverlapddXdF[ i ][ F.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdF[ b ][ J ];
 
-                                        d3OverlapddXdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nlddX[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                d3OverlapddXdR_nldF[ i ][ F.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdF[ b ][ J ];
+
+                                for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                                    d3OverlapddXdFdF[ i ][ F.size( ) * F.size( ) * I + F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tddXdF[ a ][ F.size( ) * I + K ] * dxi_tdF[ b ][ J ]
+                                                                                                            + d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tddXdF[ a ][ F.size( ) * I + J ] * dxi_tdF[ b ][ K ];
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapddXdFdF[ i ][ F.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tddX[ a ][ I ] * dxi_tdF[ b ][ J ] * dxi_tdF[ c ][ K ];
 
                                     }
 
-                                    d3OverlapddXdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( )* K + L ]
-                                        += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + L ] * dchi_nldGradChi[ B ][ K ]
-                                         + d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * d2chi_nlddXdGradChi[ A ][ gradChi.size( ) * J + K ] * dchi_nldGradChi[ B ][ L ];
+                                }
+
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                                    d3OverlapddXdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * d2xi_tddXdF[ a ][ F.size( ) * I + J ] * dxi_tdchi[ b ][ K ];
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapddXdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tddX[ a ][ I ] * dxi_tdF[ b ][ J ] * dxi_tdchi[ c ][ K ];
+
+                                    }
 
                                 }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdF[ b ][ J ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
+
+                                d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdchi[ b ][ J ];
+
+                                d3OverlapddXdR_nldChi[ i ][ chi.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdchi[ b ][ J ];
+
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
+
+                                        d3OverlapddXdChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tddX[ a ][ I ] * dxi_tdchi[ b ][ J ] * dxi_tdchi[ c ][ K ];
+
+                                    }
+
+                                }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tddX[ a ][ I ] * dxi_tdchi[ b ][ J ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tddX[ a ][ I ];
+
+                            d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * I + J ] += d3Overlapdchi_nldxi_tdR_nl[ i ][ xi_t.size( ) * J + a ] * dxi_tddX[ a ][ I ];
+
+                            for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldchi_nldxi_t[ i ][ xi_t.size( ) * chi_nl.size( ) * J + xi_t.size( ) * K + a ] * dxi_tddX[ a ][ I ];
 
                             }
 
@@ -3325,169 +4496,41 @@ namespace tractionSeparation{
 
                 }
 
-                for ( unsigned int J = 0; J < F.size( ); J++ ){
+                for ( unsigned int I = 0; I < F.size( ); I++ ){
 
-                    for ( unsigned int K = 0; K < F.size( ); K++ ){
+                    for ( unsigned int J = 0; J < F.size( ); J++ ){
 
-                        for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int B = 0; B < xi_t.size( ); B++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdFdF[ I ][ F.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ];
+                                d2OverlapdFdF[ i ][ F.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdF[ b ][ J ];
 
-                                d2OverlapdFdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ];
+                                d3OverlapdR_nldFdF[ i ][ F.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdF[ b ][ J ];
 
-                                d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdxi_tdxi_t[ I ][ xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ];
+                                for ( unsigned int K = 0; K < F.size( ); K++ ){
 
-                                d3OverlapdR_nldFdF[ I ][ F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                d3OverlapdR_nldFdChi[ I ][ chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ];
-
-                                d3OverlapdR_nldChidChi[ I ][ chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdR_nl[ I ][ xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ];
-
-                                for ( unsigned int L = 0; L < F.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapdFdFdF[ I ][ F.size( ) * F.size( ) * J + F.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdF[ C ][ L ];
-
-                                        d3OverlapdFdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdxi_tdxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * A + xi_t.size( ) * B + C ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                         d3OverlapdFdFdChi[ I ][ F.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                         d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                         d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                             += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
+                                        d3OverlapdFdFdF[ i ][ F.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdF[ a ][ I ] * dxi_tdF[ b ][ J ] * dxi_tdF[ c ][ K ];
 
                                     }
 
                                 }
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                        d3OverlapdFdFdGradChi[ I ][ F.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdF[ A ][ J ] * dxi_tdF[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapdChidChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( ) * A + B ] * dxi_tdchi[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapdFdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * C + xi_t.size( )* A + B ] * dxi_tdF[ A ][ J ] * dxi_tdchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                        d3OverlapdFdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdF[ a ][ I ] * dxi_tdF[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
 
                                 }
 
-                            }
-                            
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
 
-                                d2OverlapdFdChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ]
-                                                                               + d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ];
-
-                                d3OverlapdR_nldFdChi[ I ][ chi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                d3OverlapdR_nldChidChi[ I ][ chi.size( ) * J + K ] += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ]
-                                                                                    + d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ];
-
-                                for ( unsigned int L = 0; L < chi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ]
-                                             + d3Overlapdchi_nldxi_tdxi_t[ I ][ xi_t.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdFdChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size () * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ] * dchi_nldchi[ C ][ L ];
-
-                                    }
-
-                                }
-
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdChidChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ]
-                                             + d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ K ] * dchi_nldchi[ B ][ J ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapdFdChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( )* xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdF[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                        for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
-
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
-
-                                d2OverlapdChidChi[ I ][ chi.size( ) * J + K ] += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * B + A ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                d3OverlapdR_nldChidChi[ I ][ chi.size( ) * J + K ] += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * B + A ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ];
-
-                                for ( unsigned int L = 0; L < chi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < xi_t.size( ); C++ ){
-
-                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * A + C ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dxi_tdchi[ C ][ L ];
-
-                                    }
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdChidChidChi[ I ][ chi.size( ) * chi.size( ) * J + chi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldchi[ C ][ L ];
-
-                                    }
-
-                                }
-
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdChidChidGradChi[ I ][ chi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * B + chi_nl.size( ) * A + C ] * dchi_nldchi[ A ][ J ] * dchi_nldchi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                    }
+                                    d3OverlapdFdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] *  dxi_tdF[ a ][ I ] * dxi_tdF[ b ][ J ];
 
                                 }
 
@@ -3497,35 +4540,29 @@ namespace tractionSeparation{
 
                     }
 
-                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
 
-                        for ( unsigned int A = 0; A < xi_t.size( ); A++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdFdGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                d2OverlapdFdChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
-                                d2OverlapdChidGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d2Overlapdchi_nldxi_t[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                d3OverlapdR_nldFdChi[ i ][ chi.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
-                                d3OverlapdR_nldFdGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdF[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                                d3OverlapdR_nldChidGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldxi_tdR_nl[ I ][ xi_t.size( ) * B + A ] * dxi_tdchi[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
-
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
-
-                                        d3OverlapdChidGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdchi[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                        d3OverlapdFdGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldxi_t[ I ][ chi_nl.size( ) * xi_t.size( ) * B + xi_t.size( ) * C + A ] * dxi_tdF[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                        d3OverlapdFdChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( )* a + xi_t.size( ) * b + c ] * dxi_tdF[ a ][ I ] * dxi_tdchi[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
+
+                                }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tdF[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
                                 }
 
@@ -3533,59 +4570,73 @@ namespace tractionSeparation{
 
                         }
 
-                        for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
+                    }
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
 
-                                d2OverlapdChidGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nldchi[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                                d3OverlapdR_nldChidGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nldchi[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                            d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tdF[ a ][ I ];
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                            d3OverlapdR_nldFdChi_nl[ i ][ chi_nl.size( ) * I + J ] += d3Overlapdchi_nldxi_tdR_nl[ i ][ xi_t.size( ) * J + a ] * dxi_tdF[ a ][ I ];
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+                            for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
 
-                                        d3OverlapdChidGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nldchi[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
-
-                                    }
-
-                                }
+                                d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldchi_nldxi_t[ i ][ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * K + a ] * dxi_tdF[ a ][ I ];
 
                             }
 
                         }
-                    
+
                     }
 
                 }
 
-                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+                for ( unsigned int I = 0; I < chi.size( ); I++ ){
 
-                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+                    for ( unsigned int J = 0; J < chi.size( ); J++ ){
 
-                        for ( unsigned int A = 0; A < chi_nl.size( ); A++ ){
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
 
-                            for ( unsigned int B = 0; B < chi_nl.size( ); B++ ){
+                            for ( unsigned int b = 0; b < xi_t.size( ); b++ ){
 
-                                d2OverlapdGradChidGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d2Overlapdchi_nldchi_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nldGradChi[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                d2OverlapdChidChi[ i ][ chi.size( ) * I + J ] += d2Overlapdxi_tdxi_t[ i ][ xi_t.size( ) * a + b ] * dxi_tdchi[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
-                                d3OverlapdR_nldGradChidGradChi[ I ][ gradChi.size( ) * J + K ]
-                                    += d3Overlapdchi_nldchi_nldR_nl[ I ][ chi_nl.size( ) * A + B ] * dchi_nldGradChi[ A ][ J ] * dchi_nldGradChi[ B ][ K ];
+                                d3OverlapdR_nldChidChi[ i ][ chi.size( ) * I + J ] += d3Overlapdxi_tdxi_tdR_nl[ i ][ xi_t.size( ) * a + b ] * dxi_tdchi[ a ][ I ] * dxi_tdchi[ b ][ J ];
 
-                                for ( unsigned int L = 0; L < gradChi.size( ); L++ ){
+                                for ( unsigned int K = 0; K < chi.size( ); K++ ){
 
-                                    for ( unsigned int C = 0; C < chi_nl.size( ); C++ ){
+                                    for ( unsigned int c = 0; c < xi_t.size( ); c++ ){
 
-                                        d3OverlapdGradChidGradChidGradChi[ I ][ gradChi.size( ) * gradChi.size( ) * J + gradChi.size( ) * K + L ]
-                                            += d3Overlapdchi_nldchi_nldchi_nl[ I ][ chi_nl.size( ) * chi_nl.size( ) * A + chi_nl.size( ) * B + C ] * dchi_nldGradChi[ A ][ J ] * dchi_nldGradChi[ B ][ K ] * dchi_nldGradChi[ C ][ L ];
+                                        d3OverlapdChidChidChi[ i ][ chi.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3Overlapdxi_tdxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * a + xi_t.size( ) * b + c ] * dxi_tdchi[ a ][ I ] * dxi_tdchi[ b ][ J ] * dxi_tdchi[ c ][ K ];
 
                                     }
 
                                 }
+
+                                for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                    d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldxi_tdxi_t[ i ][ xi_t.size( ) * xi_t.size( ) * K + xi_t.size( ) * a + b ] * dxi_tdchi[ a ][ I ] * dxi_tdchi[ b ][ J ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int J = 0; J < chi_nl.size( ); J++ ){
+
+                        for ( unsigned int a = 0; a < xi_t.size( ); a++ ){
+
+                            d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + J ] += d2Overlapdchi_nldxi_t[ i ][ xi_t.size( ) * J + a ] * dxi_tdchi[ a ][ I ];
+
+                            d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * I + J ] += d3Overlapdchi_nldxi_tdR_nl[ i ][ xi_t.size( ) * J + a ] * dxi_tdchi[ a ][ I ];
+
+                            for ( unsigned int K = 0; K < chi_nl.size( ); K++ ){
+
+                                d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3Overlapdchi_nldchi_nldxi_t[ i ][ chi_nl.size( ) * xi_t.size( ) * J + xi_t.size( ) * K + a ] * dxi_tdchi[ a ][ I ];
 
                             }
 
@@ -3621,13 +4672,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -3674,13 +4725,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -3765,13 +4816,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -3922,13 +4973,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -4121,13 +5172,13 @@ namespace tractionSeparation{
 
         if ( Xsize < ( xi_t.size( ) + 1 ) ){
 
-            return new errorNode( __func__, "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "X has a size of " + std::to_string( Xsize ) + " and should have a size of " + std::to_string( xi_t.size( ) + 1 ) ) );
 
         }
 
         if ( chi_nl.size( ) != ( xi_t.size( ) * xi_t.size( ) ) ){
 
-            return new errorNode( __func__, "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "chi_nl has a size of " + std::to_string( chi_nl.size( ) ) + " and should have a size of " + std::to_string( xi_t.size( ) * xi_t.size( ) ) ) );
 
         }
 
@@ -4323,22 +5374,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -4358,22 +5399,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -4383,22 +5414,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -4408,7 +5429,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -4422,7 +5443,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -4491,22 +5512,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -4526,22 +5537,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -4551,22 +5552,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-    
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -4576,7 +5567,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -4590,7 +5581,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -4747,22 +5738,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -4782,22 +5763,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -4807,22 +5778,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-    
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -4832,7 +5793,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -4846,7 +5807,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -4867,26 +5828,16 @@ namespace tractionSeparation{
         floatVector d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl, d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
                     d3LdXdXdR_nl, d3LdXdchi_nldR_nl, d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl, d3LdXdR_nldR_nl;
 
-        error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                  d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                  d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                  d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                  d2LdR_nldR_nl,
-                                                  d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
-                                                  d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
-                                                  d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
-                                                  d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
-                                                  d3LdXdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "An error occurred when computing the overlap distance lagrangian for second gradients" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl,
+                                                             d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
+                                                             d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
+                                                             d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
+                                                             d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
+                                                             d3LdXdR_nldR_nl ) );
 
         // Compute the first order derivatives
 
@@ -5291,22 +6242,12 @@ namespace tractionSeparation{
 
         floatType d2LdR_nldR_nl;
 
-        errorOut error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
-                                                           dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                           d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                           d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                           d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                           d2LdR_nldR_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "Error in the computation of the initial Lagrangian" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L,
+                                                             dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl ) );
 
         floatType R = vectorTools::l2norm( dLdX );
 
@@ -5326,22 +6267,12 @@ namespace tractionSeparation{
 
             floatType lambda = 1;
 
-            error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                      dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                      d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                      d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                      d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                      d2LdR_nldR_nl );
-
-            if ( error ){
-    
-                errorOut result = new errorNode( __func__, "Error in the computation of iteration " + std::to_string( num_iteration ) + " Lagrangian" );
-    
-                result->addNext( error );
-    
-                return result;
-    
-            }
+            ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                 dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                 d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                 d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                 d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                 d2LdR_nldR_nl ) );
 
             unsigned int num_ls = 0;
 
@@ -5351,22 +6282,12 @@ namespace tractionSeparation{
 
                 lambda *= 0.5;
 
-                error = computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
-                                                          dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                          d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                          d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                          d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                          d2LdR_nldR_nl );
-    
-                if ( error ){
-        
-                    errorOut result = new errorNode( __func__, "Error in the " + std::to_string( num_ls ) + " line search of iteration " + std::to_string( num_iteration ) + " initial Lagrangian" );
-        
-                    result->addNext( error );
-        
-                    return result;
-        
-                }
+                ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X + lambda * dX, chi_nl, xi_t, R_nl, L,
+                                                                     dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                                     d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                                     d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                                     d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                                     d2LdR_nldR_nl ) );
 
                 R = vectorTools::l2norm( dLdX );
 
@@ -5376,7 +6297,7 @@ namespace tractionSeparation{
 
             if ( R > ( 1 - alpha_ls ) * Rp ){
 
-                return new errorNode( __func__, "Failure in linesearch" );
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "Failure in linesearch" ) );
 
             }
 
@@ -5390,7 +6311,7 @@ namespace tractionSeparation{
 
         if ( R > tol ){
 
-            return new errorNode( __func__, "The optimizer did not converge" );
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The optimizer did not converge" ) );
 
         }
 
@@ -5412,27 +6333,17 @@ namespace tractionSeparation{
                     d3LdXdXdR_nl, d3LdXdchi_nldR_nl, d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl, d3LdXdR_nldR_nl,
                     d4LdXdXdchi_nldchi_nl;
 
-        error = computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
-                                                  d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
-                                                  d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
-                                                  d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
-                                                  d2LdR_nldR_nl,
-                                                  d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
-                                                  d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
-                                                  d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
-                                                  d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
-                                                  d3LdXdR_nldR_nl,
-                                                  d4LdXdXdchi_nldchi_nl );
-
-        if ( error ){
-
-            errorOut result = new errorNode( __func__, "An error occurred when computing the overlap distance lagrangian for second gradients" );
-
-            result->addNext( error );
-
-            return result;
-
-        }
+        ERROR_TOOLS_CATCH( computeOverlapDistanceLagrangian( X, chi_nl, xi_t, R_nl, L, dLdX, dLdchi_nl, dLdxi_t, dLdR_nl,
+                                                             d2LdXdX, d2LdXdchi_nl, d2LdXdxi_t, d2LdXdR_nl,
+                                                             d2Ldchi_nldchi_nl, d2Ldchi_nldxi_t, d2Ldchi_nldR_nl,
+                                                             d2Ldxi_tdxi_t, d2Ldxi_tdR_nl,
+                                                             d2LdR_nldR_nl,
+                                                             d3LdXdXdX, d3LdXdXdchi_nl, d3LdXdchi_nldchi_nl,
+                                                             d3LdXdXdxi_t, d3LdXdchi_nldxi_t,
+                                                             d3LdXdXdR_nl, d3LdXdchi_nldR_nl,
+                                                             d3LdXdxi_tdxi_t, d3LdXdxi_tdR_nl,
+                                                             d3LdXdR_nldR_nl,
+                                                             d4LdXdXdchi_nldchi_nl ) );
 
         // Compute the first order derivatives
 
