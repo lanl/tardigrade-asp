@@ -166,6 +166,8 @@ namespace asp{
 
             unsigned int _surfaceElementCount = 1;
 
+            void formBoundingBox( const floatVector &points, floatMatrix &boundingBox );
+
         private:
             // Friend classes
             friend class unit_test::aspBaseTester;

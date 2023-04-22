@@ -210,6 +210,14 @@ namespace asp{
 
                 }
 
+                static void formBoundingBox( asp::aspBase &asp, floatVector &points, floatMatrix &boundingBox ){
+
+                    BOOST_CHECK_NO_THROW( asp.formBoundingBox( points, boundingBox ) );
+
+                    return;
+
+                }
+
                 // Direct write functions for mocking
                 static void set_indices( asp::aspBase &asp,
                                             unsigned int localIndex, unsigned int nonlocalIndex, unsigned int localSurfaceNodeIndex ){
@@ -1808,5 +1816,23 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalParticleCurrentBoundingBox ){
                            { 3, 12 } };
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalParticleCurrentBoundingBox( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_formBoundingBox ){
+
+    asp::aspBase asp;
+
+    floatVector points = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+    floatMatrix answer = { { 1, 7 },
+                           { 2, 8 },
+                           { 3, 9 } };
+
+    floatMatrix result;
+
+    asp::unit_test::aspBaseTester::formBoundingBox( asp, points, result );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
 }
