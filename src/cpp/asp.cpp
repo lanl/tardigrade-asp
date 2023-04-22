@@ -902,22 +902,44 @@ namespace asp{
         const floatVector *localCurrentSurfacePoints;
         ERROR_TOOLS_CATCH( localCurrentSurfacePoints = getLocalCurrentSurfacePoints( ) ); 
 
-        if ( localCurrentSurfacePoints->size( ) < _dimension ){
+        ERROR_TOOLS_CATCH( formBoundingBox( *localCurrentSurfacePoints, _localParticleCurrentBoundingBox.second ) );
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local current surface points need at least one point" ) );
+        _localParticleCurrentBoundingBox.first = true;
+
+        return;
+
+    }
+
+    void aspBase::formBoundingBox( const floatVector &points, floatMatrix &boundingBox ){
+        /*!
+         * Form a bounding box from the provided points
+         * 
+         * \param &points: The points to form the bounding box in [x1, y1, z1, x2, y2, z2, ...] format
+         * \param &boundingBox: The resulting bounding box
+         */
+
+        if ( ( points.size( ) % _dimension ) > 0 ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The length of points must be an integer multiple of the dimension.\n  points.size( ) = " + std::to_string( points.size( ) ) + "\n  dimension: " + std::to_string( _dimension ) ) );
 
         }
 
-        _localParticleCurrentBoundingBox.second = { { ( *localCurrentSurfacePoints )[ 0 ], ( *localCurrentSurfacePoints )[ 0 ] },
-                                                    { ( *localCurrentSurfacePoints )[ 1 ], ( *localCurrentSurfacePoints )[ 1 ] },
-                                                    { ( *localCurrentSurfacePoints )[ 2 ], ( *localCurrentSurfacePoints )[ 2 ] } };
+        if ( points.size( ) < _dimension ){
 
-        for ( unsigned int i = _dimension; i < localCurrentSurfacePoints->size( ); i += _dimension ){
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The points need at least one point" ) );
+
+        }
+
+        boundingBox = { { points[ 0 ], points[ 0 ] },
+                        { points[ 1 ], points[ 1 ] },
+                        { points[ 2 ], points[ 2 ] } };
+
+        for ( unsigned int i = _dimension; i < points.size( ); i += _dimension ){
 
             for ( unsigned int j = 0; j < _dimension; j++ ){
 
-                _localParticleCurrentBoundingBox.second[ j ][ 0 ] = std::fmin( _localParticleCurrentBoundingBox.second[ j ][ 0 ], ( *localCurrentSurfacePoints )[ i + j ] );
-                _localParticleCurrentBoundingBox.second[ j ][ 1 ] = std::fmax( _localParticleCurrentBoundingBox.second[ j ][ 1 ], ( *localCurrentSurfacePoints )[ i + j ] );
+                boundingBox[ j ][ 0 ] = std::fmin( boundingBox[ j ][ 0 ], points[ i + j ] );
+                boundingBox[ j ][ 1 ] = std::fmax( boundingBox[ j ][ 1 ], points[ i + j ] );
 
             }
 
@@ -950,26 +972,9 @@ namespace asp{
         const floatVector *nonLocalCurrentSurfacePoints;
         ERROR_TOOLS_CATCH( nonLocalCurrentSurfacePoints = getNonLocalCurrentSurfacePoints( ) ); 
 
-        if ( nonLocalCurrentSurfacePoints->size( ) < _dimension ){
+        ERROR_TOOLS_CATCH( formBoundingBox( *nonLocalCurrentSurfacePoints, _nonLocalParticleCurrentBoundingBox.second ) );
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The local current surface points need at least one point" ) );
-
-        }
-
-        _nonLocalParticleCurrentBoundingBox.second = { { ( *nonLocalCurrentSurfacePoints )[ 0 ], ( *nonLocalCurrentSurfacePoints )[ 0 ] },
-                                                       { ( *nonLocalCurrentSurfacePoints )[ 1 ], ( *nonLocalCurrentSurfacePoints )[ 1 ] },
-                                                       { ( *nonLocalCurrentSurfacePoints )[ 2 ], ( *nonLocalCurrentSurfacePoints )[ 2 ] } };
-
-        for ( unsigned int i = _dimension; i < nonLocalCurrentSurfacePoints->size( ); i += _dimension ){
-
-            for ( unsigned int j = 0; j < _dimension; j++ ){
-
-                _nonLocalParticleCurrentBoundingBox.second[ j ][ 0 ] = std::fmin( _nonLocalParticleCurrentBoundingBox.second[ j ][ 0 ], ( *nonLocalCurrentSurfacePoints )[ i + j ] );
-                _nonLocalParticleCurrentBoundingBox.second[ j ][ 1 ] = std::fmax( _nonLocalParticleCurrentBoundingBox.second[ j ][ 1 ], ( *nonLocalCurrentSurfacePoints )[ i + j ] );
-
-            }
-
-        }
+        _nonLocalParticleCurrentBoundingBox.first = true;
 
         return;
 
