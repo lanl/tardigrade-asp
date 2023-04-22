@@ -719,12 +719,95 @@ namespace asp{
 
     }
 
+    bool aspBase::pointInBoundingBox( const floatVector &point, const floatMatrix &boundingBox ){
+        /*!
+         * Determine if the point is inside of the bounding box and return a boolean value
+         * 
+         * \param &point: The point in [x, y, z, ...] space. Must be of the same length of the bounding box
+         * \param &boundingBox: The bouning box in the form (point.size( ), 2 ) where for each dimension
+         *    the row is of the form (lower bound, upper bound)
+         */
+
+        if ( point.size( ) != boundingBox.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "point and boundingBox must be the same size.\n  point.size( ): " + std::to_string( point.size( ) ) + "\n  boundingBox.size( ): " + std::to_string( boundingBox.size( ) ) ) );
+
+        }
+
+        for ( unsigned int i = 0; i < point.size( ); i++ ){
+
+            if ( boundingBox[ i ].size( ) != 2 ){
+
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "boundingBox row " + std::to_string( i ) + " has a length of " + std::to_string( boundingBox[ i ].size( ) ) + " and it should be of length 2" ) );
+
+            }
+
+            if ( ( point[ i ] < boundingBox[ i ][ 0 ] ) || ( point[ i ] > boundingBox[ i ][ 1 ] ) ){
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    void aspBase::idBoundingBoxContainedPoints( const floatVector &points, const floatMatrix &boundingBox, std::vector< unsigned int > &containedPoints ){
+        /*!
+         * Determine which of the points are in the bounding box
+         * 
+         * \param &points: The points in [x1, y1, z1, x2, y2, z2, ... ] format.
+         * \param &boundingBox: The bounding box which must be in the form (_dimension, 2 ) where for each dimension
+         *    the row is of the form (lower bound, upper bound)
+         * \param &containedPoints: The points contained in the vector
+         */
+
+        containedPoints = std::vector< unsigned int >( points.size( ) );
+
+        unsigned int numContainedPoints = 0;
+
+        for ( unsigned int i = 0; i < points.size( ); i += _dimension ){
+
+            if ( pointInBoundingBox( floatVector( points.begin( ) + i, points.begin( ) + i + _dimension ), boundingBox ) ){
+
+                containedPoints[ numContainedPoints ] = i / _dimension;
+
+                numContainedPoints++;
+
+            }
+
+        }
+
+        containedPoints.resize( numContainedPoints );
+
+        return;
+
+    }
+
     void aspBase::computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity ){
         /*!
          * Compute the surface overlap energy density for the local particle and a given interaction
          * 
          * \param &surfaceOverlapEnergyDensities: The index is the index of the local points which may be overlapping with a neighboring particle and the values are the overlap energies. It is not a scalar because two particles could be overlapping at multiple points
          */
+
+        const floatMatrix *nonLocalBoundingBox;
+        ERROR_TOOLS_CATCH( nonLocalBoundingBox = getNonLocalParticleCurrentBoundingBox( ) );
+
+        const floatVector *localSurfacePoints;
+        ERROR_TOOLS_CATCH( localSurfacePoints = getLocalCurrentSurfacePoints( ) );
+
+        // Check which of the local points are contained in the non-local bounding box
+        std::vector< unsigned int > possiblePoints;
+        ERROR_TOOLS_CATCH( idBoundingBoxContainedPoints( *localSurfacePoints, *nonLocalBoundingBox, possiblePoints ) );
+
+        for ( auto p = possiblePoints.begin( ); p != possiblePoints.end( ); p++ ){
+
+            
+
+        }
 
         return;
 

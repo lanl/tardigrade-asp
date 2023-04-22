@@ -218,6 +218,20 @@ namespace asp{
 
                 }
 
+                static bool pointInBoundingBox( asp::aspBase &asp, floatVector &point, floatMatrix &boundingBox ){
+
+                    return asp.pointInBoundingBox( point, boundingBox );
+
+                }
+
+                static void idBoundingBoxContainedPoints( asp::aspBase &asp, floatVector &points, floatMatrix &boundingBox, std::vector< unsigned int > &containedPoints ){
+
+                    BOOST_CHECK_NO_THROW( asp.idBoundingBoxContainedPoints( points, boundingBox, containedPoints ) );
+
+                    return;
+
+                }
+
                 // Direct write functions for mocking
                 static void set_indices( asp::aspBase &asp,
                                             unsigned int localIndex, unsigned int nonlocalIndex, unsigned int localSurfaceNodeIndex ){
@@ -1832,6 +1846,40 @@ BOOST_AUTO_TEST_CASE( test_aspBase_formBoundingBox ){
     floatMatrix result;
 
     asp::unit_test::aspBaseTester::formBoundingBox( asp, points, result );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_pointInBoundingBox ){
+
+    asp::aspBase asp;
+
+    floatVector point = { 1, 2 };
+
+    floatMatrix boundingBox = { { 0, 2 }, { 1, 3 } };
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::pointInBoundingBox( asp, point, boundingBox ) );
+
+    point = { 1, -2 };
+
+    BOOST_CHECK( !asp::unit_test::aspBaseTester::pointInBoundingBox( asp, point, boundingBox ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_idBoundingBoxContainedPoints ){
+
+    asp::aspBase asp;
+
+    floatVector points = { 1, 2, 3, 1, -2, 4, 0.5, 1.1, 4.9 };
+
+    floatMatrix boundingBox = { { 0, 2 }, { 1, 3 }, { 2, 5 } };
+
+    std::vector< unsigned int > answer = { 0, 2 };
+
+    std::vector< unsigned int > result;
+
+    asp::unit_test::aspBaseTester::idBoundingBoxContainedPoints( asp, points, boundingBox, result );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 

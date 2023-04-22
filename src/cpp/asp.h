@@ -166,7 +166,11 @@ namespace asp{
 
             unsigned int _surfaceElementCount = 1;
 
+            bool pointInBoundingBox( const floatVector &point, const floatMatrix &boundingBox );
+
             void formBoundingBox( const floatVector &points, floatMatrix &boundingBox );
+
+            void idBoundingBoxContainedPoints( const floatVector &points, const floatMatrix &boundingBox, std::vector< unsigned int > &containedPoints );
 
         private:
             // Friend classes
