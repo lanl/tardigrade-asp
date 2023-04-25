@@ -22,8 +22,12 @@ Internal Changes
 - Change the project to use error_tools > 0.5.1 (:merge:`19`). By `Nathan Miller`_.
 - Begin incorporation of new error_tools stack trace capability (:merge:`20`). By `Nathan Miller`_.
 - Added getter and setter functions for the private variables (:merge:`21`). By `Nathan Miller`_.
-- Added a function for the particle overlap calculation which uses a non-local micro-deformation rather than the gradient of the micro deformation (:merge:`24`). By `Nathan Miller`_.
+- Added a function for the particle overlap calculation which uses a non-local micro-deformation
+  rather than the gradient of the micro deformation (:merge:`24`). By `Nathan Miller`_.
 - Added a general bounding box function to reduce duplicated code (:merge:`26`). By `Nathan Miller`_.
+- Added a function for the particle overlap calculation which uses an arbitrary, "basis," i.e.,
+  the reference point for the Taylor series computation of the non-local micro-deformation which will
+  allow for random neighboring particles (:merge:`27`). By `Nathan Miller`_.
 
 New Features
 ============
