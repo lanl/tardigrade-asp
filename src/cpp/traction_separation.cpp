@@ -1294,6 +1294,79 @@ namespace tractionSeparation{
 
     }
 
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
+                                     floatVector &overlap ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI}^{NL,basis} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl_basis: The non-local micro deformation tensor basis
+         * \param &gradChi: The gradient of the micro deformation tensor w.r.t. the reference spatial position
+         * \param &overlap: The overlap vector
+         */
+
+        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl_basis.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi non-local basis vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi_nl_basis.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi_nl_basis;
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                }
+
+            }
+
+        }
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap ) );
+
+        return NULL;
+
+    }
+
     errorOut computeParticleOverlapChi_nl( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
                                            const floatVector &F,    const floatVector &chi,  const floatVector &chi_nl,
                                            floatVector &overlap ){
@@ -1512,6 +1585,117 @@ namespace tractionSeparation{
         dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
 
         dOverlapdChi += vectorTools::dot( dOverlapdChi_nl, dchi_nldchi );
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_NL_B, floatMatrix &dOverlapdGradChi ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI}^{NL,basis} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl_basis: The non-local micro deformation tensor basis
+         * \param &gradChi: The gradient of the micro deformation tensor w.r.t. the reference spatial position
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdChi_NL_B: The gradient of the overlap w.r.t. the non-local micro-deformation tensor basis
+         * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
+         */
+
+        if ( chi.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl_basis.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi non-local basis vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi_nl_basis.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi_nl_basis;
+
+        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl;
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi_NL_B = dOverlapdChi_nl;
 
         dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
 
@@ -2029,6 +2213,357 @@ namespace tractionSeparation{
                             d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
 
                         }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < gradChi.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapdR_nldGradChi[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nldGradChi[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdGradChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_NL_B, floatMatrix &dOverlapdGradChi,
+                                     floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dChi_NL_B, floatMatrix &d2OverlapdXi_1dGradChi,
+                                     floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdChi_NL_B, floatMatrix &d2OverlapddXdGradChi,
+                                     floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldChi_NL_B, floatMatrix &d2OverlapdR_nldGradChi,
+                                     floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdChi_NL_B, floatMatrix &d2OverlapdFdGradChi,
+                                     floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidChi_NL_B, floatMatrix &d2OverlapdChidGradChi,
+                                     floatMatrix &d2OverlapdChi_NL_BdChi_NL_B, floatMatrix &d2OverlapdChi_NL_BdGradChi,
+                                     floatMatrix &d2OverlapdGradChidGradChi ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI}^{NL,basis} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi_nl_basis: The non-local micro deformation tensor basis
+         * \param &gradChi: The gradient of the micro deformation tensor w.r.t. the reference spatial position
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor.
+         * \param &dOverlapdChi_NL_B: The gradient of the overlap w.r.t. the non-local micro-deformation tensor basis
+         * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdXi_1dXi_1: The second gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d2OverlapdXi_1ddX: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the particle reference center-to-center vector
+         * \param &d2OverlapdXi_1dR_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d2OverlapdXi_1dF: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient
+         * \param &d2OverlapdXi_1dChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor
+         * \param &d2OverlapdXi_1dGradChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapddXddX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
+         * \param &d2OverlapddXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
+         * \param &d2OverlapddXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
+         * \param &d2OverlapddXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
+         * \param &d2OverlapddXdGradChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdR_nldR_nl: The second gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d2OverlapdR_nldF: The second gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient
+         * \param &d2OverlapdR_nldChi: The second gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor
+         * \param &d2OverlapdR_nldGradChi: The second gradient of the overlap w.r.t. the non-local reference radius and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdFdF: The second gradient of the overlap w.r.t. the deformation gradient
+         * \param &d2OverlapdFdChi: The second gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor
+         * \param &d2OverlapdFdGradChi: The second gradient of the overlap w.r.t. the deformation gradient and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdChidChi: The second gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d2OverlapdChidGradChi: The second gradient of the overlap w.r.t. the micro-deformation tensor and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdGradChidGradChi: The second gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
+         */
+
+        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl_basis.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi non-local basis vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi_nl_basis.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi_nl_basis;
+
+        floatMatrix dchi_nlddX( chi_nl.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi_nl.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatMatrix d2chi_nlddXdGradChi( chi_nl.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            for ( unsigned int M = 0; M < dX.size( ); M++ ){
+
+                                dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                                d2chi_nlddXdGradChi[ Xi_1.size( ) * i + I ][ gradChi.size( ) * J + Xi_1.size( ) * Xi_1.size( ) * K + Xi_1.size( ) * L + M ] = eye[ Xi_1.size( ) * i + K ] * eye[ Xi_1.size( ) * I + L ] * eye[ Xi_1.size( ) * J + M ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl;
+
+        floatMatrix d2OverlapdXi_1dChi_nl, d2OverlapddXdChi_nl, d2OverlapdR_nldChi_nl, d2OverlapdFdChi_nl, d2OverlapdChidChi_nl,
+                    d2OverlapdChi_nldChi_nl;
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX, R_nl, F, chi, chi_nl, overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl,
+                                                         d2OverlapdXi_1dXi_1, d2OverlapdXi_1ddX, d2OverlapdXi_1dR_nl, d2OverlapdXi_1dF, d2OverlapdXi_1dChi, d2OverlapdXi_1dChi_nl,
+                                                         d2OverlapddXddX, d2OverlapddXdR_nl, d2OverlapddXdF, d2OverlapddXdChi, d2OverlapddXdChi_nl,
+                                                         d2OverlapdR_nldR_nl, d2OverlapdR_nldF, d2OverlapdR_nldChi, d2OverlapdR_nldChi_nl,
+                                                         d2OverlapdFdF, d2OverlapdFdChi, d2OverlapdFdChi_nl,
+                                                         d2OverlapdChidChi, d2OverlapdChidChi_nl,
+                                                         d2OverlapdChi_nldChi_nl ) );
+
+        d2OverlapdXi_1dChi_NL_B     = d2OverlapdXi_1dChi_nl;
+
+        d2OverlapdXi_1dGradChi      = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapddXdChi_NL_B       = d2OverlapddXdChi_nl;
+
+        d2OverlapddXdGradChi        = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdR_nldChi_NL_B     = d2OverlapdR_nldChi_nl;
+
+        d2OverlapdR_nldGradChi      = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        d2OverlapdFdChi_NL_B        = d2OverlapdFdChi_nl;
+
+        d2OverlapdFdGradChi         = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdChidChi_NL_B      = d2OverlapdChidChi_nl;
+
+        d2OverlapdChidGradChi       = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdChi_NL_BdChi_NL_B = d2OverlapdChi_nldChi_nl;
+
+        d2OverlapdChi_NL_BdGradChi  = floatMatrix( overlap.size( ), floatVector( chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdGradChidGradChi   = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi_NL_B = dOverlapdChi_nl;
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        for ( unsigned int i = 0; i < overlap.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1ddX[ i ][ dX.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1dGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                    + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapddXdR_nl[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nlddX[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdF[ i ][ chi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi_nl_basis.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdChi_NL_B[ i ][ chi_nl_basis.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + J ] * dchi_nlddX[ a ][ I ];
+
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ]
+                                                                              + dOverlapdChi_nl[ i ][ a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < F.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdFdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < chi.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < chi_nl_basis.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChi_NL_BdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
 
                     }
 
@@ -3543,6 +4078,1124 @@ namespace tractionSeparation{
                                     d3OverlapdChidGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nldchi[ a ][ I ] * dchi_nldGradChi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
 
                                 }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < gradChi.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapdR_nldGradChi[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nldGradChi[ a ][ I ];
+
+                    d3OverlapdR_nldR_nldGradChi[ i ][ I ] += d3OverlapdR_nldR_nldChi_nl[ i ][ a ] * dchi_nldGradChi[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapdGradChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                            d3OverlapdR_nldGradChidGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapdGradChidGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nldGradChi[ a ][ I ] * dchi_nldGradChi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeParticleOverlap( const floatVector &Xi_1, const floatVector &dX, const floatType &R_nl,
+                                     const floatVector &F,    const floatVector &chi, const floatVector &chi_nl_basis, const floatVector &gradChi,
+                                     floatVector &overlap,
+                                     floatMatrix &dOverlapdXi_1, floatMatrix &dOverlapddX, floatVector &dOverlapdR_nl,
+                                     floatMatrix &dOverlapdF, floatMatrix &dOverlapdChi, floatMatrix &dOverlapdChi_NL_B, floatMatrix &dOverlapdGradChi,
+                                     floatMatrix &d2OverlapdXi_1dXi_1, floatMatrix &d2OverlapdXi_1ddX, floatMatrix &d2OverlapdXi_1dR_nl, floatMatrix &d2OverlapdXi_1dF, floatMatrix &d2OverlapdXi_1dChi, floatMatrix &d2OverlapdXi_1dChi_NL_B, floatMatrix &d2OverlapdXi_1dGradChi,
+                                     floatMatrix &d2OverlapddXddX, floatMatrix &d2OverlapddXdR_nl, floatMatrix &d2OverlapddXdF, floatMatrix &d2OverlapddXdChi, floatMatrix &d2OverlapddXdChi_NL_B, floatMatrix &d2OverlapddXdGradChi,
+                                     floatVector &d2OverlapdR_nldR_nl, floatMatrix &d2OverlapdR_nldF, floatMatrix &d2OverlapdR_nldChi, floatMatrix &d2OverlapdR_nldChi_NL_B, floatMatrix &d2OverlapdR_nldGradChi,
+                                     floatMatrix &d2OverlapdFdF, floatMatrix &d2OverlapdFdChi, floatMatrix &d2OverlapdFdChi_NL_B, floatMatrix &d2OverlapdFdGradChi,
+                                     floatMatrix &d2OverlapdChidChi, floatMatrix &d2OverlapdChidChi_NL_B, floatMatrix &d2OverlapdChidGradChi,
+                                     floatMatrix &d2OverlapdChi_NL_BdChi_NL_B, floatMatrix &d2OverlapdChi_NL_BdGradChi,
+                                     floatMatrix &d2OverlapdGradChidGradChi,
+                                     floatMatrix &d3OverlapdXi_1dXi_1dXi_1, floatMatrix &d3OverlapdXi_1dXi_1ddX, floatMatrix &d3OverlapdXi_1dXi_1dR_nl, floatMatrix &d3OverlapdXi_1dXi_1dF, floatMatrix &d3OverlapdXi_1dXi_1dChi, floatMatrix &d3OverlapdXi_1dXi_1dChi_NL_B, floatMatrix &d3OverlapdXi_1dXi_1dGradChi,
+                                     floatMatrix &d3OverlapdXi_1ddXddX, floatMatrix &d3OverlapdXi_1ddXdR_nl, floatMatrix &d3OverlapdXi_1ddXdF, floatMatrix &d3OverlapdXi_1ddXdChi, floatMatrix &d3OverlapdXi_1ddXdChi_NL_B, floatMatrix &d3OverlapdXi_1ddXdGradChi,
+                                     floatMatrix &d3OverlapdXi_1dR_nldR_nl, floatMatrix &d3OverlapdXi_1dR_nldF, floatMatrix &d3OverlapdXi_1dR_nldChi, floatMatrix &d3OverlapdXi_1dR_nldChi_NL_B, floatMatrix &d3OverlapdXi_1dR_nldGradChi,
+                                     floatMatrix &d3OverlapdXi_1dFdF, floatMatrix &d3OverlapdXi_1dFdChi, floatMatrix &d3OverlapdXi_1dFdChi_NL_B, floatMatrix &d3OverlapdXi_1dFdGradChi,
+                                     floatMatrix &d3OverlapdXi_1dChidChi, floatMatrix &d3OverlapdXi_1dChidChi_NL_B, floatMatrix &d3OverlapdXi_1dChidGradChi,
+                                     floatMatrix &d3OverlapdXi_1dChi_NL_BdChi_NL_B, floatMatrix &d3OverlapdXi_1dChi_NL_BdGradChi,
+                                     floatMatrix &d3OverlapdXi_1dGradChidGradChi,
+                                     floatMatrix &d3OverlapddXddXddX, floatMatrix &d3OverlapddXddXdR_nl, floatMatrix &d3OverlapddXddXdF, floatMatrix &d3OverlapddXddXdChi, floatMatrix &d3OverlapddXddXdChi_NL_B, floatMatrix &d3OverlapddXddXdGradChi,
+                                     floatMatrix &d3OverlapddXdR_nldR_nl, floatMatrix &d3OverlapddXdR_nldF, floatMatrix &d3OverlapddXdR_nldChi, floatMatrix &d3OverlapddXdR_nldChi_NL_B, floatMatrix &d3OverlapddXdR_nldGradChi,
+                                     floatMatrix &d3OverlapddXdFdF, floatMatrix &d3OverlapddXdFdChi, floatMatrix &d3OverlapddXdFdChi_NL_B, floatMatrix &d3OverlapddXdFdGradChi,
+                                     floatMatrix &d3OverlapddXdChidChi, floatMatrix &d3OverlapddXdChidChi_NL_B, floatMatrix &d3OverlapddXdChidGradChi,
+                                     floatMatrix &d3OverlapddXdChi_NL_BdChi_NL_B, floatMatrix &d3OverlapddXdChi_NL_BdGradChi,
+                                     floatMatrix &d3OverlapddXdGradChidGradChi,
+                                     floatVector &d3OverlapdR_nldR_nldR_nl, floatMatrix &d3OverlapdR_nldR_nldF, floatMatrix &d3OverlapdR_nldR_nldChi, floatMatrix &d3OverlapdR_nldR_nldChi_NL_B, floatMatrix &d3OverlapdR_nldR_nldGradChi,
+                                     floatMatrix &d3OverlapdR_nldFdF, floatMatrix &d3OverlapdR_nldFdChi, floatMatrix &d3OverlapdR_nldFdChi_NL_B, floatMatrix &d3OverlapdR_nldFdGradChi,
+                                     floatMatrix &d3OverlapdR_nldChidChi, floatMatrix &d3OverlapdR_nldChidChi_NL_B, floatMatrix &d3OverlapdR_nldChidGradChi,
+                                     floatMatrix &d3OverlapdR_nldChi_NL_BdChi_NL_B, floatMatrix &d3OverlapdR_nldChi_NL_BdGradChi,
+                                     floatMatrix &d3OverlapdR_nldGradChidGradChi,
+                                     floatMatrix &d3OverlapdFdFdF, floatMatrix &d3OverlapdFdFdChi, floatMatrix &d3OverlapdFdFdChi_NL_B, floatMatrix &d3OverlapdFdFdGradChi,
+                                     floatMatrix &d3OverlapdFdChidChi, floatMatrix &d3OverlapdFdChidChi_NL_B, floatMatrix &d3OverlapdFdChidGradChi,
+                                     floatMatrix &d3OverlapdFdChi_NL_BdChi_NL_B, floatMatrix &d3OverlapdFdChi_NL_BdGradChi,
+                                     floatMatrix &d3OverlapdFdGradChidGradChi,
+                                     floatMatrix &d3OverlapdChidChidChi, floatMatrix &d3OverlapdChidChidChi_NL_B, floatMatrix &d3OverlapdChidChidGradChi,
+                                     floatMatrix &d3OverlapdChidChi_NL_BdChi_NL_B, floatMatrix &d3OverlapdChidChi_NL_BdGradChi,
+                                     floatMatrix &d3OverlapdChidGradChidGradChi,
+                                     floatMatrix &d3OverlapdChi_NL_BdChi_NL_BdChi_NL_B, floatMatrix &d3OverlapdChi_NL_BdChi_NL_BdGradChi,
+                                     floatMatrix &d3OverlapdChi_NL_BdGradChidGradChi,
+                                     floatMatrix &d3OverlapdGradChidGradChidGradChi ){
+        /*!
+         * Compute the amount that a point on the local particle overlaps with the non-local particle. For now, we assume
+         * a micromorphic theory of degree 1 meaning that for the local particle
+         * 
+         * \f$ \xi_i = \chi_{iI} \Xi_I\f$
+         * 
+         * and for the non-local particle
+         * 
+         * \f$ \xi_i^{NL} = \chi_{iI}^{NL} \Xi_I = \left(\chi_{iI}^{NL,Basis} + \chi_{iI,J} dX_J\right) \Xi_I\f$
+         * 
+         * where
+         * 
+         * \f$ dX_I = Xi_I^1 + D_I - Xi_I^2 \f$
+         * 
+         * So we first must determine if the particles are overlapped which can be done via computing the relative position vector
+         * of \f$ \Xi^1 \f$ with respect to the non-local centroid and seeing if it's magnitude in the non-local reference configuration
+         * is less than the non-local particle's radius. If so we will solve for the shortest distance between the overlapped local point
+         * and the surface of the non-local particle.
+         * 
+         * \param &Xi_1: The local micro relative position vector to test.
+         * \param &dX: The spacing between the local and non-local particle centroids in the reference configuration
+         * \param &R_nl: The non-local particle radius in the reference configuration
+         * \param &F: The deformation gradient
+         * \param &chi: The micro deformation tensor
+         * \param &chi: The non-local micro deformation tensor basis
+         * \param &gradChi: The gradient of the micro deformation tensor w.r.t. the reference spatial position
+         * \param &overlap: The overlap vector
+         * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &dOverlapddX: The gradient of the overlap w.r.t. the local reference center-to-center vector
+         * \param &dOverlapdR_nl: The gradient of the overlap w.r.t. the non-local reference radius
+         * \param &dOverlapdF: The gradient of the overlap w.r.t. the deformation gradient
+         * \param &dOverlapdChi: The gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &dOverlapdChi_NL_B: The gradient of the overlap w.r.t. the non-local micro-deformation tensor basis
+         * \param &dOverlapdGradChi: The gradient of the overlap w.r.t. the reference spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdXi_1dXi_1: The second gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d2OverlapdXi_1ddX: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the particle reference center-to-center vector
+         * \param &d2OverlapdXi_1dR_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d2OverlapdXi_1dF: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient
+         * \param &d2OverlapdXi_1dChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor
+         * \param &d2OverlapdXi_1dChi_NL_B: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local micro-deformation tensor basis
+         * \param &d2OverlapdXi_1dGradChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapddXddX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
+         * \param &d2OverlapddXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
+         * \param &d2OverlapddXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
+         * \param &d2OverlapddXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
+         * \param &d2OverlapddXdChi_NL_B: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local micro-deformation tensor basis
+         * \param &d2OverlapddXdGradChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdR_nldR_nl: The second gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d2OverlapdR_nldF: The second gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient
+         * \param &d2OverlapdR_nldChi: The second gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor
+         * \param &d2OverlapdR_nldChi_NL_B: The second gradient of the overlap w.r.t. the non-local reference radius and the non-local micro-deformation tensor basis
+         * \param &d2OverlapdR_nldGradChi: The second gradient of the overlap w.r.t. the non-local reference radius and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdFdF: The second gradient of the overlap w.r.t. the deformation gradient
+         * \param &d2OverlapdFdChi: The second gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor
+         * \param &d2OverlapdFdChi_NL_B: The second gradient of the overlap w.r.t. the deformation gradient and the non-local micro-deformation tensor basis
+         * \param &d2OverlapdFdGradChi: The second gradient of the overlap w.r.t. the deformation gradient and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdChidChi: The second gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d2OverlapdChidChi_NL_B: The second gradient of the overlap w.r.t. the micro-deformation tensor and the non-local micro-deformation tensor basis
+         * \param &d2OverlapdChidGradChi: The second gradient of the overlap w.r.t. the micro-deformation tensor and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdChi_NL_BdChi_NL_B: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor basis
+         * \param &d2OverlapdChi_NL_BdGradChi: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor basis and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdGradChidGradChi: The second gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
+         * 
+         * \param &d3OverlapdXi_1dXi_1dXi_1: The third gradient of the overlap w.r.t. the local reference relative micro-position vector
+         * \param &d3OverlapdXi_1dXi_1ddX: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the reference center-to-center vector
+         * \param &d3OverlapdXi_1dXi_1dR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the non-local reference radius
+         * \param &d3OverlapdXi_1dXi_1dF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the deformation gradient
+         * \param &d3OverlapdXi_1dXi_1dChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dXi_1dChi_NL_B: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdXi_1dXi_1dGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1ddXddX: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the reference center-to-center vector twice
+         * \param &d3OverlapdXi_1ddXdR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the non-local reference radius
+         * \param &d3OverlapdXi_1ddXdF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the deformation gradient
+         * \param &d3OverlapdXi_1ddXdChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1ddXdChi_NL_B: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdXi_1ddXdGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the reference center-to-center vector, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dR_nldR_nl: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
+         * \param &d3OverlapdXi_1dR_nldF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the deformation gradient
+         * \param &d3OverlapdXi_1dR_nldChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dR_nldChi_NL_B: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdXi_1dR_nldGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dFdF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient twice
+         * \param &d3OverlapdXi_1dFdChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapdXi_1dFdChi_NL_B: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdXi_1dFdGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the deformation gradient, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dChidChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor twice
+         * \param &d3OverlapdXi_1dChidChi_NL_B: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the micro-deformation tensor, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdXi_1dChidGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dChi_NL_BdChi_NL_B: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local micro-deformation tensor basis, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdXi_1dChi_NL_BdGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local micro-deformation tensor basis, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdXi_1dGradChidGradChi: The third gradient of the overlap w.r.t. the local reference relative micro-position vector and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapddXddXddX: The third gradient of the overlap w.r.t. the reference center-to-center vector
+         * \param &d3OverlapddXddXdR_nl: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the non-local reference radius
+         * \param &d3OverlapddXddXdF: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the deformation gradient
+         * \param &d3OverlapddXddXdChi: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the micro-deformation tensor
+         * \param &d3OverlapddXddXdChi_NL_B: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the non-local micro-deformation tensor basis
+         * \param &d3OverlapddXddXdGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdR_nldR_nl: The third gradient of the overlap w.r.t. the local center-to-center vector and the non-local reference radius twice
+         * \param &d3OverlapddXdR_nldF: The third gradient of the overlap w.r.t. the local reference relative micro-position vector, the non-local reference radius, and the deformation gradient
+         * \param &d3OverlapddXdR_nldChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the micro-deformation tensor
+         * \param &d3OverlapddXdR_nldChi_NL_B: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapddXdR_nldGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local reference radius, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdFdF: The third gradient of the overlap w.r.t. the local center-to-center vector and the deformation gradient twice
+         * \param &d3OverlapddXdFdChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapddXdFdChi_NL_B: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapddXdFdGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the deformation gradient, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdChidChi: The third gradient of the overlap w.r.t. the local center-to-center vector and the micro-deformation tensor twice
+         * \param &d3OverlapddXdChidChi_NL_B: The third gradient of the overlap w.r.t. the local center-to-center vector, the micro-deformation tensor, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapddXdChidGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdChi_NL_BdChi_NL_B: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local micro-deformation tensor basis, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapddXdChi_NL_BdGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector, the non-local micro-deformation tensor basis, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapddXdGradChidGradChi: The third gradient of the overlap w.r.t. the local center-to-center vector and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdR_nldR_nldR_nl: The third gradient of the overlap w.r.t. the non-local reference radius
+         * \param &d3OverlapdR_nldR_nldF: The third gradient of the overlap w.r.t. the the non-local reference radius twice and the deformation gradient
+         * \param &d3OverlapdR_nldR_nldChi: The third gradient of the overlap w.r.t. the non-local reference radius twice and the micro-deformation tensor
+         * \param &d3OverlapdR_nldR_nldChi_NL_B: The third gradient of the overlap w.r.t. the non-local reference radius twice and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdR_nldR_nldGradChi: The third gradient of the overlap w.r.t. the non-local reference radius twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldFdF: The third gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient twice
+         * \param &d3OverlapdR_nldFdChi: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the micro-deformation tensor
+         * \param &d3OverlapdR_nldFdChi_NL_B: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdR_nldFdGradChi: The third gradient of the overlap w.r.t. the non-local reference radius, the deformation gradient, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldChidChi: The third gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor twice
+         * \param &d3OverlapdR_nldChidChi_NL_B: The third gradient of the overlap w.r.t. the non-local reference radius, the micro-deformation tensor, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdR_nldChidGradChi: The third gradient of the overlap w.r.t. the non-local reference radius, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldChi_NL_BdChi_NL_B: The third gradient of the overlap w.r.t. the non-local reference radius, the non-local micro-deformation tensor basis, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdR_nldChi_NL_BdGradChi: The third gradient of the overlap w.r.t. the non-local reference radius, the non-local micro-deformation tensor basis, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdR_nldGradChidGradChi: The third gradient of the overlap w.r.t. the non-local reference radius and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdFdFdF: The third gradient of the overlap w.r.t. the deformation gradient
+         * \param &d3OverlapdFdFdChi: The third gradient of the overlap w.r.t. the deformation gradient twice and the micro-deformation tensor
+         * \param &d3OverlapdFdFdChi_NL_B: The third gradient of the overlap w.r.t. the deformation gradient twice and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdFdFdGradChi: The third gradient of the overlap w.r.t. the deformation gradient twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdFdChidChi: The third gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor twice
+         * \param &d3OverlapdFdChidChi_NL_B: The third gradient of the overlap w.r.t. the deformation gradient, the micro-deformation tensor, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdFdChidGradChi: The third gradient of the overlap w.r.t. the deformation gradient, the micro-deformation tensor, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdFdChi_NL_BdChi_NL_B: The third gradient of the overlap w.r.t. the deformation gradient, the non-local micro-deformation tensor basis, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdFdChi_NL_BdGradChi: The third gradient of the overlap w.r.t. the deformation gradient, the non-local micro-deformation tensor basis, and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdFdGradChidGradChi: The third gradient of the overlap w.r.t. the deformation gradient and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdChidChidChi: The third gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d3OverlapdChidChidChi_NL_B: The third gradient of the overlap w.r.t. the micro-deformation tensor twice and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdChidChidGradChi: The third gradient of the overlap w.r.t. the micro-deformation tensor twice and the spatial gradient of the micro-deformation tensor
+         * \param &d3OverlapdChidChi_NL_BdChi_NL_B: The third gradient of the overlap w.r.t. the micro-deformation tensor, the non-local micro-deformation tensor basis, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdChidChi_NL_BdGradChi: The third gradient of the overlap w.r.t. the micro-deformation tensor, the non-local micro-deformation tensor, and the gradient of the micro-deformation tensor basis
+         * \param &d3OverlapdChidGradChidGradChi: The third gradient of the overlap w.r.t. the micro-deformation tensor and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdChi_NL_BdChi_NL_BdChi_NL_B: The third gradient of the overlap w.r.t. the non-local micro-deformation tensor basis, the non-local micro-deformation tensor basis, and the non-local micro-deformation tensor basis
+         * \param &d3OverlapdChi_NL_BdChi_NL_BdGradChi: The third gradient of the overlap w.r.t. the non-local micro-deformation tensor basis, the non-local micro-deformation tensor basis, and the gradient of the micro-deformation tensor basis
+         * \param &d3OverlapdChi_NL_BdGradChidGradChi: The third gradient of the overlap w.r.t. the non-local micro-deformation tensor basis and the spatial gradient of the micro-deformation tensor twice
+         * \param &d3OverlapdGradChidGradChidGradChi: The third gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
+         */
+
+        if ( chi.size( ) != Xi_1.size( ) * Xi_1.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( chi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( chi_nl_basis.size( ) != ( Xi_1.size( ) * Xi_1.size( ) ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The incoming chi non-local basis vector has an inconsistent size with the micro-position vector\n  size is " + std::to_string( chi_nl_basis.size( ) ) + " and must be " + std::to_string( Xi_1.size( ) * Xi_1.size( ) ) ) );
+
+        }
+
+        if ( gradChi.size( ) != Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The gradient of the micro-deformation tensor is not the expected dimension.\n\tF: " + std::to_string( gradChi.size( ) ) + "\n\texpected: " + std::to_string( Xi_1.size( ) * Xi_1.size( ) * dX.size( ) ) ) );
+
+        }
+
+        // Compute the non-local micro-deformation tensor
+        floatVector chi_nl = chi_nl_basis;
+
+        floatMatrix dchi_nlddX( chi.size( ), floatVector( dX.size( ), 0 ) );
+
+        floatMatrix dchi_nldGradChi( chi.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        floatMatrix d2chi_nlddXdGradChi( chi.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        floatVector eye( Xi_1.size( ) * Xi_1.size( ) );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < Xi_1.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    chi_nl[ Xi_1.size( ) * i + I ] += gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ] * dX[ J ];
+
+                    dchi_nlddX[ Xi_1.size( ) * i + I ][ J ] = gradChi[ Xi_1.size( ) * dX.size( ) * i + dX.size( ) * I + J ];
+
+                    for ( unsigned int K = 0; K < Xi_1.size( ); K++ ){
+
+                        for ( unsigned int L = 0; L < dX.size( ); L++ ){
+
+                            dchi_nldGradChi[ Xi_1.size( ) * i + I ][ Xi_1.size( ) * dX.size( ) * J + dX.size( ) * K + L ] = eye[ Xi_1.size( ) * i + J ] * eye[ Xi_1.size( ) * I + K ] * dX[ L ];
+
+                            for ( unsigned int M = 0; M < dX.size( ); M++ ){
+
+                                d2chi_nlddXdGradChi[ Xi_1.size( ) * i + I ][ gradChi.size( ) * J + Xi_1.size( ) * Xi_1.size( ) * K + Xi_1.size( ) * L + M ] = eye[ Xi_1.size( ) * i + K ] * eye[ Xi_1.size( ) * I + L ] * eye[ Xi_1.size( ) * J + M ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        floatMatrix dOverlapdChi_nl, d2OverlapdXi_1dChi_nl, d2OverlapddXdChi_nl, d2OverlapdR_nldChi_nl, d2OverlapdFdChi_nl,
+                    d2OverlapdChidChi_nl, d2OverlapdChi_nldChi_nl;
+
+        floatMatrix d3OverlapdXi_1dXi_1dChi_nl, d3OverlapdXi_1ddXdChi_nl, d3OverlapdXi_1dR_nldChi_nl, d3OverlapdXi_1dFdChi_nl,
+                    d3OverlapdXi_1dChidChi_nl, d3OverlapdXi_1dChi_nldChi_nl, d3OverlapddXddXdChi_nl, d3OverlapddXdR_nldChi_nl,
+                    d3OverlapddXdFdChi_nl, d3OverlapddXdChidChi_nl, d3OverlapddXdChi_nldChi_nl, d3OverlapdR_nldR_nldChi_nl,
+                    d3OverlapdR_nldFdChi_nl, d3OverlapdR_nldChidChi_nl, d3OverlapdR_nldChi_nldChi_nl, d3OverlapdFdFdChi_nl,
+                    d3OverlapdFdChidChi_nl, d3OverlapdFdChi_nldChi_nl, d3OverlapdChidChidChi_nl, d3OverlapdChidChi_nldChi_nl,
+                    d3OverlapdChi_nldChi_nldChi_nl; 
+
+        ERROR_TOOLS_CATCH( computeParticleOverlapChi_nl( Xi_1, dX,  R_nl,
+                                                         F,    chi,  chi_nl,
+                                                         overlap,
+                                                         dOverlapdXi_1, dOverlapddX, dOverlapdR_nl,
+                                                         dOverlapdF, dOverlapdChi, dOverlapdChi_nl,
+                                                         d2OverlapdXi_1dXi_1, d2OverlapdXi_1ddX, d2OverlapdXi_1dR_nl, d2OverlapdXi_1dF, d2OverlapdXi_1dChi, d2OverlapdXi_1dChi_nl,
+                                                         d2OverlapddXddX, d2OverlapddXdR_nl, d2OverlapddXdF, d2OverlapddXdChi, d2OverlapddXdChi_nl,
+                                                         d2OverlapdR_nldR_nl, d2OverlapdR_nldF, d2OverlapdR_nldChi, d2OverlapdR_nldChi_nl,
+                                                         d2OverlapdFdF, d2OverlapdFdChi, d2OverlapdFdChi_nl,
+                                                         d2OverlapdChidChi, d2OverlapdChidChi_nl,
+                                                         d2OverlapdChi_nldChi_nl,
+                                                         d3OverlapdXi_1dXi_1dXi_1, d3OverlapdXi_1dXi_1ddX, d3OverlapdXi_1dXi_1dR_nl, d3OverlapdXi_1dXi_1dF, d3OverlapdXi_1dXi_1dChi, d3OverlapdXi_1dXi_1dChi_nl,
+                                                         d3OverlapdXi_1ddXddX, d3OverlapdXi_1ddXdR_nl, d3OverlapdXi_1ddXdF, d3OverlapdXi_1ddXdChi, d3OverlapdXi_1ddXdChi_nl,
+                                                         d3OverlapdXi_1dR_nldR_nl, d3OverlapdXi_1dR_nldF, d3OverlapdXi_1dR_nldChi, d3OverlapdXi_1dR_nldChi_nl,
+                                                         d3OverlapdXi_1dFdF, d3OverlapdXi_1dFdChi, d3OverlapdXi_1dFdChi_nl,
+                                                         d3OverlapdXi_1dChidChi, d3OverlapdXi_1dChidChi_nl,
+                                                         d3OverlapdXi_1dChi_nldChi_nl,
+                                                         d3OverlapddXddXddX, d3OverlapddXddXdR_nl, d3OverlapddXddXdF, d3OverlapddXddXdChi, d3OverlapddXddXdChi_nl,
+                                                         d3OverlapddXdR_nldR_nl, d3OverlapddXdR_nldF, d3OverlapddXdR_nldChi, d3OverlapddXdR_nldChi_nl,
+                                                         d3OverlapddXdFdF, d3OverlapddXdFdChi, d3OverlapddXdFdChi_nl,
+                                                         d3OverlapddXdChidChi, d3OverlapddXdChidChi_nl,
+                                                         d3OverlapddXdChi_nldChi_nl,
+                                                         d3OverlapdR_nldR_nldR_nl, d3OverlapdR_nldR_nldF, d3OverlapdR_nldR_nldChi, d3OverlapdR_nldR_nldChi_nl,
+                                                         d3OverlapdR_nldFdF, d3OverlapdR_nldFdChi, d3OverlapdR_nldFdChi_nl,
+                                                         d3OverlapdR_nldChidChi, d3OverlapdR_nldChidChi_nl,
+                                                         d3OverlapdR_nldChi_nldChi_nl,
+                                                         d3OverlapdFdFdF, d3OverlapdFdFdChi, d3OverlapdFdFdChi_nl,
+                                                         d3OverlapdFdChidChi, d3OverlapdFdChidChi_nl,
+                                                         d3OverlapdFdChi_nldChi_nl,
+                                                         d3OverlapdChidChidChi, d3OverlapdChidChidChi_nl,
+                                                         d3OverlapdChidChi_nldChi_nl,
+                                                         d3OverlapdChi_nldChi_nldChi_nl ) );
+
+        d2OverlapdXi_1dChi_NL_B     = d2OverlapdXi_1dChi_nl;
+
+        d2OverlapdXi_1dGradChi      = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapddXdChi_NL_B       = d2OverlapddXdChi_nl;
+
+        d2OverlapddXdGradChi        = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdR_nldChi_NL_B     = d2OverlapdR_nldChi_nl;
+
+        d2OverlapdR_nldGradChi      = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        d2OverlapdFdChi_NL_B        = d2OverlapdFdChi_nl;
+
+        d2OverlapdFdGradChi         = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdChidChi_NL_B      = d2OverlapdChidChi_nl;
+
+        d2OverlapdChidGradChi       = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdChi_NL_BdChi_NL_B = d2OverlapdChi_nldChi_nl;
+
+        d2OverlapdChi_NL_BdGradChi  = floatMatrix( overlap.size( ), floatVector( chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d2OverlapdGradChidGradChi   = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dXi_1dChi_NL_B         = d3OverlapdXi_1dXi_1dChi_nl;
+
+        d3OverlapdXi_1dXi_1dGradChi          = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1ddXdChi_NL_B           = d3OverlapdXi_1ddXdChi_nl;
+
+        d3OverlapdXi_1ddXdGradChi            = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * dX.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dR_nldChi_NL_B         = d3OverlapdXi_1dR_nldChi_nl;
+
+        d3OverlapdXi_1dR_nldGradChi          = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dFdChi_NL_B            = d3OverlapdXi_1dFdChi_nl;
+
+        d3OverlapdXi_1dFdGradChi             = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dChidChi_NL_B          = d3OverlapdXi_1dChidChi_nl;
+
+        d3OverlapdXi_1dChidGradChi           = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dChi_NL_BdChi_NL_B     = d3OverlapdXi_1dChi_nldChi_nl;
+
+        d3OverlapdXi_1dChi_NL_BdGradChi      = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdXi_1dGradChidGradChi       = floatMatrix( overlap.size( ), floatVector( Xi_1.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXddXdChi_NL_B             = d3OverlapddXddXdChi_nl;
+
+        d3OverlapddXddXdGradChi              = floatMatrix( overlap.size( ), floatVector( dX.size( ) * dX.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdR_nldChi_NL_B           = d3OverlapddXdR_nldChi_nl;
+
+        d3OverlapddXdR_nldGradChi            = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdFdChi_NL_B              = d3OverlapddXdFdChi_nl;
+
+        d3OverlapddXdFdGradChi               = floatMatrix( overlap.size( ), floatVector( dX.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdChidChi_NL_B            = d3OverlapddXdChidChi_nl;
+
+        d3OverlapddXdChidGradChi             = floatMatrix( overlap.size( ), floatVector( dX.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdChi_NL_BdChi_NL_B       = d3OverlapddXdChi_nldChi_nl;
+
+        d3OverlapddXdChi_NL_BdGradChi        = floatMatrix( overlap.size( ), floatVector( dX.size( ) * chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapddXdGradChidGradChi         = floatMatrix( overlap.size( ), floatVector( dX.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldR_nldChi_NL_B         = d3OverlapdR_nldR_nldChi_nl;
+
+        d3OverlapdR_nldR_nldGradChi          = floatMatrix( overlap.size( ), floatVector( gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldFdChi_NL_B            = d3OverlapdR_nldFdChi_nl;
+
+        d3OverlapdR_nldFdGradChi             = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldChidChi_NL_B          = d3OverlapdR_nldChidChi_nl;
+
+        d3OverlapdR_nldChidGradChi           = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldChi_NL_BdChi_NL_B     = d3OverlapdR_nldChi_nldChi_nl;
+
+        d3OverlapdR_nldChi_NL_BdGradChi      = floatMatrix( overlap.size( ), floatVector( chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdR_nldGradChidGradChi       = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdFdChi_NL_B               = d3OverlapdFdFdChi_nl;
+
+        d3OverlapdFdFdGradChi                = floatMatrix( overlap.size( ), floatVector( F.size( ) * F.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdChidChi_NL_B             = d3OverlapdFdChidChi_nl;
+
+        d3OverlapdFdChidGradChi              = floatMatrix( overlap.size( ), floatVector( F.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdChi_NL_BdChi_NL_B        = d3OverlapdFdChi_nldChi_nl;
+
+        d3OverlapdFdChi_NL_BdGradChi         = floatMatrix( overlap.size( ), floatVector( F.size( ) * chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdFdGradChidGradChi          = floatMatrix( overlap.size( ), floatVector( F.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChidChidChi_NL_B           = d3OverlapdChidChidChi_nl;
+
+        d3OverlapdChidChidGradChi            = floatMatrix( overlap.size( ), floatVector( chi.size( ) * chi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChidChi_NL_BdChi_NL_B      = d3OverlapdChidChi_nldChi_nl;
+
+        d3OverlapdChidChi_NL_BdGradChi       = floatMatrix( overlap.size( ), floatVector( chi.size( ) * chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChidGradChidGradChi        = floatMatrix( overlap.size( ), floatVector( chi.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChi_NL_BdChi_NL_BdChi_NL_B = d3OverlapdChi_nldChi_nldChi_nl;
+
+        d3OverlapdChi_NL_BdChi_NL_BdGradChi  = floatMatrix( overlap.size( ), floatVector( chi_nl_basis.size( ) * chi_nl_basis.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdChi_NL_BdGradChidGradChi   = floatMatrix( overlap.size( ), floatVector( chi_nl_basis.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        d3OverlapdGradChidGradChidGradChi    = floatMatrix( overlap.size( ), floatVector( gradChi.size( ) * gradChi.size( ) * gradChi.size( ), 0 ) );
+
+        dOverlapddX  += vectorTools::dot( dOverlapdChi_nl, dchi_nlddX );
+
+        dOverlapdChi_NL_B = dOverlapdChi_nl;
+
+        dOverlapdGradChi = vectorTools::dot( dOverlapdChi_nl, dchi_nldGradChi );
+
+        for ( unsigned int i = 0; i < overlap.size( ); i++ ){
+
+            for ( unsigned int I = 0; I < Xi_1.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < Xi_1.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dXi_1ddX[ i ][ Xi_1.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdXi_1dXi_1dChi_nl[ i ][ Xi_1.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ K ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dXi_1dGradChi[ i ][ Xi_1.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dXi_1dChi_nl[ i ][ Xi_1.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1ddX[ i ][ dX.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        d3OverlapdXi_1ddXdR_nl[ i ][ dX.size( ) * I + J ] += d3OverlapdXi_1dR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapdXi_1dFdChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < chi_nl_basis.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdChi_NL_B[ i ][ dX.size( ) * chi_nl_basis.size( ) * I + chi_nl_basis.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapdXi_1ddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdXi_1dChi_nl[ i ][ chi.size( ) * I + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * J + K ]
+                                                                                                                          + d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1ddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1ddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ K ]
+                                                                                                           + d3OverlapdXi_1ddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1ddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nlddX[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdXi_1dFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapdXi_1dChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi_nl_basis.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapdXi_1dChi_NL_BdGradChi[ i ][ chi_nl_basis.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdXi_1dGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdXi_1dChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdXi_1dR_nldGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdXi_1dR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdXi_1dGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdXi_1dChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < dX.size( ); I++ ){
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d3OverlapddXdR_nldR_nl[ i ][ I ] += d3OverlapdR_nldR_nldChi_nl[ i ][ a ] * dchi_nlddX[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < dX.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                    + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        d3OverlapddXddXdR_nl[ i ][ dX.size( ) * I + J ] += d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ]
+                                                                         + d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nlddX[ a ][ J ];
+
+                        for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                            d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                         + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ]
+                                                                                                         + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ K ];
+
+                        }
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXddX[ i ][ dX.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            d3OverlapddXddXdR_nl[ i ][ dX.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            for ( unsigned int K = 0; K < dX.size( ); K++ ){
+
+                                d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nlddX[ b ][ K ]
+                                                                                                             + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ K ]
+                                                                                                             + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+ 
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+    
+                                    d3OverlapddXddXddX[ i ][ dX.size( ) * dX.size( ) * I + dX.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ] * dchi_nlddX[ c ][ K ];
+    
+                                }
+    
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                      + d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdF[ i ][ dX.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                            + d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdChi[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi_nl_basis.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdChi_NL_B[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapddXdChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ]
+                                                                                                                 + d3OverlapddXdChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ J ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdChi_NL_B[ i ][ dX.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * K + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ];
+
+                            }
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                        + d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * J + K ]
+                                                                                                                        + d3OverlapddXddXdChi_nl[ i ][ dX.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * ( d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ] * dchi_nlddX[ b ][ J ] + dchi_nlddX[ a ][ I ] * d2chi_nlddXdGradChi[ b ][ gradChi.size( ) * J + K ] )
+                                                                                                                            + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ]
+                                                                                                                            + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXddXdGradChi[ i ][ dX.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nlddX[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                    d2OverlapddXdR_nl[ i ][ I ] += d2OverlapdR_nldChi_nl[ i ][ a ] * dchi_nlddX[ a ][ I ];
+
+                }
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdF[ i ][ chi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                        d3OverlapddXdR_nldF[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                        for ( unsigned int K = 0; K < F.size( ); K++ ){
+
+                            d3OverlapddXdFdF[ i ][ F.size( ) * F.size( ) * I + F.size( ) * J + K ] += d3OverlapdFdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                            d3OverlapddXdFdChi[ i ][ F.size( ) * chi.size( ) * I + chi.size( ) * J + K ] += d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < chi_nl_basis.size( ); K++ ){
+
+                            d3OverlapddXdFdChi_NL_B[ i ][ F.size( ) * chi_nl_basis.size( ) * I + chi_nl_basis.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                        for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                            d3OverlapddXdFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                      + d3OverlapddXdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdChi[ i ][ chi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                        d3OverlapddXdR_nldChi[ i ][ chi.size( ) * I + J ] += d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * dchi_nlddX[ a ][ I ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChidChi[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + K ] += d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi_nl_basis.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChidChi_NL_B[ i ][ chi.size( ) * chi_nl_basis.size( ) * I + chi_nl_basis.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                          + d3OverlapddXdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi_nl_basis.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdChi_NL_B[ i ][ chi_nl_basis.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + J ] * dchi_nlddX[ a ][ I ];
+
+                        d3OverlapddXdR_nldChi_NL_B[ i ][ chi_nl_basis.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + J ] * dchi_nlddX[ a ][ I ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < chi_nl_basis.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChi_NL_BdChi_NL_B[ i ][ chi.size( ) * chi_nl_basis.size( ) * I + chi_nl_basis.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * K + a ] * dchi_nlddX[ a ][ I ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapddXdChi_NL_BdGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * J + a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ]
+                                                                                                                               + d3OverlapddXdChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapddXdChi_NL_BdGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * J + chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapddXdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ]
+                                                                              + dOverlapdChi_nl[ i ][ a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ];
+
+                        d3OverlapddXdR_nldGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapddXdR_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ]
+                                                                                   + d2OverlapdR_nldChi_nl[ i ][ a ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ];
+
+                        for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                            d2OverlapddXdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                            d3OverlapddXdR_nldGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ];
+
+                        }
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                    d3OverlapddXdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + K ] * dchi_nldGradChi[ b ][ J ]
+                                                                                                                                          + d3OverlapddXdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ]
+                                                                                                                                          + d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * a + b ] * d2chi_nlddXdGradChi[ a ][ gradChi.size( ) * I + J ] * dchi_nldGradChi[ b ][ K ];
+    
+                                for ( unsigned int c = 0; c < chi_nl.size( ); c++ ){
+
+                                    d3OverlapddXdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * a + chi_nl.size( ) * b + c ] * dchi_nlddX[ a ][ I ] * dchi_nldGradChi[ b ][ J ] * dchi_nldGradChi[ c ][ K ];
+        
+                                }
+    
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < F.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < F.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdFdGradChi[ i ][ F.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdFdChi_nl[ i ][ F.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi_nl_basis.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdFdChi_NL_BdGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdFdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdR_nldFdGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldFdChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdFdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdFdChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < chi.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < chi.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdChidChidGradChi[ i ][ chi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChidChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < chi_nl_basis.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdChidChi_NL_BdGradChi[ i ][ chi_nl_basis.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChidGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdR_nldChidGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChidChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdChidGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChidChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            for ( unsigned int I = 0; I < chi_nl_basis.size( ); I++ ){
+
+                for ( unsigned int J = 0; J < chi_nl_basis.size( ); J++ ){
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            d3OverlapdChi_NL_BdChi_NL_BdGradChi[ i ][ chi_nl_basis.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * J + a ] * dchi_nldGradChi[ a ][ K ];
+
+                        }
+
+                    }
+
+                }
+
+                for ( unsigned int J = 0; J < gradChi.size( ); J++ ){
+
+                    for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                        d2OverlapdChi_NL_BdGradChi[ i ][ gradChi.size( ) * I + J ] += d2OverlapdChi_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                        d3OverlapdR_nldChi_NL_BdGradChi[ i ][ gradChi.size( ) * I + J ] += d3OverlapdR_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * I + a ] * dchi_nldGradChi[ a ][ J ];
+
+                    }
+
+                    for ( unsigned int K = 0; K < gradChi.size( ); K++ ){
+
+                        for ( unsigned int a = 0; a < chi_nl.size( ); a++ ){
+
+                            for ( unsigned int b = 0; b < chi_nl.size( ); b++ ){
+
+                                d3OverlapdChi_NL_BdGradChidGradChi[ i ][ gradChi.size( ) * gradChi.size( ) * I + gradChi.size( ) * J + K ] += d3OverlapdChi_nldChi_nldChi_nl[ i ][ chi_nl.size( ) * chi_nl.size( ) * I + chi_nl.size( ) * a + b ] * dchi_nldGradChi[ a ][ J ] * dchi_nldGradChi[ b ][ K ];
 
                             }
 
