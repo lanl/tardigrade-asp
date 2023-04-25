@@ -133,13 +133,19 @@ namespace asp{
 
             const floatVector* getLocalReferenceParticleSpacing( );
 
+            const floatVector* getGradientMicroDeformation( );
+
             const floatVector* getNonLocalMicroDeformation( );
+
+            const floatVector* getLocalGradientMicroDeformation( );
 
             const floatVector* getCurrentDistanceVector( );
 
             const floatVector* getLocalCurrentNormal( );
 
             const floatVector* getSurfaceParameters( );
+
+            const floatVector* getSurfaceOverlapParameters( );
 
             const floatVector* getReferenceDistanceVector( );
 
@@ -156,6 +162,8 @@ namespace asp{
             const floatMatrix* getLocalParticleCurrentBoundingBox( );
 
             const floatMatrix* getNonLocalParticleCurrentBoundingBox( );
+
+            const std::unordered_map< unsigned int, floatVector >* getParticlePairOverlap( );
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
 
@@ -222,11 +230,15 @@ namespace asp{
 
             std::pair< bool, floatVector > _nonlocalMicroDeformation;
 
+            std::pair< bool, floatVector > _localGradientMicroDeformation;
+
             std::pair< bool, floatVector > _currentDistanceVector;
 
             std::pair< bool, floatVector > _localCurrentNormal;
 
             std::pair< bool, floatVector > _surfaceParameters;
+
+            std::pair< bool, floatVector > _surfaceOverlapParameters;
 
             std::pair< bool, floatType > _surfaceAdhesionEnergyDensity;
 
@@ -235,6 +247,8 @@ namespace asp{
             std::pair< bool, floatVector > _nonLocalCurrentSurfacePoints;
 
             std::pair< bool, floatMatrix > _nonLocalParticleCurrentBoundingBox;
+
+            std::pair< bool, std::unordered_map< unsigned int, floatVector > > _particlePairOverlap;
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
@@ -258,6 +272,8 @@ namespace asp{
 
             virtual void setNonLocalMicroDeformation( );
 
+            virtual void setLocalGradientMicroDeformation( );
+
             virtual void setLocalCurrentNormal( );
 
             virtual void setLocalReferenceParticleSpacing( );
@@ -265,6 +281,8 @@ namespace asp{
             virtual void setCurrentDistanceVector( );
 
             virtual void setSurfaceParameters( );
+
+            virtual void setSurfaceOverlapParameters( );
 
             virtual void initializeSurfaceIntegrandQuantities( );
 
@@ -281,6 +299,8 @@ namespace asp{
             virtual void setLocalCurrentSurfacePoints( );
 
             virtual void setNonLocalCurrentSurfacePoints( );
+
+            virtual void setParticlePairOverlap( );
 
             virtual void resetSurface( );
 
