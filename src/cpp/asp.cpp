@@ -25,7 +25,7 @@ namespace asp{
         // Initialize surface integral pairs
         _localReferenceRadius = std::make_pair( false, 0 );
 
-        _nonlocalReferenceRadius = std::make_pair( false, 0 );
+        _nonLocalReferenceRadius = std::make_pair( false, 0 );
 
         _unitSpherePoints = std::make_pair( false, floatVector( _dimension, 0 ) );
 
@@ -33,7 +33,7 @@ namespace asp{
 
         _localSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
 
-        _nonlocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _nonLocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
 
         _referenceDistanceVector = std::make_pair( false, floatVector( _dimension, 0 ) );
 
@@ -43,7 +43,7 @@ namespace asp{
 
         _localMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
 
-        _nonlocalMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _nonLocalMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
 
         _currentDistanceVector = std::make_pair( false, floatVector( _dimension, 0 ) );
 
@@ -253,12 +253,12 @@ namespace asp{
         const floatVector* localReferenceNormal;
         ERROR_TOOLS_CATCH( localReferenceNormal = getLocalReferenceNormal( ) );
 
-        const floatType* nonlocalReferenceRadius;
-        ERROR_TOOLS_CATCH( nonlocalReferenceRadius = getNonLocalReferenceRadius( ) );
+        const floatType* nonLocalReferenceRadius;
+        ERROR_TOOLS_CATCH( nonLocalReferenceRadius = getNonLocalReferenceRadius( ) );
 
-        _nonlocalSurfaceReferenceRelativePositionVector.second = -( *nonlocalReferenceRadius ) * ( *localReferenceNormal );
+        _nonLocalSurfaceReferenceRelativePositionVector.second = -( *nonLocalReferenceRadius ) * ( *localReferenceNormal );
 
-        _nonlocalSurfaceReferenceRelativePositionVector.first = true;
+        _nonLocalSurfaceReferenceRelativePositionVector.first = true;
 
         return;
 
@@ -269,13 +269,13 @@ namespace asp{
          * Get the non-local surface reference relative position vector
          */
 
-        if ( !_nonlocalSurfaceReferenceRelativePositionVector.first ){
+        if ( !_nonLocalSurfaceReferenceRelativePositionVector.first ){
 
             ERROR_TOOLS_CATCH( setNonLocalSurfaceReferenceRelativePositionVector( ) );
 
         }
 
-        return &_nonlocalSurfaceReferenceRelativePositionVector.second;
+        return &_nonLocalSurfaceReferenceRelativePositionVector.second;
 
     }
 
@@ -312,9 +312,9 @@ namespace asp{
          * Set the non-local reference radius
          */
 
-        _nonlocalReferenceRadius.second = _radius;
+        _nonLocalReferenceRadius.second = _radius;
 
-        _nonlocalReferenceRadius.first = true;
+        _nonLocalReferenceRadius.first = true;
 
         return;
 
@@ -325,13 +325,13 @@ namespace asp{
          * Get the local reference radius
          */
 
-        if ( !_nonlocalReferenceRadius.first ){
+        if ( !_nonLocalReferenceRadius.first ){
 
             ERROR_TOOLS_CATCH( setNonLocalReferenceRadius( ) );
 
         }
 
-        return &_nonlocalReferenceRadius.second;
+        return &_nonLocalReferenceRadius.second;
 
     }
 
@@ -402,15 +402,15 @@ namespace asp{
         const floatVector* localSurfaceReferenceRelativePositionVector;
         ERROR_TOOLS_CATCH( localSurfaceReferenceRelativePositionVector = getLocalSurfaceReferenceRelativePositionVector( ) );
 
-        const floatVector* nonlocalSurfaceReferenceRelativePositionVector;
-        ERROR_TOOLS_CATCH( nonlocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
+        const floatVector* nonLocalSurfaceReferenceRelativePositionVector;
+        ERROR_TOOLS_CATCH( nonLocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
 
         const floatVector* referenceDistanceVector;
         ERROR_TOOLS_CATCH( referenceDistanceVector = getReferenceDistanceVector( ) );
 
         _localReferenceParticleSpacing.second = ( *localSurfaceReferenceRelativePositionVector )
                                               + ( *referenceDistanceVector )
-                                              - ( *nonlocalSurfaceReferenceRelativePositionVector );
+                                              - ( *nonLocalSurfaceReferenceRelativePositionVector );
 
         _localReferenceParticleSpacing.first = true;
 
@@ -443,7 +443,13 @@ namespace asp{
         const floatVector* localReferenceParticleSpacing;
         ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacing( ) );
 
-        _nonlocalMicroDeformation.second = _microDeformation;
+        const floatVector* microDeformationBase;
+        ERROR_TOOLS_CATCH( microDeformationBase = getNonLocalMicroDeformationBase( ) );
+
+        const floatVector* gradientMicroDeformation;
+        ERROR_TOOLS_CATCH( gradientMicroDeformation = getGradientMicroDeformation( ) );
+
+        _nonLocalMicroDeformation.second = *microDeformationBase;
 
         for ( unsigned int i = 0; i < _dimension; i++ ){
 
@@ -451,8 +457,8 @@ namespace asp{
 
                 for ( unsigned int J = 0; J < _dimension; J++ ){
 
-                    _nonlocalMicroDeformation.second[ _dimension * i + I ]
-                        += _gradientMicroDeformation[ _dimension * _dimension * i + _dimension * I + J ]
+                    _nonLocalMicroDeformation.second[ _dimension * i + I ]
+                        += ( *gradientMicroDeformation )[ _dimension * _dimension * i + _dimension * I + J ]
                          * ( *localReferenceParticleSpacing )[ J ];
 
                 }
@@ -461,7 +467,7 @@ namespace asp{
 
         }
 
-        _nonlocalMicroDeformation.first = true;
+        _nonLocalMicroDeformation.first = true;
 
         return;
 
@@ -472,13 +478,42 @@ namespace asp{
          * Get the non-local micro deformation tensor
          */
 
-        if ( !_nonlocalMicroDeformation.first ){
+        if ( !_nonLocalMicroDeformation.first ){
 
             ERROR_TOOLS_CATCH( setNonLocalMicroDeformation( ) );
 
         }
 
-        return &_nonlocalMicroDeformation.second;
+        return &_nonLocalMicroDeformation.second;
+
+    }
+
+    const floatVector* aspBase::getNonLocalMicroDeformationBase( ){
+        /*!
+         * Get the base of the non-local micro deformation tensor
+         */
+
+        if ( !_nonLocalMicroDeformationBase.first ){
+
+            ERROR_TOOLS_CATCH( setNonLocalMicroDeformationBase( ) );
+
+        }
+
+        return &_nonLocalMicroDeformationBase.second;
+
+    }
+
+    void aspBase::setNonLocalMicroDeformationBase( ){
+        /*!
+         * Set the non-local micro-deformation tensor base
+         */
+
+        const floatVector *microDeformationTensor;
+        ERROR_TOOLS_CATCH( microDeformationTensor = getMicroDeformation( ) );
+
+        _nonLocalMicroDeformationBase.second = *microDeformationTensor;
+
+        _nonLocalMicroDeformationBase.first = true;
 
     }
 
@@ -490,8 +525,8 @@ namespace asp{
         const floatVector* localSurfaceReferenceRelativePositionVector;
         ERROR_TOOLS_CATCH( localSurfaceReferenceRelativePositionVector = getLocalSurfaceReferenceRelativePositionVector( ) );
 
-        const floatVector* nonlocalSurfaceReferenceRelativePositionVector;
-        ERROR_TOOLS_CATCH( nonlocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
+        const floatVector* nonLocalSurfaceReferenceRelativePositionVector;
+        ERROR_TOOLS_CATCH( nonLocalSurfaceReferenceRelativePositionVector = getNonLocalSurfaceReferenceRelativePositionVector( ) );
 
         const floatVector* referenceDistanceVector;
         ERROR_TOOLS_CATCH( referenceDistanceVector = getReferenceDistanceVector( ) );
@@ -502,16 +537,16 @@ namespace asp{
         const floatVector* localMicroDeformation;
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        const floatVector* nonlocalMicroDeformation;
-        ERROR_TOOLS_CATCH( nonlocalMicroDeformation = getNonLocalMicroDeformation( ) );
+        const floatVector* nonLocalMicroDeformation;
+        ERROR_TOOLS_CATCH( nonLocalMicroDeformation = getNonLocalMicroDeformation( ) );
 
         // Compute the current distance
         ERROR_TOOLS_CATCH( tractionSeparation::computeCurrentDistanceGeneral( *localSurfaceReferenceRelativePositionVector,
-                                                                              *nonlocalSurfaceReferenceRelativePositionVector,
+                                                                              *nonLocalSurfaceReferenceRelativePositionVector,
                                                                               *referenceDistanceVector,
                                                                               *localDeformationGradient,
                                                                               *localMicroDeformation,
-                                                                              *nonlocalMicroDeformation,
+                                                                              *nonLocalMicroDeformation,
                                                                               _currentDistanceVector.second ) );
 
         _currentDistanceVector.first = true;
@@ -662,13 +697,13 @@ namespace asp{
 
         _localReferenceRadius = std::make_pair( false, 0. );
 
-        _nonlocalReferenceRadius = std::make_pair( false, 0. );
+        _nonLocalReferenceRadius = std::make_pair( false, 0. );
 
         _localReferenceNormal = std::make_pair( false, floatVector( 0, 0 ) );
 
         _localSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
 
-        _nonlocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
+        _nonLocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
 
         _referenceDistanceVector = std::make_pair( false, floatVector( 0, 0 ) );
 
@@ -678,7 +713,7 @@ namespace asp{
 
         _localMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
 
-        _nonlocalMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
+        _nonLocalMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
 
         _currentDistanceVector = std::make_pair( false, floatVector( 0, 0 ) );
 
@@ -821,8 +856,11 @@ namespace asp{
         const floatMatrix *nonLocalBoundingBox;
         ERROR_TOOLS_CATCH( nonLocalBoundingBox = getNonLocalParticleCurrentBoundingBox( ) );
 
-        const floatVector *localSurfacePoints;
-        ERROR_TOOLS_CATCH( localSurfacePoints = getLocalCurrentSurfacePoints( ) );
+        const floatVector *localReferenceSurfacePoints;
+        ERROR_TOOLS_CATCH( localReferenceSurfacePoints = getLocalReferenceSurfacePoints( ) );
+
+        const floatVector *localCurrentSurfacePoints;
+        ERROR_TOOLS_CATCH( localCurrentSurfacePoints = getLocalCurrentSurfacePoints( ) );
 
         const floatVector *localDeformationGradient;
         ERROR_TOOLS_CATCH( localDeformationGradient = getLocalDeformationGradient( ) );
@@ -841,22 +879,20 @@ namespace asp{
 
         // Check which of the local points are contained in the non-local bounding box
         std::vector< unsigned int > possiblePoints;
-        ERROR_TOOLS_CATCH( idBoundingBoxContainedPoints( *localSurfacePoints, *nonLocalBoundingBox, possiblePoints ) );
+        ERROR_TOOLS_CATCH( idBoundingBoxContainedPoints( *localCurrentSurfacePoints, *nonLocalBoundingBox, possiblePoints ) );
 
-        const floatVector *nonLocalMicroDeformation;
+        const floatVector *nonLocalMicroDeformationBase;
+        ERROR_TOOLS_CATCH( nonLocalMicroDeformationBase = getNonLocalMicroDeformationBase( ) );
 
         for ( auto p = possiblePoints.begin( ); p != possiblePoints.end( ); p++ ){
-
-            // Get the non-local micro deformation
-            ERROR_TOOLS_CATCH( nonLocalMicroDeformation = getNonLocalMicroDeformation( ) );
 
             // Compute the overlap between the local and non-local particles
             floatVector overlap;
 
-            ERROR_TOOLS_CATCH( tractionSeparation::computeParticleOverlap( floatVector( localSurfacePoints->begin( ) + _dimension * ( *p ),
-                                                                                        localSurfacePoints->begin( ) + _dimension * ( ( *p ) + 1 ) ),
+            ERROR_TOOLS_CATCH( tractionSeparation::computeParticleOverlap( floatVector( localReferenceSurfacePoints->begin( ) + _dimension * ( *p ),
+                                                                                        localReferenceSurfacePoints->begin( ) + _dimension * ( ( *p ) + 1 ) ),
                                                                            *localReferenceParticleSpacing, *nonLocalReferenceRadius, *localDeformationGradient,
-                                                                           *localMicroDeformation, *nonLocalMicroDeformation, *localGradientMicroDeformation,
+                                                                           *localMicroDeformation, *nonLocalMicroDeformationBase, *localGradientMicroDeformation,
                                                                            overlap ) );
 
             _particlePairOverlap.second.insert( { *p, overlap } );
@@ -905,6 +941,15 @@ namespace asp{
          */
 
         return &_gradientMicroDeformation;
+
+    }
+
+    const floatVector *aspBase::getMicroDeformation( ){
+        /*!
+         * Get the gradient of the micro-deformation
+         */
+
+        return &_microDeformation;
 
     }
 

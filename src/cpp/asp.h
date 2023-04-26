@@ -133,7 +133,11 @@ namespace asp{
 
             const floatVector* getLocalReferenceParticleSpacing( );
 
+            const floatVector* getMicroDeformation( );
+
             const floatVector* getGradientMicroDeformation( );
+
+            const floatVector* getNonLocalMicroDeformationBase( );
 
             const floatVector* getNonLocalMicroDeformation( );
 
@@ -187,7 +191,7 @@ namespace asp{
             // Private parameters
             unsigned int _localIndex = 0;
 
-            unsigned int _nonlocalIndex = 0;
+            unsigned int _nonLocalIndex = 0;
 
             unsigned int _localSurfaceNodeIndex = 0;
 
@@ -208,7 +212,7 @@ namespace asp{
             // ALL OF THESE MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
             std::pair< bool, floatType > _localReferenceRadius;
 
-            std::pair< bool, floatType > _nonlocalReferenceRadius;
+            std::pair< bool, floatType > _nonLocalReferenceRadius;
 
             std::pair< bool, std::vector< unsigned int > > _unitSphereConnectivity;
 
@@ -218,7 +222,7 @@ namespace asp{
 
             std::pair< bool, floatVector > _localSurfaceReferenceRelativePositionVector;
 
-            std::pair< bool, floatVector > _nonlocalSurfaceReferenceRelativePositionVector;
+            std::pair< bool, floatVector > _nonLocalSurfaceReferenceRelativePositionVector;
 
             std::pair< bool, floatVector > _referenceDistanceVector;
 
@@ -228,7 +232,9 @@ namespace asp{
 
             std::pair< bool, floatVector > _localMicroDeformation;
 
-            std::pair< bool, floatVector > _nonlocalMicroDeformation;
+            std::pair< bool, floatVector > _nonLocalMicroDeformation;
+
+            std::pair< bool, floatVector > _nonLocalMicroDeformationBase;
 
             std::pair< bool, floatVector > _localGradientMicroDeformation;
 
@@ -271,6 +277,8 @@ namespace asp{
             virtual void setLocalMicroDeformation( );
 
             virtual void setNonLocalMicroDeformation( );
+
+            virtual void setNonLocalMicroDeformationBase( );
 
             virtual void setLocalGradientMicroDeformation( );
 
