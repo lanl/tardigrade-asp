@@ -2138,11 +2138,15 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     std::unordered_map< unsigned int, floatType > result;
 
     BOOST_CHECK_NO_THROW( asp.computeSurfaceOverlapEnergyDensity( result ) );
+
+    const std::unordered_map< unsigned int, floatType > *resultGet;
+
+    resultGet = aspGet.getSurfaceOverlapEnergyDensity( );
 
     for ( auto p = asp.particlePairOverlap.begin( ); p != asp.particlePairOverlap.end( ); p++ ){
 
@@ -2151,6 +2155,12 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
         BOOST_CHECK( overlapEnergy != result.end( ) );
 
         BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergy->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) ) );
+
+        auto overlapEnergyGet = resultGet->find( p->first );
+
+        BOOST_CHECK( overlapEnergyGet != result.end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergyGet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) ) );
 
     } 
 

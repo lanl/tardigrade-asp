@@ -922,7 +922,7 @@ namespace asp{
 
     const floatType* aspBase::getSurfaceAdhesionEnergyDensity( ){
         /*!
-         * Get the surface energy density
+         * Get the surface adhesion energy density
          */
 
         if ( !_surfaceAdhesionEnergyDensity.first ){
@@ -932,6 +932,21 @@ namespace asp{
         }
 
         return &_surfaceAdhesionEnergyDensity.second;
+
+    }
+
+    const std::unordered_map< unsigned int, floatType >* aspBase::getSurfaceOverlapEnergyDensity( ){
+        /*!
+         * Get the surface overlap energy density
+         */
+
+        if ( !_surfaceOverlapEnergyDensity.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceOverlapEnergyDensity( ) );
+
+        }
+
+        return &_surfaceOverlapEnergyDensity.second;
 
     }
 
@@ -984,12 +999,25 @@ namespace asp{
 
     void aspBase::setSurfaceAdhesionEnergyDensity( ){
         /*!
-         * Set the surface energy density if required.
+         * Set the surface adhesion energy density if required.
          */
 
         ERROR_TOOLS_CATCH( computeSurfaceAdhesionEnergyDensity( _surfaceAdhesionEnergyDensity.second ) );
 
         _surfaceAdhesionEnergyDensity.first = true;
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceOverlapEnergyDensity( ){
+        /*!
+         * Set the surface overlap energy density if required.
+         */
+
+        ERROR_TOOLS_CATCH( computeSurfaceOverlapEnergyDensity( _surfaceOverlapEnergyDensity.second ) );
+
+        _surfaceOverlapEnergyDensity.first = true;
 
         return;
 

@@ -167,6 +167,8 @@ namespace asp{
 
             const floatMatrix* getNonLocalParticleCurrentBoundingBox( );
 
+            const std::unordered_map< unsigned int, floatType >* getSurfaceOverlapEnergyDensity( );
+
             const std::unordered_map< unsigned int, floatVector >* getParticlePairOverlap( );
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
@@ -248,6 +250,8 @@ namespace asp{
 
             std::pair< bool, floatType > _surfaceAdhesionEnergyDensity;
 
+            std::pair< bool, std::unordered_map< unsigned int, floatType > > _surfaceOverlapEnergyDensity;
+
             std::pair< bool, floatVector > _nonLocalReferenceSurfacePoints;
 
             std::pair< bool, floatVector > _nonLocalCurrentSurfacePoints;
@@ -295,6 +299,8 @@ namespace asp{
             virtual void initializeSurfaceIntegrandQuantities( );
 
             virtual void setSurfaceAdhesionEnergyDensity( );
+
+            virtual void setSurfaceOverlapEnergyDensity( );
 
             virtual void setLocalParticleCurrentBoundingBox( );
 
