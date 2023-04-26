@@ -491,6 +491,15 @@ namespace asp{
 
                 }
 
+                static void set_particlePairOverlap( asp::aspBase &asp, const std::unordered_map< unsigned int, floatVector > &particlePairOverlap ){
+
+                    asp._particlePairOverlap.first = true;
+                    asp._particlePairOverlap.second = particlePairOverlap;
+
+                    return;
+
+                }
+
                 // Read functions for checking for errors
                 static std::pair< bool, floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
 
@@ -2087,18 +2096,62 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setParticlePairOverlap ){
 
     const std::unordered_map< unsigned int, floatVector > *result = asp.getParticlePairOverlap( );
 
-    for ( auto p = result->begin( ); p != result->end( ); p++ ){
+    for ( auto p = answer.begin( ); p != answer.end( ); p++ ){
 
-        auto search = answer.find( p->first );
+        auto search = result->find( p->first );
 
-        BOOST_CHECK( search != answer.end( ) );
+        BOOST_CHECK( search != result->end( ) );
 
-        if ( search != answer.end( ) ){
+        if ( search != result->end( ) ){
 
             BOOST_CHECK( vectorTools::fuzzyEquals( p->second, search->second ) );
 
         }
 
     }
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+   
+            std::unordered_map< unsigned int, floatVector > particlePairOverlap = { { 0, { -0.5, 0, 0 } }, { 4, { 2, -1, 4 } } };
+
+            floatVector surfaceOverlapParameters = { 2.3 };
+
+        private:
+
+            virtual void setParticlePairOverlap( ){
+
+                asp::unit_test::aspBaseTester::set_particlePairOverlap( *this, particlePairOverlap );
+
+            }
+
+            virtual void setSurfaceOverlapParameters( ){
+
+                asp::unit_test::aspBaseTester::set_surfaceOverlapParameters( *this, surfaceOverlapParameters );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    std::unordered_map< unsigned int, floatType > result;
+
+    BOOST_CHECK_NO_THROW( asp.computeSurfaceOverlapEnergyDensity( result ) );
+
+    for ( auto p = asp.particlePairOverlap.begin( ); p != asp.particlePairOverlap.end( ); p++ ){
+
+        auto overlapEnergy = result.find( p->first );
+
+        BOOST_CHECK( overlapEnergy != result.end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergy->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) ) );
+
+    } 
 
 }
