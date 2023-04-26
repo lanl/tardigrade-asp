@@ -52,3 +52,5 @@ New Features
 - Added the computation of the traction separation energy at a single surface point. (:merge:`15`). By `Nathan Miller`_.
 - Changed the interface to the surface energy such that it sets an internal variable rather than returning a value (:merge:`16`). By `Nathan Miller`_.
 - Added the computation of the points on the surface of the local and non-local particles in the reference and current configurations (:merge:`25`). By `Nathan Miller`_.
+- Added the ability to detect if points are in a bounding box (:merge:`27`). By `Nathan Miller`_.
+- Added the capability to compute the overlap energy (:merge:`27`). By `Nathan Miller`_.
