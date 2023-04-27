@@ -79,6 +79,18 @@ namespace tractionSeparation{
                               floatMatrix &d2dtdddd, floatMatrix &d2dtdddn,
                               floatMatrix &d2dtdndn );
 
+    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                    const floatVector &parameters, floatVector &traction );
+
+    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                    const floatVector &parameters, floatVector &traction,
+                                    floatMatrix &dtractionddn, floatMatrix &dtractionddt, floatMatrix &dtractiondp );
+
+    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                    const floatVector &parameters, floatVector &traction,
+                                    floatMatrix &dtractionddn, floatMatrix &dtractionddt, floatMatrix &dtractiondp,
+                                    floatMatrix &d2tractionddndp, floatMatrix &d2tractionddtdp );
+
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy );
 
