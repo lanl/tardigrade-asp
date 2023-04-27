@@ -1304,6 +1304,8 @@ namespace asp{
     void aspBase::computeSurfaceAdhesionTraction( floatVector &surfaceAdhesionTraction ){
         /*!
          * Compute the surface adhesion traction
+         * 
+         * \param &surfaceAdhesionTraction: The current adhesion traction between the local and non-local particles
          */
 
         const floatVector* currentDistanceVector;
@@ -1322,6 +1324,59 @@ namespace asp{
         ERROR_TOOLS_CATCH( tractionSeparation::computeLinearTraction( dn, dt, *surfaceParameters, surfaceAdhesionTraction ) );
 
         return;
+
+    }
+
+    void aspBase::computeSurfaceOverlapTraction( std::unordered_map< unsigned int, floatVector > &surfaceOverlapTraction ){
+        /*!
+         * Compute the surface overlap traction
+         * 
+         * \param &surfaceOverlapTraction: An unordered map mapping from points on the local particle to the amount they overlap the non-local particle
+         */
+
+        surfaceOverlapTraction.clear( );
+
+        const std::unordered_map< unsigned int, floatVector > *particlePairOverlap;
+        ERROR_TOOLS_CATCH( particlePairOverlap = getParticlePairOverlap( ) );
+
+        const floatVector *overlapParameters;
+        ERROR_TOOLS_CATCH( overlapParameters = getSurfaceOverlapParameters( ) );
+
+        for ( auto overlap = particlePairOverlap->begin( ); overlap != particlePairOverlap->end( ); overlap++ ){
+
+            surfaceOverlapTraction.insert( { overlap->first, ( *overlapParameters )[ 0 ] * overlap->second } );
+
+        }
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceOverlapTraction( ){
+        /*!
+         * Set the surface overlap traction
+         */
+
+        ERROR_TOOLS_CATCH( computeSurfaceOverlapTraction( _surfaceOverlapTraction.second ) );
+
+        _surfaceOverlapTraction.first = true;
+
+        return;
+
+    }
+
+    const std::unordered_map< unsigned int, floatVector >* aspBase::getSurfaceOverlapTraction( ){
+        /*!
+         * Get the surface overlap traction
+         */
+
+        if ( !_surfaceOverlapTraction.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceOverlapTraction( ) );
+
+        }
+
+        return &_surfaceOverlapTraction.second;
 
     }
 
