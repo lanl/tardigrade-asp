@@ -2211,3 +2211,57 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
     } 
 
 }
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapTraction ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+   
+            std::unordered_map< unsigned int, floatVector > particlePairOverlap = { { 0, { -0.5, 0, 0 } }, { 4, { 2, -1, 4 } } };
+
+            floatVector surfaceOverlapParameters = { 2.3 };
+
+        private:
+
+            virtual void setParticlePairOverlap( ){
+
+                asp::unit_test::aspBaseTester::set_particlePairOverlap( *this, particlePairOverlap );
+
+            }
+
+            virtual void setSurfaceOverlapParameters( ){
+
+                asp::unit_test::aspBaseTester::set_surfaceOverlapParameters( *this, surfaceOverlapParameters );
+
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    std::unordered_map< unsigned int, floatVector > result;
+
+    BOOST_CHECK_NO_THROW( asp.computeSurfaceOverlapTraction( result ) );
+
+    const std::unordered_map< unsigned int, floatVector > *resultGet;
+
+    resultGet = aspGet.getSurfaceOverlapTraction( );
+
+    for ( auto p = asp.particlePairOverlap.begin( ); p != asp.particlePairOverlap.end( ); p++ ){
+
+        auto overlapTraction = result.find( p->first );
+
+        BOOST_CHECK( overlapTraction != result.end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapTraction->second, asp.surfaceOverlapParameters[ 0 ] * p->second ) );
+
+        auto overlapTractionGet = resultGet->find( p->first );
+
+        BOOST_CHECK( overlapTractionGet != result.end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapTraction->second, asp.surfaceOverlapParameters[ 0 ] * p->second ) );
+
+    } 
+
+}

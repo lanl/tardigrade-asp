@@ -114,6 +114,8 @@ namespace asp{
 
             virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity );
 
+            virtual void computeSurfaceOverlapTraction( std::unordered_map< unsigned int, floatVector > &surfaceOverlapTraction );
+
             virtual void computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity );
 
             // Getter functions
@@ -166,6 +168,8 @@ namespace asp{
             const floatVector* getNonLocalCurrentSurfacePoints( );
 
             const floatVector* getSurfaceAdhesionTraction( );
+
+            const std::unordered_map< unsigned int, floatVector>* getSurfaceOverlapTraction( );
 
             const floatMatrix* getLocalParticleCurrentBoundingBox( );
 
@@ -265,6 +269,8 @@ namespace asp{
             std::pair< bool, std::unordered_map< unsigned int, floatVector > > _particlePairOverlap;
 
             std::pair< bool, floatVector > _surfaceAdhesionTraction;
+
+            std::pair< bool, std::unordered_map< unsigned int, floatVector > > _surfaceOverlapTraction;
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
@@ -309,6 +315,8 @@ namespace asp{
             virtual void setSurfaceOverlapEnergyDensity( );
 
             virtual void setSurfaceAdhesionTraction( );
+
+            virtual void setSurfaceOverlapTraction( );
 
             virtual void setLocalParticleCurrentBoundingBox( );
 
