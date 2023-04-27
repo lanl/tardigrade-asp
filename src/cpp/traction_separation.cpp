@@ -819,6 +819,144 @@ namespace tractionSeparation{
 
     }
 
+    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                    const floatVector &parameters, floatVector &traction ){
+        /*!
+         * Compute the linear traction
+         * 
+         * \f$ = E^n d^n_i + E^t d^t_i\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &traction: The resulting traction
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        traction = En * normalDeformationMeasure + Et * tangentialDeformationMeasure;
+
+        return NULL;
+
+    }
+
+    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                    const floatVector &parameters, floatVector &traction,
+                                    floatMatrix &dtractionddn, floatMatrix &dtractionddt, floatMatrix &dtractiondp ){
+        /*!
+         * Compute the linear traction
+         * 
+         * \f$ = E^n d^n_i + E^t d^t_i\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &traction: The resulting traction
+         * \param &dtractionddn: The derivative of the traction w.r.t. the normal deformation measure
+         * \param &dtractionddt: The derivative of the traction w.r.t. the tangential deformation measure
+         * \param &dtractiondp: The derivative of the traction w.r.t. the parameters
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        traction = En * normalDeformationMeasure + Et * tangentialDeformationMeasure;
+
+        dtractionddn = floatMatrix( traction.size( ), floatVector( normalDeformationMeasure.size( ), 0 ) );
+
+        dtractionddt = floatMatrix( traction.size( ), floatVector( tangentialDeformationMeasure.size( ), 0 ) );
+
+        dtractiondp = floatMatrix( traction.size( ), floatVector( parameters.size( ), 0 ) );
+
+        for ( unsigned int i = 0; i < traction.size( ); i++ ){
+
+            dtractionddn[ i ][ i ] = En;
+
+            dtractionddt[ i ][ i ] = Et;
+
+            dtractiondp[ i ] = { normalDeformationMeasure[ i ], tangentialDeformationMeasure[ i ] };
+
+        }
+
+        return NULL;
+
+    }
+
+    errorOut computeLinearTraction( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
+                                    const floatVector &parameters, floatVector &traction,
+                                    floatMatrix &dtractionddn, floatMatrix &dtractionddt, floatMatrix &dtractiondp,
+                                    floatMatrix &d2tractionddndp, floatMatrix &d2tractionddtdp ){
+        /*!
+         * Compute the linear traction
+         * 
+         * \f$ = E^n d^n_i + E^t d^t_i\f$
+         * 
+         * \param &normalDeformationMeasure: The normal deformation measure \f$ d^n_i \f$
+         * \param &tangentialDeformationMeasure: The tangential deformation measure \f$ d^t_i \f$
+         * \param &parameters: The material parameters \f$ E^n \f$ and \f$ E^t \f$.
+         * \param &traction: The resulting traction
+         * \param &dtractionddn: The derivative of the traction w.r.t. the normal deformation measure
+         * \param &dtractionddt: The derivative of the traction w.r.t. the tangential deformation measure
+         * \param &dtractiondp: The derivative of the traction w.r.t. the parameters
+         * \param &d2tractionddndp: The second derivative of the traction w.r.t. the normal deformation measure and the parameters
+         * \param &d2tractionddtdp: The second derivative of the traction w.r.t. the tangential deformation measure and the parameters
+         */
+
+        if ( parameters.size( ) != 2 ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "Two parameters are required for the traction-separation law. " + std::to_string( parameters.size( ) ) + " are provided." ) );
+
+        }
+
+        floatType En = parameters[ 0 ];
+
+        floatType Et = parameters[ 1 ];
+
+        traction = En * normalDeformationMeasure + Et * tangentialDeformationMeasure;
+
+        dtractionddn = floatMatrix( traction.size( ), floatVector( normalDeformationMeasure.size( ), 0 ) );
+
+        dtractionddt = floatMatrix( traction.size( ), floatVector( tangentialDeformationMeasure.size( ), 0 ) );
+
+        dtractiondp = floatMatrix( traction.size( ), floatVector( parameters.size( ), 0 ) );
+
+        d2tractionddndp = floatMatrix( traction.size( ), floatVector( normalDeformationMeasure.size( ) * parameters.size( ), 0 ) );
+
+        d2tractionddtdp = floatMatrix( traction.size( ), floatVector( tangentialDeformationMeasure.size( ) * parameters.size( ), 0 ) );
+
+        for ( unsigned int i = 0; i < traction.size( ); i++ ){
+
+            dtractionddn[ i ][ i ] = En;
+
+            dtractionddt[ i ][ i ] = Et;
+
+            dtractiondp[ i ] = { normalDeformationMeasure[ i ], tangentialDeformationMeasure[ i ] };
+
+            d2tractionddndp[ i ][ parameters.size( ) * i + 0 ] = 1.;
+
+            d2tractionddtdp[ i ][ parameters.size( ) * i + 1 ] = 1.;
+
+        }
+
+        return NULL;
+
+    }
+
     errorOut computeLinearTractionEnergy( const floatVector &normalDeformationMeasure, const floatVector &tangentialDeformationMeasure,
                                           const floatVector &parameters, floatType &energy ){
         /*!

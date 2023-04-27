@@ -1273,6 +1273,58 @@ namespace asp{
 
     }
 
+    void aspBase::setSurfaceAdhesionTraction( ){
+        /*!
+         * Set the surface adhesion traction
+         */
+
+        ERROR_TOOLS_CATCH( computeSurfaceAdhesionTraction( _surfaceAdhesionTraction.second ) );
+
+        _surfaceAdhesionTraction.first = true;
+
+        return;
+
+    }
+
+    const floatVector* aspBase::getSurfaceAdhesionTraction( ){
+        /*!
+         * Get the surface adhesion traction
+         */
+
+        if ( !_surfaceAdhesionTraction.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceAdhesionTraction( ) );
+
+        }
+
+        return &_surfaceAdhesionTraction.second;
+
+    }
+
+    void aspBase::computeSurfaceAdhesionTraction( floatVector &surfaceAdhesionTraction ){
+        /*!
+         * Compute the surface adhesion traction
+         */
+
+        const floatVector* currentDistanceVector;
+        ERROR_TOOLS_CATCH( currentDistanceVector = getCurrentDistanceVector( ) );
+
+        const floatVector* localCurrentNormal;
+        ERROR_TOOLS_CATCH( localCurrentNormal = getLocalCurrentNormal( ) );
+
+        const floatVector* surfaceParameters;
+        ERROR_TOOLS_CATCH( surfaceParameters = getSurfaceParameters( ) );
+
+        // Decompose the traction into normal and tangential directions
+        floatVector dn, dt;
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( *currentDistanceVector, *localCurrentNormal, dn, dt ) );
+
+        ERROR_TOOLS_CATCH( tractionSeparation::computeLinearTraction( dn, dt, *surfaceParameters, surfaceAdhesionTraction ) );
+
+        return;
+
+    }
+
     const floatMatrix* aspBase::getNonLocalParticleCurrentBoundingBox( ){
         /*!
          * Get the local particle's bounding box
