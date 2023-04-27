@@ -1606,7 +1606,53 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity ){
 
     asp.computeSurfaceAdhesionEnergyDensity( result );
 
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
     result = *asp.getSurfaceAdhesionEnergyDensity( );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionTraction ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector distanceVector = { 1, 2, 3 };
+
+            floatVector localCurrentNormal = { 0.45584231, 0.56980288, 0.68376346 };
+
+            floatVector surfaceParameters = { 12.3, 45.6 };
+
+            aspBaseMock( ){
+
+                asp::unit_test::aspBaseTester::set_currentDistance( *this, distanceVector );
+
+                asp::unit_test::aspBaseTester::set_localCurrentNormal( *this, localCurrentNormal );
+
+                asp::unit_test::aspBaseTester::set_surfaceParameters( *this, surfaceParameters );
+
+            }
+
+    };
+    
+    aspBaseMock asp, aspGet;
+
+    floatVector dn = vectorTools::dot( asp.distanceVector, asp.localCurrentNormal ) * asp.localCurrentNormal;
+
+    floatVector dt = ( asp.distanceVector - dn );
+
+    floatVector answer = asp.surfaceParameters[ 0 ] * dn + asp.surfaceParameters[ 1 ] * dt;
+
+    floatVector result;
+
+    asp.computeSurfaceAdhesionTraction( result );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+    result = *aspGet.getSurfaceAdhesionTraction( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 

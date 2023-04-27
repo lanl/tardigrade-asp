@@ -55,3 +55,4 @@ New Features
 - Added the ability to detect if points are in a bounding box (:merge:`27`). By `Nathan Miller`_.
 - Added the capability to compute the overlap energy (:merge:`28`). By `Nathan Miller`_.
 - Added the computation of the traction for a linear traction (:merge:`29`). By `Nathan Miller`_.
+- Added the computation of the surface adhesion traction (:merge:`29`). By `Nathan Miller`_.
