@@ -57,3 +57,4 @@ New Features
 - Added the computation of the traction for a linear traction (:merge:`29`). By `Nathan Miller`_.
 - Added the computation of the surface adhesion traction (:merge:`29`). By `Nathan Miller`_.
 - Added the computation of the surface overlap traction (:merge:`30`). By `Nathan Miller`_.
+- Added the functions to reset internally computed values at the correct times (:merge:`31`). By `Nathan Miller`_.

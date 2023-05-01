@@ -23,31 +23,31 @@ namespace asp{
          */
 
         // Initialize surface integral pairs
-        _localReferenceRadius = std::make_pair( false, 0 );
+        _localReferenceRadius = dataStorage( false, 0. );
 
-        _nonLocalReferenceRadius = std::make_pair( false, 0 );
+        _nonLocalReferenceRadius = dataStorage( false, 0. );
 
-        _unitSpherePoints = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _unitSpherePoints = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _localReferenceNormal = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _localReferenceNormal = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _localSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _localSurfaceReferenceRelativePositionVector = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _nonLocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _nonLocalSurfaceReferenceRelativePositionVector = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _referenceDistanceVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _referenceDistanceVector = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _localReferenceParticleSpacing = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _localReferenceParticleSpacing = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _localDeformationGradient = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _localDeformationGradient = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _localMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _localMicroDeformation = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _nonLocalMicroDeformation = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _nonLocalMicroDeformation = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _currentDistanceVector = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _currentDistanceVector = dataStorage( false, floatVector( _dimension, 0 ) );
 
-        _localCurrentNormal = std::make_pair( false, floatVector( _dimension, 0 ) );
+        _localCurrentNormal = dataStorage( false, floatVector( _dimension, 0 ) );
 
     }
 
@@ -182,6 +182,8 @@ namespace asp{
 
         _localReferenceNormal.first = true;
 
+        addSurfacePointData( &_localReferenceNormal );
+
         return;
 
     }
@@ -222,6 +224,8 @@ namespace asp{
 
         _localSurfaceReferenceRelativePositionVector.first = true;
 
+        addSurfacePointData( &_localSurfaceReferenceRelativePositionVector );
+
         return;
 
     }
@@ -260,6 +264,8 @@ namespace asp{
 
         _nonLocalSurfaceReferenceRelativePositionVector.first = true;
 
+        addInteractionPairData( &_nonLocalSurfaceReferenceRelativePositionVector );
+
         return;
 
     }
@@ -288,6 +294,8 @@ namespace asp{
 
         _localReferenceRadius.first = true;
 
+        addLocalParticleData( &_localReferenceRadius );
+
         return;
 
     }
@@ -315,6 +323,8 @@ namespace asp{
         _nonLocalReferenceRadius.second = _radius;
 
         _nonLocalReferenceRadius.first = true;
+
+        addInteractionPairData( &_nonLocalReferenceRadius );
 
         return;
 
@@ -345,6 +355,8 @@ namespace asp{
 
         _localDeformationGradient.first = true;
 
+        addLocalParticleData( &_localDeformationGradient );
+
         return;
 
     }
@@ -372,6 +384,8 @@ namespace asp{
         _localMicroDeformation.second = _microDeformation;
 
         _localMicroDeformation.first = true;
+
+        addLocalParticleData( &_localMicroDeformation );
 
         return;
 
@@ -413,6 +427,8 @@ namespace asp{
                                               - ( *nonLocalSurfaceReferenceRelativePositionVector );
 
         _localReferenceParticleSpacing.first = true;
+
+        addInteractionPairData( &_localReferenceParticleSpacing );
 
         return;
 
@@ -469,6 +485,8 @@ namespace asp{
 
         _nonLocalMicroDeformation.first = true;
 
+        addInteractionPairData( &_nonLocalMicroDeformation );
+
         return;
 
     }
@@ -515,6 +533,8 @@ namespace asp{
 
         _nonLocalMicroDeformationBase.first = true;
 
+        addInteractionPairData( &_nonLocalMicroDeformationBase );
+
     }
 
     void aspBase::setCurrentDistanceVector( ){
@@ -550,6 +570,8 @@ namespace asp{
                                                                               _currentDistanceVector.second ) );
 
         _currentDistanceVector.first = true;
+
+        addInteractionPairData( &_currentDistanceVector );
 
         return;
 
@@ -608,35 +630,6 @@ namespace asp{
 
     }
 
-    void aspBase::initializeSurfaceIntegrandQuantities( ){
-        /*!
-         * Initialize the surface integrand quantities
-         */
-
-        ERROR_TOOLS_CATCH( setLocalReferenceNormal( ) );
-
-        ERROR_TOOLS_CATCH( setLocalSurfaceReferenceRelativePositionVector( ) );
-
-        ERROR_TOOLS_CATCH( setNonLocalSurfaceReferenceRelativePositionVector( ) );
-
-        ERROR_TOOLS_CATCH( setReferenceDistanceVector( ) );
-
-        ERROR_TOOLS_CATCH( setLocalDeformationGradient( ) );
-
-        ERROR_TOOLS_CATCH( setLocalMicroDeformation( ) );
-
-        ERROR_TOOLS_CATCH( setNonLocalMicroDeformation( ) );
-
-        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
-
-        ERROR_TOOLS_CATCH( setLocalCurrentNormal( ) );
-
-        ERROR_TOOLS_CATCH( setSurfaceParameters( ) );
-
-        return;
-
-    }
-
     void aspBase::setSurfaceParameters( ){
         /*!
          * Set the surface parameters for the integrand
@@ -690,36 +683,57 @@ namespace asp{
 
     }
 
-    void aspBase::resetSurface( ){
+    void aspBase::resetInteractionPairData( ){
         /*!
-         * Reset the surface to the base state
+         * Reset the interaction pair data to the base state
          */
 
-        _localReferenceRadius = std::make_pair( false, 0. );
+        for ( auto d = _interactionPairData.begin( ); d != _interactionPairData.end( ); d++ ){
 
-        _nonLocalReferenceRadius = std::make_pair( false, 0. );
+            ( *d )->clear( );
 
-        _localReferenceNormal = std::make_pair( false, floatVector( 0, 0 ) );
+        }
 
-        _localSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
+        _interactionPairData.clear( );
 
-        _nonLocalSurfaceReferenceRelativePositionVector = std::make_pair( false, floatVector( 0, 0 ) );
+        return;
 
-        _referenceDistanceVector = std::make_pair( false, floatVector( 0, 0 ) );
+    }
 
-        _localReferenceParticleSpacing = std::make_pair( false, floatVector( 0, 0 ) );
+    void aspBase::resetSurfacePointData( ){
+        /*!
+         * Reset the surface point data to the base state
+         */
 
-        _localDeformationGradient = std::make_pair( false, floatVector( 0, 0 ) );
+        // Reset the interaction pair
+        resetInteractionPairData( );
 
-        _localMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
+        for ( auto d = _surfacePointData.begin( ); d != _surfacePointData.end( ); d++ ){
 
-        _nonLocalMicroDeformation = std::make_pair( false, floatVector( 0, 0 ) );
+            ( *d )->clear( );
 
-        _currentDistanceVector = std::make_pair( false, floatVector( 0, 0 ) );
+        }
 
-        _localCurrentNormal = std::make_pair( false, floatVector( 0, 0 ) );
+        _surfacePointData.clear( );
 
-        _surfaceParameters = std::make_pair( false, floatVector( 0, 0 ) );
+        return;
+
+    }
+
+    void aspBase::resetLocalParticleData( ){
+        /*!
+         * Reset the local particle data to the base state
+         */
+
+        resetSurfacePointData( );
+
+        for ( auto d = _localParticleData.begin( ); d != _localParticleData.end( ); d++ ){
+
+            ( *d )->clear( );
+
+        }
+
+        _localParticleData.clear( );
 
         return;
 
@@ -901,6 +915,8 @@ namespace asp{
 
         _particlePairOverlap.first = true;
 
+        addInteractionPairData( &_particlePairOverlap );
+
         return;
 
     }
@@ -980,6 +996,8 @@ namespace asp{
 
         _localGradientMicroDeformation.first = true;
 
+        addLocalParticleData( &_localGradientMicroDeformation );
+
     }
 
     const floatVector *aspBase::getLocalGradientMicroDeformation( ){
@@ -1006,6 +1024,8 @@ namespace asp{
 
         _surfaceAdhesionEnergyDensity.first = true;
 
+        addInteractionPairData( &_surfaceAdhesionEnergyDensity );
+
         return;
 
     }
@@ -1019,6 +1039,8 @@ namespace asp{
 
         _surfaceOverlapEnergyDensity.first = true;
 
+        addInteractionPairData( &_surfaceOverlapEnergyDensity );
+
         return;
 
     }
@@ -1031,6 +1053,8 @@ namespace asp{
         _surfaceOverlapParameters.second = { 1 };
 
         _surfaceOverlapParameters.first = true;
+
+        addInteractionPairData( &_surfaceOverlapParameters );
 
         return;
 
@@ -1066,6 +1090,8 @@ namespace asp{
 
         _localReferenceSurfacePoints.first = true;
 
+        addLocalParticleData( &_localReferenceSurfacePoints );
+
         return;
 
     }
@@ -1099,6 +1125,8 @@ namespace asp{
         _nonLocalReferenceSurfacePoints.second = ( *nonLocalReferenceRadius ) * ( *unitSpherePoints );
 
         _nonLocalReferenceSurfacePoints.first = true;
+
+        addInteractionPairData( &_nonLocalReferenceSurfacePoints );
 
         return;
 
@@ -1136,6 +1164,8 @@ namespace asp{
 
         _localCurrentSurfacePoints.first = true;
 
+        addLocalParticleData( &_localCurrentSurfacePoints );
+
     }
 
     const floatVector* aspBase::getLocalCurrentSurfacePoints( ){
@@ -1170,6 +1200,8 @@ namespace asp{
 
         _nonLocalCurrentSurfacePoints.first = true;
 
+        addInteractionPairData( &_nonLocalCurrentSurfacePoints );
+
     }
 
     const floatVector* aspBase::getNonLocalCurrentSurfacePoints( ){
@@ -1198,6 +1230,8 @@ namespace asp{
         ERROR_TOOLS_CATCH( formBoundingBox( *localCurrentSurfacePoints, _localParticleCurrentBoundingBox.second ) );
 
         _localParticleCurrentBoundingBox.first = true;
+
+        addLocalParticleData( &_localParticleCurrentBoundingBox );
 
         return;
 
@@ -1269,6 +1303,8 @@ namespace asp{
 
         _nonLocalParticleCurrentBoundingBox.first = true;
 
+        addInteractionPairData( &_nonLocalParticleCurrentBoundingBox );
+
         return;
 
     }
@@ -1281,6 +1317,8 @@ namespace asp{
         ERROR_TOOLS_CATCH( computeSurfaceAdhesionTraction( _surfaceAdhesionTraction.second ) );
 
         _surfaceAdhesionTraction.first = true;
+
+        addInteractionPairData( &_surfaceAdhesionTraction );
 
         return;
 
@@ -1360,6 +1398,8 @@ namespace asp{
         ERROR_TOOLS_CATCH( computeSurfaceOverlapTraction( _surfaceOverlapTraction.second ) );
 
         _surfaceOverlapTraction.first = true;
+
+        addInteractionPairData( &_surfaceOverlapTraction );
 
         return;
 
