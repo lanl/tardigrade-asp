@@ -28,6 +28,7 @@ Internal Changes
 - Added a function for the particle overlap calculation which uses an arbitrary, "basis," i.e.,
   the reference point for the Taylor series computation of the non-local micro-deformation which will
   allow for random neighboring particles (:merge:`27`). By `Nathan Miller`_.
+- Changed the overlap surface energy to be a surface density rather than a volumetric density (:merge:`31`). By `Nathan Miller`_.
 
 New Features
 ============
@@ -58,3 +59,4 @@ New Features
 - Added the computation of the surface adhesion traction (:merge:`29`). By `Nathan Miller`_.
 - Added the computation of the surface overlap traction (:merge:`30`). By `Nathan Miller`_.
 - Added the functions to reset internally computed values at the correct times (:merge:`31`). By `Nathan Miller`_.
+- Added ability to compute the normals (reference and current) of a local particle at arbitrary surface points rather than just the current points (:merge:`31`). By `Nathan Miller`_.

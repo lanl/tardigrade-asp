@@ -162,23 +162,7 @@ namespace asp{
          * as any position vector on the surface of the sphere.
          */
 
-        const floatVector* unitSpherePoints;
-        ERROR_TOOLS_CATCH( unitSpherePoints = getUnitSpherePoints( ) );
-
-        if ( _dimension * ( _localIndex + 1 ) > unitSpherePoints->size( ) ){
-
-            std::string message = "The requested index is greater than the number of points available on the unit sphere.\n";
-            message            += "  localSurfaceNodeIndex: " + std::to_string( _localSurfaceNodeIndex ) + "\n";
-            message            += "  number of points:      " + std::to_string( unitSpherePoints->size( ) / _dimension );
-
-            ERROR_TOOLS_CATCH( throw std::runtime_error( message ) );
-
-        }
-
-        _localReferenceNormal.second = floatVector( unitSpherePoints->begin( ) + _dimension * _localSurfaceNodeIndex,
-                                                    unitSpherePoints->begin( ) + _dimension * ( _localSurfaceNodeIndex + 1 ) );
-
-        _localReferenceNormal.second /= vectorTools::l2norm( _localReferenceNormal.second );
+        ERROR_TOOLS_CATCH( getLocalReferenceNormal( _localSurfaceNodeIndex, _localReferenceNormal.second ) );
 
         _localReferenceNormal.first = true;
 
@@ -603,13 +587,14 @@ namespace asp{
         const floatVector* localMicroDeformation;
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        // Compute the current normal
         ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, *localReferenceNormal,
                                                                        _localCurrentNormal.second ) );
 
         _localCurrentNormal.second /= vectorTools::l2norm( _localCurrentNormal.second );
 
         _localCurrentNormal.first = true;
+
+        addSurfacePointData( &_localCurrentNormal );
 
         return;
 
@@ -630,12 +615,67 @@ namespace asp{
 
     }
 
+    void aspBase::getLocalReferenceNormal( const unsigned int &index, floatVector &localReferenceNormal ){
+        /*!
+         * compute the local reference normal at the referenced surface point index
+         * 
+         * \param &index: The index of the local surface point
+         * \param &localReferenceNormal: The resulting local reference normal vector
+         */
+
+        const floatVector* unitSpherePoints;
+        ERROR_TOOLS_CATCH( unitSpherePoints = getUnitSpherePoints( ) );
+
+        if ( _dimension * ( index + 1 ) > unitSpherePoints->size( ) ){
+
+            std::string message = "The requested index is greater than the number of points available on the unit sphere.\n";
+            message            += "  index:            " + std::to_string( index ) + "\n";
+            message            += "  number of points: " + std::to_string( unitSpherePoints->size( ) / _dimension );
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( message ) );
+
+        }
+
+        localReferenceNormal = floatVector( unitSpherePoints->begin( ) + _dimension * index,
+                                            unitSpherePoints->begin( ) + _dimension * ( index + 1 ) );
+
+        localReferenceNormal /= vectorTools::l2norm( localReferenceNormal );
+
+        return;
+
+    }
+
+    void aspBase::getLocalCurrentNormal( const unsigned int &index, floatVector &normal ){
+        /*!
+         * compute the local current normal at the referenced surface point index
+         * 
+         * \param &index: The index of the local surface point
+         * \param &normal: The resulting normal vector
+         */
+
+        floatVector referenceNormal;
+        ERROR_TOOLS_CATCH( getLocalReferenceNormal( index, referenceNormal ) );
+
+        const floatVector* localMicroDeformation;
+        ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
+
+        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, referenceNormal,
+                                                                       normal ) );
+
+        normal /= vectorTools::l2norm( normal );
+
+        return;
+
+    }
+
     void aspBase::setSurfaceParameters( ){
         /*!
          * Set the surface parameters for the integrand
          */
 
         _surfaceParameters.first = true;
+
+        addInteractionPairData( &_surfaceParameters );
 
         return;
     }
@@ -663,6 +703,8 @@ namespace asp{
         _referenceDistanceVector.second = floatVector( _dimension, 0. );
 
         _referenceDistanceVector.first = true;
+
+        addInteractionPairData( &_referenceDistanceVector );
 
         return;
 
@@ -852,7 +894,11 @@ namespace asp{
 
         for ( auto overlap = particlePairOverlap->begin( ); overlap != particlePairOverlap->end( ); overlap++ ){
 
-            surfaceOverlapEnergyDensity.insert( { overlap->first, 0.5 * ( *overlapParameters )[ 0 ] * vectorTools::dot( overlap->second, overlap->second ) } );
+            floatVector normal;
+
+            getLocalCurrentNormal( overlap->first, normal );
+
+            surfaceOverlapEnergyDensity.insert( { overlap->first, 0.5 * ( *overlapParameters )[ 0 ] * vectorTools::dot( overlap->second, overlap->second ) * vectorTools::dot( overlap->second, normal ) } );
 
         }
 

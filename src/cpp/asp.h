@@ -189,6 +189,8 @@ namespace asp{
 
             const floatVector* getLocalReferenceNormal( );
 
+            virtual void getLocalReferenceNormal( const unsigned int &index, floatVector &localReferenceNormal );
+
             const floatVector* getLocalSurfaceReferenceRelativePositionVector( );
 
             const floatVector* getNonLocalSurfaceReferenceRelativePositionVector( );
@@ -212,6 +214,8 @@ namespace asp{
             const floatVector* getCurrentDistanceVector( );
 
             const floatVector* getLocalCurrentNormal( );
+
+            virtual void getLocalCurrentNormal( const unsigned int &index, floatVector &normal );
 
             const floatVector* getSurfaceParameters( );
 
