@@ -83,6 +83,68 @@ namespace asp{
                              const floatMatrix &dfgrd1,       const int &NOEL,            const int &NPT,            const int &LAYER,          const int &KSPT,
                              const std::vector< int > &jstep, const int &KINC );
 
+    class dataBase{
+
+        public:
+
+            virtual void clear( ){
+
+                ERROR_TOOLS_CATCH( throw std::runtime_error( "clear not implemented!" ) );
+
+            }
+
+    };
+
+    template < typename T >
+    class dataStorage : public dataBase{
+
+        public:
+
+            bool first = false;
+
+            T second;
+
+            dataStorage( ){ };
+
+            dataStorage( const bool &_first, const T &_second ) : first( _first ), second( _second ) { }
+
+            virtual void clear( ){
+
+                first = false;
+
+                second.clear( );
+
+            }
+
+    };
+
+    template <>
+    inline void dataStorage< int >::clear( ){
+
+        first = false;
+
+        second = 0;
+
+    }
+
+    template <>
+    inline void dataStorage< unsigned int >::clear( ){
+
+        first = false;
+
+        second = 0;
+
+    }
+
+    template <>
+    inline void dataStorage< floatType >::clear( ){
+
+        first = false;
+
+        second = 0;
+
+    }
+
     class aspBase{
         /*!
          * The base class for all Anisotropic Stochastic Particle (ASP) models.
@@ -127,6 +189,8 @@ namespace asp{
 
             const floatVector* getLocalReferenceNormal( );
 
+            virtual void getLocalReferenceNormal( const unsigned int &index, floatVector &localReferenceNormal );
+
             const floatVector* getLocalSurfaceReferenceRelativePositionVector( );
 
             const floatVector* getNonLocalSurfaceReferenceRelativePositionVector( );
@@ -150,6 +214,8 @@ namespace asp{
             const floatVector* getCurrentDistanceVector( );
 
             const floatVector* getLocalCurrentNormal( );
+
+            virtual void getLocalCurrentNormal( const unsigned int &index, floatVector &normal );
 
             const floatVector* getSurfaceParameters( );
 
@@ -180,6 +246,13 @@ namespace asp{
             const std::unordered_map< unsigned int, floatVector >* getParticlePairOverlap( );
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
+
+            // Add functions
+            void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
+
+            void addSurfacePointData( dataBase *data ){ _surfacePointData.push_back( data ); }
+
+            void addInteractionPairData( dataBase *data ){ _interactionPairData.push_back( data ); }
 
         protected:
 
@@ -213,64 +286,81 @@ namespace asp{
 
             floatVector _gradientMicroDeformation;
 
-            std::pair< bool, floatMatrix > _localParticleCurrentBoundingBox;
+            dataStorage< floatMatrix > _localParticleCurrentBoundingBox;
 
-            std::pair< bool, floatVector > _localReferenceSurfacePoints;
+            dataStorage< floatVector > _localReferenceSurfacePoints;
 
-            std::pair< bool, floatVector > _localCurrentSurfacePoints;
+            dataStorage< floatVector > _localCurrentSurfacePoints;
 
             // ALL OF THESE MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
-            std::pair< bool, floatType > _localReferenceRadius;
+            dataStorage< floatType > _localReferenceRadius;
 
-            std::pair< bool, floatType > _nonLocalReferenceRadius;
+            dataStorage< floatType > _nonLocalReferenceRadius;
 
-            std::pair< bool, std::vector< unsigned int > > _unitSphereConnectivity;
+            dataStorage< std::vector< unsigned int > > _unitSphereConnectivity;
 
-            std::pair< bool, floatVector > _unitSpherePoints;
+            dataStorage< floatVector > _unitSpherePoints;
 
-            std::pair< bool, floatVector > _localReferenceNormal;
+            dataStorage< floatVector > _localReferenceNormal;
 
-            std::pair< bool, floatVector > _localSurfaceReferenceRelativePositionVector;
+            dataStorage< floatVector > _localSurfaceReferenceRelativePositionVector;
 
-            std::pair< bool, floatVector > _nonLocalSurfaceReferenceRelativePositionVector;
+            dataStorage< floatVector > _nonLocalSurfaceReferenceRelativePositionVector;
 
-            std::pair< bool, floatVector > _referenceDistanceVector;
+            dataStorage< floatVector > _referenceDistanceVector;
 
-            std::pair< bool, floatVector > _localReferenceParticleSpacing;
+            dataStorage< floatVector > _localReferenceParticleSpacing;
 
-            std::pair< bool, floatVector > _localDeformationGradient;
+            dataStorage< floatVector > _localDeformationGradient;
 
-            std::pair< bool, floatVector > _localMicroDeformation;
+            dataStorage< floatVector > _localMicroDeformation;
 
-            std::pair< bool, floatVector > _nonLocalMicroDeformation;
+            dataStorage< floatVector > _nonLocalMicroDeformation;
 
-            std::pair< bool, floatVector > _nonLocalMicroDeformationBase;
+            dataStorage< floatVector > _nonLocalMicroDeformationBase;
 
-            std::pair< bool, floatVector > _localGradientMicroDeformation;
+            dataStorage< floatVector > _localGradientMicroDeformation;
 
-            std::pair< bool, floatVector > _currentDistanceVector;
+            dataStorage< floatVector > _currentDistanceVector;
 
-            std::pair< bool, floatVector > _localCurrentNormal;
+            dataStorage< floatVector > _localCurrentNormal;
 
-            std::pair< bool, floatVector > _surfaceParameters;
+            dataStorage< floatVector > _surfaceParameters;
 
-            std::pair< bool, floatVector > _surfaceOverlapParameters;
+            dataStorage< floatVector > _surfaceOverlapParameters;
 
-            std::pair< bool, floatType > _surfaceAdhesionEnergyDensity;
+            dataStorage< floatType > _surfaceAdhesionEnergyDensity;
 
-            std::pair< bool, std::unordered_map< unsigned int, floatType > > _surfaceOverlapEnergyDensity;
+            dataStorage< std::unordered_map< unsigned int, floatType > > _surfaceOverlapEnergyDensity;
 
-            std::pair< bool, floatVector > _nonLocalReferenceSurfacePoints;
+            dataStorage< floatVector > _nonLocalReferenceSurfacePoints;
 
-            std::pair< bool, floatVector > _nonLocalCurrentSurfacePoints;
+            dataStorage< floatVector > _nonLocalCurrentSurfacePoints;
 
-            std::pair< bool, floatMatrix > _nonLocalParticleCurrentBoundingBox;
+            dataStorage< floatMatrix > _nonLocalParticleCurrentBoundingBox;
 
-            std::pair< bool, std::unordered_map< unsigned int, floatVector > > _particlePairOverlap;
+            dataStorage< std::unordered_map< unsigned int, floatVector > > _particlePairOverlap;
 
-            std::pair< bool, floatVector > _surfaceAdhesionTraction;
+            dataStorage< floatVector > _surfaceAdhesionTraction;
 
-            std::pair< bool, std::unordered_map< unsigned int, floatVector > > _surfaceOverlapTraction;
+            dataStorage< std::unordered_map< unsigned int, floatVector > > _surfaceOverlapTraction;
+
+            dataStorage< floatVector > _allParticleSurfaceAdhesionEnergy;
+
+            dataStorage< floatMatrix > _allParticleSurfaceAdhesionTraction;
+
+            dataStorage< std::vector< std::unordered_map< unsigned int, floatType > > > _allParticleSurfaceOverlapEnergy;
+
+            dataStorage< std::vector< std::unordered_map< unsigned int, floatVector > > > _allParticleSurfaceOverlapTraction;
+
+            dataStorage< floatVector > _allParticleSurfaceConstraintEnergy;
+
+            std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
+
+            std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
+
+            std::vector< dataBase* > _interactionPairData; //! A vector of pointers to quantities required for a particle interaction
+
             // END OF MEMBERS WHICH MUST BE CLEARED AFTER EACH SURFACE INTEGRAND CALCULATION
 
             // Private member functions
@@ -308,8 +398,6 @@ namespace asp{
 
             virtual void setSurfaceOverlapParameters( );
 
-            virtual void initializeSurfaceIntegrandQuantities( );
-
             virtual void setSurfaceAdhesionEnergyDensity( );
 
             virtual void setSurfaceOverlapEnergyDensity( );
@@ -332,7 +420,11 @@ namespace asp{
 
             virtual void setParticlePairOverlap( );
 
-            virtual void resetSurface( );
+            virtual void resetInteractionPairData( );
+
+            virtual void resetSurfacePointData( );
+
+            virtual void resetLocalParticleData( );
 
     };
 

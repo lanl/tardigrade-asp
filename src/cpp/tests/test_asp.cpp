@@ -54,8 +54,8 @@ namespace asp{
             public:
 
                 static void initializeUnitSphere( asp::aspBase &asp,
-                                                      std::pair< bool, floatVector > & unitSpherePoints,
-                                                      std::pair< bool, std::vector< unsigned int > > & unitSphereConnectivity ){
+                                                      asp::dataStorage< floatVector > & unitSpherePoints,
+                                                      asp::dataStorage< std::vector< unsigned int > > & unitSphereConnectivity ){
     
                     BOOST_CHECK_NO_THROW( asp.initializeUnitSphere( ) );
     
@@ -67,144 +67,331 @@ namespace asp{
     
                 }
 
-                static void setLocalReferenceRadius( asp::aspBase &asp, std::pair< bool, floatType > &radius ){
+                static void setLocalReferenceRadius( asp::aspBase &asp, asp::dataStorage< floatType > &radius ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalReferenceRadius( ) );
 
                     radius = asp._localReferenceRadius;
 
+                    BOOST_CHECK( &asp._localReferenceRadius == asp._localParticleData.back( ) );
+
                     return;
 
                 }
 
-                static void setNonLocalReferenceRadius( asp::aspBase &asp, std::pair< bool, floatType > &radius ){
+                static void setNonLocalReferenceRadius( asp::aspBase &asp, asp::dataStorage< floatType > &radius ){
 
                     BOOST_CHECK_NO_THROW( asp.setNonLocalReferenceRadius( ) );
 
                     radius = asp._nonLocalReferenceRadius;
 
+                    BOOST_CHECK( &asp._nonLocalReferenceRadius == asp._interactionPairData.back( ) );
+
                     return;
 
                 }
 
-                static void setLocalReferenceNormal( asp::aspBase &asp, std::pair< bool, floatVector > &normal ){
+                static void setLocalReferenceNormal( asp::aspBase &asp, asp::dataStorage< floatVector > &normal ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalReferenceNormal( ) );
 
                     normal = asp._localReferenceNormal;
 
+                    BOOST_CHECK( &asp._localReferenceNormal == asp._surfacePointData.back( ) );
+
                     return;
 
                 }
 
-                static void setLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp, std::pair< bool, floatVector > &Xi ){
+                static void setLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp, asp::dataStorage< floatVector > &Xi ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalSurfaceReferenceRelativePositionVector( ) );
 
                     Xi = asp._localSurfaceReferenceRelativePositionVector;
 
+                    BOOST_CHECK( &asp._localSurfaceReferenceRelativePositionVector == asp._surfacePointData.back( ) );
+
                     return;
 
                 }
 
-                static void setNonLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp, std::pair< bool, floatVector > &Xi ){
+                static void setNonLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp, asp::dataStorage< floatVector > &Xi ){
 
                     BOOST_CHECK_NO_THROW( asp.setNonLocalSurfaceReferenceRelativePositionVector( ) );
 
                     Xi = asp._nonLocalSurfaceReferenceRelativePositionVector;
 
+                    BOOST_CHECK( &asp._nonLocalSurfaceReferenceRelativePositionVector == asp._interactionPairData.back( ) );
+
                     return;
 
                 }
 
-                static void setLocalDeformationGradient( asp::aspBase &asp, std::pair< bool, floatVector > &localDeformationGradient ){
+                static void setLocalDeformationGradient( asp::aspBase &asp, asp::dataStorage< floatVector > &localDeformationGradient ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalDeformationGradient( ) );
 
                     localDeformationGradient = asp._localDeformationGradient;
 
+                    BOOST_CHECK( &asp._localDeformationGradient == asp._localParticleData.back( ) );
+
                     return;
 
                 }
 
-                static void setLocalMicroDeformation( asp::aspBase &asp, std::pair< bool, floatVector > &localMicroDeformation ){
+                static void setLocalMicroDeformation( asp::aspBase &asp, asp::dataStorage< floatVector > &localMicroDeformation ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalMicroDeformation( ) );
 
                     localMicroDeformation = asp._localMicroDeformation;
 
+                    BOOST_CHECK( &asp._localMicroDeformation == asp._localParticleData.back( ) );
+
                     return;
 
                 }
 
-                static void setReferenceDistanceVector( asp::aspBase &asp, std::pair< bool, floatVector > &referenceDistanceVector ){
+                static void setReferenceDistanceVector( asp::aspBase &asp, asp::dataStorage< floatVector > &referenceDistanceVector ){
 
                     BOOST_CHECK_NO_THROW( asp.setReferenceDistanceVector( ) );
 
                     referenceDistanceVector = asp._referenceDistanceVector;
+
+                    BOOST_CHECK( &asp._referenceDistanceVector == asp._interactionPairData.back( ) );
 
                     return;
 
                 }
 
                 static void setLocalReferenceParticleSpacing( asp::aspBase &asp,
-                                                                  std::pair< bool, floatVector > &localReferenceParticleSpacing ){
+                                                                  asp::dataStorage< floatVector > &localReferenceParticleSpacing ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalReferenceParticleSpacing( ) );
 
                     localReferenceParticleSpacing = asp._localReferenceParticleSpacing;
+
+                    BOOST_CHECK( &asp._localReferenceParticleSpacing == asp._interactionPairData.back( ) );
 
                     return;
 
                 }
 
                 static void setNonLocalMicroDeformation( asp::aspBase &asp,
-                                                             std::pair< bool, floatVector > &nonLocalMicroDeformation ){
+                                                             asp::dataStorage< floatVector > &nonLocalMicroDeformation ){
 
                     BOOST_CHECK_NO_THROW( asp.setNonLocalMicroDeformation( ) );
 
                     nonLocalMicroDeformation = asp._nonLocalMicroDeformation;
+
+                    BOOST_CHECK( &asp._nonLocalMicroDeformation == asp._interactionPairData.back( ) );
 
                     return;
 
                 }
 
                 static void setLocalCurrentNormal( asp::aspBase &asp,
-                                                       std::pair< bool, floatVector > &localCurrentNormal ){
+                                                       asp::dataStorage< floatVector > &localCurrentNormal ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalCurrentNormal( ) );
 
                     localCurrentNormal = asp._localCurrentNormal;
+
+                    BOOST_CHECK( &asp._localCurrentNormal == asp._surfacePointData.back( ) );
 
                     return;
 
                 }
 
                 static void setCurrentDistanceVector( asp::aspBase &asp,
-                                                    std::pair< bool, floatVector > &currentDistance ){
+                                                    asp::dataStorage< floatVector > &currentDistance ){
 
                     BOOST_CHECK_NO_THROW( asp.setCurrentDistanceVector( ) );
 
                     currentDistance = asp._currentDistanceVector;
+
+                    BOOST_CHECK( &asp._currentDistanceVector == asp._interactionPairData.back( ) );
 
                     return;
 
                 }
 
                 static void setSurfaceParameters( asp::aspBase &asp,
-                                                      std::pair< bool, floatVector > &currentSurfaceParameters ){
+                                                      asp::dataStorage< floatVector > &currentSurfaceParameters ){
 
                     BOOST_CHECK_NO_THROW( asp.setSurfaceParameters( ) );
 
                     currentSurfaceParameters = asp._surfaceParameters;
 
+                    BOOST_CHECK( &asp._surfaceParameters == asp._interactionPairData.back( ) );
+
                     return;
 
                 }
 
-                static void initializeSurfaceIntegrandQuantities( asp::aspBase &asp ){
+                static void setSurfaceAdhesionEnergyDensity( asp::aspBase &asp,
+                                                             asp::dataStorage< floatType > &surfaceAdhesionEnergyDensity ){
 
-                    BOOST_CHECK_NO_THROW( asp.initializeSurfaceIntegrandQuantities( ) );
+                    BOOST_CHECK_NO_THROW( asp.setSurfaceAdhesionEnergyDensity( ) );
+
+                    surfaceAdhesionEnergyDensity = asp._surfaceAdhesionEnergyDensity;
+
+                    BOOST_CHECK( &asp._surfaceAdhesionEnergyDensity == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setSurfaceAdhesionTraction( asp::aspBase &asp,
+                                                        asp::dataStorage< floatVector > &surfaceAdhesionTraction ){
+
+                    BOOST_CHECK_NO_THROW( asp.setSurfaceAdhesionTraction( ) );
+
+                    surfaceAdhesionTraction = asp._surfaceAdhesionTraction;
+
+                    BOOST_CHECK( &asp._surfaceAdhesionTraction == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setLocalReferenceSurfacePoints( asp::aspBase &asp,
+                                                            asp::dataStorage< floatVector > &localReferenceSurfacePoints ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalReferenceSurfacePoints( ) );
+
+                    localReferenceSurfacePoints = asp._localReferenceSurfacePoints;
+
+                    BOOST_CHECK( &asp._localReferenceSurfacePoints == asp._localParticleData.back( ) );
+
+                    return;
+
+                }
+
+                static void setNonLocalReferenceSurfacePoints( asp::aspBase &asp,
+                                                               asp::dataStorage< floatVector > &nonLocalReferenceSurfacePoints ){
+
+                    BOOST_CHECK_NO_THROW( asp.setNonLocalReferenceSurfacePoints( ) );
+
+                    nonLocalReferenceSurfacePoints = asp._nonLocalReferenceSurfacePoints;
+
+                    BOOST_CHECK( &asp._nonLocalReferenceSurfacePoints == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setLocalCurrentSurfacePoints( asp::aspBase &asp,
+                                                          asp::dataStorage< floatVector > &localCurrentSurfacePoints ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalCurrentSurfacePoints( ) );
+
+                    localCurrentSurfacePoints = asp._localCurrentSurfacePoints;
+
+                    BOOST_CHECK( &asp._localCurrentSurfacePoints == asp._localParticleData.back( ) );
+
+                    return;
+
+                }
+
+                static void setNonLocalCurrentSurfacePoints( asp::aspBase &asp,
+                                                             asp::dataStorage< floatVector > &nonLocalCurrentSurfacePoints ){
+
+                    BOOST_CHECK_NO_THROW( asp.setNonLocalCurrentSurfacePoints( ) );
+
+                    nonLocalCurrentSurfacePoints = asp._nonLocalCurrentSurfacePoints;
+
+                    BOOST_CHECK( &asp._nonLocalCurrentSurfacePoints == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setLocalParticleCurrentBoundingBox( asp::aspBase &asp,
+                                                                asp::dataStorage< floatMatrix > &localParticleCurrentBoundingBox ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalParticleCurrentBoundingBox( ) );
+
+                    localParticleCurrentBoundingBox = asp._localParticleCurrentBoundingBox;
+
+                    BOOST_CHECK( &asp._localParticleCurrentBoundingBox == asp._localParticleData.back( ) );
+
+                    return;
+
+                }
+
+                static void setNonLocalParticleCurrentBoundingBox( asp::aspBase &asp,
+                                                                   asp::dataStorage< floatMatrix > &nonLocalParticleCurrentBoundingBox ){
+
+                    BOOST_CHECK_NO_THROW( asp.setNonLocalParticleCurrentBoundingBox( ) );
+
+                    nonLocalParticleCurrentBoundingBox = asp._nonLocalParticleCurrentBoundingBox;
+
+                    BOOST_CHECK( &asp._nonLocalParticleCurrentBoundingBox == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setLocalGradientMicroDeformation( asp::aspBase &asp,
+                                                              asp::dataStorage< floatVector > &localGradientMicroDeformation ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalGradientMicroDeformation( ) );
+
+                    localGradientMicroDeformation = asp._localGradientMicroDeformation;
+
+                    BOOST_CHECK( &asp._localGradientMicroDeformation == asp._localParticleData.back( ) );
+
+                    return;
+
+                }
+
+                static void setNonLocalMicroDeformationBase( asp::aspBase &asp,
+                                                             asp::dataStorage< floatVector > &nonLocalMicroDeformationBase ){
+
+                    BOOST_CHECK_NO_THROW( asp.setNonLocalMicroDeformationBase( ) );
+
+                    nonLocalMicroDeformationBase = asp._nonLocalMicroDeformationBase;
+
+                    BOOST_CHECK( &asp._nonLocalMicroDeformationBase == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setSurfaceOverlapParameters( asp::aspBase &asp,
+                                                         asp::dataStorage< floatVector > &surfaceOverlapParameters ){
+
+                    BOOST_CHECK_NO_THROW( asp.setSurfaceOverlapParameters( ) );
+
+                    surfaceOverlapParameters = asp._surfaceOverlapParameters;
+
+                    BOOST_CHECK( &asp._surfaceOverlapParameters == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setParticlePairOverlap( asp::aspBase &asp,
+                                                    asp::dataStorage< std::unordered_map< unsigned int, floatVector > > &particlePairOverlap ){
+
+                    BOOST_CHECK_NO_THROW( asp.setParticlePairOverlap( ) );
+
+                    particlePairOverlap = asp._particlePairOverlap;
+
+                    BOOST_CHECK( &asp._particlePairOverlap == asp._interactionPairData.back( ) );
+
+                    return;
+
+                }
+
+                static void setSurfaceOverlapEnergyDensity( asp::aspBase &asp,
+                                                            asp::dataStorage< std::unordered_map< unsigned int, floatType > > &surfaceOverlapEnergyDensity ){
+
+                    BOOST_CHECK_NO_THROW( asp.setSurfaceOverlapEnergyDensity( ) );
+
+                    surfaceOverlapEnergyDensity = asp._surfaceOverlapEnergyDensity;
+
+                    BOOST_CHECK( &asp._surfaceOverlapEnergyDensity == asp._interactionPairData.back( ) );
 
                     return;
 
@@ -274,6 +461,8 @@ namespace asp{
                     asp._localReferenceNormal.first = true;
                     asp._localReferenceNormal.second = normal;
 
+                    asp.addSurfacePointData( &asp._localReferenceNormal );
+
                     return;
 
                 }
@@ -284,6 +473,8 @@ namespace asp{
                     asp._localReferenceRadius.first = true;
                     asp._localReferenceRadius.second = radius;
 
+                    asp.addLocalParticleData( &asp._localReferenceRadius );
+
                     return;
 
                 }
@@ -293,6 +484,8 @@ namespace asp{
 
                     asp._nonLocalReferenceRadius.first = true;
                     asp._nonLocalReferenceRadius.second = radius;
+
+                    asp.addInteractionPairData( &asp._nonLocalReferenceRadius );
 
                     return;
 
@@ -322,6 +515,8 @@ namespace asp{
                     asp._localDeformationGradient.first = true;
                     asp._localDeformationGradient.second = deformationGradient;
 
+                    asp.addLocalParticleData( &asp._localDeformationGradient );
+
                     return;
 
                 }
@@ -331,6 +526,8 @@ namespace asp{
 
                     asp._localMicroDeformation.first = true;
                     asp._localMicroDeformation.second = microDeformation;
+
+                    asp.addLocalParticleData( &asp._localMicroDeformation );
 
                     return;
 
@@ -342,6 +539,8 @@ namespace asp{
                     asp._nonLocalMicroDeformation.first = true;
                     asp._nonLocalMicroDeformation.second = nonLocalMicroDeformation;
 
+                    asp.addInteractionPairData( &asp._nonLocalMicroDeformation );
+
                     return;
 
                 }
@@ -351,6 +550,8 @@ namespace asp{
 
                     asp._localSurfaceReferenceRelativePositionVector.first = true;
                     asp._localSurfaceReferenceRelativePositionVector.second = localXi;
+
+                    asp.addSurfacePointData( &asp._localSurfaceReferenceRelativePositionVector );
 
                     return;
 
@@ -362,6 +563,8 @@ namespace asp{
                     asp._nonLocalSurfaceReferenceRelativePositionVector.first = true;
                     asp._nonLocalSurfaceReferenceRelativePositionVector.second = nonLocalXi;
 
+                    asp.addInteractionPairData( &asp._nonLocalSurfaceReferenceRelativePositionVector );
+
                     return;
 
                 }
@@ -370,6 +573,8 @@ namespace asp{
 
                     asp._referenceDistanceVector.first = true;
                     asp._referenceDistanceVector.second = referenceDistanceVector;
+
+                    asp.addInteractionPairData( &asp._referenceDistanceVector );
 
                     return;
 
@@ -388,6 +593,8 @@ namespace asp{
                     asp._localReferenceParticleSpacing.first = true;
                     asp._localReferenceParticleSpacing.second = referenceParticleSpacing;
 
+                    asp.addInteractionPairData( &asp._localReferenceParticleSpacing );
+
                     return;
 
                 }
@@ -396,6 +603,8 @@ namespace asp{
 
                     asp._surfaceParameters.first = true;
                     asp._surfaceParameters.second = surfaceParameters;
+
+                    asp.addInteractionPairData( &asp._surfaceParameters );
 
                     return;
 
@@ -406,6 +615,8 @@ namespace asp{
                     asp._currentDistanceVector.first = true;
                     asp._currentDistanceVector.second = currentDistance;
 
+                    asp.addInteractionPairData( &asp._currentDistanceVector );
+
                     return;
 
                 }
@@ -414,6 +625,8 @@ namespace asp{
 
                     asp._localCurrentNormal.first = true;
                     asp._localCurrentNormal.second = localCurrentNormal;
+
+                    asp.addSurfacePointData( &asp._localCurrentNormal );
 
                     return;
 
@@ -424,6 +637,8 @@ namespace asp{
                     asp._localReferenceSurfacePoints.first = true;
                     asp._localReferenceSurfacePoints.second = localReferenceSurfacePoints;
 
+                    asp.addLocalParticleData( &asp._localReferenceSurfacePoints );
+
                     return;
 
                 }
@@ -432,6 +647,8 @@ namespace asp{
 
                     asp._nonLocalReferenceSurfacePoints.first = true;
                     asp._nonLocalReferenceSurfacePoints.second = nonLocalReferenceSurfacePoints;
+
+                    asp.addInteractionPairData( &asp._nonLocalReferenceSurfacePoints );
 
                     return;
 
@@ -442,6 +659,8 @@ namespace asp{
                     asp._localCurrentSurfacePoints.first = true;
                     asp._localCurrentSurfacePoints.second = localCurrentSurfacePoints;
 
+                    asp.addLocalParticleData( &asp._localCurrentSurfacePoints );
+
                     return;
 
                 }
@@ -450,6 +669,8 @@ namespace asp{
 
                     asp._nonLocalCurrentSurfacePoints.first = true;
                     asp._nonLocalCurrentSurfacePoints.second = nonLocalCurrentSurfacePoints;
+
+                    asp.addInteractionPairData( &asp._nonLocalCurrentSurfacePoints );
 
                     return;
 
@@ -460,6 +681,8 @@ namespace asp{
                     asp._surfaceOverlapParameters.first = true;
                     asp._surfaceOverlapParameters.second = nonLocalCurrentSurfacePoints;
 
+                    asp.addInteractionPairData( &asp._surfaceOverlapParameters );
+
                     return;
 
                 }
@@ -468,6 +691,8 @@ namespace asp{
 
                     asp._nonLocalParticleCurrentBoundingBox.first = true;
                     asp._nonLocalParticleCurrentBoundingBox.second = nonLocalParticleBoundingBox;
+
+                    asp.addInteractionPairData( &asp._nonLocalParticleCurrentBoundingBox );
 
                     return;
 
@@ -478,6 +703,8 @@ namespace asp{
                     asp._localGradientMicroDeformation.first = true;
                     asp._localGradientMicroDeformation.second = localGradientMicroDeformation;
 
+                    asp.addLocalParticleData( &asp._localGradientMicroDeformation );
+
                     return;
 
                 }
@@ -486,6 +713,8 @@ namespace asp{
 
                     asp._nonLocalMicroDeformationBase.first = true;
                     asp._nonLocalMicroDeformationBase.second = nonLocalMicroDeformationBase;
+
+                    asp.addInteractionPairData( &asp._nonLocalMicroDeformationBase );
 
                     return;
 
@@ -496,68 +725,106 @@ namespace asp{
                     asp._particlePairOverlap.first = true;
                     asp._particlePairOverlap.second = particlePairOverlap;
 
+                    asp.addInteractionPairData( &asp._particlePairOverlap );
+
                     return;
 
                 }
 
                 // Read functions for checking for errors
-                static std::pair< bool, floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
 
                     return asp._localReferenceNormal;
 
                 }
 
-                static std::pair< bool, floatVector > getLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp ){
 
                     return asp._localSurfaceReferenceRelativePositionVector;
 
                 }
 
-                static std::pair< bool, floatVector > getNonLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getNonLocalSurfaceReferenceRelativePositionVector( asp::aspBase &asp ){
 
                     return asp._nonLocalSurfaceReferenceRelativePositionVector;
 
                 }
 
-                static std::pair< bool, floatVector > getReferenceDistanceVector( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getReferenceDistanceVector( asp::aspBase &asp ){
 
                     return asp._referenceDistanceVector;
 
                 }
 
-                static std::pair< bool, floatVector > getLocalDeformationGradient( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getLocalDeformationGradient( asp::aspBase &asp ){
 
                     return asp._localDeformationGradient;
 
                 }
 
-                static std::pair< bool, floatVector > getLocalMicroDeformation( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getLocalMicroDeformation( asp::aspBase &asp ){
 
                     return asp._localMicroDeformation;
 
                 }
 
-                static std::pair< bool, floatVector > getNonLocalMicroDeformation( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getNonLocalMicroDeformation( asp::aspBase &asp ){
 
                     return asp._nonLocalMicroDeformation;
 
                 }
 
-                static std::pair< bool, floatVector > getCurrentDistance( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getCurrentDistance( asp::aspBase &asp ){
 
                     return asp._currentDistanceVector;
 
                 }
 
-                static std::pair< bool, floatVector > getLocalCurrentNormal( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getLocalCurrentNormal( asp::aspBase &asp ){
 
                     return asp._localCurrentNormal;
 
                 }
 
-                static std::pair< bool, floatVector > getSurfaceParameters( asp::aspBase &asp ){
+                static asp::dataStorage< floatVector > getSurfaceParameters( asp::aspBase &asp ){
 
                     return asp._surfaceParameters;
+
+                }
+
+                static std::vector< asp::dataBase* > getInteractionPairData( asp::aspBase &asp ){
+
+                    return asp._interactionPairData;
+
+                }
+
+                static std::vector< asp::dataBase* > getSurfacePointData( asp::aspBase &asp ){
+
+                    return asp._surfacePointData;
+
+                }
+
+                static std::vector< asp::dataBase* > getLocalParticleData( asp::aspBase &asp ){
+
+                    return asp._localParticleData;
+
+                }
+
+                static void resetInteractionPairData( asp::aspBase & asp ){
+
+                    asp.resetInteractionPairData( );
+
+                }
+
+                static void resetSurfacePointData( asp::aspBase & asp ){
+
+                    asp.resetSurfacePointData( );
+
+                }
+
+                static void resetLocalParticleData( asp::aspBase & asp ){
+
+                    asp.resetLocalParticleData( );
 
                 }
 
@@ -782,9 +1049,9 @@ BOOST_AUTO_TEST_CASE( test_aspBase_initializeUnitSphere ){
 
     asp::aspBase asp;
 
-    std::pair< bool, floatVector > unitSpherePoints;
+    asp::dataStorage< floatVector > unitSpherePoints;
 
-    std::pair< bool, std::vector< unsigned int > > unitSphereConnectivity;
+    asp::dataStorage< std::vector< unsigned int > > unitSphereConnectivity;
 
     asp::unit_test::aspBaseTester::initializeUnitSphere( asp, unitSpherePoints, unitSphereConnectivity );
 
@@ -831,7 +1098,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceRadius ){
 
     aspBaseMock asp( radiusAnswer );
 
-    std::pair< bool, floatType > radius;
+    asp::dataStorage< floatType > radius;
 
     asp::unit_test::aspBaseTester::setLocalReferenceRadius( asp, radius );
 
@@ -863,7 +1130,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalReferenceRadius ){
 
     aspBaseMock asp( radiusAnswer );
 
-    std::pair< bool, floatType > radius;
+    asp::dataStorage< floatType > radius;
 
     asp::unit_test::aspBaseTester::setNonLocalReferenceRadius( asp, radius );
 
@@ -877,7 +1144,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalReferenceRadius ){
 
 }
 
-BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceNormal ){
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalReferenceNormal ){
 
     class aspBaseMock : public asp::aspBase{
 
@@ -915,27 +1182,13 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceNormal ){
 
     }
 
-    std::pair< bool, floatVector > result;
-
-    unsigned int localIndex = 0;
-
-    unsigned int nonLocalIndex = 0;
+    floatVector result;
 
     for ( unsigned int i = 0; i < normalAnswers.size( ); i++ ){
 
-        asp::unit_test::aspBaseTester::set_indices( asp, localIndex, nonLocalIndex, i );
+        asp.getLocalReferenceNormal( i, result );
 
-        asp::unit_test::aspBaseTester::setLocalReferenceNormal( asp, result );
-
-        BOOST_CHECK( result.first );
-
-        BOOST_CHECK( vectorTools::fuzzyEquals( result.second, normalAnswers[ i ] ) );
-
-        aspBaseMock aspGet;
-
-        asp::unit_test::aspBaseTester::set_indices( aspGet, localIndex, nonLocalIndex, i );
-
-        BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalReferenceNormal( ), normalAnswers[ i ] ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( result, normalAnswers[ i ] ) );
 
     }
 
@@ -973,7 +1226,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalSurfaceReferenceRelativePositionVecto
 
     floatVector answer = { 0.65479004, 1.30958009, 1.96437013 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setLocalSurfaceReferenceRelativePositionVector( asp, result );
 
@@ -1019,7 +1272,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalSurfaceReferenceRelativePositionVe
 
     floatVector answer = { -0.65479004, -1.30958009, -1.96437013 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setNonLocalSurfaceReferenceRelativePositionVector( asp, result );
 
@@ -1045,7 +1298,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalDeformationGradient ){
         
     asp::unit_test::aspBaseTester::set_deformationGradient( asp, answer );
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setLocalDeformationGradient( asp, result );
 
@@ -1073,7 +1326,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalMicroDeformation ){
         
     asp::unit_test::aspBaseTester::set_microDeformation( asp, answer );
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setLocalMicroDeformation( asp, result );
 
@@ -1099,7 +1352,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setReferenceDistanceVector ){
 
     floatVector answer = { 0, 0, 0 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setReferenceDistanceVector( asp, result );
 
@@ -1153,7 +1406,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalReferenceParticleSpacing ){
 
     floatVector answer = { 4, 5, 6 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setLocalReferenceParticleSpacing( asp, result );
 
@@ -1201,7 +1454,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
                           147, 166, 185, 
                           204, 223, 242 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setNonLocalMicroDeformation( asp, result );
 
@@ -1251,7 +1504,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormal ){
 
     floatVector answer = { -0.73381014, -0.454509  ,  0.50492004 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setLocalCurrentNormal( asp, result );
 
@@ -1264,6 +1517,59 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormal ){
     BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalCurrentNormal( ), answer ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalCurrentNormal ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatMatrix values = { { 1, 2, 3 }, { 4, 5, 6 } };
+
+
+        private:
+
+            void getLocalReferenceNormal( const unsigned int &index, floatVector &value ){
+    
+                value = values[ index ];
+    
+                return;
+    
+            }
+    
+            void setLocalMicroDeformation( ){
+    
+                floatVector value = { 0.39293837, -0.42772133, -0.54629709,
+                                      0.10262954,  0.43893794, -0.15378708,
+                                      0.9615284 ,  0.36965948, -0.0381362 };
+    
+                asp::unit_test::aspBaseTester::set_localMicroDeformation( *this, value );
+    
+                return;
+    
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatMatrix answers = {
+                              { -0.73381014, -0.454509  ,  0.50492004 },
+                              { -0.68612755, -0.39784135,  0.60905767 },
+                          };
+
+    floatVector result;
+
+    for ( unsigned int i = 0; i < answers.size( ); i++ ){
+
+        asp.getLocalCurrentNormal( i, result );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( result, answers[ i ] ) );
+
+    }
+
+}
+
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVector ){
 
@@ -1341,7 +1647,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVector ){
 
     floatVector answer = { 482, 554, 626 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setCurrentDistanceVector( asp, result );
 
@@ -1376,7 +1682,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceParameters ){
 
     floatVector answer = { 1, 2, 3 };
 
-    std::pair< bool, floatVector > result;
+    asp::dataStorage< floatVector > result;
 
     asp::unit_test::aspBaseTester::setSurfaceParameters( asp, result );
 
@@ -1387,190 +1693,6 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceParameters ){
     aspBaseMock aspGet;
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getSurfaceParameters( ), answer ) );
-
-}
-
-BOOST_AUTO_TEST_CASE( test_aspBase_initializeSurfaceIntegrandQuantities ){
-
-    class aspBaseMock : public asp::aspBase{
-
-        public:
-
-            floatVector localReferenceNormalAnswer = { 1, 2, 3};
-
-            floatVector localSurfaceReferenceRelativePositionVectorAnswer = { 4, 5, 6 };
-
-            floatVector nonLocalSurfaceReferenceRelativePositionVectorAnswer = { 7, 8, 9 };
-
-            floatVector referenceDistanceVectorAnswer = { 10, 11, 12 };
-
-            floatVector localDeformationGradientAnswer = { 13, 14, 15,
-                                                           16, 17, 18,
-                                                           19, 20, 21 };
-
-            floatVector localMicroDeformationAnswer = { 22, 23, 24,
-                                                        25, 26, 27,
-                                                        28, 29, 30 };
-
-            floatVector nonLocalMicroDeformationAnswer = { 31, 32, 33,
-                                                           34, 35, 36,
-                                                           37, 38, 39 };
-
-            floatVector currentDistanceAnswer = { 40, 41, 42 };
-
-            floatVector localCurrentNormalAnswer = { 43, 44, 45 };
-
-            floatVector surfaceParametersAnswer = { 46, 47 };
-
-        private:
-
-            virtual void setLocalReferenceNormal( ){
-    
-                asp::unit_test::aspBaseTester::set_localReferenceNormal( *this, localReferenceNormalAnswer );
-
-                return;
-    
-            }
-
-            virtual void setLocalSurfaceReferenceRelativePositionVector( ){
-
-                asp::unit_test::aspBaseTester::set_localSurfaceReferenceRelativePositionVector( *this, localSurfaceReferenceRelativePositionVectorAnswer );
-
-                return;
-
-            }
-
-            virtual void setNonLocalSurfaceReferenceRelativePositionVector( ){
-
-                asp::unit_test::aspBaseTester::set_nonLocalSurfaceReferenceRelativePositionVector( *this, nonLocalSurfaceReferenceRelativePositionVectorAnswer );
-
-                return;
-
-            }
-
-            virtual void setReferenceDistanceVector( ){
-
-                asp::unit_test::aspBaseTester::set_referenceDistanceVector( *this, referenceDistanceVectorAnswer );
-
-                return;
-
-            }
-
-            virtual void setLocalDeformationGradient( ){
-
-                asp::unit_test::aspBaseTester::set_localDeformationGradient( *this, localDeformationGradientAnswer );
-
-                return;
-
-            }
-
-            virtual void setLocalMicroDeformation( ){
-
-                asp::unit_test::aspBaseTester::set_localMicroDeformation( *this, localMicroDeformationAnswer );
-
-                return;
-
-            }
-
-            virtual void setNonLocalMicroDeformation( ){
-
-                asp::unit_test::aspBaseTester::set_nonLocalMicroDeformation( *this, nonLocalMicroDeformationAnswer );
-
-                return;
-
-            }
-
-            virtual void setCurrentDistanceVector( ){
-
-                asp::unit_test::aspBaseTester::set_currentDistance( *this, currentDistanceAnswer );
-
-                return;
-
-            }
-
-            virtual void setLocalCurrentNormal( ){
-
-                asp::unit_test::aspBaseTester::set_localCurrentNormal( *this, localCurrentNormalAnswer );
-
-                return;
-
-            }
-
-            virtual void setSurfaceParameters( ){
-
-                asp::unit_test::aspBaseTester::set_surfaceParameters( *this, surfaceParametersAnswer );
-
-                return;
-
-            }
-
-    };
-
-    aspBaseMock asp;
-
-    asp::unit_test::aspBaseTester::initializeSurfaceIntegrandQuantities( asp );
-
-    std::pair< bool, floatVector > result;
-
-    result = asp::unit_test::aspBaseTester::getLocalReferenceNormal( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localReferenceNormalAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getLocalSurfaceReferenceRelativePositionVector( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localSurfaceReferenceRelativePositionVectorAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getNonLocalSurfaceReferenceRelativePositionVector( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.nonLocalSurfaceReferenceRelativePositionVectorAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getReferenceDistanceVector( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.referenceDistanceVectorAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getLocalDeformationGradient( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localDeformationGradientAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getLocalMicroDeformation( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localMicroDeformationAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getNonLocalMicroDeformation( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.nonLocalMicroDeformationAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getCurrentDistance( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.currentDistanceAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getLocalCurrentNormal( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.localCurrentNormalAnswer ) );
-
-    result = asp::unit_test::aspBaseTester::getSurfaceParameters( asp );
-
-    BOOST_CHECK( result.first );
-
-    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.surfaceParametersAnswer ) );
 
 }
 
@@ -1598,7 +1720,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity ){
 
     };
     
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatType answer = 178.2828858284305;
 
@@ -1608,7 +1730,15 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
-    result = *asp.getSurfaceAdhesionEnergyDensity( );
+    asp::dataStorage< floatType > result2;
+
+    asp::unit_test::aspBaseTester::setSurfaceAdhesionEnergyDensity( asp, result2 );
+
+    BOOST_CHECK( result2.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result2.second, answer ) );
+
+    result = *aspGet.getSurfaceAdhesionEnergyDensity( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
 
@@ -1651,6 +1781,14 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionTraction ){
     asp.computeSurfaceAdhesionTraction( result );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+    asp::dataStorage< floatVector > result2;
+
+    asp::unit_test::aspBaseTester::setSurfaceAdhesionTraction( asp, result2 );
+
+    BOOST_CHECK( result2.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result2.second, answer ) );
 
     result = *aspGet.getSurfaceAdhesionTraction( );
 
@@ -1750,11 +1888,19 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getLocalReferenceSurfacePoints ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatVector answer = asp.points * asp.radius;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalReferenceSurfacePoints( ), answer ) );
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setLocalReferenceSurfacePoints( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalReferenceSurfacePoints( ), answer ) );
 
 }
 
@@ -1786,11 +1932,19 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalReferenceSurfacePoints ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatVector answer = asp.points * asp.radius;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalReferenceSurfacePoints( ), answer ) );
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setNonLocalReferenceSurfacePoints( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalReferenceSurfacePoints( ), answer ) );
 
 }
 
@@ -1820,14 +1974,22 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getLocalCurrentSurfacePoints ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatVector answer = { 1.4,  3.2,  5. ,
                            3.2,  7.7, 12.2,
                            5. , 12.2, 19.4,
                            6.8, 16.7, 26.6};
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalCurrentSurfacePoints( ), answer ) );
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setLocalCurrentSurfacePoints( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalCurrentSurfacePoints( ), answer ) );
 
 }
 
@@ -1857,14 +2019,22 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalCurrentSurfacePoints ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatVector answer = { 1.4,  3.2,  5. ,
                            3.2,  7.7, 12.2,
                            5. , 12.2, 19.4,
                            6.8, 16.7, 26.6};
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalCurrentSurfacePoints( ), answer ) );
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setNonLocalCurrentSurfacePoints( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalCurrentSurfacePoints( ), answer ) );
 
 }
 
@@ -1886,13 +2056,21 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleCurrentBoundingBox ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatMatrix answer = { { 1, 10 },
                            { 2, 11 },
                            { 3, 12 } };
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalParticleCurrentBoundingBox( ), answer ) );
+    asp::dataStorage< floatMatrix > result;
+
+    asp::unit_test::aspBaseTester::setLocalParticleCurrentBoundingBox( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleCurrentBoundingBox( ), answer ) );
 
 }
 
@@ -1914,13 +2092,21 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalParticleCurrentBoundingBox ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     floatMatrix answer = { { 1, 10 },
                            { 2, 11 },
                            { 3, 12 } };
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalParticleCurrentBoundingBox( ), answer ) );
+    asp::dataStorage< floatMatrix > result;
+
+    asp::unit_test::aspBaseTester::setNonLocalParticleCurrentBoundingBox( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalParticleCurrentBoundingBox( ), answer ) );
 
 }
 
@@ -2002,26 +2188,46 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getGradientMicroDeformation ){
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setLocalGradientMicroDeformation ){
 
-    asp::aspBase asp;
+    asp::aspBase asp, aspGet;
 
     floatVector answer = { 1, 2, 3, 4, 5, 6 };
 
     asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp, answer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getLocalGradientMicroDeformation( ), answer ) );
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspGet, answer );
+
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setLocalGradientMicroDeformation( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalGradientMicroDeformation( ), answer ) );
 
 }
 
 
 BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformationBase ){
 
-    asp::aspBase asp;
+    asp::aspBase asp, aspGet;
 
     floatVector answer = { 1, 2, 3, 4, 5, 6 };
 
     asp::unit_test::aspBaseTester::set_microDeformation( asp, answer );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getNonLocalMicroDeformationBase( ), answer ) );
+    asp::unit_test::aspBaseTester::set_microDeformation( aspGet, answer );
+
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setNonLocalMicroDeformationBase( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalMicroDeformationBase( ), answer ) );
 
 }
 
@@ -2043,9 +2249,17 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceOverlapParameters ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp.getSurfaceOverlapParameters( ), asp.overlapParameters ) );
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setSurfaceOverlapParameters( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, asp.overlapParameters ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getSurfaceOverlapParameters( ), asp.overlapParameters ) );
 
 }
 
@@ -2136,21 +2350,37 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setParticlePairOverlap ){
 
     };
 
-    aspBaseMock asp;
+    aspBaseMock asp, aspGet;
 
     std::unordered_map< unsigned int, floatVector > answer = { { 0, { 0, 0, 0 } }, { 1, { -0.5, 0, 0 } }, { 2, { -0.65, 0, 0 } } };
 
-    const std::unordered_map< unsigned int, floatVector > *result = asp.getParticlePairOverlap( );
+    asp::dataStorage< std::unordered_map< unsigned int, floatVector > > result;
+
+    asp::unit_test::aspBaseTester::setParticlePairOverlap( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    const std::unordered_map< unsigned int, floatVector > *result2 = aspGet.getParticlePairOverlap( );
 
     for ( auto p = answer.begin( ); p != answer.end( ); p++ ){
 
-        auto search = result->find( p->first );
+        auto search = result.second.find( p->first );
 
-        BOOST_CHECK( search != result->end( ) );
+        BOOST_CHECK( search != result.second.end( ) );
 
-        if ( search != result->end( ) ){
+        if ( search != result.second.end( ) ){
 
             BOOST_CHECK( vectorTools::fuzzyEquals( p->second, search->second ) );
+
+        }
+
+        auto search2 = result2->find( p->first );
+
+        BOOST_CHECK( search2 != result2->end( ) );
+
+        if ( search2 != result2->end( ) ){
+
+            BOOST_CHECK( vectorTools::fuzzyEquals( p->second, search2->second ) );
 
         }
 
@@ -2168,6 +2398,8 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
 
             floatVector surfaceOverlapParameters = { 2.3 };
 
+            floatMatrix currentNormals = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, { 10, 11, 12 }, { 13, 14, 15 } };
+
         private:
 
             virtual void setParticlePairOverlap( ){
@@ -2182,13 +2414,25 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
 
             }
 
+            virtual void getLocalCurrentNormal( const unsigned int &index, floatVector &normal ){
+
+                normal = currentNormals[ index ];
+
+            }
+
     };
 
     aspBaseMock asp, aspGet;
 
     std::unordered_map< unsigned int, floatType > result;
 
+    asp::dataStorage< std::unordered_map< unsigned int, floatType > > resultSet;
+
     BOOST_CHECK_NO_THROW( asp.computeSurfaceOverlapEnergyDensity( result ) );
+
+    asp::unit_test::aspBaseTester::setSurfaceOverlapEnergyDensity( asp, resultSet );
+
+    BOOST_CHECK( resultSet.first );
 
     const std::unordered_map< unsigned int, floatType > *resultGet;
 
@@ -2200,13 +2444,19 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
 
         BOOST_CHECK( overlapEnergy != result.end( ) );
 
-        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergy->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergy->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) );
+
+        auto overlapEnergySet = resultSet.second.find( p->first );
+
+        BOOST_CHECK( overlapEnergySet != resultSet.second.end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergySet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) );
 
         auto overlapEnergyGet = resultGet->find( p->first );
 
-        BOOST_CHECK( overlapEnergyGet != result.end( ) );
+        BOOST_CHECK( overlapEnergyGet != resultGet->end( ) );
 
-        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergyGet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergyGet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) );
 
     } 
 
@@ -2263,5 +2513,215 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapTraction ){
         BOOST_CHECK( vectorTools::fuzzyEquals( overlapTraction->second, asp.surfaceOverlapParameters[ 0 ] * p->second ) );
 
     } 
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_resetInteractionPairData ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            asp::dataStorage< int > interactionData1;
+        
+            asp::dataStorage< floatVector > interactionData2;
+    
+            asp::dataStorage< floatType > surfaceData1;
+    
+            asp::dataStorage< floatMatrix > surfaceData2;
+    
+            asp::dataStorage< std::unordered_map< int, floatType > > particleData1;
+
+            aspBaseMock( ){
+
+                interactionData1 = asp::dataStorage< int >( true, 1 );
+        
+                interactionData2 = asp::dataStorage< floatVector >( true, { 1, 2, 3 } );
+    
+                surfaceData1 = asp::dataStorage< floatType >( true, 2. );
+    
+                surfaceData2 = asp::dataStorage< floatMatrix >( true, { { 1, 2, 3 }, { 4, 5, 6 } } );
+    
+                particleData1 = asp::dataStorage< std::unordered_map< int, floatType > >( true, { { 1, 1 }, { 2, 3 } } );
+
+                addInteractionPairData( &interactionData1 );
+
+                addInteractionPairData( &interactionData2 );
+
+                addSurfacePointData( &surfaceData1 );
+
+                addSurfacePointData( &surfaceData2 );
+
+                addLocalParticleData( &particleData1 );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getInteractionPairData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getSurfacePointData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getLocalParticleData( asp ).size( ) == 1 );
+
+    asp::unit_test::aspBaseTester::resetInteractionPairData( asp );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getInteractionPairData( asp ).size( ) == 0 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getSurfacePointData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getLocalParticleData( asp ).size( ) == 1 );
+
+    BOOST_CHECK( !asp.interactionData1.first );
+
+    BOOST_CHECK( !asp.interactionData2.first );
+
+    BOOST_CHECK( asp.surfaceData1.first );
+
+    BOOST_CHECK( asp.surfaceData2.first );
+
+    BOOST_CHECK( asp.particleData1.first );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_resetSurfacePointData ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            asp::dataStorage< int > interactionData1;
+        
+            asp::dataStorage< floatVector > interactionData2;
+    
+            asp::dataStorage< floatType > surfaceData1;
+    
+            asp::dataStorage< floatMatrix > surfaceData2;
+    
+            asp::dataStorage< std::unordered_map< int, floatType > > particleData1;
+
+            aspBaseMock( ){
+
+                interactionData1 = asp::dataStorage< int >( true, 1 );
+        
+                interactionData2 = asp::dataStorage< floatVector >( true, { 1, 2, 3 } );
+    
+                surfaceData1 = asp::dataStorage< floatType >( true, 2. );
+    
+                surfaceData2 = asp::dataStorage< floatMatrix >( true, { { 1, 2, 3 }, { 4, 5, 6 } } );
+    
+                particleData1 = asp::dataStorage< std::unordered_map< int, floatType > >( true, { { 1, 1 }, { 2, 3 } } );
+
+                addInteractionPairData( &interactionData1 );
+
+                addInteractionPairData( &interactionData2 );
+
+                addSurfacePointData( &surfaceData1 );
+
+                addSurfacePointData( &surfaceData2 );
+
+                addLocalParticleData( &particleData1 );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getInteractionPairData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getSurfacePointData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getLocalParticleData( asp ).size( ) == 1 );
+
+    asp::unit_test::aspBaseTester::resetSurfacePointData( asp );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getInteractionPairData( asp ).size( ) == 0 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getSurfacePointData( asp ).size( ) == 0 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getLocalParticleData( asp ).size( ) == 1 );
+
+    BOOST_CHECK( !asp.interactionData1.first );
+
+    BOOST_CHECK( !asp.interactionData2.first );
+
+    BOOST_CHECK( !asp.surfaceData1.first );
+
+    BOOST_CHECK( !asp.surfaceData2.first );
+
+    BOOST_CHECK( asp.particleData1.first );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_resetLocalParticleData ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            asp::dataStorage< int > interactionData1;
+        
+            asp::dataStorage< floatVector > interactionData2;
+    
+            asp::dataStorage< floatType > surfaceData1;
+    
+            asp::dataStorage< floatMatrix > surfaceData2;
+    
+            asp::dataStorage< std::unordered_map< int, floatType > > particleData1;
+
+            aspBaseMock( ){
+
+                interactionData1 = asp::dataStorage< int >( true, 1 );
+        
+                interactionData2 = asp::dataStorage< floatVector >( true, { 1, 2, 3 } );
+    
+                surfaceData1 = asp::dataStorage< floatType >( true, 2. );
+    
+                surfaceData2 = asp::dataStorage< floatMatrix >( true, { { 1, 2, 3 }, { 4, 5, 6 } } );
+    
+                particleData1 = asp::dataStorage< std::unordered_map< int, floatType > >( true, { { 1, 1 }, { 2, 3 } } );
+
+                addInteractionPairData( &interactionData1 );
+
+                addInteractionPairData( &interactionData2 );
+
+                addSurfacePointData( &surfaceData1 );
+
+                addSurfacePointData( &surfaceData2 );
+
+                addLocalParticleData( &particleData1 );
+
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getInteractionPairData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getSurfacePointData( asp ).size( ) == 2 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getLocalParticleData( asp ).size( ) == 1 );
+
+    asp::unit_test::aspBaseTester::resetLocalParticleData( asp );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getInteractionPairData( asp ).size( ) == 0 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getSurfacePointData( asp ).size( ) == 0 );
+
+    BOOST_CHECK( asp::unit_test::aspBaseTester::getLocalParticleData( asp ).size( ) == 0 );
+
+    BOOST_CHECK( !asp.interactionData1.first );
+
+    BOOST_CHECK( !asp.interactionData2.first );
+
+    BOOST_CHECK( !asp.surfaceData1.first );
+
+    BOOST_CHECK( !asp.surfaceData2.first );
+
+    BOOST_CHECK( !asp.particleData1.first );
 
 }
