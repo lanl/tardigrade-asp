@@ -61,6 +61,8 @@ namespace asp{
     typedef std::vector< floatType > floatVector; //!< Define a vector of floats
     typedef std::vector< std::vector< floatType > > floatMatrix; //!< Define a matrix of floats
 
+    floatType _pi = 3.14159265;
+
     /// Say hello
     /// @param message The message to print
     errorOut sayHello(std::string message);
@@ -88,6 +90,9 @@ namespace asp{
         public:
 
             virtual void clear( ){
+                /*!
+                 * The function to erase the current values stored
+                 */
 
                 ERROR_TOOLS_CATCH( throw std::runtime_error( "clear not implemented!" ) );
 
@@ -100,15 +105,18 @@ namespace asp{
 
         public:
 
-            bool first = false;
+            bool first = false; //!The flag for whether the data has been stored
 
-            T second;
+            T second; //!The stored data
 
             dataStorage( ){ };
 
             dataStorage( const bool &_first, const T &_second ) : first( _first ), second( _second ) { }
 
             virtual void clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and clearing second
+                 */
 
                 first = false;
 
@@ -120,6 +128,9 @@ namespace asp{
 
     template <>
     inline void dataStorage< int >::clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and second to zero
+                 */
 
         first = false;
 
@@ -129,6 +140,9 @@ namespace asp{
 
     template <>
     inline void dataStorage< unsigned int >::clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and second to zero
+                 */
 
         first = false;
 
@@ -138,6 +152,9 @@ namespace asp{
 
     template <>
     inline void dataStorage< floatType >::clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and second to zero
+                 */
 
         first = false;
 
@@ -163,15 +180,15 @@ namespace asp{
                                                             const floatType &currentTemperature, const floatType &previousTemperature,
                                                             const floatVector &previousStateVariables,
                                                             const floatVector &parameters,
-                                                            floatType &energy, floatVector &cauchyStress );
+                                                            floatType &energyDensity, floatVector &cauchyStress, floatVector &stateVariables );
 
             virtual void computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
                                                             const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
                                                             const floatType &currentTemperature, const floatType &previousTemperature,
                                                             const floatVector &previousStateVariables,
                                                             const floatVector &parameters,
-                                                            floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio );
-
+                                                            floatType &energyDensity, floatVector &cauchyStress, floatVector &stateVariables, floatType &logProbabilityRatio );
+       
             virtual void computeSurfaceAdhesionTraction( floatVector &surfaceAdhesionTraction );
 
             virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity );
@@ -181,11 +198,39 @@ namespace asp{
             virtual void computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity );
 
             // Getter functions
+            const unsigned int* getNumLocalParticles( );
+
+            const floatType* getPreviousTime( );
+
+            const floatType* getDeltaTime( );
+
+            const floatType* getPreviousTemperature( );
+
+            const floatType* getTemperature( );
+
+            const floatType* getLocalParticleEnergy( );
+
+            const floatType* getLocalParticleEnergyDensity( );
+
+            const floatType* getLocalParticleLogProbabilityRatio( );
+
             const floatType* getSurfaceAdhesionEnergyDensity( );
 
             const floatType* getLocalReferenceRadius( );
 
             const floatType* getNonLocalReferenceRadius( );
+
+            const floatType* getLocalParticleReferenceVolume( );
+
+            const floatType* getLocalParticleCurrentVolume( );
+
+            const floatVector* getLocalParticleMicroCauchyStress( );
+
+            const floatVector* getLocalParticleStateVariables( );
+
+            const floatVector* getParticleParameters( );
+
+            const floatVector* getLocalParticleParameters( );
 
             const floatVector* getLocalReferenceNormal( );
 
@@ -195,13 +240,23 @@ namespace asp{
 
             const floatVector* getNonLocalSurfaceReferenceRelativePositionVector( );
 
+            const floatVector* getDeformationGradient( );
+
+            const floatVector* getPreviousDeformationGradient( );
+
             const floatVector* getLocalDeformationGradient( );
 
+            const floatVector* getPreviousLocalDeformationGradient( );
+
             const floatVector* getLocalMicroDeformation( );
+
+            const floatVector* getPreviousLocalMicroDeformation( );
 
             const floatVector* getLocalReferenceParticleSpacing( );
 
             const floatVector* getMicroDeformation( );
+
+            const floatVector* getPreviousMicroDeformation( );
 
             const floatVector* getGradientMicroDeformation( );
 
@@ -235,6 +290,10 @@ namespace asp{
 
             const floatVector* getSurfaceAdhesionTraction( );
 
+            const floatVector* getPreviousStateVariables( );
+
+            const floatVector* getPreviousLocalStateVariables( );
+
             const std::unordered_map< unsigned int, floatVector>* getSurfaceOverlapTraction( );
 
             const floatMatrix* getLocalParticleCurrentBoundingBox( );
@@ -246,6 +305,20 @@ namespace asp{
             const std::unordered_map< unsigned int, floatVector >* getParticlePairOverlap( );
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
+
+            const floatVector* getAssembledLocalParticleEnergies( );
+
+            const floatMatrix* getAssembledLocalParticleMicroCauchyStresses( );
+
+            const floatVector* getAssembledLocalParticleVolumes( );
+
+            const floatVector* getAssembledLocalParticleLogProbabilityRatios( );
+
+            const unsigned int* getLocalIndex( ){ return &_localIndex; }
+
+            const unsigned int* getNonLocalIndex( ){ return &_nonLocalIndex; };
+
+            const unsigned int* getLocalSurfaceNodeIndex( ){ return &_localSurfaceNodeIndex; };
 
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
@@ -278,13 +351,33 @@ namespace asp{
 
             unsigned int _localSurfaceNodeIndex = 0;
 
+            unsigned int _numLocalParticles = 1;
+
             floatType   _radius;
+
+            floatType   _previousTime;
+
+            floatType   _deltaTime;
+
+            floatType   _temperature;
+
+            floatType   _previousTemperature;
+
+            floatVector _previousDeformationGradient;
+
+            floatVector _previousMicroDeformation;
+
+            floatVector _previousGradientMicroDeformation;
+
+            floatVector _previousStateVariables;
 
             floatVector _deformationGradient;
 
             floatVector _microDeformation;
 
             floatVector _gradientMicroDeformation;
+
+            floatVector _particleParameters;
 
             dataStorage< floatMatrix > _localParticleCurrentBoundingBox;
 
@@ -296,6 +389,10 @@ namespace asp{
             dataStorage< floatType > _localReferenceRadius;
 
             dataStorage< floatType > _nonLocalReferenceRadius;
+
+            dataStorage< floatType > _localParticleEnergyDensity;
+
+            dataStorage< floatType > _localParticleLogProbabilityRatio;
 
             dataStorage< std::vector< unsigned int > > _unitSphereConnectivity;
 
@@ -313,7 +410,11 @@ namespace asp{
 
             dataStorage< floatVector > _localDeformationGradient;
 
+            dataStorage< floatVector > _previousLocalDeformationGradient;
+
             dataStorage< floatVector > _localMicroDeformation;
+
+            dataStorage< floatVector > _previousLocalMicroDeformation;
 
             dataStorage< floatVector > _nonLocalMicroDeformation;
 
@@ -355,6 +456,28 @@ namespace asp{
 
             dataStorage< floatVector > _allParticleSurfaceConstraintEnergy;
 
+            dataStorage< floatType > _localParticleEnergy;
+
+            dataStorage< floatVector > _localParticleEnergies;
+
+            dataStorage< floatVector > _localParticleMicroCauchyStress;
+
+            dataStorage< floatVector > _localParticleStateVariables;
+
+            dataStorage< floatType > _localParticleReferenceVolume;
+
+            dataStorage< floatType > _localParticleCurrentVolume;
+
+            dataStorage< floatVector > _localParticleParameters;
+
+            dataStorage< floatVector > _assembledLocalParticleEnergies;
+
+            dataStorage< floatMatrix > _assembledLocalParticleMicroCauchyStress;
+
+            dataStorage< floatVector > _assembledLocalParticleVolumes;
+
+            dataStorage< floatVector > _assembledLocalParticleLogProbabilityRatios;
+
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
             std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
@@ -380,7 +503,11 @@ namespace asp{
 
             virtual void setLocalDeformationGradient( );
 
+            virtual void setPreviousLocalDeformationGradient( );
+
             virtual void setLocalMicroDeformation( );
+
+            virtual void setPreviousLocalMicroDeformation( );
 
             virtual void setNonLocalMicroDeformation( );
 
@@ -397,6 +524,10 @@ namespace asp{
             virtual void setSurfaceParameters( );
 
             virtual void setSurfaceOverlapParameters( );
+
+            virtual void setLocalParticleQuantities( );
+
+            virtual void setLocalParticleEnergy( );
 
             virtual void setSurfaceAdhesionEnergyDensity( );
 
@@ -420,11 +551,20 @@ namespace asp{
 
             virtual void setParticlePairOverlap( );
 
+            virtual void setLocalParticleReferenceVolume( );
+
+            virtual void setLocalParticleCurrentVolume( );
+
+            virtual void setLocalParticleParameters( );
+
             virtual void resetInteractionPairData( );
 
             virtual void resetSurfacePointData( );
 
             virtual void resetLocalParticleData( );
+
+            virtual void assembleLocalParticles( );
+
 
     };
 

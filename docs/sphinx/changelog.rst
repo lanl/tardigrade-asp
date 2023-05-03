@@ -60,3 +60,5 @@ New Features
 - Added the computation of the surface overlap traction (:merge:`30`). By `Nathan Miller`_.
 - Added the functions to reset internally computed values at the correct times (:merge:`31`). By `Nathan Miller`_.
 - Added ability to compute the normals (reference and current) of a local particle at arbitrary surface points rather than just the current points (:merge:`31`). By `Nathan Miller`_.
+- Added all required functions for the computation of the local particle's energy (:merge:`32`). By `Nathan Miller`_.
+- Added the computation of the local particle's energy (:merge:`32`). By `Nathan Miller`_.

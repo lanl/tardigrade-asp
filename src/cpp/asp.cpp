@@ -56,9 +56,9 @@ namespace asp{
                                                      const floatType &currentTemperature, const floatType &previousTemperature,
                                                      const floatVector &previousStateVariables,
                                                      const floatVector &parameters,
-                                                     floatType &energy, floatVector &cauchyStress ){
+                                                     floatType &energyDensity, floatVector &cauchyStress, floatVector &stateVariables ){
         /*!
-         * Default function for computing the local particle's energy per unit current volume
+         * Default function for computing the local particle's energy in the current configuration
          * Defaults to a linear-elastic solid with parameters defined in the reference configuration.
          * 
          * \param &previousTime: The previous value of the time
@@ -68,11 +68,12 @@ namespace asp{
          * \param &currentTemperature: The current value of the temperature
          * \param &previousTemperature: The previous value of the temperature
          * \param &parameters: The parameters for the model
-         * \param &energy: The current value of the Helmholtz free energy per unit current volume
+         * \param &energyDensity: The current value of the Helmholtz free energy density in the current configuration
          * \param &cauchyStress: The current value of the Cauchy stress
+         * \param &stateVariables: The updated values of the state variables
          */
 
-        ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energy, cauchyStress ) );
+        ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energyDensity, cauchyStress ) );
 
         return;
 
@@ -83,9 +84,10 @@ namespace asp{
                                                      const floatType &currentTemperature, const floatType &previousTemperature,
                                                      const floatVector &previousStateVariables,
                                                      const floatVector &parameters,
-                                                     floatType &energy, floatVector &cauchyStress, floatType &logProbabilityRatio ){
+                                                     floatType &energyDensity, floatVector &cauchyStress, floatVector &stateVariables,
+                                                     floatType &logProbabilityRatio ){
         /*!
-         * Default function for computing the local particle's energy per unit current volume
+         * Default function for computing the local particle's energy density in the current configuration
          * Defaults to a linear-elastic solid with parameters defined in the reference configuration.
          * 
          * \param &previousTime: The previous value of the time
@@ -95,13 +97,14 @@ namespace asp{
          * \param &currentTemperature: The current value of the temperature
          * \param &previousTemperature: The previous value of the temperature
          * \param &parameters: The parameters for the model
-         * \param &energy: The current value of the Helmholtz free energy per unit current volume
+         * \param &energyDensity: The current value of the Helmholtz free energy density in the current configuration
          * \param &cauchyStress: The current value of the Cauchy stress
+         * \param &stateVariables: The updated values of the state variables
          * \param &logProbabilityRatio: The natural logarithm of the probability ratio between the new
          *     probability density and the previous value.
          */
 
-        ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energy, cauchyStress ) );
+        ERROR_TOOLS_CATCH_NODE_POINTER( stressTools::linearElasticity::evaluateEnergy( currentMicroDeformation, parameters, energyDensity, cauchyStress ) );
 
         logProbabilityRatio = 0.;
 
@@ -329,13 +332,42 @@ namespace asp{
 
     }
 
+    const floatVector* aspBase::getDeformationGradient( ){
+        /*!
+         * Get the deformation gradient
+         */
+
+        return &_deformationGradient;
+
+    }
+
+    const floatVector* aspBase::getPreviousDeformationGradient( ){
+        /*!
+         * Get the previous deformation gradient
+         */
+
+        return &_previousDeformationGradient;
+
+    }
+
+    const floatVector* aspBase::getPreviousMicroDeformation( ){
+        /*!
+         * Get the previous value of the micro deformation
+         */
+
+        return &_previousMicroDeformation;
+
+    }
 
     void aspBase::setLocalDeformationGradient( ){
         /*!
          * Set the local deformation gradient
          */
 
-        _localDeformationGradient.second = _deformationGradient;
+        const floatVector* deformationGradient;
+        ERROR_TOOLS_CATCH( deformationGradient = getDeformationGradient( ) );
+
+        _localDeformationGradient.second = *deformationGradient;
 
         _localDeformationGradient.first = true;
 
@@ -360,12 +392,49 @@ namespace asp{
 
     }
 
+    void aspBase::setPreviousLocalDeformationGradient( ){
+        /*!
+         * Set the local previous deformation gradient
+         */
+
+        const floatVector* previousDeformationGradient;
+        ERROR_TOOLS_CATCH( previousDeformationGradient = getPreviousDeformationGradient( ) );
+
+        _previousLocalDeformationGradient.second = *previousDeformationGradient;
+
+        _previousLocalDeformationGradient.first = true;
+
+        addLocalParticleData( &_previousLocalDeformationGradient );
+
+        return;
+
+    }
+
+    const floatVector* aspBase::getPreviousLocalDeformationGradient( ){
+        /*!
+         * Get the local previous deformation gradient
+         */
+
+        if ( !_previousLocalDeformationGradient.first ){
+
+            ERROR_TOOLS_CATCH( setPreviousLocalDeformationGradient( ) );
+
+        }
+
+        return &_previousLocalDeformationGradient.second;
+
+    }
+
+
     void aspBase::setLocalMicroDeformation( ){
         /*!
          * Set the local micro deformation
          */
 
-        _localMicroDeformation.second = _microDeformation;
+        const floatVector* microDeformation;
+        ERROR_TOOLS_CATCH( microDeformation = getMicroDeformation( ) );
+
+        _localMicroDeformation.second = *microDeformation;
 
         _localMicroDeformation.first = true;
 
@@ -387,6 +456,39 @@ namespace asp{
         }
 
         return &_localMicroDeformation.second;
+
+    }
+
+    void aspBase::setPreviousLocalMicroDeformation( ){
+        /*!
+         * Set the local previous micro deformation
+         */
+
+        const floatVector* previousMicroDeformation;
+        ERROR_TOOLS_CATCH( previousMicroDeformation = getPreviousMicroDeformation( ) );
+
+        _previousLocalMicroDeformation.second = *previousMicroDeformation;
+
+        _previousLocalMicroDeformation.first = true;
+
+        addLocalParticleData( &_previousLocalMicroDeformation );
+
+        return;
+
+    }
+
+    const floatVector* aspBase::getPreviousLocalMicroDeformation( ){
+        /*!
+         * Get the local previous micro deformation
+         */
+
+        if ( !_previousLocalMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setPreviousLocalMicroDeformation( ) );
+
+        }
+
+        return &_previousLocalMicroDeformation.second;
 
     }
 
@@ -1478,6 +1580,407 @@ namespace asp{
         }
 
         return &_nonLocalParticleCurrentBoundingBox.second;
+
+    }
+
+    const unsigned int* aspBase::getNumLocalParticles( ){
+        /*!
+         * Get the number of local particles
+         */
+
+        return &_numLocalParticles;
+    }
+
+    void aspBase::setLocalParticleQuantities( ){
+        /*!
+         * Set the energy, microstress, and log probability ratio for the local particle
+         */
+
+        const floatType *previousTime;
+        ERROR_TOOLS_CATCH( previousTime = getPreviousTime( ) );
+
+        const floatType *deltaTime;
+        ERROR_TOOLS_CATCH( deltaTime = getDeltaTime( ) );
+
+        const floatVector *currentLocalMicroDeformation;
+        ERROR_TOOLS_CATCH( currentLocalMicroDeformation = getLocalMicroDeformation( ) );
+
+        const floatVector *previousLocalMicroDeformation;
+        ERROR_TOOLS_CATCH( previousLocalMicroDeformation = getPreviousLocalMicroDeformation( ) );
+
+        const floatType *currentTemperature;
+        ERROR_TOOLS_CATCH( currentTemperature = getTemperature( ) );
+
+        const floatType *previousTemperature;
+        ERROR_TOOLS_CATCH( previousTemperature = getPreviousTemperature( ) );
+
+        const floatVector *previousStateVariables;
+        ERROR_TOOLS_CATCH( previousStateVariables = getPreviousLocalStateVariables( ) );
+
+        const floatVector *parameters;
+        ERROR_TOOLS_CATCH( parameters = getLocalParticleParameters( ) );
+
+        ERROR_TOOLS_CATCH( computeLocalParticleEnergyDensity( *previousTime, *deltaTime, *currentLocalMicroDeformation, *previousLocalMicroDeformation,
+                                                              *currentTemperature, *previousTemperature, *previousStateVariables, *parameters,
+                                                              _localParticleEnergyDensity.second, _localParticleMicroCauchyStress.second,
+                                                              _localParticleStateVariables.second, _localParticleLogProbabilityRatio.second ) );
+
+        _localParticleEnergyDensity.first = true;
+
+        _localParticleMicroCauchyStress.first = true;
+
+        _localParticleStateVariables.first = true;
+
+        _localParticleLogProbabilityRatio.first = true;
+
+        addLocalParticleData( &_localParticleEnergyDensity );
+
+        addLocalParticleData( &_localParticleMicroCauchyStress );
+
+        addLocalParticleData( &_localParticleStateVariables );
+
+        addLocalParticleData( &_localParticleLogProbabilityRatio );
+
+    }
+
+    void aspBase::setLocalParticleEnergy( ){
+        /*!
+         * Set the local particle's energy
+         */
+
+        _localParticleEnergy.second = ( *getLocalParticleEnergyDensity( ) ) * ( *getLocalParticleCurrentVolume( ) );
+
+        _localParticleEnergy.first = true;
+
+        addLocalParticleData( &_localParticleEnergy );
+
+    }
+
+    const floatType* aspBase::getLocalParticleEnergy( ){
+        /*!
+         * Get the local particle's energy
+         */
+
+        if ( !_localParticleEnergy.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleEnergy( ) );
+
+        }
+
+        return &_localParticleEnergy.second;
+
+    }
+
+    const floatType* aspBase::getLocalParticleEnergyDensity( ){
+        /*!
+         * Get the local particle's energy density
+         */
+
+        if ( !_localParticleEnergyDensity.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleQuantities( ) );
+
+        }
+
+        return &_localParticleEnergyDensity.second;
+
+    }
+
+    const floatType* aspBase::getLocalParticleLogProbabilityRatio( ){
+        /*!
+         * Get the local particle's log probability ratio
+         */
+
+        if ( !_localParticleLogProbabilityRatio.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleQuantities( ) );
+
+        }
+
+        return &_localParticleLogProbabilityRatio.second;
+
+    }
+
+    const floatVector* aspBase::getLocalParticleMicroCauchyStress( ){
+        /*!
+         * Get the local particle's micro cauchy stress
+         */
+
+        if ( !_localParticleMicroCauchyStress.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleQuantities( ) );
+
+        }
+
+        return &_localParticleMicroCauchyStress.second;
+
+    }
+
+    const floatVector* aspBase::getLocalParticleStateVariables( ){
+        /*!
+         * Get the local particle's state variables
+         */
+
+        if ( !_localParticleStateVariables.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleQuantities( ) );
+
+        }
+
+        return &_localParticleStateVariables.second;
+
+    }
+
+    const floatType* aspBase::getPreviousTime( ){
+        /*!
+         * Get the previous value of the time
+         */
+
+        return &_previousTime;
+
+    }
+    
+    const floatType* aspBase::getDeltaTime( ){
+        /*!
+         * Get the change in time
+         */
+
+        return &_deltaTime;
+
+    }
+
+    const floatType* aspBase::getPreviousTemperature( ){
+        /*!
+         * Get the previous value of the temperature
+         */
+
+        return &_previousTemperature;
+
+    }
+    
+    const floatType* aspBase::getTemperature( ){
+        /*!
+         * Get the current temperature
+         */
+
+        return &_temperature;
+
+    }
+
+    const floatType* aspBase::getLocalParticleReferenceVolume( ){
+
+        if ( !_localParticleReferenceVolume.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleReferenceVolume( ) );
+
+        }
+
+        return &_localParticleReferenceVolume.second;
+
+    }
+
+    void aspBase::setLocalParticleReferenceVolume( ){
+
+        const floatType* localReferenceRadius;
+        ERROR_TOOLS_CATCH( localReferenceRadius = getLocalReferenceRadius( ) );
+
+        _localParticleReferenceVolume.second = 4./3 * _pi * ( *localReferenceRadius ) * ( *localReferenceRadius ) * ( *localReferenceRadius );
+
+        _localParticleReferenceVolume.first = true;
+
+        addLocalParticleData( &_localParticleReferenceVolume );
+
+        return;
+
+    }
+
+    const floatType* aspBase::getLocalParticleCurrentVolume( ){
+
+        if ( !_localParticleCurrentVolume.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleCurrentVolume( ) );
+
+        }
+
+        return &_localParticleCurrentVolume.second;
+
+    }
+
+    void aspBase::setLocalParticleCurrentVolume( ){
+
+        const floatVector* microDeformation;
+        ERROR_TOOLS_CATCH( microDeformation = getLocalMicroDeformation( ) );
+
+        const floatType* referenceVolume;
+        ERROR_TOOLS_CATCH( referenceVolume = getLocalParticleReferenceVolume( ) );
+
+        floatType J;
+        ERROR_TOOLS_CATCH( J = vectorTools::determinant( *microDeformation, _dimension, _dimension ) );
+
+        _localParticleCurrentVolume.second = J * ( *referenceVolume );
+
+        _localParticleCurrentVolume.first = true;
+
+        addLocalParticleData( &_localParticleCurrentVolume );
+
+    }
+
+    const floatVector* aspBase::getPreviousStateVariables( ){
+        /*!
+         * Get the previous state variables
+         */
+
+        return &_previousStateVariables;
+
+    }
+
+    const floatVector* aspBase::getPreviousLocalStateVariables( ){
+        /*!
+         * Get the previous state variables for the local particle
+         */
+
+        const floatVector* previousStateVariables;
+        ERROR_TOOLS_CATCH( previousStateVariables = getPreviousStateVariables( ) );
+
+        return previousStateVariables;
+
+    }
+
+    const floatVector* aspBase::getParticleParameters( ){
+        /*!
+         * Get the parameters for the internal particle computation
+         */
+
+        return &_particleParameters;
+
+    }
+
+    void aspBase::setLocalParticleParameters( ){
+
+        const floatVector* particleParameters;
+        ERROR_TOOLS_CATCH( particleParameters = getParticleParameters( ) );
+
+        _localParticleParameters.second = *particleParameters;
+
+        _localParticleParameters.first = true;
+
+        addLocalParticleData( &_localParticleParameters );
+
+    }
+
+    const floatVector* aspBase::getLocalParticleParameters( ){
+
+        if ( !_localParticleParameters.first ){
+
+            ERROR_TOOLS_CATCH( setLocalParticleParameters( ) );
+
+        }
+
+        return &_localParticleParameters.second;
+
+    }
+
+    void aspBase::assembleLocalParticles( ){
+        /*!
+         * Assemble all the required quantities for the local particles
+         */
+
+        _assembledLocalParticleEnergies.second = floatVector( *getNumLocalParticles( ) );
+
+        _assembledLocalParticleMicroCauchyStress.second = floatMatrix( *getNumLocalParticles( ) );
+
+        _assembledLocalParticleVolumes.second = floatVector( *getNumLocalParticles( ) );
+
+        _assembledLocalParticleLogProbabilityRatios.second = floatVector( *getNumLocalParticles( ) );
+
+        for ( unsigned int i = 0; i < *getNumLocalParticles( ); i++ ){
+
+            _localIndex = i; // Set the current local index
+
+            // Quantities required for the energy calculation
+            _assembledLocalParticleEnergies.second[ i ] = *getLocalParticleEnergy( );
+
+            _assembledLocalParticleMicroCauchyStress.second[ i ] = *getLocalParticleMicroCauchyStress( );
+
+            _assembledLocalParticleVolumes.second[ i ] = *getLocalParticleCurrentVolume( );
+
+            _assembledLocalParticleLogProbabilityRatios.second[ i ] = *getLocalParticleLogProbabilityRatio( );
+
+            // Quantities required for the gradient calculation
+
+            // Quantities required for the Hessian calculation
+
+            resetLocalParticleData( );
+
+        }
+
+        _assembledLocalParticleEnergies.first = true;
+
+        _assembledLocalParticleMicroCauchyStress.first = true;
+
+        _assembledLocalParticleVolumes.first = true;
+
+        _assembledLocalParticleLogProbabilityRatios.first = true;
+
+    }
+
+    const floatVector* aspBase::getAssembledLocalParticleEnergies( ){
+        /*!
+         * Get the assembled local particle energies
+         */
+
+        if ( !_assembledLocalParticleEnergies.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleEnergies.second;
+
+    }
+
+    const floatMatrix* aspBase::getAssembledLocalParticleMicroCauchyStresses( ){
+        /*!
+         * Get the assembled local particle micro Cauchy stress
+         */
+
+        if ( !_assembledLocalParticleMicroCauchyStress.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleMicroCauchyStress.second;
+
+    }
+
+    const floatVector* aspBase::getAssembledLocalParticleVolumes( ){
+        /*!
+         * Get the assembled local particle volumes
+         */
+
+        if ( !_assembledLocalParticleVolumes.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleVolumes.second;
+
+    }
+
+    const floatVector* aspBase::getAssembledLocalParticleLogProbabilityRatios( ){
+        /*!
+         * Get the assembled local particle log probability ratios
+         */
+
+        if ( !_assembledLocalParticleLogProbabilityRatios.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleLogProbabilityRatios.second;
 
     }
 
