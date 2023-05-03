@@ -139,6 +139,18 @@ namespace asp{
 
                 }
 
+                static void setPreviousLocalDeformationGradient( asp::aspBase &asp, asp::dataStorage< floatVector > &previousLocalDeformationGradient ){
+
+                    BOOST_CHECK_NO_THROW( asp.setPreviousLocalDeformationGradient( ) );
+
+                    previousLocalDeformationGradient = asp._previousLocalDeformationGradient;
+
+                    BOOST_CHECK( &asp._previousLocalDeformationGradient == asp._localParticleData.back( ) );
+
+                    return;
+
+                }
+
                 static void setLocalMicroDeformation( asp::aspBase &asp, asp::dataStorage< floatVector > &localMicroDeformation ){
 
                     BOOST_CHECK_NO_THROW( asp.setLocalMicroDeformation( ) );
@@ -146,6 +158,18 @@ namespace asp{
                     localMicroDeformation = asp._localMicroDeformation;
 
                     BOOST_CHECK( &asp._localMicroDeformation == asp._localParticleData.back( ) );
+
+                    return;
+
+                }
+
+                static void setPreviousLocalMicroDeformation( asp::aspBase &asp, asp::dataStorage< floatVector > &previousLocalMicroDeformation ){
+
+                    BOOST_CHECK_NO_THROW( asp.setPreviousLocalMicroDeformation( ) );
+
+                    previousLocalMicroDeformation = asp._previousLocalMicroDeformation;
+
+                    BOOST_CHECK( &asp._previousLocalMicroDeformation == asp._localParticleData.back( ) );
 
                     return;
 
@@ -397,6 +421,83 @@ namespace asp{
 
                 }
 
+                static void setLocalParticleReferenceVolume( asp::aspBase &asp,
+                                                             asp::dataStorage< floatType > &result ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalParticleReferenceVolume( ) );
+
+                    result = asp._localParticleReferenceVolume;
+
+                    BOOST_CHECK( &asp._localParticleReferenceVolume == asp._localParticleData.back( ) );
+
+                }
+
+                static void setLocalParticleCurrentVolume( asp::aspBase &asp,
+                                                           asp::dataStorage< floatType > &result ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalParticleCurrentVolume( ) );
+
+                    result = asp._localParticleCurrentVolume;
+
+                    BOOST_CHECK( &asp._localParticleCurrentVolume == asp._localParticleData.back( ) );
+
+                }
+
+                static void setLocalParticleEnergy( asp::aspBase &asp,
+                                                    asp::dataStorage< floatType > &result ){
+
+                    try{
+                        asp.setLocalParticleEnergy( );
+                    }
+                    catch(std::exception &e){
+                        errorTools::printNestedExceptions( e );
+                    }
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalParticleEnergy( ) );
+
+                    result = asp._localParticleEnergy;
+
+                    BOOST_CHECK( &asp._localParticleEnergy == asp._localParticleData.back( ) );
+
+                }
+
+                static void setLocalParticleQuantities( asp::aspBase &asp,
+                                                        asp::dataStorage< floatType > &energyResult,
+                                                        asp::dataStorage< floatVector > &stressResult,
+                                                        asp::dataStorage< floatVector > &sdvResult,
+                                                        asp::dataStorage< floatType > &probabilityResult ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalParticleQuantities( ) );
+
+                    energyResult = asp._localParticleEnergyDensity;
+
+                    stressResult = asp._localParticleMicroCauchyStress;
+
+                    sdvResult = asp._localParticleStateVariables;
+
+                    probabilityResult = asp._localParticleLogProbabilityRatio;
+
+                    BOOST_CHECK( &asp._localParticleEnergyDensity       == asp._localParticleData[ asp._localParticleData.size( ) - 4 ] );
+
+                    BOOST_CHECK( &asp._localParticleMicroCauchyStress   == asp._localParticleData[ asp._localParticleData.size( ) - 3 ] );
+
+                    BOOST_CHECK( &asp._localParticleStateVariables      == asp._localParticleData[ asp._localParticleData.size( ) - 2 ] );
+
+                    BOOST_CHECK( &asp._localParticleLogProbabilityRatio == asp._localParticleData[ asp._localParticleData.size( ) - 1 ] );
+
+                }
+
+                static void setLocalParticleParameters( asp::aspBase &asp,
+                                                        asp::dataStorage< floatVector > &result ){
+
+                    BOOST_CHECK_NO_THROW( asp.setLocalParticleParameters( ) );
+
+                    result = asp._localParticleParameters;
+
+                    BOOST_CHECK( &asp._localParticleParameters == asp._localParticleData.back( ) );
+
+                }
+
                 static void formBoundingBox( asp::aspBase &asp, floatVector &points, floatMatrix &boundingBox ){
 
                     BOOST_CHECK_NO_THROW( asp.formBoundingBox( points, boundingBox ) );
@@ -500,10 +601,28 @@ namespace asp{
 
                 }
 
+                static void set_previousDeformationGradient( asp::aspBase &asp,
+                                                             const floatVector &previousDeformationGradient ){
+
+                    asp._previousDeformationGradient = previousDeformationGradient;
+
+                    return;
+
+                }
+
                 static void set_microDeformation( asp::aspBase &asp,
                                                       const floatVector &microDeformation ){
 
                     asp._microDeformation = microDeformation;
+
+                    return;
+
+                }
+
+                static void set_previousMicroDeformation( asp::aspBase &asp,
+                                                          const floatVector &previousMicroDeformation ){
+
+                    asp._previousMicroDeformation = previousMicroDeformation;
 
                     return;
 
@@ -731,6 +850,75 @@ namespace asp{
 
                 }
 
+                static void set_localParticleEnergyDensity( asp::aspBase &asp, floatType &value ){
+
+                    asp._localParticleEnergyDensity.first = true;
+                    asp._localParticleEnergyDensity.second = value;
+
+                    asp.addLocalParticleData( &asp._localParticleEnergyDensity );
+
+                }
+
+                static void set_localParticleReferenceVolume( asp::aspBase &asp, floatType &referenceVolume ){
+
+                    asp._localParticleReferenceVolume.first = true;
+                    asp._localParticleReferenceVolume.second = referenceVolume;
+
+                    asp.addLocalParticleData( &asp._localParticleReferenceVolume );
+
+                }
+
+                static void set_localParticleCurrentVolume( asp::aspBase &asp, floatType &currentVolume ){
+
+                    asp._localParticleCurrentVolume.first = true;
+                    asp._localParticleCurrentVolume.second = currentVolume;
+
+                    asp.addLocalParticleData( &asp._localParticleCurrentVolume );
+
+                }
+
+                static void set_particleParameters( asp::aspBase &asp, floatVector &value ){
+
+                    asp._particleParameters = value;
+
+                }
+
+                static void set_localParticleParameters( asp::aspBase &asp, floatVector &value ){
+
+                    asp._localParticleParameters.first = true;
+                    asp._localParticleParameters.second = value;
+
+                    asp.addLocalParticleData( &asp._localParticleParameters );
+
+                }
+
+                static void set_localParticleMicroCauchyStress( asp::aspBase &asp, floatVector &value ){
+
+                    asp._localParticleMicroCauchyStress.first = true;
+                    asp._localParticleMicroCauchyStress.second = value;
+
+                    asp.addLocalParticleData( &asp._localParticleMicroCauchyStress );
+
+                }
+
+                static void set_localParticleStateVariables( asp::aspBase &asp, floatVector &value ){
+
+                    asp._localParticleStateVariables.first = true;
+                    asp._localParticleStateVariables.second = value;
+
+                    asp.addLocalParticleData( &asp._localParticleStateVariables );
+
+                }
+
+                static void set_localParticleLogProbabilityRatio( asp::aspBase &asp, floatType &value ){
+
+                    asp._localParticleLogProbabilityRatio.first = true;
+                    asp._localParticleLogProbabilityRatio.second = value;
+
+                    asp.addLocalParticleData( &asp._localParticleLogProbabilityRatio );
+
+                }
+
                 // Read functions for checking for errors
                 static asp::dataStorage< floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
 
@@ -810,21 +998,87 @@ namespace asp{
 
                 }
 
-                static void resetInteractionPairData( asp::aspBase & asp ){
+                static void resetInteractionPairData( asp::aspBase &asp ){
 
                     asp.resetInteractionPairData( );
 
                 }
 
-                static void resetSurfacePointData( asp::aspBase & asp ){
+                static void resetSurfacePointData( asp::aspBase &asp ){
 
                     asp.resetSurfacePointData( );
 
                 }
 
-                static void resetLocalParticleData( asp::aspBase & asp ){
+                static void resetLocalParticleData( asp::aspBase &asp ){
 
                     asp.resetLocalParticleData( );
+
+                }
+
+                static void checkNumLocalParticles( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._numLocalParticles == asp.getNumLocalParticles( ) );
+
+                }
+
+                static void checkPreviousTime( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._previousTime == asp.getPreviousTime( ) );
+
+                }
+
+                static void checkDeltaTime( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._deltaTime == asp.getDeltaTime( ) );
+
+                }
+
+                static void checkPreviousTemperature( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._previousTemperature == asp.getPreviousTemperature( ) );
+
+                }
+
+                static void checkTemperature( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._temperature == asp.getTemperature( ) );
+
+                }
+
+                static void checkPreviousDeformationGradient( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._previousDeformationGradient == asp.getPreviousDeformationGradient( ) );
+
+                }
+
+                static void checkPreviousMicroDeformation( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._previousMicroDeformation == asp.getPreviousMicroDeformation( ) );
+
+                }
+
+                static void checkPreviousStateVariables( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._previousStateVariables == asp.getPreviousStateVariables( ) );
+
+                }
+
+                static void checkPreviousLocalStateVariables( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._previousStateVariables == asp.getPreviousLocalStateVariables( ) );
+
+                }
+
+                static void checkDeformationGradient( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._deformationGradient == asp.getDeformationGradient( ) );
+
+                }
+
+                static void checkParticleParameters( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._particleParameters == asp.getParticleParameters( ) );
 
                 }
 
@@ -992,6 +1246,18 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeLocalParticleEnergyDensity ){
      * Test the default implementation of the computation of the local particle's energy density
      */
 
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            aspBaseMock( floatType &radius ){
+
+                asp::unit_test::aspBaseTester::set_radius( *this, radius );
+
+            }
+
+    };
+
     floatType previousTime = 1.2;
 
     floatType deltaTime = 0.4;
@@ -1010,18 +1276,22 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeLocalParticleEnergyDensity ){
 
     floatVector previousStateVariables;
 
+    floatVector currentStateVariables;
+
     floatVector parameters = { 30., 20. };
+
+    floatType radius = 2.4;
 
     floatType energy = 0;
 
     floatVector cauchyStress;
 
-    asp::aspBase asp;
+    aspBaseMock asp( radius );
 
     BOOST_CHECK_NO_THROW( asp.computeLocalParticleEnergyDensity( previousTime, deltaTime, currentDeformationGradient, previousDeformationGradient,
-                                                                 currentTemperature, previousTemperature, previousStateVariables, parameters, energy, cauchyStress ) );
+                                                                 currentTemperature, previousTemperature, previousStateVariables, parameters, energy, cauchyStress, currentStateVariables ) );
 
-    BOOST_CHECK_NO_THROW( vectorTools::fuzzyEquals( energy, 0. ) );
+    BOOST_CHECK( !vectorTools::fuzzyEquals( energy, 0. ) );
 
     BOOST_CHECK( cauchyStress.size( ) == currentDeformationGradient.size( ) );
 
@@ -1032,9 +1302,9 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeLocalParticleEnergyDensity ){
     floatType logProbabilityRatio = 3.4;
 
     BOOST_CHECK_NO_THROW( asp.computeLocalParticleEnergyDensity( previousTime, deltaTime, currentDeformationGradient, previousDeformationGradient,
-                                                         currentTemperature, previousTemperature, previousStateVariables, parameters, energy, cauchyStress, logProbabilityRatio ) );
+                                                                 currentTemperature, previousTemperature, previousStateVariables, parameters, energy, cauchyStress, currentStateVariables, logProbabilityRatio ) );
 
-    BOOST_CHECK_NO_THROW( vectorTools::fuzzyEquals( energy, 0. ) );
+    BOOST_CHECK( !vectorTools::fuzzyEquals( energy, 0. ) );
 
     BOOST_CHECK( cauchyStress.size( ) == currentDeformationGradient.size( ) );
 
@@ -1314,6 +1584,35 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalDeformationGradient ){
 
 }
 
+BOOST_AUTO_TEST_CASE( test_aspBase_setPreviousLocalDeformationGradient ){
+
+    class aspBaseMock : public asp::aspBase{
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector answer = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        
+    asp::unit_test::aspBaseTester::set_previousDeformationGradient( asp, answer );
+
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setPreviousLocalDeformationGradient( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    aspBaseMock aspGet;
+
+    asp::unit_test::aspBaseTester::set_previousDeformationGradient( aspGet, answer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getPreviousLocalDeformationGradient( ), answer ) );
+
+}
+
+
 BOOST_AUTO_TEST_CASE( test_aspBase_setLocalMicroDeformation ){
 
     class aspBaseMock : public asp::aspBase{
@@ -1339,6 +1638,34 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalMicroDeformation ){
     asp::unit_test::aspBaseTester::set_microDeformation( aspGet, answer );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalMicroDeformation( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_setPreviousLocalMicroDeformation ){
+
+    class aspBaseMock : public asp::aspBase{
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector answer = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        
+    asp::unit_test::aspBaseTester::set_previousMicroDeformation( asp, answer );
+
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::setPreviousLocalMicroDeformation( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    aspBaseMock aspGet;
+
+    asp::unit_test::aspBaseTester::set_previousMicroDeformation( aspGet, answer );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getPreviousLocalMicroDeformation( ), answer ) );
 
 }
 
@@ -2723,5 +3050,404 @@ BOOST_AUTO_TEST_CASE( test_aspBase_resetLocalParticleData ){
     BOOST_CHECK( !asp.surfaceData2.first );
 
     BOOST_CHECK( !asp.particleData1.first );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getNumLocalParticles ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkNumLocalParticles( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getPreviousTime ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkPreviousTime( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getDeltaTime ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkDeltaTime( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getPreviousTemperature ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkPreviousTemperature( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getTemperature ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkTemperature( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getDeformationGradient ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkDeformationGradient( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getPreviousDeformationGradient ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkPreviousDeformationGradient( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getPreviousMicroDeformation ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkPreviousMicroDeformation( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getPreviousStateVariables ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkPreviousStateVariables( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getPreviousLocalStateVariables ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkPreviousLocalStateVariables( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getParticleParameters ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkParticleParameters( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleEnergy ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatType volume = 2.4;
+    
+            floatType energyDensity = 3.5;
+    
+            floatVector stress = { 1, 2, 3 };
+    
+            floatVector stateVariables = { -1, -2 };
+    
+            floatType probabilityRatio = .34;
+
+        private:
+
+            void setLocalParticleCurrentVolume( ){
+    
+                asp::unit_test::aspBaseTester::set_localParticleCurrentVolume( *this, volume );
+    
+            }
+
+            void setLocalParticleQuantities( ){
+    
+                asp::unit_test::aspBaseTester::set_localParticleEnergyDensity( *this, energyDensity );
+
+                asp::unit_test::aspBaseTester::set_localParticleMicroCauchyStress( *this, stress );
+
+                asp::unit_test::aspBaseTester::set_localParticleStateVariables( *this, stateVariables );
+
+                asp::unit_test::aspBaseTester::set_localParticleLogProbabilityRatio( *this, probabilityRatio );
+    
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatType answer = 8.4;
+
+    asp::dataStorage< floatType > result;
+
+    asp::unit_test::aspBaseTester::setLocalParticleEnergy( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleEnergy( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleEnergyDensity ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatType volume = 2.4;
+    
+            floatType energyDensity = 3.5;
+
+            floatVector stress = { 1, 2, 3 };
+    
+            floatVector stateVariables = { -1, -2 };
+    
+            floatType probabilityRatio = .34;
+
+        private:
+
+            void setLocalParticleQuantities( ){
+    
+                asp::unit_test::aspBaseTester::set_localParticleEnergyDensity( *this, energyDensity );
+    
+                asp::unit_test::aspBaseTester::set_localParticleMicroCauchyStress( *this, stress );
+
+                asp::unit_test::aspBaseTester::set_localParticleStateVariables( *this, stateVariables );
+
+                asp::unit_test::aspBaseTester::set_localParticleLogProbabilityRatio( *this, probabilityRatio );
+    
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatType answer = asp.energyDensity;
+
+    asp::unit_test::aspBaseTester::set_localParticleEnergyDensity( asp, asp.energyDensity );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleEnergyDensity( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleLogProbabilityRatio ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatType volume = 2.4;
+    
+            floatType energyDensity = 3.5;
+
+            floatVector stress = { 1, 2, 3 };
+    
+            floatVector stateVariables = { -1, -2 };
+    
+            floatType probabilityRatio = .34;
+
+        private:
+
+            void setLocalParticleQuantities( ){
+    
+                asp::unit_test::aspBaseTester::set_localParticleEnergyDensity( *this, energyDensity );
+    
+                asp::unit_test::aspBaseTester::set_localParticleMicroCauchyStress( *this, stress );
+
+                asp::unit_test::aspBaseTester::set_localParticleStateVariables( *this, stateVariables );
+
+                asp::unit_test::aspBaseTester::set_localParticleLogProbabilityRatio( *this, probabilityRatio );
+    
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatType answer = asp.probabilityRatio;
+
+    asp::unit_test::aspBaseTester::set_localParticleLogProbabilityRatio( asp, asp.probabilityRatio );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleLogProbabilityRatio( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_setLocalParticleQuantities ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        private:
+
+            virtual void computeLocalParticleEnergyDensity( const floatType &previousTime, const floatType &deltaTime,
+                                                            const floatVector &currentMicroDeformation, const floatVector &previousMicroDeformation,
+                                                            const floatType &currentTemperature, const floatType &previousTemperature,
+                                                            const floatVector &previousStateVariables,
+                                                            const floatVector &parameters,
+                                                            floatType &energyDensity, floatVector &cauchyStress, floatVector &stateVariables, floatType &logProbabilityRatio ){
+
+                energyDensity = 1.2;
+
+                cauchyStress = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+                stateVariables = { -1, -2 };
+
+                logProbabilityRatio = 0.47;
+
+                return;
+
+            }
+
+    };
+
+    aspBaseMock asp, aspGet1, aspGet2, aspGet3, aspGet4;
+
+    floatType energyDensityAnswer = 1.2;
+
+    floatVector cauchyStressAnswer = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+    floatVector stateVariablesAnswer = { -1, -2 };
+
+    floatType logProbabilityRatioAnswer = 0.47;
+
+    asp::dataStorage< floatType > energyDensityResult;
+
+    asp::dataStorage< floatVector > cauchyStressResult;
+
+    asp::dataStorage< floatVector > stateVariableResult;
+
+    asp::dataStorage< floatType > logProbabilityRatioResult;
+
+    asp::unit_test::aspBaseTester::setLocalParticleQuantities( asp, energyDensityResult, cauchyStressResult, stateVariableResult, logProbabilityRatioResult );
+
+    BOOST_CHECK( energyDensityResult.first );
+
+    BOOST_CHECK( cauchyStressResult.first );
+
+    BOOST_CHECK( stateVariableResult.first );
+
+    BOOST_CHECK( logProbabilityRatioResult.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( energyDensityResult.second, energyDensityAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( cauchyStressResult.second, cauchyStressAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( stateVariableResult.second, stateVariablesAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( logProbabilityRatioResult.second, logProbabilityRatioAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet1.getLocalParticleEnergyDensity( ), energyDensityAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet2.getLocalParticleMicroCauchyStress( ), cauchyStressAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet3.getLocalParticleStateVariables( ), stateVariablesAnswer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet4.getLocalParticleLogProbabilityRatio( ), logProbabilityRatioAnswer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleReferenceVolume ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        floatType radius = 2.4;
+
+        private:
+
+            void setLocalReferenceRadius( ){
+    
+                asp::unit_test::aspBaseTester::set_localReferenceRadius( *this, radius );
+    
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatType answer = 57.90583579096705;
+
+    asp::dataStorage< floatType > result;
+
+    asp::unit_test::aspBaseTester::setLocalParticleReferenceVolume( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleReferenceVolume( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleCurrentVolume ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        floatType referenceVolume = 2.4;
+
+        floatVector microDeformation = { 1, 2, 3, 4, 5, 6, 7, 8, 2 };
+
+        private:
+
+            void setLocalParticleReferenceVolume( ){
+    
+                asp::unit_test::aspBaseTester::set_localParticleReferenceVolume( *this, referenceVolume );
+    
+            }
+
+            void setLocalMicroDeformation( ){
+    
+                asp::unit_test::aspBaseTester::set_localMicroDeformation( *this, microDeformation );
+    
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatType answer = 50.39999999999997;
+
+    asp::dataStorage< floatType > result;
+
+    asp::unit_test::aspBaseTester::setLocalParticleCurrentVolume( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleCurrentVolume( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_setLocalParticleParameters ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        floatVector particleParameters = { 1, 2, 3 };
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatVector answer = { 1, 2, 3 };
+
+    asp::dataStorage< floatVector > result;
+
+    asp::unit_test::aspBaseTester::set_particleParameters( asp, answer );
+
+    asp::unit_test::aspBaseTester::set_particleParameters( aspGet, answer );
+
+    asp::unit_test::aspBaseTester::setLocalParticleParameters( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleParameters( ), answer ) );
 
 }
