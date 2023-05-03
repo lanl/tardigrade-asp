@@ -859,6 +859,15 @@ namespace asp{
 
                 }
 
+                static void set_localParticleEnergy( asp::aspBase &asp, floatType &value ){
+
+                    asp._localParticleEnergy.first = true;
+                    asp._localParticleEnergy.second = value;
+
+                    asp.addLocalParticleData( &asp._localParticleEnergy );
+
+                }
+
                 static void set_localParticleReferenceVolume( asp::aspBase &asp, floatType &referenceVolume ){
 
                     asp._localParticleReferenceVolume.first = true;
@@ -916,6 +925,12 @@ namespace asp{
                     asp._localParticleLogProbabilityRatio.second = value;
 
                     asp.addLocalParticleData( &asp._localParticleLogProbabilityRatio );
+
+                }
+
+                static void set_numLocalParticles( asp::aspBase &asp, unsigned int &value ){
+
+                    asp._numLocalParticles = value;
 
                 }
 
@@ -1079,6 +1094,24 @@ namespace asp{
                 static void checkParticleParameters( asp::aspBase &asp ){
 
                     BOOST_CHECK( &asp._particleParameters == asp.getParticleParameters( ) );
+
+                }
+
+                static void checkLocalIndex( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._localIndex == asp.getLocalIndex( ) );
+
+                }
+
+                static void checkNonLocalIndex( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._nonLocalIndex == asp.getNonLocalIndex( ) );
+
+                }
+
+                static void checkLocalSurfaceNodeIndex( asp::aspBase &asp ){
+
+                    BOOST_CHECK( &asp._localSurfaceNodeIndex == asp.getLocalSurfaceNodeIndex( ) );
 
                 }
 
@@ -3141,6 +3174,30 @@ BOOST_AUTO_TEST_CASE( test_aspBase_getParticleParameters ){
 
 }
 
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalIndex ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkLocalIndex( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getNonLocalIndex ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkNonLocalIndex( asp );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_getLocalSurfaceNodeIndex ){
+
+    asp::aspBase asp;
+
+    asp::unit_test::aspBaseTester::checkLocalSurfaceNodeIndex( asp );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_aspBase_getLocalParticleEnergy ){
 
     class aspBaseMock : public asp::aspBase{
@@ -3449,5 +3506,67 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalParticleParameters ){
     BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getLocalParticleParameters( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_assembleLocalParticle ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            unsigned int numLocalParticles = 4;
+    
+            floatVector energies = { 1, 2, 3, 4 };
+
+            floatVector energyDensities = { 10, 20, 30, 40 };
+    
+            floatMatrix microCauchyStresses = { { 1, 2, 3 }, { 4, 5 }, { 6, 7, 8 }, { 9, 10, 11, 12 } };
+    
+            floatVector localParticleVolumes = { 0.1, 0.2, 0.3, 0.4 };
+    
+            floatVector probabilityRatios = { -0.2, -0.3, -0.4, -0.5 };
+    
+            aspBaseMock( ) : aspBase( ){
+    
+                asp::unit_test::aspBaseTester::set_numLocalParticles( *this, numLocalParticles );
+    
+            }
+
+        private:
+
+            virtual void setLocalParticleEnergy( ){
+
+                const unsigned int* localIndex = getLocalIndex( );
+
+                asp::unit_test::aspBaseTester::set_localParticleEnergy( *this, energies[ *localIndex ] );
+
+            }
+
+            virtual void setLocalParticleQuantities( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_localParticleEnergyDensity( *this, energies[ *localIndex ] );
+
+                asp::unit_test::aspBaseTester::set_localParticleMicroCauchyStress( *this, microCauchyStresses[ *localIndex ] );
+    
+                asp::unit_test::aspBaseTester::set_localParticleCurrentVolume( *this, localParticleVolumes[ *localIndex ] );
+    
+                asp::unit_test::aspBaseTester::set_localParticleLogProbabilityRatio( *this, probabilityRatios[ *localIndex ] );
+    
+            }
+
+    };
+
+    aspBaseMock asp1, asp2, asp3, asp4;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp1.getAssembledLocalParticleEnergies( ), asp1.energies ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp2.getAssembledLocalParticleMicroCauchyStresses( ), asp2.microCauchyStresses ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp3.getAssembledLocalParticleVolumes( ), asp3.localParticleVolumes ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp4.getAssembledLocalParticleLogProbabilityRatios( ), asp4.probabilityRatios ) );
 
 }

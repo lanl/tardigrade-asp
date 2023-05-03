@@ -1880,6 +1880,110 @@ namespace asp{
 
     }
 
+    void aspBase::assembleLocalParticles( ){
+        /*!
+         * Assemble all the required quantities for the local particles
+         */
+
+        _assembledLocalParticleEnergies.second = floatVector( *getNumLocalParticles( ) );
+
+        _assembledLocalParticleMicroCauchyStress.second = floatMatrix( *getNumLocalParticles( ) );
+
+        _assembledLocalParticleVolumes.second = floatVector( *getNumLocalParticles( ) );
+
+        _assembledLocalParticleLogProbabilityRatios.second = floatVector( *getNumLocalParticles( ) );
+
+        for ( unsigned int i = 0; i < *getNumLocalParticles( ); i++ ){
+
+            _localIndex = i; // Set the current local index
+
+            // Quantities required for the energy calculation
+            _assembledLocalParticleEnergies.second[ i ] = *getLocalParticleEnergy( );
+
+            _assembledLocalParticleMicroCauchyStress.second[ i ] = *getLocalParticleMicroCauchyStress( );
+
+            _assembledLocalParticleVolumes.second[ i ] = *getLocalParticleCurrentVolume( );
+
+            _assembledLocalParticleLogProbabilityRatios.second[ i ] = *getLocalParticleLogProbabilityRatio( );
+
+            // Quantities required for the gradient calculation
+
+            // Quantities required for the Hessian calculation
+
+            resetLocalParticleData( );
+
+        }
+
+        _assembledLocalParticleEnergies.first = true;
+
+        _assembledLocalParticleMicroCauchyStress.first = true;
+
+        _assembledLocalParticleVolumes.first = true;
+
+        _assembledLocalParticleLogProbabilityRatios.first = true;
+
+    }
+
+    const floatVector* aspBase::getAssembledLocalParticleEnergies( ){
+        /*!
+         * Get the assembled local particle energies
+         */
+
+        if ( !_assembledLocalParticleEnergies.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleEnergies.second;
+
+    }
+
+    const floatMatrix* aspBase::getAssembledLocalParticleMicroCauchyStresses( ){
+        /*!
+         * Get the assembled local particle micro Cauchy stress
+         */
+
+        if ( !_assembledLocalParticleMicroCauchyStress.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleMicroCauchyStress.second;
+
+    }
+
+    const floatVector* aspBase::getAssembledLocalParticleVolumes( ){
+        /*!
+         * Get the assembled local particle volumes
+         */
+
+        if ( !_assembledLocalParticleVolumes.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleVolumes.second;
+
+    }
+
+    const floatVector* aspBase::getAssembledLocalParticleLogProbabilityRatios( ){
+        /*!
+         * Get the assembled local particle log probability ratios
+         */
+
+        if ( !_assembledLocalParticleLogProbabilityRatios.first ){
+
+            ERROR_TOOLS_CATCH( assembleLocalParticles( ) );
+
+        }
+
+        return &_assembledLocalParticleLogProbabilityRatios.second;
+
+    }
+
     /** \brief Define required number of Abaqus material constants for the Abaqus interface. */
     const int nStateVariables = 2;
 

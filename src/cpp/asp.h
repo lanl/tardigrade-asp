@@ -90,6 +90,9 @@ namespace asp{
         public:
 
             virtual void clear( ){
+                /*!
+                 * The function to erase the current values stored
+                 */
 
                 ERROR_TOOLS_CATCH( throw std::runtime_error( "clear not implemented!" ) );
 
@@ -102,15 +105,18 @@ namespace asp{
 
         public:
 
-            bool first = false;
+            bool first = false; //!The flag for whether the data has been stored
 
-            T second;
+            T second; //!The stored data
 
             dataStorage( ){ };
 
             dataStorage( const bool &_first, const T &_second ) : first( _first ), second( _second ) { }
 
             virtual void clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and clearing second
+                 */
 
                 first = false;
 
@@ -122,6 +128,9 @@ namespace asp{
 
     template <>
     inline void dataStorage< int >::clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and second to zero
+                 */
 
         first = false;
 
@@ -131,6 +140,9 @@ namespace asp{
 
     template <>
     inline void dataStorage< unsigned int >::clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and second to zero
+                 */
 
         first = false;
 
@@ -140,6 +152,9 @@ namespace asp{
 
     template <>
     inline void dataStorage< floatType >::clear( ){
+                /*!
+                 * The function to erase the current values stored by setting first to false and second to zero
+                 */
 
         first = false;
 
@@ -291,6 +306,20 @@ namespace asp{
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
 
+            const floatVector* getAssembledLocalParticleEnergies( );
+
+            const floatMatrix* getAssembledLocalParticleMicroCauchyStresses( );
+
+            const floatVector* getAssembledLocalParticleVolumes( );
+
+            const floatVector* getAssembledLocalParticleLogProbabilityRatios( );
+
+            const unsigned int* getLocalIndex( ){ return &_localIndex; }
+
+            const unsigned int* getNonLocalIndex( ){ return &_nonLocalIndex; };
+
+            const unsigned int* getLocalSurfaceNodeIndex( ){ return &_localSurfaceNodeIndex; };
+
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
 
@@ -441,6 +470,14 @@ namespace asp{
 
             dataStorage< floatVector > _localParticleParameters;
 
+            dataStorage< floatVector > _assembledLocalParticleEnergies;
+
+            dataStorage< floatMatrix > _assembledLocalParticleMicroCauchyStress;
+
+            dataStorage< floatVector > _assembledLocalParticleVolumes;
+
+            dataStorage< floatVector > _assembledLocalParticleLogProbabilityRatios;
+
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
             std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
@@ -514,8 +551,6 @@ namespace asp{
 
             virtual void setParticlePairOverlap( );
 
-//            virtual void setLocalParticleEnergies( );
-
             virtual void setLocalParticleReferenceVolume( );
 
             virtual void setLocalParticleCurrentVolume( );
@@ -527,6 +562,9 @@ namespace asp{
             virtual void resetSurfacePointData( );
 
             virtual void resetLocalParticleData( );
+
+            virtual void assembleLocalParticles( );
+
 
     };
 

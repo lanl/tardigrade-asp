@@ -48,7 +48,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &NDI: Number of direct stress components at this integration point.
      * \param &NSHR: Number of engineering shear stress components at this integration point.
      * \param &NTENS: Size of the stress and strain component array. NTENS = NDI + NSHR
-     * \param &NSTATEV: Number of state variables for this material, CMNAME.
+     * \param &NSTATV: Number of state variables for this material, CMNAME.
      * \param *PROPS: Material model constants defined as part of the *MATERIAL keyword in the input file.
      * \param &NPROPS: Number of user defined material constants.
      * \param *COORDS: Coordinates of the current Gauss point.
