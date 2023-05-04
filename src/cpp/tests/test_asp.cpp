@@ -498,6 +498,24 @@ namespace asp{
 
                 }
 
+                static void setSurfaceAdhesionThickness( asp::aspBase &asp,
+                                                         asp::dataStorage< floatType > &result ){
+
+                    try{
+                        asp.setSurfaceAdhesionThickness( );
+                    }
+                    catch( std::exception &e ){
+                        errorTools::printNestedExceptions( e );
+                    }
+
+                    BOOST_CHECK_NO_THROW( asp.setSurfaceAdhesionThickness( ) );
+
+                    result = asp._surfaceAdhesionThickness;
+
+                    BOOST_CHECK( &asp._surfaceAdhesionThickness == asp._interactionPairData.back( ) );
+
+                }
+
                 static void formBoundingBox( asp::aspBase &asp, floatVector &points, floatMatrix &boundingBox ){
 
                     BOOST_CHECK_NO_THROW( asp.formBoundingBox( points, boundingBox ) );
@@ -729,7 +747,7 @@ namespace asp{
 
                 }
 
-                static void set_currentDistance( asp::aspBase &asp, const floatVector &currentDistance ){
+                static void set_currentDistanceVector( asp::aspBase &asp, const floatVector &currentDistance ){
 
                     asp._currentDistanceVector.first = true;
                     asp._currentDistanceVector.second = currentDistance;
@@ -931,6 +949,33 @@ namespace asp{
                 static void set_numLocalParticles( asp::aspBase &asp, unsigned int &value ){
 
                     asp._numLocalParticles = value;
+
+                }
+
+                static void set_surfaceAdhesionEnergyDensity( asp::aspBase &asp, floatType &value ){
+
+                    asp._surfaceAdhesionEnergyDensity.first = true;
+                    asp._surfaceAdhesionEnergyDensity.second = value;
+
+                    asp.addInteractionPairData( &asp._surfaceAdhesionEnergyDensity );
+
+                }
+
+                static void set_surfaceAdhesionTraction( asp::aspBase &asp, floatVector &value ){
+
+                    asp._surfaceAdhesionTraction.first = true;
+                    asp._surfaceAdhesionTraction.second = value;
+
+                    asp.addInteractionPairData( &asp._surfaceAdhesionTraction );
+
+                }
+
+                static void set_surfaceAdhesionThickness( asp::aspBase &asp, floatType &value ){
+
+                    asp._surfaceAdhesionThickness.first = true;
+                    asp._surfaceAdhesionThickness.second = value;
+
+                    asp.addInteractionPairData( &asp._surfaceAdhesionThickness );
 
                 }
 
@@ -2070,7 +2115,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity ){
 
             aspBaseMock( ){
 
-                asp::unit_test::aspBaseTester::set_currentDistance( *this, distanceVector );
+                asp::unit_test::aspBaseTester::set_currentDistanceVector( *this, distanceVector );
 
                 asp::unit_test::aspBaseTester::set_localCurrentNormal( *this, localCurrentNormal );
 
@@ -2118,7 +2163,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionTraction ){
 
             aspBaseMock( ){
 
-                asp::unit_test::aspBaseTester::set_currentDistance( *this, distanceVector );
+                asp::unit_test::aspBaseTester::set_currentDistanceVector( *this, distanceVector );
 
                 asp::unit_test::aspBaseTester::set_localCurrentNormal( *this, localCurrentNormal );
 
@@ -2804,19 +2849,19 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
 
         BOOST_CHECK( overlapEnergy != result.end( ) );
 
-        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergy->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergy->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * std::fabs( vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) ) );
 
         auto overlapEnergySet = resultSet.second.find( p->first );
 
         BOOST_CHECK( overlapEnergySet != resultSet.second.end( ) );
 
-        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergySet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergySet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * std::fabs( vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) ) );
 
         auto overlapEnergyGet = resultGet->find( p->first );
 
         BOOST_CHECK( overlapEnergyGet != resultGet->end( ) );
 
-        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergyGet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) );
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergyGet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * std::fabs( vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) ) );
 
     } 
 
@@ -3570,3 +3615,255 @@ BOOST_AUTO_TEST_CASE( test_aspBase_assembleLocalParticle ){
     BOOST_CHECK( vectorTools::fuzzyEquals( *asp4.getAssembledLocalParticleLogProbabilityRatios( ), asp4.probabilityRatios ) );
 
 }
+
+BOOST_AUTO_TEST_CASE( test_aspBase_setSurfaceAdhesionThickness ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector normalVector = { 1, 2, 3 };
+
+            floatVector distanceVector = { 4, 5, 6 };
+
+            aspBaseMock( ){
+
+                normalVector /= vectorTools::l2norm( normalVector );
+
+            }
+
+        private:
+
+            virtual void setCurrentDistanceVector( ){
+
+                asp::unit_test::aspBaseTester::set_currentDistanceVector( *this, distanceVector );
+
+            }
+
+            virtual void setLocalCurrentNormal( ){
+
+                asp::unit_test::aspBaseTester::set_localCurrentNormal( *this, normalVector );
+
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    floatType answer = std::fabs( vectorTools::dot( asp.normalVector, asp.distanceVector ) );
+
+    asp::dataStorage< floatType > result;
+
+    asp::unit_test::aspBaseTester::setSurfaceAdhesionThickness( asp, result );
+
+    BOOST_CHECK( result.first );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result.second, answer ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getSurfaceAdhesionThickness( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_assembleSurfaceEnergies ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            unsigned int numLocalParticles = 4;
+
+            floatVector unitSpherePoints = { 1, 2, 3, 4, 5, 6 };
+
+            std::vector< unsigned int > unitSphereConnectivity = { 10, 11, 12, 13 };
+
+            std::vector< std::vector< floatVector > > energyDensities = {
+                                                                            {
+                                                                                {
+                                                                                    1, 2, 3, 4
+                                                                                },
+                                                                                {
+                                                                                    5, 6, 7, 8
+                                                                                },
+                                                                            },
+                                                                            {
+                                                                                {
+                                                                                    9, 10, 11, 12
+                                                                                },
+                                                                                {
+                                                                                    13, 14, 15, 16
+                                                                                },
+                                                                            },
+                                                                            {
+                                                                                {
+                                                                                    17, 18, 19, 20
+                                                                                },
+                                                                                {
+                                                                                    21, 22, 23, 24
+                                                                                },
+                                                                            },
+                                                                            {
+                                                                                {
+                                                                                    25, 26, 27, 28
+                                                                                },
+                                                                                {
+                                                                                    29, 30, 31, 32
+                                                                                },
+                                                                            },
+                                                                        };
+
+            std::vector< std::vector< floatVector > > thicknesses = {
+                                                                        {
+                                                                            {
+                                                                                33, 34, 35, 36
+                                                                            },
+                                                                            {
+                                                                                37, 38, 39, 40
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            {
+                                                                                41, 42, 43, 44
+                                                                            },
+                                                                            {
+                                                                                45, 46, 47, 48
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            {
+                                                                                49, 50, 51, 52
+                                                                            },
+                                                                            {
+                                                                                53, 54, 55, 56
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            {
+                                                                                57, 58, 59, 60
+                                                                            },
+                                                                            {
+                                                                                61, 62, 63, 64
+                                                                            },
+                                                                        },
+                                                                    };
+
+            std::vector< std::vector< floatMatrix > > tractions = {
+                                                                      {
+                                                                          {
+                                                                              {  1,  2,  3 },
+                                                                              {  4,  5,  6 },
+                                                                              {  7,  8,  9 },
+                                                                              { 10, 11, 12 },
+                                                                          },
+                                                                          {
+                                                                              { 13, 14, 15 },
+                                                                              { 16, 17, 18 },
+                                                                              { 19, 20, 21 },
+                                                                              { 22, 23, 24 },
+                                                                          },
+                                                                      },
+                                                                      {
+                                                                          {
+                                                                              { 25, 26, 27 },
+                                                                              { 28, 29, 30 },
+                                                                              { 31, 32, 33 },
+                                                                              { 34, 35, 36 },
+                                                                          },
+                                                                          {
+                                                                              { 37, 38, 39 },
+                                                                              { 40, 41, 42 },
+                                                                              { 43, 44, 45 },
+                                                                              { 46, 47, 48 },
+                                                                          },
+                                                                      },
+                                                                      {
+                                                                          {
+                                                                              { 49, 50, 51 },
+                                                                              { 52, 53, 54 },
+                                                                              { 55, 56, 57 },
+                                                                              { 58, 59, 60 },
+                                                                          },
+                                                                          {
+                                                                              { 61, 62, 63 },
+                                                                              { 64, 65, 66 },
+                                                                              { 67, 68, 69 },
+                                                                              { 70, 71, 72 },
+                                                                          },
+                                                                      },
+                                                                      {
+                                                                          {
+                                                                              { 73, 74, 75 },
+                                                                              { 76, 77, 78 },
+                                                                              { 79, 80, 81 },
+                                                                              { 82, 83, 84 },
+                                                                          },
+                                                                          {
+                                                                              { 85, 86, 87 },
+                                                                              { 88, 89, 90 },
+                                                                              { 91, 92, 93 },
+                                                                              { 94, 95, 96 },
+                                                                          },
+                                                                      },
+                                                                  };
+    
+            aspBaseMock( ) : aspBase( ){
+    
+                asp::unit_test::aspBaseTester::set_numLocalParticles( *this, numLocalParticles );
+    
+            }
+
+        private:
+
+            virtual void initializeUnitSphere( ){
+
+                asp::unit_test::aspBaseTester::set_unitSphere( *this, unitSpherePoints, unitSphereConnectivity );
+
+            }
+
+            virtual void setSurfaceAdhesionEnergyDensity( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+
+                const unsigned int* localSurfaceNodeIndex = getLocalSurfaceNodeIndex( );
+
+                const unsigned int* nonLocalIndex = getNonLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_surfaceAdhesionEnergyDensity( *this, energyDensities[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+    
+            }
+
+            virtual void setSurfaceAdhesionTraction( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+
+                const unsigned int* localSurfaceNodeIndex = getLocalSurfaceNodeIndex( );
+
+                const unsigned int* nonLocalIndex = getNonLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_surfaceAdhesionTraction( *this, tractions[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+    
+            }
+
+            virtual void setSurfaceAdhesionThickness( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+
+                const unsigned int* localSurfaceNodeIndex = getLocalSurfaceNodeIndex( );
+
+                const unsigned int* nonLocalIndex = getNonLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_surfaceAdhesionThickness( *this, thicknesses[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+    
+            }
+
+    };
+
+    aspBaseMock asp1, asp2, asp3;
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp1.getAssembledSurfaceAdhesionEnergyDensities( ), asp1.energyDensities ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp2.getAssembledSurfaceAdhesionTractions( ), asp2.tractions ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp3.getAssembledSurfaceAdhesionThicknesses( ), asp3.thicknesses ) );
+
+}
+
