@@ -320,6 +320,14 @@ namespace asp{
 
             const unsigned int* getLocalSurfaceNodeIndex( ){ return &_localSurfaceNodeIndex; };
 
+            const floatType* getSurfaceAdhesionThickness( );
+
+            const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionThicknesses( );
+
+            const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionEnergyDensities( );
+
+            const std::vector< std::vector< floatMatrix > >* getAssembledSurfaceAdhesionTractions( );
+
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
 
@@ -478,6 +486,14 @@ namespace asp{
 
             dataStorage< floatVector > _assembledLocalParticleLogProbabilityRatios;
 
+            dataStorage< floatType > _surfaceAdhesionThickness;
+
+            dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionThicknesses;
+
+            dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionEnergyDensities;
+
+            dataStorage< std::vector< std::vector< floatMatrix > > > _assembledSurfaceAdhesionTractions;
+
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
             std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
@@ -557,6 +573,8 @@ namespace asp{
 
             virtual void setLocalParticleParameters( );
 
+            virtual void setSurfaceAdhesionThickness( );
+
             virtual void resetInteractionPairData( );
 
             virtual void resetSurfacePointData( );
@@ -565,6 +583,7 @@ namespace asp{
 
             virtual void assembleLocalParticles( );
 
+            virtual void assembleSurfaceResponses( );
 
     };
 

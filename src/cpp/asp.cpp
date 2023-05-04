@@ -1000,7 +1000,7 @@ namespace asp{
 
             getLocalCurrentNormal( overlap->first, normal );
 
-            surfaceOverlapEnergyDensity.insert( { overlap->first, 0.5 * ( *overlapParameters )[ 0 ] * vectorTools::dot( overlap->second, overlap->second ) * vectorTools::dot( overlap->second, normal ) } );
+            surfaceOverlapEnergyDensity.insert( { overlap->first, 0.5 * ( *overlapParameters )[ 0 ] * vectorTools::dot( overlap->second, overlap->second ) * std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
 
         }
 
@@ -1513,6 +1513,89 @@ namespace asp{
 
     }
 
+    void aspBase::setSurfaceAdhesionThickness( ){
+        /*!
+         * Set the current thickness of the surface adhesion
+         */
+
+        const floatVector* currentDistanceVector;
+        ERROR_TOOLS_CATCH( currentDistanceVector = getCurrentDistanceVector( ) );
+
+        const floatVector* localCurrentNormal;
+        ERROR_TOOLS_CATCH( localCurrentNormal = getLocalCurrentNormal( ) );
+        
+        // Decompose the distance into normal and tangential directions
+        floatVector dn, dt;
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( *currentDistanceVector, *localCurrentNormal, dn, dt ) );
+
+        _surfaceAdhesionThickness.second = vectorTools::l2norm( dn );
+
+        _surfaceAdhesionThickness.first = true;
+
+        addInteractionPairData( &_surfaceAdhesionThickness );
+
+    }
+
+    const floatType* aspBase::getSurfaceAdhesionThickness( ){
+        /*!
+         * Get the current value of the surface adhesion thickness
+         */
+
+        if ( !_surfaceAdhesionThickness.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceAdhesionThickness( ) );
+
+        }
+
+        return &_surfaceAdhesionThickness.second;
+
+    }
+
+    const std::vector< std::vector< floatVector > >* aspBase::getAssembledSurfaceAdhesionThicknesses( ){
+        /*!
+         * Get the current value of the surface adhesion thicknesses
+         */
+
+        if ( !_assembledSurfaceAdhesionThicknesses.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceAdhesionThicknesses.second;
+
+    }
+
+    const std::vector< std::vector< floatVector > >* aspBase::getAssembledSurfaceAdhesionEnergyDensities( ){
+        /*!
+         * Get the current value of the surface adhesion energy densities
+         */
+
+        if ( !_assembledSurfaceAdhesionEnergyDensities.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceAdhesionEnergyDensities.second;
+
+    }
+
+    const std::vector< std::vector< floatMatrix > >* aspBase::getAssembledSurfaceAdhesionTractions( ){
+        /*!
+         * Get the current value of the surface adhesion thicknesses
+         */
+
+        if ( !_assembledSurfaceAdhesionTractions.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceAdhesionTractions.second;
+
+    }
+
     void aspBase::computeSurfaceOverlapTraction( std::unordered_map< unsigned int, floatVector > &surfaceOverlapTraction ){
         /*!
          * Compute the surface overlap traction
@@ -1921,6 +2004,64 @@ namespace asp{
         _assembledLocalParticleVolumes.first = true;
 
         _assembledLocalParticleLogProbabilityRatios.first = true;
+
+    }
+
+    void aspBase::assembleSurfaceResponses( ){
+        /*!
+         * Assemble the surface responses of the particles
+         */
+
+        unsigned int numLocalParticles = *getNumLocalParticles( );
+
+        unsigned int numSurfacePoints = getUnitSpherePoints( )->size( ) / _dimension;
+
+        _assembledSurfaceAdhesionEnergyDensities.second = std::vector< std::vector< floatVector > >( numLocalParticles, std::vector< floatVector >( numSurfacePoints, floatVector( numLocalParticles ) ) );
+
+        _assembledSurfaceAdhesionThicknesses.second = std::vector< std::vector< floatVector > >( numLocalParticles, std::vector< floatVector >( numSurfacePoints, floatVector( numLocalParticles ) ) );
+
+        _assembledSurfaceAdhesionTractions.second = std::vector< std::vector< floatMatrix > >( numLocalParticles, std::vector< floatMatrix >( numSurfacePoints, floatMatrix( numLocalParticles ) ) );
+
+        for ( unsigned int i = 0; i < *getNumLocalParticles( ); i++ ){
+
+            _localIndex = i; // Set the current local index
+
+            for ( unsigned int j = 0; j < numSurfacePoints; j++ ){
+
+                _localSurfaceNodeIndex = j; // Set the local surface node index
+
+                for ( unsigned int k = 0; k < *getNumLocalParticles( ); k++ ){
+
+                    _nonLocalIndex = k; // Set the interaction index
+
+                    // Quantities required for the energy calculation
+                    _assembledSurfaceAdhesionEnergyDensities.second[ i ][ j ][ k ] = *getSurfaceAdhesionEnergyDensity( );
+
+                    _assembledSurfaceAdhesionTractions.second[ i ][ j ][ k ] = *getSurfaceAdhesionTraction( );
+
+                    _assembledSurfaceAdhesionThicknesses.second[ i ][ j ][ k ] = *getSurfaceAdhesionThickness( );
+
+                    // Quantities required for the gradient calculation
+
+                    // Quantities required for the Hessian calculation
+
+                    resetInteractionPairData( );
+
+                }
+
+                resetSurfacePointData( );
+
+            }
+
+            resetLocalParticleData( );
+
+        }
+
+        _assembledSurfaceAdhesionEnergyDensities.first = true;
+
+        _assembledSurfaceAdhesionTractions.first = true;
+
+        _assembledSurfaceAdhesionThicknesses.first = true;
 
     }
 
