@@ -1551,6 +1551,45 @@ namespace asp{
 
     }
 
+    void aspBase::setSurfaceOverlapThickness( ){
+        /*!
+         * Set the current thickness of the surface overlap
+         */
+
+        const std::unordered_map< unsigned int, floatVector >* particlePairOverlap;
+        ERROR_TOOLS_CATCH( particlePairOverlap = getParticlePairOverlap( ) );
+
+        for ( auto overlap = particlePairOverlap->begin( ); overlap != particlePairOverlap->end( ); overlap++ ){
+
+            floatVector normal;
+
+            ERROR_TOOLS_CATCH( getLocalCurrentNormal( overlap->first, normal ) );
+        
+            _surfaceOverlapThickness.second.insert( { overlap->first, std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
+
+        }
+
+        _surfaceOverlapThickness.first = true;
+
+        addInteractionPairData( &_surfaceOverlapThickness );
+
+    }
+
+    const std::unordered_map< unsigned int, floatType >* aspBase::getSurfaceOverlapThickness( ){
+        /*!
+         * Get the current value of the surface overlap thickness
+         */
+
+        if ( !_surfaceOverlapThickness.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceOverlapThickness( ) );
+
+        }
+
+        return &_surfaceOverlapThickness.second;
+
+    }
+
     const std::vector< std::vector< floatVector > >* aspBase::getAssembledSurfaceAdhesionThicknesses( ){
         /*!
          * Get the current value of the surface adhesion thicknesses

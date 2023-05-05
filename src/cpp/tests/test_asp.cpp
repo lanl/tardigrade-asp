@@ -501,18 +501,22 @@ namespace asp{
                 static void setSurfaceAdhesionThickness( asp::aspBase &asp,
                                                          asp::dataStorage< floatType > &result ){
 
-                    try{
-                        asp.setSurfaceAdhesionThickness( );
-                    }
-                    catch( std::exception &e ){
-                        errorTools::printNestedExceptions( e );
-                    }
-
                     BOOST_CHECK_NO_THROW( asp.setSurfaceAdhesionThickness( ) );
 
                     result = asp._surfaceAdhesionThickness;
 
                     BOOST_CHECK( &asp._surfaceAdhesionThickness == asp._interactionPairData.back( ) );
+
+                }
+
+                static void setSurfaceOverlapThickness( asp::aspBase &asp,
+                                                        asp::dataStorage< std::unordered_map< unsigned int, floatType > > &result ){
+
+                    BOOST_CHECK_NO_THROW( asp.setSurfaceOverlapThickness( ) );
+
+                    result = asp._surfaceOverlapThickness;
+
+                    BOOST_CHECK( &asp._surfaceOverlapThickness == asp._interactionPairData.back( ) );
 
                 }
 
@@ -2862,6 +2866,62 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapEnergyDensity ){
         BOOST_CHECK( overlapEnergyGet != resultGet->end( ) );
 
         BOOST_CHECK( vectorTools::fuzzyEquals( overlapEnergyGet->second, 0.5 * asp.surfaceOverlapParameters[ 0 ] * vectorTools::dot( p->second, p->second ) * std::fabs( vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) ) );
+
+    } 
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceOverlapThickness ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+   
+            std::unordered_map< unsigned int, floatVector > particlePairOverlap = { { 0, { -0.5, 0, 0 } }, { 4, { 2, -1, 4 } } };
+
+            floatMatrix currentNormals = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, { 10, 11, 12 }, { 13, 14, 15 } };
+
+        private:
+
+            virtual void setParticlePairOverlap( ){
+
+                asp::unit_test::aspBaseTester::set_particlePairOverlap( *this, particlePairOverlap );
+
+            }
+
+            virtual void getLocalCurrentNormal( const unsigned int &index, floatVector &normal ){
+
+                normal = currentNormals[ index ];
+
+            }
+
+    };
+
+    aspBaseMock asp, aspGet;
+
+    asp::dataStorage< std::unordered_map< unsigned int, floatType > > resultSet;
+
+    asp::unit_test::aspBaseTester::setSurfaceOverlapThickness( asp, resultSet );
+
+    BOOST_CHECK( resultSet.first );
+
+    const std::unordered_map< unsigned int, floatType > *resultGet;
+
+    resultGet = aspGet.getSurfaceOverlapThickness( );
+
+    for ( auto p = asp.particlePairOverlap.begin( ); p != asp.particlePairOverlap.end( ); p++ ){
+
+        auto overlapThicknessSet = resultSet.second.find( p->first );
+
+        BOOST_CHECK( overlapThicknessSet != resultSet.second.end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapThicknessSet->second, std::fabs( vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) ) );
+
+        auto overlapThicknessGet = resultGet->find( p->first );
+
+        BOOST_CHECK( overlapThicknessGet != resultGet->end( ) );
+
+        BOOST_CHECK( vectorTools::fuzzyEquals( overlapThicknessGet->second, std::fabs( vectorTools::dot( asp.currentNormals[ p->first ], p->second ) ) ) );
 
     } 
 

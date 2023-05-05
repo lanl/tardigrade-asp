@@ -322,6 +322,8 @@ namespace asp{
 
             const floatType* getSurfaceAdhesionThickness( );
 
+            const std::unordered_map< unsigned int, floatType >* getSurfaceOverlapThickness( );
+
             const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionThicknesses( );
 
             const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionEnergyDensities( );
@@ -488,6 +490,8 @@ namespace asp{
 
             dataStorage< floatType > _surfaceAdhesionThickness;
 
+            dataStorage< std::unordered_map< unsigned int, floatType > > _surfaceOverlapThickness;
+
             dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionThicknesses;
 
             dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionEnergyDensities;
@@ -574,6 +578,8 @@ namespace asp{
             virtual void setLocalParticleParameters( );
 
             virtual void setSurfaceAdhesionThickness( );
+
+            virtual void setSurfaceOverlapThickness( );
 
             virtual void resetInteractionPairData( );
 
