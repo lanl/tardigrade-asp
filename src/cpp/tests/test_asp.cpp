@@ -983,6 +983,33 @@ namespace asp{
 
                 }
 
+                static void set_surfaceOverlapEnergyDensity( asp::aspBase &asp, mapFloatType &value ){
+
+                    asp._surfaceOverlapEnergyDensity.first = true;
+                    asp._surfaceOverlapEnergyDensity.second = value;
+
+                    asp.addInteractionPairData( &asp._surfaceOverlapEnergyDensity );
+
+                }
+
+                static void set_surfaceOverlapTraction( asp::aspBase &asp, mapFloatVector &value ){
+
+                    asp._surfaceOverlapTraction.first = true;
+                    asp._surfaceOverlapTraction.second = value;
+
+                    asp.addInteractionPairData( &asp._surfaceOverlapTraction );
+
+                }
+
+                static void set_surfaceOverlapThickness( asp::aspBase &asp, mapFloatType &value ){
+
+                    asp._surfaceOverlapThickness.first = true;
+                    asp._surfaceOverlapThickness.second = value;
+
+                    asp.addInteractionPairData( &asp._surfaceOverlapThickness );
+
+                }
+
                 // Read functions for checking for errors
                 static asp::dataStorage< floatVector > getLocalReferenceNormal( asp::aspBase &asp ){
 
@@ -3732,146 +3759,264 @@ BOOST_AUTO_TEST_CASE( test_aspBase_assembleSurfaceEnergies ){
 
             unsigned int numLocalParticles = 4;
 
+            unsigned int numSurfacePoints = 2;
+
             floatVector unitSpherePoints = { 1, 2, 3, 4, 5, 6 };
 
             std::vector< unsigned int > unitSphereConnectivity = { 10, 11, 12, 13 };
 
-            std::vector< std::vector< floatVector > > energyDensities = {
-                                                                            {
-                                                                                {
-                                                                                    1, 2, 3, 4
-                                                                                },
-                                                                                {
-                                                                                    5, 6, 7, 8
-                                                                                },
-                                                                            },
-                                                                            {
-                                                                                {
-                                                                                    9, 10, 11, 12
-                                                                                },
-                                                                                {
-                                                                                    13, 14, 15, 16
-                                                                                },
-                                                                            },
-                                                                            {
-                                                                                {
-                                                                                    17, 18, 19, 20
-                                                                                },
-                                                                                {
-                                                                                    21, 22, 23, 24
-                                                                                },
-                                                                            },
-                                                                            {
-                                                                                {
-                                                                                    25, 26, 27, 28
-                                                                                },
-                                                                                {
-                                                                                    29, 30, 31, 32
-                                                                                },
-                                                                            },
-                                                                        };
+            std::vector< std::vector< std::vector< std::vector< unsigned int > > > > neighboringOverlapParticles
+                {
+                    {
+                        {
+                            { 1, 7 },
+                            { 0, },
+                            { },
+                            { 13, 8, 17},
+                        },
+                        {
+                            { 11, 4 },
+                            { 9, 34 },
+                            { 10 },
+                            { 8, 9, 10, 11},
+                        },
+                    },
+                    {
+                        {
+                            { 8, 13},
+                            { 2 },
+                            { 0, 1, 2 },
+                            { 13 },
+                        },
+                        {
+                            { },
+                            { },
+                            { 4, 7 },
+                            { 45 },
+                        },
+                    },
+                    {
+                        {
+                            { 6, 7, 8, 9 },
+                            { 1, },
+                            { 7, 6 },
+                            { 35 },
+                        },
+                        {
+                            { 1, 2 },
+                            { },
+                            { 6 },
+                            { },
+                        },
+                    },
+                    {
+                        {
+                            { 78, 22, 45, 13 },
+                            { 9, 87 },
+                            { },
+                            { 22 },
+                        },
+                        {
+                            { },
+                            { },
+                            { },
+                            { 35, 6, 7 },
+                        },
+                    },
+                };
 
-            std::vector< std::vector< floatVector > > thicknesses = {
-                                                                        {
-                                                                            {
-                                                                                33, 34, 35, 36
-                                                                            },
-                                                                            {
-                                                                                37, 38, 39, 40
-                                                                            },
-                                                                        },
-                                                                        {
-                                                                            {
-                                                                                41, 42, 43, 44
-                                                                            },
-                                                                            {
-                                                                                45, 46, 47, 48
-                                                                            },
-                                                                        },
-                                                                        {
-                                                                            {
-                                                                                49, 50, 51, 52
-                                                                            },
-                                                                            {
-                                                                                53, 54, 55, 56
-                                                                            },
-                                                                        },
-                                                                        {
-                                                                            {
-                                                                                57, 58, 59, 60
-                                                                            },
-                                                                            {
-                                                                                61, 62, 63, 64
-                                                                            },
-                                                                        },
-                                                                    };
+            std::vector< std::vector< floatVector > > adhesionEnergyDensities =
+                {
+                    {
+                        {
+                            1, 2, 3, 4
+                        },
+                        {
+                            5, 6, 7, 8
+                        },
+                    },
+                    {
+                        {
+                            9, 10, 11, 12
+                        },
+                        {
+                            13, 14, 15, 16
+                        },
+                    },
+                    {
+                        {
+                            17, 18, 19, 20
+                        },
+                        {
+                            21, 22, 23, 24
+                        },
+                    },
+                    {
+                        {
+                            25, 26, 27, 28
+                        },
+                        {
+                            29, 30, 31, 32
+                        },
+                    },
+                };
 
-            std::vector< std::vector< floatMatrix > > tractions = {
-                                                                      {
-                                                                          {
-                                                                              {  1,  2,  3 },
-                                                                              {  4,  5,  6 },
-                                                                              {  7,  8,  9 },
-                                                                              { 10, 11, 12 },
-                                                                          },
-                                                                          {
-                                                                              { 13, 14, 15 },
-                                                                              { 16, 17, 18 },
-                                                                              { 19, 20, 21 },
-                                                                              { 22, 23, 24 },
-                                                                          },
-                                                                      },
-                                                                      {
-                                                                          {
-                                                                              { 25, 26, 27 },
-                                                                              { 28, 29, 30 },
-                                                                              { 31, 32, 33 },
-                                                                              { 34, 35, 36 },
-                                                                          },
-                                                                          {
-                                                                              { 37, 38, 39 },
-                                                                              { 40, 41, 42 },
-                                                                              { 43, 44, 45 },
-                                                                              { 46, 47, 48 },
-                                                                          },
-                                                                      },
-                                                                      {
-                                                                          {
-                                                                              { 49, 50, 51 },
-                                                                              { 52, 53, 54 },
-                                                                              { 55, 56, 57 },
-                                                                              { 58, 59, 60 },
-                                                                          },
-                                                                          {
-                                                                              { 61, 62, 63 },
-                                                                              { 64, 65, 66 },
-                                                                              { 67, 68, 69 },
-                                                                              { 70, 71, 72 },
-                                                                          },
-                                                                      },
-                                                                      {
-                                                                          {
-                                                                              { 73, 74, 75 },
-                                                                              { 76, 77, 78 },
-                                                                              { 79, 80, 81 },
-                                                                              { 82, 83, 84 },
-                                                                          },
-                                                                          {
-                                                                              { 85, 86, 87 },
-                                                                              { 88, 89, 90 },
-                                                                              { 91, 92, 93 },
-                                                                              { 94, 95, 96 },
-                                                                          },
-                                                                      },
-                                                                  };
+            std::vector< std::vector< floatVector > > adhesionThicknesses =
+            {
+                {
+                    {
+                        33, 34, 35, 36
+                    },
+                    {
+                        37, 38, 39, 40
+                    },
+                },
+                {
+                    {
+                        41, 42, 43, 44
+                    },
+                    {
+                        45, 46, 47, 48
+                    },
+                },
+                {
+                    {
+                        49, 50, 51, 52
+                    },
+                    {
+                        53, 54, 55, 56
+                    },
+                },
+                {
+                    {
+                        57, 58, 59, 60
+                    },
+                    {
+                        61, 62, 63, 64
+                    },
+                },
+            };
+
+            std::vector< std::vector< floatMatrix > > adhesionTractions =
+            {
+                {
+                    {
+                        {  1,  2,  3 },
+                        {  4,  5,  6 },
+                        {  7,  8,  9 },
+                        { 10, 11, 12 },
+                    },
+                    {
+                        { 13, 14, 15 },
+                        { 16, 17, 18 },
+                        { 19, 20, 21 },
+                        { 22, 23, 24 },
+                    },
+                },
+                {
+                    {
+                        { 25, 26, 27 },
+                        { 28, 29, 30 },
+                        { 31, 32, 33 },
+                        { 34, 35, 36 },
+                    },
+                    {
+                        { 37, 38, 39 },
+                        { 40, 41, 42 },
+                        { 43, 44, 45 },
+                        { 46, 47, 48 },
+                    },
+                },
+                {
+                    {
+                        { 49, 50, 51 },
+                        { 52, 53, 54 },
+                        { 55, 56, 57 },
+                        { 58, 59, 60 },
+                    },
+                    {
+                        { 61, 62, 63 },
+                        { 64, 65, 66 },
+                        { 67, 68, 69 },
+                        { 70, 71, 72 },
+                    },
+                },
+                {
+                    {
+                        { 73, 74, 75 },
+                        { 76, 77, 78 },
+                        { 79, 80, 81 },
+                        { 82, 83, 84 },
+                    },
+                    {
+                        { 85, 86, 87 },
+                        { 88, 89, 90 },
+                        { 91, 92, 93 },
+                        { 94, 95, 96 },
+                    },
+                },
+            };
+
+            std::vector< std::vector< std::vector< std::unordered_map< unsigned int, floatType > > > > overlapEnergyDensities;
+
+            std::vector< std::vector< std::vector< std::unordered_map< unsigned int, floatType > > > > overlapThicknesses;
+
+            std::vector< std::vector< std::vector< std::unordered_map< unsigned int, floatVector > > > > overlapTractions;
     
             aspBaseMock( ) : aspBase( ){
     
                 asp::unit_test::aspBaseTester::set_numLocalParticles( *this, numLocalParticles );
-    
+   
+                initializeOverlapQuantitiesTest( );
+ 
             }
 
         private:
+
+            void initializeOverlapQuantitiesTest( ){
+
+                overlapEnergyDensities.resize( numLocalParticles );
+
+                overlapThicknesses.resize( numLocalParticles );
+
+                overlapTractions.resize( numLocalParticles );
+
+                for ( unsigned int i = 0; i < numLocalParticles; i++ ){
+
+                    overlapEnergyDensities[ i ].resize( numSurfacePoints );
+    
+                    overlapThicknesses[ i ].resize( numSurfacePoints );
+    
+                    overlapTractions[ i ].resize( numSurfacePoints );
+
+                    for ( unsigned int j = 0; j < numSurfacePoints; j++ ){
+
+                        overlapEnergyDensities[ i ][ j ].resize( numLocalParticles );
+
+                        overlapThicknesses[ i ][ j ].resize( numLocalParticles );
+
+                        overlapTractions[ i ][ j ].resize( numLocalParticles );
+
+                        for ( unsigned int k = 0; k < numLocalParticles; k++ ){
+
+                            for ( auto index = neighboringOverlapParticles[ i ][ j ][ k ].begin( );
+                                       index != neighboringOverlapParticles[ i ][ j ][ k ].end( ); index++ ){
+
+                                overlapEnergyDensities[ i ][ j ][ k ].emplace( *index, adhesionEnergyDensities[ i ][ j ][ k ] * ( *index ) * .142 );
+
+                                overlapThicknesses[ i ][ j ][ k ].emplace( *index, adhesionThicknesses[ i ][ j ][ k ] * ( ( *index ) - 3 ) * .89 );
+
+                                overlapTractions[ i ][ j ][ k ].emplace( *index, adhesionTractions[ i ][ j ][ k ] * ( ( *index ) - .78 ) * .09 );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
 
             virtual void initializeUnitSphere( ){
 
@@ -3887,7 +4032,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_assembleSurfaceEnergies ){
 
                 const unsigned int* nonLocalIndex = getNonLocalIndex( );
     
-                asp::unit_test::aspBaseTester::set_surfaceAdhesionEnergyDensity( *this, energyDensities[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+                asp::unit_test::aspBaseTester::set_surfaceAdhesionEnergyDensity( *this, adhesionEnergyDensities[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
     
             }
 
@@ -3899,7 +4044,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_assembleSurfaceEnergies ){
 
                 const unsigned int* nonLocalIndex = getNonLocalIndex( );
     
-                asp::unit_test::aspBaseTester::set_surfaceAdhesionTraction( *this, tractions[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+                asp::unit_test::aspBaseTester::set_surfaceAdhesionTraction( *this, adhesionTractions[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
     
             }
 
@@ -3911,19 +4056,91 @@ BOOST_AUTO_TEST_CASE( test_aspBase_assembleSurfaceEnergies ){
 
                 const unsigned int* nonLocalIndex = getNonLocalIndex( );
     
-                asp::unit_test::aspBaseTester::set_surfaceAdhesionThickness( *this, thicknesses[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+                asp::unit_test::aspBaseTester::set_surfaceAdhesionThickness( *this, adhesionThicknesses[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+    
+            }
+
+            virtual void setSurfaceOverlapEnergyDensity( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+
+                const unsigned int* localSurfaceNodeIndex = getLocalSurfaceNodeIndex( );
+
+                const unsigned int* nonLocalIndex = getNonLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_surfaceOverlapEnergyDensity( *this, overlapEnergyDensities[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+    
+            }
+
+            virtual void setSurfaceOverlapTraction( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+
+                const unsigned int* localSurfaceNodeIndex = getLocalSurfaceNodeIndex( );
+
+                const unsigned int* nonLocalIndex = getNonLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_surfaceOverlapTraction( *this, overlapTractions[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
+    
+            }
+
+            virtual void setSurfaceOverlapThickness( ){
+    
+                const unsigned int* localIndex = getLocalIndex( );
+
+                const unsigned int* localSurfaceNodeIndex = getLocalSurfaceNodeIndex( );
+
+                const unsigned int* nonLocalIndex = getNonLocalIndex( );
+    
+                asp::unit_test::aspBaseTester::set_surfaceOverlapThickness( *this, overlapThicknesses[ *localIndex ][ *localSurfaceNodeIndex ][ *nonLocalIndex ] );
     
             }
 
     };
 
-    aspBaseMock asp1, asp2, asp3;
+    aspBaseMock asp1, asp2, asp3, asp4, asp5, asp6;
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp1.getAssembledSurfaceAdhesionEnergyDensities( ), asp1.energyDensities ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp1.getAssembledSurfaceAdhesionEnergyDensities( ), asp1.adhesionEnergyDensities ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp2.getAssembledSurfaceAdhesionTractions( ), asp2.tractions ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp2.getAssembledSurfaceAdhesionTractions( ), asp2.adhesionTractions ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( *asp3.getAssembledSurfaceAdhesionThicknesses( ), asp3.thicknesses ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( *asp3.getAssembledSurfaceAdhesionThicknesses( ), asp3.adhesionThicknesses ) );
+
+    for ( unsigned int i = 0; i < asp1.numLocalParticles; i++ ){
+
+        for ( unsigned int j = 0; j < asp1.numSurfacePoints; j++ ){
+
+            for ( unsigned int k = 0; k < asp1.numLocalParticles; k++ ){
+
+                for ( auto index = asp1.neighboringOverlapParticles[ i ][ j ][ k ].begin( );
+                           index != asp1.neighboringOverlapParticles[ i ][ j ][ k ].end( );
+                           index++ ){
+
+                    auto energy    = ( *asp4.getAssembledSurfaceOverlapEnergyDensities( ) )[ i ][ j ][ k ].find( *index );
+
+                    auto thickness = ( *asp5.getAssembledSurfaceOverlapThicknesses( ) )[ i ][ j ][ k ].find( *index );
+
+                    auto traction  = ( *asp6.getAssembledSurfaceOverlapTractions( ) )[ i ][ j ][ k ].find( *index );
+
+                    BOOST_CHECK( energy != ( *asp4.getAssembledSurfaceOverlapEnergyDensities( ) )[ i ][ j ][ k ].end( ) );
+
+                    BOOST_CHECK( thickness != ( *asp5.getAssembledSurfaceOverlapThicknesses( ) )[ i ][ j ][ k ].end( ) );
+
+                    BOOST_CHECK( traction != ( *asp6.getAssembledSurfaceOverlapTractions( ) )[ i ][ j ][ k ].end( ) );
+
+                    BOOST_CHECK( vectorTools::fuzzyEquals( energy->second, asp4.overlapEnergyDensities[ i ][ j ][ k ][ *index ] ) );
+
+                    BOOST_CHECK( vectorTools::fuzzyEquals( thickness->second, asp5.overlapThicknesses[ i ][ j ][ k ][ *index ] ) );
+
+                    BOOST_CHECK( vectorTools::fuzzyEquals( traction->second, asp6.overlapTractions[ i ][ j ][ k ][ *index ] ) );
+
+                }
+
+            }
+
+        }
+
+    }
 
 }
 

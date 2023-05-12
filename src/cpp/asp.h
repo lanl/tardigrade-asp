@@ -327,11 +327,17 @@ namespace asp{
 
             const mapFloatType* getSurfaceOverlapThickness( );
 
-            const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionThicknesses( );
+            const std::vector< std::vector< std::vector< floatType > > >* getAssembledSurfaceAdhesionThicknesses( );
 
-            const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionEnergyDensities( );
+            const std::vector< std::vector< std::vector< floatType > > >* getAssembledSurfaceAdhesionEnergyDensities( );
 
-            const std::vector< std::vector< floatMatrix > >* getAssembledSurfaceAdhesionTractions( );
+            const std::vector< std::vector< std::vector< floatVector > > >* getAssembledSurfaceAdhesionTractions( );
+
+            const std::vector< std::vector< std::vector< mapFloatType > > >* getAssembledSurfaceOverlapThicknesses( );
+
+            const std::vector< std::vector< std::vector< mapFloatType > > >* getAssembledSurfaceOverlapEnergyDensities( );
+
+            const std::vector< std::vector< std::vector< mapFloatVector > > >* getAssembledSurfaceOverlapTractions( );
 
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
@@ -495,11 +501,17 @@ namespace asp{
 
             dataStorage< mapFloatType > _surfaceOverlapThickness;
 
-            dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionThicknesses;
+            dataStorage< std::vector< std::vector< std::vector< floatType > > > > _assembledSurfaceAdhesionThicknesses;
 
-            dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionEnergyDensities;
+            dataStorage< std::vector< std::vector< std::vector< floatType > > > > _assembledSurfaceAdhesionEnergyDensities;
 
-            dataStorage< std::vector< std::vector< floatMatrix > > > _assembledSurfaceAdhesionTractions;
+            dataStorage< std::vector< std::vector< std::vector< floatVector > > > > _assembledSurfaceAdhesionTractions;
+
+            dataStorage< std::vector< std::vector< std::vector< mapFloatType > > > > _assembledSurfaceOverlapThicknesses;
+
+            dataStorage< std::vector< std::vector< std::vector< mapFloatType > > > > _assembledSurfaceOverlapEnergyDensities;
+
+            dataStorage< std::vector< std::vector< std::vector< mapFloatVector > > > > _assembledSurfaceOverlapTractions;
 
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 

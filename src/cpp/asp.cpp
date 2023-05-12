@@ -1635,6 +1635,51 @@ namespace asp{
 
     }
 
+    const std::vector< std::vector< std::vector< mapFloatType > > >* aspBase::getAssembledSurfaceOverlapThicknesses( ){
+        /*!
+         * Get the current value of the surface overlap thicknesses
+         */
+
+        if ( !_assembledSurfaceOverlapThicknesses.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceOverlapThicknesses.second;
+
+    }
+
+    const std::vector< std::vector< std::vector< mapFloatType > > >* aspBase::getAssembledSurfaceOverlapEnergyDensities( ){
+        /*!
+         * Get the current value of the surface overlap energy densities
+         */
+
+        if ( !_assembledSurfaceOverlapEnergyDensities.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceOverlapEnergyDensities.second;
+
+    }
+
+    const std::vector< std::vector< std::vector< mapFloatVector > > >* aspBase::getAssembledSurfaceOverlapTractions( ){
+        /*!
+         * Get the current value of the surface overlap thicknesses
+         */
+
+        if ( !_assembledSurfaceOverlapTractions.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceOverlapTractions.second;
+
+    }
+
     void aspBase::computeSurfaceOverlapTraction( mapFloatVector &surfaceOverlapTraction ){
         /*!
          * Compute the surface overlap traction
@@ -2113,6 +2158,12 @@ namespace asp{
         _assembledSurfaceAdhesionTractions.first = true;
 
         _assembledSurfaceAdhesionThicknesses.first = true;
+
+        _assembledSurfaceOverlapEnergyDensities.first = true;
+
+        _assembledSurfaceOverlapTractions.first = true;
+
+        _assembledSurfaceOverlapThicknesses.first = true;
 
     }
 
