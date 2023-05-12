@@ -60,6 +60,9 @@ namespace asp{
     typedef double floatType; //!< Define the float values type.
     typedef std::vector< floatType > floatVector; //!< Define a vector of floats
     typedef std::vector< std::vector< floatType > > floatMatrix; //!< Define a matrix of floats
+    typedef std::unordered_map< unsigned int, floatType > mapFloatType; //!< Define an unordered map of floats
+    typedef std::unordered_map< unsigned int, floatVector > mapFloatVector; //!< Define an unordered map of float vectors
+    typedef std::unordered_map< unsigned int, floatMatrix > mapFloatMatrix; //!< Define an unordered map of float matrices
 
     floatType _pi = 3.14159265;
 
@@ -193,9 +196,9 @@ namespace asp{
 
             virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity );
 
-            virtual void computeSurfaceOverlapTraction( std::unordered_map< unsigned int, floatVector > &surfaceOverlapTraction );
+            virtual void computeSurfaceOverlapTraction( mapFloatVector &surfaceOverlapTraction );
 
-            virtual void computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity );
+            virtual void computeSurfaceOverlapEnergyDensity( mapFloatType &surfaceOverlapEnergyDensity );
 
             // Getter functions
             const unsigned int* getNumLocalParticles( );
@@ -300,9 +303,9 @@ namespace asp{
 
             const floatMatrix* getNonLocalParticleCurrentBoundingBox( );
 
-            const std::unordered_map< unsigned int, floatType >* getSurfaceOverlapEnergyDensity( );
+            const mapFloatType* getSurfaceOverlapEnergyDensity( );
 
-            const std::unordered_map< unsigned int, floatVector >* getParticlePairOverlap( );
+            const mapFloatVector* getParticlePairOverlap( );
 
             const std::vector< unsigned int >* getUnitSphereConnectivity( );
 
@@ -322,11 +325,19 @@ namespace asp{
 
             const floatType* getSurfaceAdhesionThickness( );
 
-            const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionThicknesses( );
+            const mapFloatType* getSurfaceOverlapThickness( );
 
-            const std::vector< std::vector< floatVector > >* getAssembledSurfaceAdhesionEnergyDensities( );
+            const std::vector< std::vector< std::vector< floatType > > >* getAssembledSurfaceAdhesionThicknesses( );
 
-            const std::vector< std::vector< floatMatrix > >* getAssembledSurfaceAdhesionTractions( );
+            const std::vector< std::vector< std::vector< floatType > > >* getAssembledSurfaceAdhesionEnergyDensities( );
+
+            const std::vector< std::vector< std::vector< floatVector > > >* getAssembledSurfaceAdhesionTractions( );
+
+            const std::vector< std::vector< std::vector< mapFloatType > > >* getAssembledSurfaceOverlapThicknesses( );
+
+            const std::vector< std::vector< std::vector< mapFloatType > > >* getAssembledSurfaceOverlapEnergyDensities( );
+
+            const std::vector< std::vector< std::vector< mapFloatVector > > >* getAssembledSurfaceOverlapTractions( );
 
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
@@ -440,7 +451,7 @@ namespace asp{
 
             dataStorage< floatType > _surfaceAdhesionEnergyDensity;
 
-            dataStorage< std::unordered_map< unsigned int, floatType > > _surfaceOverlapEnergyDensity;
+            dataStorage< mapFloatType > _surfaceOverlapEnergyDensity;
 
             dataStorage< floatVector > _nonLocalReferenceSurfacePoints;
 
@@ -448,19 +459,19 @@ namespace asp{
 
             dataStorage< floatMatrix > _nonLocalParticleCurrentBoundingBox;
 
-            dataStorage< std::unordered_map< unsigned int, floatVector > > _particlePairOverlap;
+            dataStorage< mapFloatVector > _particlePairOverlap;
 
             dataStorage< floatVector > _surfaceAdhesionTraction;
 
-            dataStorage< std::unordered_map< unsigned int, floatVector > > _surfaceOverlapTraction;
+            dataStorage< mapFloatVector > _surfaceOverlapTraction;
 
             dataStorage< floatVector > _allParticleSurfaceAdhesionEnergy;
 
             dataStorage< floatMatrix > _allParticleSurfaceAdhesionTraction;
 
-            dataStorage< std::vector< std::unordered_map< unsigned int, floatType > > > _allParticleSurfaceOverlapEnergy;
+            dataStorage< std::vector< mapFloatType > > _allParticleSurfaceOverlapEnergy;
 
-            dataStorage< std::vector< std::unordered_map< unsigned int, floatVector > > > _allParticleSurfaceOverlapTraction;
+            dataStorage< std::vector< mapFloatVector > > _allParticleSurfaceOverlapTraction;
 
             dataStorage< floatVector > _allParticleSurfaceConstraintEnergy;
 
@@ -488,11 +499,19 @@ namespace asp{
 
             dataStorage< floatType > _surfaceAdhesionThickness;
 
-            dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionThicknesses;
+            dataStorage< mapFloatType > _surfaceOverlapThickness;
 
-            dataStorage< std::vector< std::vector< floatVector > > > _assembledSurfaceAdhesionEnergyDensities;
+            dataStorage< std::vector< std::vector< std::vector< floatType > > > > _assembledSurfaceAdhesionThicknesses;
 
-            dataStorage< std::vector< std::vector< floatMatrix > > > _assembledSurfaceAdhesionTractions;
+            dataStorage< std::vector< std::vector< std::vector< floatType > > > > _assembledSurfaceAdhesionEnergyDensities;
+
+            dataStorage< std::vector< std::vector< std::vector< floatVector > > > > _assembledSurfaceAdhesionTractions;
+
+            dataStorage< std::vector< std::vector< std::vector< mapFloatType > > > > _assembledSurfaceOverlapThicknesses;
+
+            dataStorage< std::vector< std::vector< std::vector< mapFloatType > > > > _assembledSurfaceOverlapEnergyDensities;
+
+            dataStorage< std::vector< std::vector< std::vector< mapFloatVector > > > > _assembledSurfaceOverlapTractions;
 
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
@@ -574,6 +593,8 @@ namespace asp{
             virtual void setLocalParticleParameters( );
 
             virtual void setSurfaceAdhesionThickness( );
+
+            virtual void setSurfaceOverlapThickness( );
 
             virtual void resetInteractionPairData( );
 

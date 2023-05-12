@@ -979,7 +979,7 @@ namespace asp{
 
     }
 
-    void aspBase::computeSurfaceOverlapEnergyDensity( std::unordered_map< unsigned int, floatType > &surfaceOverlapEnergyDensity ){
+    void aspBase::computeSurfaceOverlapEnergyDensity( mapFloatType &surfaceOverlapEnergyDensity ){
         /*!
          * Compute the surface overlap energy density for the local particle and a given interaction
          * 
@@ -988,7 +988,7 @@ namespace asp{
 
         surfaceOverlapEnergyDensity.clear( );
 
-        const std::unordered_map< unsigned int, floatVector > *particlePairOverlap;
+        const mapFloatVector *particlePairOverlap;
         ERROR_TOOLS_CATCH( particlePairOverlap = getParticlePairOverlap( ) );
 
         const floatVector *overlapParameters;
@@ -1069,7 +1069,7 @@ namespace asp{
 
     }
 
-    const std::unordered_map< unsigned int, floatVector >* aspBase::getParticlePairOverlap( ){
+    const mapFloatVector* aspBase::getParticlePairOverlap( ){
         /*!
          * Get an unordered map of the overlap distance between the current local to non-local particle pair
          */
@@ -1099,7 +1099,7 @@ namespace asp{
 
     }
 
-    const std::unordered_map< unsigned int, floatType >* aspBase::getSurfaceOverlapEnergyDensity( ){
+    const mapFloatType* aspBase::getSurfaceOverlapEnergyDensity( ){
         /*!
          * Get the surface overlap energy density
          */
@@ -1551,6 +1551,45 @@ namespace asp{
 
     }
 
+    void aspBase::setSurfaceOverlapThickness( ){
+        /*!
+         * Set the current thickness of the surface overlap
+         */
+
+        const mapFloatVector* particlePairOverlap;
+        ERROR_TOOLS_CATCH( particlePairOverlap = getParticlePairOverlap( ) );
+
+        for ( auto overlap = particlePairOverlap->begin( ); overlap != particlePairOverlap->end( ); overlap++ ){
+
+            floatVector normal;
+
+            ERROR_TOOLS_CATCH( getLocalCurrentNormal( overlap->first, normal ) );
+        
+            _surfaceOverlapThickness.second.insert( { overlap->first, std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
+
+        }
+
+        _surfaceOverlapThickness.first = true;
+
+        addInteractionPairData( &_surfaceOverlapThickness );
+
+    }
+
+    const mapFloatType* aspBase::getSurfaceOverlapThickness( ){
+        /*!
+         * Get the current value of the surface overlap thickness
+         */
+
+        if ( !_surfaceOverlapThickness.first ){
+
+            ERROR_TOOLS_CATCH( setSurfaceOverlapThickness( ) );
+
+        }
+
+        return &_surfaceOverlapThickness.second;
+
+    }
+
     const std::vector< std::vector< floatVector > >* aspBase::getAssembledSurfaceAdhesionThicknesses( ){
         /*!
          * Get the current value of the surface adhesion thicknesses
@@ -1596,7 +1635,52 @@ namespace asp{
 
     }
 
-    void aspBase::computeSurfaceOverlapTraction( std::unordered_map< unsigned int, floatVector > &surfaceOverlapTraction ){
+    const std::vector< std::vector< std::vector< mapFloatType > > >* aspBase::getAssembledSurfaceOverlapThicknesses( ){
+        /*!
+         * Get the current value of the surface overlap thicknesses
+         */
+
+        if ( !_assembledSurfaceOverlapThicknesses.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceOverlapThicknesses.second;
+
+    }
+
+    const std::vector< std::vector< std::vector< mapFloatType > > >* aspBase::getAssembledSurfaceOverlapEnergyDensities( ){
+        /*!
+         * Get the current value of the surface overlap energy densities
+         */
+
+        if ( !_assembledSurfaceOverlapEnergyDensities.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceOverlapEnergyDensities.second;
+
+    }
+
+    const std::vector< std::vector< std::vector< mapFloatVector > > >* aspBase::getAssembledSurfaceOverlapTractions( ){
+        /*!
+         * Get the current value of the surface overlap thicknesses
+         */
+
+        if ( !_assembledSurfaceOverlapTractions.first ){
+
+            ERROR_TOOLS_CATCH( assembleSurfaceResponses( ) );
+
+        }
+
+        return &_assembledSurfaceOverlapTractions.second;
+
+    }
+
+    void aspBase::computeSurfaceOverlapTraction( mapFloatVector &surfaceOverlapTraction ){
         /*!
          * Compute the surface overlap traction
          * 
@@ -1605,7 +1689,7 @@ namespace asp{
 
         surfaceOverlapTraction.clear( );
 
-        const std::unordered_map< unsigned int, floatVector > *particlePairOverlap;
+        const mapFloatVector *particlePairOverlap;
         ERROR_TOOLS_CATCH( particlePairOverlap = getParticlePairOverlap( ) );
 
         const floatVector *overlapParameters;
@@ -1636,7 +1720,7 @@ namespace asp{
 
     }
 
-    const std::unordered_map< unsigned int, floatVector >* aspBase::getSurfaceOverlapTraction( ){
+    const mapFloatVector* aspBase::getSurfaceOverlapTraction( ){
         /*!
          * Get the surface overlap traction
          */
@@ -2022,6 +2106,12 @@ namespace asp{
 
         _assembledSurfaceAdhesionTractions.second = std::vector< std::vector< floatMatrix > >( numLocalParticles, std::vector< floatMatrix >( numSurfacePoints, floatMatrix( numLocalParticles ) ) );
 
+        _assembledSurfaceOverlapEnergyDensities.second = std::vector< std::vector< std::vector< mapFloatType > > >( numLocalParticles, std::vector< std::vector< mapFloatType > >( numSurfacePoints, std::vector< mapFloatType >( numLocalParticles ) ) );
+
+        _assembledSurfaceOverlapThicknesses.second = std::vector< std::vector< std::vector< mapFloatType > > >( numLocalParticles, std::vector< std::vector< mapFloatType > >( numSurfacePoints, std::vector< mapFloatType >( numLocalParticles ) ) );
+
+        _assembledSurfaceOverlapTractions.second = std::vector< std::vector< std::vector< mapFloatVector > > >( numLocalParticles, std::vector< std::vector< mapFloatVector > >( numSurfacePoints, std::vector< mapFloatVector >( numLocalParticles ) ) );
+
         for ( unsigned int i = 0; i < *getNumLocalParticles( ); i++ ){
 
             _localIndex = i; // Set the current local index
@@ -2040,6 +2130,12 @@ namespace asp{
                     _assembledSurfaceAdhesionTractions.second[ i ][ j ][ k ] = *getSurfaceAdhesionTraction( );
 
                     _assembledSurfaceAdhesionThicknesses.second[ i ][ j ][ k ] = *getSurfaceAdhesionThickness( );
+
+                    _assembledSurfaceOverlapEnergyDensities.second[ i ][ j ][ k ] = *getSurfaceOverlapEnergyDensity( );
+
+                    _assembledSurfaceOverlapTractions.second[ i ][ j ][ k ] = *getSurfaceOverlapTraction( );
+
+                    _assembledSurfaceOverlapThicknesses.second[ i ][ j ][ k ] = *getSurfaceOverlapThickness( );
 
                     // Quantities required for the gradient calculation
 
@@ -2062,6 +2158,12 @@ namespace asp{
         _assembledSurfaceAdhesionTractions.first = true;
 
         _assembledSurfaceAdhesionThicknesses.first = true;
+
+        _assembledSurfaceOverlapEnergyDensities.first = true;
+
+        _assembledSurfaceOverlapTractions.first = true;
+
+        _assembledSurfaceOverlapThicknesses.first = true;
 
     }
 

@@ -63,3 +63,5 @@ New Features
 - Added all required functions for the computation of the local particle's energy (:merge:`32`). By `Nathan Miller`_.
 - Added the computation of the local particle's energy (:merge:`32`). By `Nathan Miller`_.
 - Added the assembly of the surface adhesion quantities (:merge:`33`). By `Nathan Miller`_.
+- Added the computation of the surface overlap thickness (:merge:`34`). By `Nathan Miller`_.
+- Added the assembly of the overlap quantities (:merge:`35`). By `Nathan Miller`_.
