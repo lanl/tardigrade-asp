@@ -30,6 +30,7 @@ Internal Changes
   allow for random neighboring particles (:merge:`27`). By `Nathan Miller`_.
 - Changed the overlap surface energy to be a surface density rather than a volumetric density (:merge:`31`). By `Nathan Miller`_.
 - Changed the setter functions to use a parameter-less setter for user defined functions, and a value taking setter that can be called by developers. (:merge:`36`). By `Nathan Miller`_.
+- Added getter functions for the gradients of the current distance vector. (:merge:`36`). By `Nathan Miller`_.
 
 New Features
 ============

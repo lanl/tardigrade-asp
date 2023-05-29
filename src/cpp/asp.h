@@ -343,6 +343,21 @@ namespace asp{
 
             const std::vector< std::vector< std::vector< mapFloatVector > > >* getAssembledSurfaceOverlapTractions( );
 
+
+            const floatMatrix* getdCurrentDistanceVectordLocalReferenceRelativePositionVector( );
+
+            const floatMatrix* getdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( );
+
+            const floatMatrix* getdCurrentDistanceVectordReferenceDistanceVector( );
+
+            const floatMatrix* getdCurrentDistanceVectordLocalDeformationGradient( );
+
+            const floatMatrix* getdCurrentDistanceVectordLocalMicroDeformation( );
+
+            const floatMatrix* getdCurrentDistanceVectordNonLocalMicroDeformation( );
+
+            const floatMatrix* getdCurrentDistanceVectordGradientMicroDeformation( );
+
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
 
@@ -616,7 +631,7 @@ namespace asp{
 
             dataStorage< std::vector< std::vector< std::vector< mapFloatVector > > > > _assembledSurfaceOverlapTractions;
 
-            dataStorage< floatMatrix > _dCurrentDistanceVectordReferenceRelativePositionVector;
+            dataStorage< floatMatrix > _dCurrentDistanceVectordLocalReferenceRelativePositionVector;
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalReferenceRelativePositionVector;
 

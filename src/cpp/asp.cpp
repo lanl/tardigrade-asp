@@ -887,11 +887,27 @@ namespace asp{
          *     reference relative position vector
          */
 
-        _dCurrentDistanceVectordReferenceRelativePositionVector.second = value;
+        _dCurrentDistanceVectordLocalReferenceRelativePositionVector.second = value;
 
-        _dCurrentDistanceVectordReferenceRelativePositionVector.first = true;
+        _dCurrentDistanceVectordLocalReferenceRelativePositionVector.first = true;
 
-        addInteractionPairData( &_dCurrentDistanceVectordReferenceRelativePositionVector );
+        addInteractionPairData( &_dCurrentDistanceVectordLocalReferenceRelativePositionVector );
+
+    }
+
+    const floatMatrix *aspBase::getdCurrentDistanceVectordLocalReferenceRelativePositionVector( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the local reference
+         * relative position vector.
+         */
+
+        if ( !_dCurrentDistanceVectordLocalReferenceRelativePositionVector.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordLocalReferenceRelativePositionVector( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordLocalReferenceRelativePositionVector.second;
 
     }
 
@@ -921,6 +937,22 @@ namespace asp{
 
     }
 
+    const floatMatrix *aspBase::getdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the non-local reference
+         * relative position vector.
+         */
+
+        if ( !_dCurrentDistanceVectordNonLocalReferenceRelativePositionVector.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordNonLocalReferenceRelativePositionVector.second;
+
+    }
+
     void aspBase::setdCurrentDistanceVectordReferenceDistanceVector( ){
         /*!
          * set the derivative of the current distance vector w.r.t. the reference
@@ -944,6 +976,21 @@ namespace asp{
         _dCurrentDistanceVectordReferenceDistanceVector.first = true;
 
         addInteractionPairData( &_dCurrentDistanceVectordReferenceDistanceVector );
+
+    }
+
+    const floatMatrix *aspBase::getdCurrentDistanceVectordReferenceDistanceVector( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the reference distance vector.
+         */
+
+        if ( !_dCurrentDistanceVectordReferenceDistanceVector.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordReferenceDistanceVector( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordReferenceDistanceVector.second;
 
     }
 
@@ -974,6 +1021,21 @@ namespace asp{
 
     }
 
+    const floatMatrix *aspBase::getdCurrentDistanceVectordLocalDeformationGradient( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the local deformation gradient.
+         */
+
+        if ( !_dCurrentDistanceVectordLocalDeformationGradient.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordLocalDeformationGradient( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordLocalDeformationGradient.second;
+
+    }
+
     void aspBase::setdCurrentDistanceVectordLocalMicroDeformation( ){
         /*!
          * set the derivative of the current distance vector w.r.t. the local
@@ -998,6 +1060,21 @@ namespace asp{
         _dCurrentDistanceVectordLocalMicroDeformation.first = true;
 
         addInteractionPairData( &_dCurrentDistanceVectordLocalMicroDeformation );
+
+    }
+
+    const floatMatrix *aspBase::getdCurrentDistanceVectordLocalMicroDeformation( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the local micro-deformation.
+         */
+
+        if ( !_dCurrentDistanceVectordLocalMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordLocalMicroDeformation( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordLocalMicroDeformation.second;
 
     }
 
@@ -1027,6 +1104,21 @@ namespace asp{
 
     }
 
+    const floatMatrix *aspBase::getdCurrentDistanceVectordNonLocalMicroDeformation( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the non-local micro-deformation.
+         */
+
+        if ( !_dCurrentDistanceVectordNonLocalMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordNonLocalMicroDeformation( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordNonLocalMicroDeformation.second;
+
+    }
+
     void aspBase::setdCurrentDistanceVectordGradientMicroDeformation( ){
         /*!
          * set the derivative of the current distance vector w.r.t. the reference
@@ -1050,6 +1142,21 @@ namespace asp{
         _dCurrentDistanceVectordGradientMicroDeformation.first = true;
 
         addInteractionPairData( &_dCurrentDistanceVectordGradientMicroDeformation );
+
+    }
+
+    const floatMatrix *aspBase::getdCurrentDistanceVectordGradientMicroDeformation( ){
+        /*!
+         * Get the derivative of the current distance vector w.r.t. the gradient of the micro-deformation.
+         */
+
+        if ( !_dCurrentDistanceVectordGradientMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordGradientMicroDeformation( ) )
+
+        }
+
+        return &_dCurrentDistanceVectordGradientMicroDeformation.second;
 
     }
 
