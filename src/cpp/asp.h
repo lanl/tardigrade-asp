@@ -201,7 +201,11 @@ namespace asp{
             virtual void computeSurfaceOverlapEnergyDensity( mapFloatType &surfaceOverlapEnergyDensity );
 
             // Getter functions
+            const unsigned int* getDimension( );
+
             const unsigned int* getNumLocalParticles( );
+
+            const floatType* getRadius( );
 
             const floatType* getPreviousTime( );
 
@@ -359,6 +363,105 @@ namespace asp{
 
             void idBoundingBoxContainedPoints( const floatVector &points, const floatMatrix &boundingBox, std::vector< unsigned int > &containedPoints );
 
+            // Setter functions
+            void setLocalReferenceRadius( const floatType &value );
+
+            void setNonLocalReferenceRadius( const floatType &value );
+
+            void setLocalReferenceNormal( const floatVector &value );
+
+            void setLocalSurfaceReferenceRelativePositionVector( const floatVector &value );
+
+            void setNonLocalSurfaceReferenceRelativePositionVector( const floatVector &value );
+
+            void setReferenceDistanceVector( const floatVector &value );
+
+            void setLocalDeformationGradient( const floatVector &value );
+
+            void setPreviousLocalDeformationGradient( const floatVector &value );
+
+            void setLocalMicroDeformation( const floatVector &value );
+
+            void setPreviousLocalMicroDeformation( const floatVector &value );
+
+            void setNonLocalMicroDeformation( const floatVector &value );
+
+            void setNonLocalMicroDeformationBase( const floatVector &value );
+
+            void setLocalGradientMicroDeformation( const floatVector &value );
+
+            void setLocalCurrentNormal( const floatVector &value );
+
+            void setLocalReferenceParticleSpacing( const floatVector &value );
+
+            void setCurrentDistanceVector( const floatVector &value );
+
+            void setSurfaceParameters( const floatVector &value );
+
+            void setSurfaceOverlapParameters( const floatVector &value );
+
+            void setLocalParticleQuantities( const floatVector &value );
+
+            void setLocalParticleEnergyDensity( const floatType &value );
+
+            void setLocalParticleMicroCauchyStress( const floatVector &value );
+
+            void setLocalParticleStateVariables( const floatVector &value );
+
+            void setLocalParticleLogProbabilityRatio( const floatType &value );
+
+            void setLocalParticleEnergy( const floatType &value );
+
+            void setSurfaceAdhesionEnergyDensity( const floatType &value );
+
+            void setSurfaceOverlapEnergyDensity( const mapFloatType &value );
+
+            void setSurfaceAdhesionTraction( const floatVector &value );
+
+            void setSurfaceOverlapTraction( const mapFloatVector &value );
+
+            void setLocalParticleCurrentBoundingBox( const floatMatrix &value );
+
+            void setNonLocalParticleCurrentBoundingBox( const floatMatrix &value );
+
+            void setLocalReferenceSurfacePoints( const floatVector &value );
+
+            void setNonLocalReferenceSurfacePoints( const floatVector &value );
+
+            void setLocalCurrentSurfacePoints( const floatVector &value );
+
+            void setNonLocalCurrentSurfacePoints( const floatVector &value );
+
+            void setParticlePairOverlap( const mapFloatVector &value );
+
+            void setLocalParticleReferenceVolume( const floatType &value );
+
+            void setLocalParticleCurrentVolume( const floatType &value );
+
+            void setLocalParticleParameters( const floatVector &value );
+
+            void setSurfaceAdhesionThickness( const floatType &value );
+
+            void setSurfaceOverlapThickness( const mapFloatType &value );
+
+//derp
+
+            void setdCurrentDistanceVectordLocalReferenceRelativePositionVector( const floatMatrix &value );
+
+            void setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( const floatMatrix &value );
+
+            void setdCurrentDistanceVectordReferenceDistanceVector( const floatMatrix &value );
+
+            void setdCurrentDistanceVectordLocalDeformationGradient( const floatMatrix &value );
+
+            void setdCurrentDistanceVectordLocalMicroDeformation( const floatMatrix &value );
+
+            void setdCurrentDistanceVectordNonLocalMicroDeformation( const floatMatrix &value );
+
+            void setdCurrentDistanceVectordGradientMicroDeformation( const floatMatrix &value );
+
+//endderp
+
         private:
             // Friend classes
             friend class unit_test::aspBaseTester;
@@ -513,6 +616,20 @@ namespace asp{
 
             dataStorage< std::vector< std::vector< std::vector< mapFloatVector > > > > _assembledSurfaceOverlapTractions;
 
+            dataStorage< floatMatrix > _dCurrentDistanceVectordReferenceRelativePositionVector;
+
+            dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalReferenceRelativePositionVector;
+
+            dataStorage< floatMatrix > _dCurrentDistanceVectordReferenceDistanceVector;
+
+            dataStorage< floatMatrix > _dCurrentDistanceVectordLocalDeformationGradient;
+
+            dataStorage< floatMatrix > _dCurrentDistanceVectordLocalMicroDeformation;
+
+            dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalMicroDeformation;
+
+            dataStorage< floatMatrix > _dCurrentDistanceVectordGradientMicroDeformation;
+
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
             std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
@@ -555,6 +672,24 @@ namespace asp{
             virtual void setLocalReferenceParticleSpacing( );
 
             virtual void setCurrentDistanceVector( );
+
+//derp
+
+            virtual void setdCurrentDistanceVectordLocalReferenceRelativePositionVector( );
+
+            virtual void setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( );
+
+            virtual void setdCurrentDistanceVectordReferenceDistanceVector( );
+
+            virtual void setdCurrentDistanceVectordLocalDeformationGradient( );
+
+            virtual void setdCurrentDistanceVectordLocalMicroDeformation( );
+
+            virtual void setdCurrentDistanceVectordNonLocalMicroDeformation( );
+
+            virtual void setdCurrentDistanceVectordGradientMicroDeformation( );
+
+//endderp
 
             virtual void setSurfaceParameters( );
 

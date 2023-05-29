@@ -29,6 +29,7 @@ Internal Changes
   the reference point for the Taylor series computation of the non-local micro-deformation which will
   allow for random neighboring particles (:merge:`27`). By `Nathan Miller`_.
 - Changed the overlap surface energy to be a surface density rather than a volumetric density (:merge:`31`). By `Nathan Miller`_.
+- Changed the setter functions to use a parameter-less setter for user defined functions, and a value taking setter that can be called by developers. (:merge:`36`). By `Nathan Miller`_.
 
 New Features
 ============

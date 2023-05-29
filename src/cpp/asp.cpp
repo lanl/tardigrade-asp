@@ -23,31 +23,33 @@ namespace asp{
          */
 
         // Initialize surface integral pairs
+        const unsigned int *dim = getDimension( );
+
         _localReferenceRadius = dataStorage( false, 0. );
 
         _nonLocalReferenceRadius = dataStorage( false, 0. );
 
-        _unitSpherePoints = dataStorage( false, floatVector( _dimension, 0 ) );
+        _unitSpherePoints = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _localReferenceNormal = dataStorage( false, floatVector( _dimension, 0 ) );
+        _localReferenceNormal = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _localSurfaceReferenceRelativePositionVector = dataStorage( false, floatVector( _dimension, 0 ) );
+        _localSurfaceReferenceRelativePositionVector = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _nonLocalSurfaceReferenceRelativePositionVector = dataStorage( false, floatVector( _dimension, 0 ) );
+        _nonLocalSurfaceReferenceRelativePositionVector = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _referenceDistanceVector = dataStorage( false, floatVector( _dimension, 0 ) );
+        _referenceDistanceVector = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _localReferenceParticleSpacing = dataStorage( false, floatVector( _dimension, 0 ) );
+        _localReferenceParticleSpacing = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _localDeformationGradient = dataStorage( false, floatVector( _dimension, 0 ) );
+        _localDeformationGradient = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _localMicroDeformation = dataStorage( false, floatVector( _dimension, 0 ) );
+        _localMicroDeformation = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _nonLocalMicroDeformation = dataStorage( false, floatVector( _dimension, 0 ) );
+        _nonLocalMicroDeformation = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _currentDistanceVector = dataStorage( false, floatVector( _dimension, 0 ) );
+        _currentDistanceVector = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
-        _localCurrentNormal = dataStorage( false, floatVector( _dimension, 0 ) );
+        _localCurrentNormal = dataStorage( false, floatVector( ( *dim ), 0 ) );
 
     }
 
@@ -127,6 +129,24 @@ namespace asp{
 
     }
 
+    const unsigned int* aspBase::getDimension( ){
+        /*!
+         * Get the spacial dimension
+         */
+
+        return &_dimension;
+
+    }
+
+    const floatType* aspBase::getRadius( ){
+        /*!
+         * Get the radius
+         */
+
+        return &_radius;
+
+    }
+
     const floatVector* aspBase::getUnitSpherePoints( ){
         /*!
          * Get the points on the unit sphere
@@ -165,7 +185,25 @@ namespace asp{
          * as any position vector on the surface of the sphere.
          */
 
-        ERROR_TOOLS_CATCH( getLocalReferenceNormal( _localSurfaceNodeIndex, _localReferenceNormal.second ) );
+        floatVector localReferenceNormal;
+
+        ERROR_TOOLS_CATCH( getLocalReferenceNormal( *getLocalSurfaceNodeIndex( ), localReferenceNormal ) );
+
+        setLocalReferenceNormal( localReferenceNormal );
+
+        return;
+
+    }
+
+    void aspBase::setLocalReferenceNormal( const floatVector &value ){
+        /*!
+         * Set the local reference normal vector
+         * 
+         * \param &value: The local reference normal vector
+         * 
+         */
+
+        _localReferenceNormal.second = value;
 
         _localReferenceNormal.first = true;
 
@@ -207,7 +245,20 @@ namespace asp{
         const floatType* localReferenceRadius;
         ERROR_TOOLS_CATCH( localReferenceRadius = getLocalReferenceRadius( ) );
 
-        _localSurfaceReferenceRelativePositionVector.second = ( *localReferenceRadius ) * ( *localReferenceNormal );
+        setLocalSurfaceReferenceRelativePositionVector( ( *localReferenceRadius ) * ( *localReferenceNormal ) );
+
+        return;
+
+    }
+
+    void aspBase::setLocalSurfaceReferenceRelativePositionVector( const floatVector &value ){
+        /*!
+         * Set the local surface relative position vector
+         * 
+         * \param &value: The value of the local surface relative position vector
+         */
+
+        _localSurfaceReferenceRelativePositionVector.second = value;
 
         _localSurfaceReferenceRelativePositionVector.first = true;
 
@@ -247,7 +298,20 @@ namespace asp{
         const floatType* nonLocalReferenceRadius;
         ERROR_TOOLS_CATCH( nonLocalReferenceRadius = getNonLocalReferenceRadius( ) );
 
-        _nonLocalSurfaceReferenceRelativePositionVector.second = -( *nonLocalReferenceRadius ) * ( *localReferenceNormal );
+        setNonLocalSurfaceReferenceRelativePositionVector( -( *nonLocalReferenceRadius ) * ( *localReferenceNormal ) );
+
+        return;
+
+    }
+
+    void aspBase::setNonLocalSurfaceReferenceRelativePositionVector( const floatVector &value ){
+        /*!
+         * Set the non-local relative position vector
+         * 
+         * \param &value: The value of the non-local surface reference relative position vector
+         */
+
+        _nonLocalSurfaceReferenceRelativePositionVector.second = value;
 
         _nonLocalSurfaceReferenceRelativePositionVector.first = true;
 
@@ -277,7 +341,20 @@ namespace asp{
          * Set the local reference radius
          */
 
-        _localReferenceRadius.second = _radius;
+        setLocalReferenceRadius( *getRadius( ) );
+
+        return;
+
+    }
+
+    void aspBase::setLocalReferenceRadius( const floatType &value ){
+        /*!
+         * Set the local reference radius
+         * 
+         * \param &value: The value of the local reference radius
+         */
+
+        _localReferenceRadius.second = value;
 
         _localReferenceRadius.first = true;
 
@@ -307,7 +384,20 @@ namespace asp{
          * Set the non-local reference radius
          */
 
-        _nonLocalReferenceRadius.second = _radius;
+        setNonLocalReferenceRadius( *getRadius( ) );
+
+        return;
+
+    }
+
+    void aspBase::setNonLocalReferenceRadius( const floatType &value ){
+        /*!
+         * Set the non-local reference radius
+         * 
+         * \param &value: The value of the non-local reference radius
+         */
+
+        _nonLocalReferenceRadius.second = value;
 
         _nonLocalReferenceRadius.first = true;
 
@@ -367,7 +457,20 @@ namespace asp{
         const floatVector* deformationGradient;
         ERROR_TOOLS_CATCH( deformationGradient = getDeformationGradient( ) );
 
-        _localDeformationGradient.second = *deformationGradient;
+        setLocalDeformationGradient( *deformationGradient );
+
+        return;
+
+    }
+
+    void aspBase::setLocalDeformationGradient( const floatVector &value ){
+        /*!
+         * Set the local deformation gradient
+         * 
+         * \param &value: The value of the local deformation gradient
+         */
+
+        _localDeformationGradient.second = value;
 
         _localDeformationGradient.first = true;
 
@@ -400,7 +503,20 @@ namespace asp{
         const floatVector* previousDeformationGradient;
         ERROR_TOOLS_CATCH( previousDeformationGradient = getPreviousDeformationGradient( ) );
 
-        _previousLocalDeformationGradient.second = *previousDeformationGradient;
+        setPreviousLocalDeformationGradient( *previousDeformationGradient );
+
+        return;
+
+    }
+
+    void aspBase::setPreviousLocalDeformationGradient( const floatVector &value ){
+        /*!
+         * Set the local previous deformation gradient
+         * 
+         * \param &value: The value of the local previous deformation gradient
+         */
+
+        _previousLocalDeformationGradient.second = value;
 
         _previousLocalDeformationGradient.first = true;
 
@@ -434,7 +550,20 @@ namespace asp{
         const floatVector* microDeformation;
         ERROR_TOOLS_CATCH( microDeformation = getMicroDeformation( ) );
 
-        _localMicroDeformation.second = *microDeformation;
+        setLocalMicroDeformation( *microDeformation );
+
+        return;
+
+    }
+
+    void aspBase::setLocalMicroDeformation( const floatVector &value ){
+        /*!
+         * Set the local micro deformation
+         * 
+         * \param &value: The value of the local micro deformation
+         */
+
+        _localMicroDeformation.second = value;
 
         _localMicroDeformation.first = true;
 
@@ -467,7 +596,20 @@ namespace asp{
         const floatVector* previousMicroDeformation;
         ERROR_TOOLS_CATCH( previousMicroDeformation = getPreviousMicroDeformation( ) );
 
-        _previousLocalMicroDeformation.second = *previousMicroDeformation;
+        setPreviousLocalMicroDeformation( *previousMicroDeformation );
+
+        return;
+
+    }
+
+    void aspBase::setPreviousLocalMicroDeformation( const floatVector &value ){
+        /*!
+         * Set the local previous micro deformation
+         * 
+         * \param &value: The previous local micro deformation
+         */
+
+        _previousLocalMicroDeformation.second = value;
 
         _previousLocalMicroDeformation.first = true;
 
@@ -508,9 +650,26 @@ namespace asp{
         const floatVector* referenceDistanceVector;
         ERROR_TOOLS_CATCH( referenceDistanceVector = getReferenceDistanceVector( ) );
 
-        _localReferenceParticleSpacing.second = ( *localSurfaceReferenceRelativePositionVector )
-                                              + ( *referenceDistanceVector )
-                                              - ( *nonLocalSurfaceReferenceRelativePositionVector );
+        floatVector localReferenceParticleSpacing;
+
+        localReferenceParticleSpacing = ( *localSurfaceReferenceRelativePositionVector )
+                                      + ( *referenceDistanceVector )
+                                      - ( *nonLocalSurfaceReferenceRelativePositionVector );
+
+        setLocalReferenceParticleSpacing( localReferenceParticleSpacing );
+
+        return;
+
+    }
+
+    void aspBase::setLocalReferenceParticleSpacing( const floatVector &value ){
+        /*!
+         * Set the local particle spacing
+         * 
+         * \param &value: The local particle spacing
+         */
+
+        _localReferenceParticleSpacing.second = value;
 
         _localReferenceParticleSpacing.first = true;
 
@@ -542,6 +701,8 @@ namespace asp{
          * \f$ \chi_{iI}^{non-local} = \chi_{iI} + \chi_{iI,J} dX_J\f$
          */
 
+        const unsigned int *dim = getDimension( );
+
         const floatVector* localReferenceParticleSpacing;
         ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacing( ) );
 
@@ -551,16 +712,16 @@ namespace asp{
         const floatVector* gradientMicroDeformation;
         ERROR_TOOLS_CATCH( gradientMicroDeformation = getGradientMicroDeformation( ) );
 
-        _nonLocalMicroDeformation.second = *microDeformationBase;
+        floatVector nonLocalMicroDeformation = *microDeformationBase;
 
-        for ( unsigned int i = 0; i < _dimension; i++ ){
+        for ( unsigned int i = 0; i < ( *dim ); i++ ){
 
-            for ( unsigned int I = 0; I < _dimension; I++ ){
+            for ( unsigned int I = 0; I < ( *dim ); I++ ){
 
-                for ( unsigned int J = 0; J < _dimension; J++ ){
+                for ( unsigned int J = 0; J < ( *dim ); J++ ){
 
-                    _nonLocalMicroDeformation.second[ _dimension * i + I ]
-                        += ( *gradientMicroDeformation )[ _dimension * _dimension * i + _dimension * I + J ]
+                    nonLocalMicroDeformation[ ( *dim ) * i + I ]
+                        += ( *gradientMicroDeformation )[ ( *dim ) * ( *dim ) * i + ( *dim ) * I + J ]
                          * ( *localReferenceParticleSpacing )[ J ];
 
                 }
@@ -568,6 +729,21 @@ namespace asp{
             }
 
         }
+
+        setNonLocalMicroDeformation( nonLocalMicroDeformation );
+
+        return;
+
+    }
+
+    void aspBase::setNonLocalMicroDeformation( const floatVector &value ){
+        /*!
+         * Set the non-local micro deformation
+         * 
+         * \param &value: The value of the non-local micro deformation
+         */
+
+        _nonLocalMicroDeformation.second = value;
 
         _nonLocalMicroDeformation.first = true;
 
@@ -615,7 +791,18 @@ namespace asp{
         const floatVector *microDeformationTensor;
         ERROR_TOOLS_CATCH( microDeformationTensor = getMicroDeformation( ) );
 
-        _nonLocalMicroDeformationBase.second = *microDeformationTensor;
+        setNonLocalMicroDeformationBase( *microDeformationTensor );
+
+    }
+
+    void aspBase::setNonLocalMicroDeformationBase( const floatVector &value ){
+        /*!
+         * Set the non-local micro-deformation tensor base
+         * 
+         * \param &value: The value of the non-local micro-deformation tensor base
+         */
+
+        _nonLocalMicroDeformationBase.second = value;
 
         _nonLocalMicroDeformationBase.first = true;
 
@@ -647,19 +834,222 @@ namespace asp{
         ERROR_TOOLS_CATCH( nonLocalMicroDeformation = getNonLocalMicroDeformation( ) );
 
         // Compute the current distance
+
+        floatVector currentDistanceVector;
+
         ERROR_TOOLS_CATCH( tractionSeparation::computeCurrentDistanceGeneral( *localSurfaceReferenceRelativePositionVector,
                                                                               *nonLocalSurfaceReferenceRelativePositionVector,
                                                                               *referenceDistanceVector,
                                                                               *localDeformationGradient,
                                                                               *localMicroDeformation,
                                                                               *nonLocalMicroDeformation,
-                                                                              _currentDistanceVector.second ) );
+                                                                              currentDistanceVector ) );
+
+        setCurrentDistanceVector( currentDistanceVector );
+
+        return;
+
+    }
+
+    void aspBase::setCurrentDistanceVector( const floatVector &value ){
+        /*!
+         * Set the current distance vector
+         * 
+         * \param &value: The value of the current distance vector
+         */
+
+        _currentDistanceVector.second = value;
 
         _currentDistanceVector.first = true;
 
         addInteractionPairData( &_currentDistanceVector );
 
         return;
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordLocalReferenceRelativePositionVector( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the local reference
+         * relative position vector.
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordLocalReferenceRelativePositionVector( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the local reference
+         * relative position vector.
+         * 
+         * \param &value: The derivative of the current distance vector w.r.t. the local
+         *     reference relative position vector
+         */
+
+        _dCurrentDistanceVectordReferenceRelativePositionVector.second = value;
+
+        _dCurrentDistanceVectordReferenceRelativePositionVector.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordReferenceRelativePositionVector );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the non-local reference
+         * relative position vector.
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the non-local reference
+         * relative position vector.
+         * 
+         * \param &value: The value of the derivative of the current distance vector w.r.t. the non-local relative position vector.
+         */
+
+        _dCurrentDistanceVectordNonLocalReferenceRelativePositionVector.second = value;
+
+        _dCurrentDistanceVectordNonLocalReferenceRelativePositionVector.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordNonLocalReferenceRelativePositionVector );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordReferenceDistanceVector( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the reference
+         * distance vector
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordReferenceDistanceVector( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the reference
+         * distance vector
+         * 
+         * \param &value: The derivative of the current distance vector w.r.t. the reference distance vector
+         */
+
+        _dCurrentDistanceVectordReferenceDistanceVector.second = value;
+
+        _dCurrentDistanceVectordReferenceDistanceVector.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordReferenceDistanceVector );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordLocalDeformationGradient( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the local
+         * deformation gradient.
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordLocalDeformationGradient( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the local
+         * deformation gradient.
+         * 
+         * \param &value: The derivative of the current distance vector w.r.t. the local
+         *     deformation gradient.
+         */
+
+        _dCurrentDistanceVectordLocalDeformationGradient.second = value;
+
+        _dCurrentDistanceVectordLocalDeformationGradient.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordLocalDeformationGradient );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordLocalMicroDeformation( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the local
+         * micro-deformation
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordLocalMicroDeformation( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the local
+         * micro-deformation
+         * 
+         * \param &value: The derivative of the current distance vector w.r.t. the local
+         *     micro-deformation
+         */
+
+        _dCurrentDistanceVectordLocalMicroDeformation.second = value;
+
+        _dCurrentDistanceVectordLocalMicroDeformation.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordLocalMicroDeformation );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordNonLocalMicroDeformation( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the non-local
+         * micro-deformation
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordNonLocalMicroDeformation( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the non-local
+         * micro-deformation
+         * 
+         * \param &value: The derivative of the current distance vector w.r.t. the non-local micro-deformation
+         */
+
+        _dCurrentDistanceVectordNonLocalMicroDeformation.second = value;
+
+        _dCurrentDistanceVectordNonLocalMicroDeformation.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordNonLocalMicroDeformation );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordGradientMicroDeformation( ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the reference
+         * spatial gradient of the micro-deformation.
+         */
+
+        ERROR_TOOLS_CATCH( setCurrentDistanceVector( ) );
+
+    }
+
+    void aspBase::setdCurrentDistanceVectordGradientMicroDeformation( const floatMatrix &value ){
+        /*!
+         * set the derivative of the current distance vector w.r.t. the reference
+         * spatial gradient of the micro-deformation.
+         * 
+         * \param &value:
+         */
+
+        _dCurrentDistanceVectordGradientMicroDeformation.second = value;
+
+        _dCurrentDistanceVectordGradientMicroDeformation.first = true;
+
+        addInteractionPairData( &_dCurrentDistanceVectordGradientMicroDeformation );
 
     }
 
@@ -689,10 +1079,27 @@ namespace asp{
         const floatVector* localMicroDeformation;
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, *localReferenceNormal,
-                                                                       _localCurrentNormal.second ) );
+        floatVector localCurrentNormal;
 
-        _localCurrentNormal.second /= vectorTools::l2norm( _localCurrentNormal.second );
+        ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, *localReferenceNormal,
+                                                                       localCurrentNormal ) );
+
+        localCurrentNormal /= vectorTools::l2norm( localCurrentNormal );
+
+        setLocalCurrentNormal( localCurrentNormal );
+
+        return;
+
+    }
+
+    void aspBase::setLocalCurrentNormal( const floatVector &value ){
+        /*!
+         * Set the current local normal
+         * 
+         * \param &value: The value of the local current normal
+         */
+
+        _localCurrentNormal.second = value;
 
         _localCurrentNormal.first = true;
 
@@ -725,21 +1132,23 @@ namespace asp{
          * \param &localReferenceNormal: The resulting local reference normal vector
          */
 
+        const unsigned int *dim = getDimension( );
+
         const floatVector* unitSpherePoints;
         ERROR_TOOLS_CATCH( unitSpherePoints = getUnitSpherePoints( ) );
 
-        if ( _dimension * ( index + 1 ) > unitSpherePoints->size( ) ){
+        if ( ( *dim ) * ( index + 1 ) > unitSpherePoints->size( ) ){
 
             std::string message = "The requested index is greater than the number of points available on the unit sphere.\n";
             message            += "  index:            " + std::to_string( index ) + "\n";
-            message            += "  number of points: " + std::to_string( unitSpherePoints->size( ) / _dimension );
+            message            += "  number of points: " + std::to_string( unitSpherePoints->size( ) / ( *dim ) );
 
             ERROR_TOOLS_CATCH( throw std::runtime_error( message ) );
 
         }
 
-        localReferenceNormal = floatVector( unitSpherePoints->begin( ) + _dimension * index,
-                                            unitSpherePoints->begin( ) + _dimension * ( index + 1 ) );
+        localReferenceNormal = floatVector( unitSpherePoints->begin( ) + ( *dim ) * index,
+                                            unitSpherePoints->begin( ) + ( *dim ) * ( index + 1 ) );
 
         localReferenceNormal /= vectorTools::l2norm( localReferenceNormal );
 
@@ -775,6 +1184,20 @@ namespace asp{
          * Set the surface parameters for the integrand
          */
 
+        setSurfaceParameters( floatVector( 0, 0 ) );        
+
+        return;
+    }
+
+    void aspBase::setSurfaceParameters( const floatVector &value ){
+        /*!
+         * Set the surface parameters for the integrand
+         * 
+         * \param &value: The values of the surface parameters
+         */
+
+        _surfaceParameters.second = value;
+
         _surfaceParameters.first = true;
 
         addInteractionPairData( &_surfaceParameters );
@@ -802,7 +1225,21 @@ namespace asp{
          * Set the initial distance between two particles
          */
 
-        _referenceDistanceVector.second = floatVector( _dimension, 0. );
+
+        setReferenceDistanceVector( floatVector( *getDimension( ), 0. ) );
+
+        return;
+
+    }
+
+    void aspBase::setReferenceDistanceVector( const floatVector &value ){
+        /*!
+         * Set the initial distance between two particles
+         * 
+         * \param &value: The value of the reference distance vector
+         */
+
+        _referenceDistanceVector.second = value;
 
         _referenceDistanceVector.first = true;
 
@@ -957,15 +1394,17 @@ namespace asp{
          * \param &containedPoints: The points contained in the vector
          */
 
+        const unsigned int *dim = getDimension( );
+
         containedPoints = std::vector< unsigned int >( points.size( ) );
 
         unsigned int numContainedPoints = 0;
 
-        for ( unsigned int i = 0; i < points.size( ); i += _dimension ){
+        for ( unsigned int i = 0; i < points.size( ); i += ( *dim ) ){
 
-            if ( pointInBoundingBox( floatVector( points.begin( ) + i, points.begin( ) + i + _dimension ), boundingBox ) ){
+            if ( pointInBoundingBox( floatVector( points.begin( ) + i, points.begin( ) + i + ( *dim ) ), boundingBox ) ){
 
-                containedPoints[ numContainedPoints ] = i / _dimension;
+                containedPoints[ numContainedPoints ] = i / ( *dim );
 
                 numContainedPoints++;
 
@@ -1013,7 +1452,9 @@ namespace asp{
          * Set the particle overlap for the current local to non-local pair
          */
 
-        _particlePairOverlap.second.clear( );
+        mapFloatVector particlePairOverlap;
+
+        const unsigned int *dim = getDimension( );
 
         const floatMatrix *nonLocalBoundingBox;
         ERROR_TOOLS_CATCH( nonLocalBoundingBox = getNonLocalParticleCurrentBoundingBox( ) );
@@ -1051,21 +1492,34 @@ namespace asp{
             // Compute the overlap between the local and non-local particles
             floatVector overlap;
 
-            ERROR_TOOLS_CATCH( tractionSeparation::computeParticleOverlap( floatVector( localReferenceSurfacePoints->begin( ) + _dimension * ( *p ),
-                                                                                        localReferenceSurfacePoints->begin( ) + _dimension * ( ( *p ) + 1 ) ),
+            ERROR_TOOLS_CATCH( tractionSeparation::computeParticleOverlap( floatVector( localReferenceSurfacePoints->begin( ) + ( *dim ) * ( *p ),
+                                                                                        localReferenceSurfacePoints->begin( ) + ( *dim ) * ( ( *p ) + 1 ) ),
                                                                            *localReferenceParticleSpacing, *nonLocalReferenceRadius, *localDeformationGradient,
                                                                            *localMicroDeformation, *nonLocalMicroDeformationBase, *localGradientMicroDeformation,
                                                                            overlap ) );
 
-            _particlePairOverlap.second.insert( { *p, overlap } );
+            particlePairOverlap.insert( { *p, overlap } );
 
         }
+
+        setParticlePairOverlap( particlePairOverlap );
+
+        return;
+
+    }
+
+    void aspBase::setParticlePairOverlap( const mapFloatVector &value ){
+        /*!
+         * Set the vector of the overlap of the current pariticle pair
+         * 
+         * \param &value: The vector defining the overlap of the two particles.
+         */
+
+        _particlePairOverlap.second = value;
 
         _particlePairOverlap.first = true;
 
         addInteractionPairData( &_particlePairOverlap );
-
-        return;
 
     }
 
@@ -1140,7 +1594,18 @@ namespace asp{
         const floatVector *gradientMicroDeformation;
         ERROR_TOOLS_CATCH( gradientMicroDeformation = getGradientMicroDeformation( ) );
 
-        _localGradientMicroDeformation.second = *gradientMicroDeformation;
+        setLocalGradientMicroDeformation( *gradientMicroDeformation );
+
+    }
+
+    void aspBase::setLocalGradientMicroDeformation( const floatVector &value ){
+        /*!
+         * Set the local gradient of the micro-deformation
+         * 
+         * \param &value: The current value of the local gradient of the micro deformation
+         */
+
+        _localGradientMicroDeformation.second = value;
 
         _localGradientMicroDeformation.first = true;
 
@@ -1168,7 +1633,24 @@ namespace asp{
          * Set the surface adhesion energy density if required.
          */
 
-        ERROR_TOOLS_CATCH( computeSurfaceAdhesionEnergyDensity( _surfaceAdhesionEnergyDensity.second ) );
+        floatType surfaceAdhesionEnergyDensity;
+
+        ERROR_TOOLS_CATCH( computeSurfaceAdhesionEnergyDensity( surfaceAdhesionEnergyDensity ) );
+
+        setSurfaceAdhesionEnergyDensity( surfaceAdhesionEnergyDensity );
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceAdhesionEnergyDensity( const floatType& value ){
+        /*!
+         * Set the surface adhesion energy density if required.
+         * 
+         * \param &value: the current value of the surface adhesion density
+         */
+
+        _surfaceAdhesionEnergyDensity.second = value;
 
         _surfaceAdhesionEnergyDensity.first = true;
 
@@ -1183,7 +1665,24 @@ namespace asp{
          * Set the surface overlap energy density if required.
          */
 
-        ERROR_TOOLS_CATCH( computeSurfaceOverlapEnergyDensity( _surfaceOverlapEnergyDensity.second ) );
+        mapFloatType surfaceOverlapEnergyDensity;
+
+        ERROR_TOOLS_CATCH( computeSurfaceOverlapEnergyDensity( surfaceOverlapEnergyDensity ) );
+
+        setSurfaceOverlapEnergyDensity( surfaceOverlapEnergyDensity );
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceOverlapEnergyDensity( const mapFloatType &value ){
+        /*!
+         * Set the surface overlap energy density if required.
+         * 
+         * \param &value: The map to the surface overlap energy density
+         */
+
+        _surfaceOverlapEnergyDensity.second = value;
 
         _surfaceOverlapEnergyDensity.first = true;
 
@@ -1198,7 +1697,20 @@ namespace asp{
          * Set the surface overlap parameters
          */
 
-        _surfaceOverlapParameters.second = { 1 };
+        setSurfaceOverlapParameters( { 1 } );
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceOverlapParameters( const floatVector &value ){
+        /*!
+         * Set the surface overlap parameters
+         * 
+         * \param &value: Set the value of the surface overlap parameters
+         */
+
+        _surfaceOverlapParameters.second = value;
 
         _surfaceOverlapParameters.first = true;
 
@@ -1234,13 +1746,23 @@ namespace asp{
         const floatType *localReferenceRadius;
         ERROR_TOOLS_CATCH( localReferenceRadius = getLocalReferenceRadius( ) );
 
-        _localReferenceSurfacePoints.second = ( *localReferenceRadius ) * ( *unitSpherePoints );
+        setLocalReferenceSurfacePoints( ( *localReferenceRadius ) * ( *unitSpherePoints ) );
+
+        return;
+
+    }
+
+    void aspBase::setLocalReferenceSurfacePoints( const floatVector &value ){
+        /*!
+         * Set the collection of points which are on the surface of the local particle in the reference configuration
+         * \param &value: The values of the local reference surface points
+         */
+
+        _localReferenceSurfacePoints.second = value;
 
         _localReferenceSurfacePoints.first = true;
 
         addLocalParticleData( &_localReferenceSurfacePoints );
-
-        return;
 
     }
 
@@ -1270,7 +1792,20 @@ namespace asp{
         const floatType *nonLocalReferenceRadius;
         ERROR_TOOLS_CATCH( nonLocalReferenceRadius = getNonLocalReferenceRadius( ) );
 
-        _nonLocalReferenceSurfacePoints.second = ( *nonLocalReferenceRadius ) * ( *unitSpherePoints );
+        setNonLocalReferenceSurfacePoints( ( *nonLocalReferenceRadius ) * ( *unitSpherePoints ) );
+
+        return;
+
+    }
+
+    void aspBase::setNonLocalReferenceSurfacePoints( const floatVector &value ){
+        /*!
+         * Set the collection of points which are on the surface of the non-local particle in the reference configuration
+         * 
+         * \param &value: The value of the non-local reference surface points
+         */
+
+        _nonLocalReferenceSurfacePoints.second = value;
 
         _nonLocalReferenceSurfacePoints.first = true;
 
@@ -1300,15 +1835,31 @@ namespace asp{
          * Set the collection of points on the surface of the local particle in the current configuration
          */
 
+        const unsigned int *dim = getDimension( );
+
         const floatVector *localReferenceSurfacePoints;
         ERROR_TOOLS_CATCH( localReferenceSurfacePoints = getLocalReferenceSurfacePoints( ) );
 
         const floatVector *localMicroDeformation;
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        ERROR_TOOLS_CATCH( _localCurrentSurfacePoints.second = vectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
-                                                                                            localReferenceSurfacePoints->size( ) / _dimension,
-                                                                                            _dimension, _dimension, _dimension, false, true ) );
+        floatVector localCurrentSurfacePoints;
+
+        ERROR_TOOLS_CATCH( localCurrentSurfacePoints = vectorTools::matrixMultiply( *localReferenceSurfacePoints, *localMicroDeformation,
+                                                                                    localReferenceSurfacePoints->size( ) / ( *dim ), *dim, *dim, *dim, false, true ) );
+
+        setLocalCurrentSurfacePoints( localCurrentSurfacePoints );
+
+    }
+
+    void aspBase::setLocalCurrentSurfacePoints( const floatVector &value ){
+        /*!
+         * Set the collection of points on the surface of the local particle in the current configuration
+         *
+         * \param &value: The current points on the surface of the local particle
+         */
+
+        _localCurrentSurfacePoints.second = value;
 
         _localCurrentSurfacePoints.first = true;
 
@@ -1336,15 +1887,32 @@ namespace asp{
          * Set the collection of points on the surface of the non-local particle in the current configuration
          */
 
+        const unsigned int *dim = getDimension( );
+
         const floatVector *nonLocalReferenceSurfacePoints;
         ERROR_TOOLS_CATCH( nonLocalReferenceSurfacePoints = getNonLocalReferenceSurfacePoints( ) );
 
         const floatVector *nonLocalMicroDeformation;
         ERROR_TOOLS_CATCH( nonLocalMicroDeformation = getNonLocalMicroDeformation( ) );
 
-        ERROR_TOOLS_CATCH( _nonLocalCurrentSurfacePoints.second = vectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
-                                                                                               nonLocalReferenceSurfacePoints->size( ) / _dimension,
-                                                                                               _dimension, _dimension, _dimension, false, true ) );
+        floatVector nonLocalCurrentSurfacePoints;
+
+        ERROR_TOOLS_CATCH( nonLocalCurrentSurfacePoints = vectorTools::matrixMultiply( *nonLocalReferenceSurfacePoints, *nonLocalMicroDeformation,
+                                                                                       nonLocalReferenceSurfacePoints->size( ) / ( *dim ),
+                                                                                               *dim, *dim, *dim, false, true ) );
+
+        setNonLocalCurrentSurfacePoints( nonLocalCurrentSurfacePoints );
+
+    }
+
+    void aspBase::setNonLocalCurrentSurfacePoints( const floatVector &value ){
+        /*!
+         * Set the collection of points on the surface of the non-local particle in the current configuration
+         * 
+         * \param &value: The current non-local surface points
+         */
+
+        _nonLocalCurrentSurfacePoints.second = value;
 
         _nonLocalCurrentSurfacePoints.first = true;
 
@@ -1375,7 +1943,24 @@ namespace asp{
         const floatVector *localCurrentSurfacePoints;
         ERROR_TOOLS_CATCH( localCurrentSurfacePoints = getLocalCurrentSurfacePoints( ) ); 
 
-        ERROR_TOOLS_CATCH( formBoundingBox( *localCurrentSurfacePoints, _localParticleCurrentBoundingBox.second ) );
+        floatMatrix localParticleCurrentBoundingBox;
+
+        ERROR_TOOLS_CATCH( formBoundingBox( *localCurrentSurfacePoints, localParticleCurrentBoundingBox ) );
+
+        setLocalParticleCurrentBoundingBox( localParticleCurrentBoundingBox );
+
+        return;
+
+    }
+
+    void aspBase::setLocalParticleCurrentBoundingBox( const floatMatrix &value ){
+        /*!
+         * Set the bounding box of the local particle (dimension, (lower bound, upper bound))
+         * 
+         * \param &value: The local particle's current bounding box
+         */
+
+        _localParticleCurrentBoundingBox.second = value;
 
         _localParticleCurrentBoundingBox.first = true;
 
@@ -1393,13 +1978,15 @@ namespace asp{
          * \param &boundingBox: The resulting bounding box
          */
 
-        if ( ( points.size( ) % _dimension ) > 0 ){
+        const unsigned int *dim = getDimension( );
 
-            ERROR_TOOLS_CATCH( throw std::runtime_error( "The length of points must be an integer multiple of the dimension.\n  points.size( ) = " + std::to_string( points.size( ) ) + "\n  dimension: " + std::to_string( _dimension ) ) );
+        if ( ( points.size( ) % ( *dim ) ) > 0 ){
+
+            ERROR_TOOLS_CATCH( throw std::runtime_error( "The length of points must be an integer multiple of the dimension.\n  points.size( ) = " + std::to_string( points.size( ) ) + "\n  dimension: " + std::to_string( ( *dim ) ) ) );
 
         }
 
-        if ( points.size( ) < _dimension ){
+        if ( points.size( ) < ( *dim ) ){
 
             ERROR_TOOLS_CATCH( throw std::runtime_error( "The points need at least one point" ) );
 
@@ -1409,9 +1996,9 @@ namespace asp{
                         { points[ 1 ], points[ 1 ] },
                         { points[ 2 ], points[ 2 ] } };
 
-        for ( unsigned int i = _dimension; i < points.size( ); i += _dimension ){
+        for ( unsigned int i = ( *dim ); i < points.size( ); i += ( *dim ) ){
 
-            for ( unsigned int j = 0; j < _dimension; j++ ){
+            for ( unsigned int j = 0; j < ( *dim ); j++ ){
 
                 boundingBox[ j ][ 0 ] = std::fmin( boundingBox[ j ][ 0 ], points[ i + j ] );
                 boundingBox[ j ][ 1 ] = std::fmax( boundingBox[ j ][ 1 ], points[ i + j ] );
@@ -1447,7 +2034,24 @@ namespace asp{
         const floatVector *nonLocalCurrentSurfacePoints;
         ERROR_TOOLS_CATCH( nonLocalCurrentSurfacePoints = getNonLocalCurrentSurfacePoints( ) ); 
 
-        ERROR_TOOLS_CATCH( formBoundingBox( *nonLocalCurrentSurfacePoints, _nonLocalParticleCurrentBoundingBox.second ) );
+        floatMatrix nonLocalParticleCurrentBoundingBox;
+
+        ERROR_TOOLS_CATCH( formBoundingBox( *nonLocalCurrentSurfacePoints, nonLocalParticleCurrentBoundingBox ) );
+
+        setNonLocalParticleCurrentBoundingBox( nonLocalParticleCurrentBoundingBox );
+
+        return;
+
+    }
+
+    void aspBase::setNonLocalParticleCurrentBoundingBox( const floatMatrix &value ){
+        /*!
+         * Set the bounding box of the non-local particle (dimension, (lower bound, upper bound))
+         * 
+         * \param &value: The non-local particle's current bounding box
+         */
+
+        _nonLocalParticleCurrentBoundingBox.second = value;
 
         _nonLocalParticleCurrentBoundingBox.first = true;
 
@@ -1462,7 +2066,24 @@ namespace asp{
          * Set the surface adhesion traction
          */
 
-        ERROR_TOOLS_CATCH( computeSurfaceAdhesionTraction( _surfaceAdhesionTraction.second ) );
+        floatVector surfaceAdhesionTraction;
+
+        ERROR_TOOLS_CATCH( computeSurfaceAdhesionTraction( surfaceAdhesionTraction ) );
+
+        setSurfaceAdhesionTraction( surfaceAdhesionTraction );
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceAdhesionTraction( const floatVector &value ){
+        /*!
+         * Set the surface adhesion traction
+         *
+         * \param &value: The value of the surface adhesion traction.
+         */
+
+        _surfaceAdhesionTraction.second = value;
 
         _surfaceAdhesionTraction.first = true;
 
@@ -1528,7 +2149,18 @@ namespace asp{
         floatVector dn, dt;
         ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( *currentDistanceVector, *localCurrentNormal, dn, dt ) );
 
-        _surfaceAdhesionThickness.second = vectorTools::l2norm( dn );
+        setSurfaceAdhesionThickness( vectorTools::l2norm( dn ) );
+
+    }
+
+    void aspBase::setSurfaceAdhesionThickness( const floatType &value ){
+        /*!
+         * Set the current thickness of the surface adhesion
+         * 
+         * \param &value: The thickness associated with the surface adhesion
+         */
+
+        _surfaceAdhesionThickness.second = value;
 
         _surfaceAdhesionThickness.first = true;
 
@@ -1559,15 +2191,30 @@ namespace asp{
         const mapFloatVector* particlePairOverlap;
         ERROR_TOOLS_CATCH( particlePairOverlap = getParticlePairOverlap( ) );
 
+        mapFloatType surfaceOverlapThickness;
+
         for ( auto overlap = particlePairOverlap->begin( ); overlap != particlePairOverlap->end( ); overlap++ ){
 
             floatVector normal;
 
             ERROR_TOOLS_CATCH( getLocalCurrentNormal( overlap->first, normal ) );
         
-            _surfaceOverlapThickness.second.insert( { overlap->first, std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
+            surfaceOverlapThickness.insert( { overlap->first, std::fabs( vectorTools::dot( overlap->second, normal ) ) } );
 
         }
+
+        setSurfaceOverlapThickness( surfaceOverlapThickness );
+
+    }
+
+    void aspBase::setSurfaceOverlapThickness( const mapFloatType &value ){
+        /*!
+         * Set the current thickness of the surface overlap
+         * 
+         * \param &value: The map from local surface node indices to the overlap thickness
+         */
+
+        _surfaceOverlapThickness.second = value;
 
         _surfaceOverlapThickness.first = true;
 
@@ -1710,7 +2357,24 @@ namespace asp{
          * Set the surface overlap traction
          */
 
-        ERROR_TOOLS_CATCH( computeSurfaceOverlapTraction( _surfaceOverlapTraction.second ) );
+        mapFloatVector surfaceOverlapTraction;
+
+        ERROR_TOOLS_CATCH( computeSurfaceOverlapTraction( surfaceOverlapTraction ) );
+
+        setSurfaceOverlapTraction( surfaceOverlapTraction );
+
+        return;
+
+    }
+
+    void aspBase::setSurfaceOverlapTraction( const mapFloatVector &value ){
+        /*!
+         * Set the surface overlap traction
+         * 
+         * \param &value: The map from the local node indices to the overlap traction vectors
+         */
+
+        _surfaceOverlapTraction.second = value;
 
         _surfaceOverlapTraction.first = true;
 
@@ -1787,26 +2451,26 @@ namespace asp{
         const floatVector *parameters;
         ERROR_TOOLS_CATCH( parameters = getLocalParticleParameters( ) );
 
+        floatType localParticleEnergyDensity;
+
+        floatVector localParticleStateVariables;
+
+        floatVector localParticleMicroCauchyStress;
+
+        floatType localParticleLogProbabilityRatio;
+
         ERROR_TOOLS_CATCH( computeLocalParticleEnergyDensity( *previousTime, *deltaTime, *currentLocalMicroDeformation, *previousLocalMicroDeformation,
                                                               *currentTemperature, *previousTemperature, *previousStateVariables, *parameters,
-                                                              _localParticleEnergyDensity.second, _localParticleMicroCauchyStress.second,
-                                                              _localParticleStateVariables.second, _localParticleLogProbabilityRatio.second ) );
+                                                              localParticleEnergyDensity, localParticleMicroCauchyStress,
+                                                              localParticleStateVariables, localParticleLogProbabilityRatio ) );
 
-        _localParticleEnergyDensity.first = true;
+        setLocalParticleEnergyDensity( localParticleEnergyDensity );
 
-        _localParticleMicroCauchyStress.first = true;
+        setLocalParticleMicroCauchyStress( localParticleMicroCauchyStress );
 
-        _localParticleStateVariables.first = true;
+        setLocalParticleStateVariables( localParticleStateVariables );
 
-        _localParticleLogProbabilityRatio.first = true;
-
-        addLocalParticleData( &_localParticleEnergyDensity );
-
-        addLocalParticleData( &_localParticleMicroCauchyStress );
-
-        addLocalParticleData( &_localParticleStateVariables );
-
-        addLocalParticleData( &_localParticleLogProbabilityRatio );
+        setLocalParticleLogProbabilityRatio( localParticleLogProbabilityRatio );
 
     }
 
@@ -1815,7 +2479,22 @@ namespace asp{
          * Set the local particle's energy
          */
 
-        _localParticleEnergy.second = ( *getLocalParticleEnergyDensity( ) ) * ( *getLocalParticleCurrentVolume( ) );
+        floatType localParticleEnergy;
+
+        localParticleEnergy = ( *getLocalParticleEnergyDensity( ) ) * ( *getLocalParticleCurrentVolume( ) );
+
+        setLocalParticleEnergy( localParticleEnergy );
+
+    }
+
+    void aspBase::setLocalParticleEnergy( const floatType &value ){
+        /*!
+         * Set the local particle's energy
+         * 
+         * \param &value: The local particle's energy
+         */
+
+        _localParticleEnergy.second = value;
 
         _localParticleEnergy.first = true;
 
@@ -1838,6 +2517,21 @@ namespace asp{
 
     }
 
+    void aspBase::setLocalParticleEnergyDensity( const floatType &value ){
+        /*!
+         * Set the local particle's energy density
+         *
+         * \param &value: The value of the local particle's energy density
+         */
+
+        _localParticleEnergyDensity.second = value;
+
+        _localParticleEnergyDensity.first = true;
+
+        addLocalParticleData( &_localParticleEnergyDensity );
+
+    }
+
     const floatType* aspBase::getLocalParticleEnergyDensity( ){
         /*!
          * Get the local particle's energy density
@@ -1850,6 +2544,22 @@ namespace asp{
         }
 
         return &_localParticleEnergyDensity.second;
+
+    }
+
+    void aspBase::setLocalParticleLogProbabilityRatio( const floatType &value ){
+        /*!
+         * Set the local particle's log-probability ratio (i.e. the change in
+         * the local particle's energy log probability (log(p_current) - log(p_previous))
+         * 
+         * \param &value: The value of the change in log probability.
+         */
+
+        _localParticleLogProbabilityRatio.second = value;
+
+        _localParticleLogProbabilityRatio.first = true;
+
+        addLocalParticleData( &_localParticleLogProbabilityRatio );
 
     }
 
@@ -1868,6 +2578,21 @@ namespace asp{
 
     }
 
+    void aspBase::setLocalParticleMicroCauchyStress( const floatVector &value ){
+        /*!
+         * Set the local particle's value of the micro Cauchy stress
+         * 
+         * \param &value: The value of the micro-cauchy stress
+         */
+
+        _localParticleMicroCauchyStress.second = value;
+
+        _localParticleMicroCauchyStress.first = true;
+
+        addLocalParticleData( &_localParticleMicroCauchyStress );
+
+    }
+
     const floatVector* aspBase::getLocalParticleMicroCauchyStress( ){
         /*!
          * Get the local particle's micro cauchy stress
@@ -1880,6 +2605,21 @@ namespace asp{
         }
 
         return &_localParticleMicroCauchyStress.second;
+
+    }
+
+    void aspBase::setLocalParticleStateVariables( const floatVector &value ){
+        /*!
+         * Set the local particle's state variables
+         * 
+         * \param &value: The value of the local particle's state variables
+         */
+
+        _localParticleStateVariables.second = value;
+
+        _localParticleStateVariables.first = true;
+
+        addLocalParticleData( &_localParticleStateVariables );
 
     }
 
@@ -1935,6 +2675,9 @@ namespace asp{
     }
 
     const floatType* aspBase::getLocalParticleReferenceVolume( ){
+        /*!
+         * Get the reference configuration volume for the local particle
+         */ 
 
         if ( !_localParticleReferenceVolume.first ){
 
@@ -1947,11 +2690,32 @@ namespace asp{
     }
 
     void aspBase::setLocalParticleReferenceVolume( ){
+        /*!
+         * Set the reference configuration volume for the local particle
+         */ 
 
         const floatType* localReferenceRadius;
         ERROR_TOOLS_CATCH( localReferenceRadius = getLocalReferenceRadius( ) );
 
-        _localParticleReferenceVolume.second = 4./3 * _pi * ( *localReferenceRadius ) * ( *localReferenceRadius ) * ( *localReferenceRadius );
+        floatType localParticleReferenceVolume;
+
+        localParticleReferenceVolume = 4./3 * _pi * std::pow( *localReferenceRadius, 3 );
+
+        setLocalParticleReferenceVolume( localParticleReferenceVolume );
+
+        return;
+
+    }
+
+    void aspBase::setLocalParticleReferenceVolume( const floatType &value ){
+        /*!
+         * Set the reference configuration volume for the local particle
+         * 
+         * \param &value: The value of the reference configuration volume of the
+         *     local particle.
+         */
+
+        _localParticleReferenceVolume.second = value;
 
         _localParticleReferenceVolume.first = true;
 
@@ -1962,6 +2726,9 @@ namespace asp{
     }
 
     const floatType* aspBase::getLocalParticleCurrentVolume( ){
+        /*!
+         * Set the current configuration volume for the local particle
+         */ 
 
         if ( !_localParticleCurrentVolume.first ){
 
@@ -1974,6 +2741,11 @@ namespace asp{
     }
 
     void aspBase::setLocalParticleCurrentVolume( ){
+        /*!
+         * Set the current configuration local particle volume
+         */ 
+
+        const unsigned int *dim = getDimension( );
 
         const floatVector* microDeformation;
         ERROR_TOOLS_CATCH( microDeformation = getLocalMicroDeformation( ) );
@@ -1982,9 +2754,22 @@ namespace asp{
         ERROR_TOOLS_CATCH( referenceVolume = getLocalParticleReferenceVolume( ) );
 
         floatType J;
-        ERROR_TOOLS_CATCH( J = vectorTools::determinant( *microDeformation, _dimension, _dimension ) );
+        ERROR_TOOLS_CATCH( J = vectorTools::determinant( *microDeformation, ( *dim ), ( *dim ) ) );
 
-        _localParticleCurrentVolume.second = J * ( *referenceVolume );
+        floatType currentVolume = J * ( *referenceVolume );
+
+        setLocalParticleCurrentVolume( currentVolume );
+
+    }
+
+    void aspBase::setLocalParticleCurrentVolume( const floatType &value ){
+        /*!
+         * Set the current configuration local particle volume
+         * 
+         * \param &value: The current configuration local particle volume
+         */
+
+        _localParticleCurrentVolume.second = value;
 
         _localParticleCurrentVolume.first = true;
 
@@ -2023,17 +2808,29 @@ namespace asp{
     }
 
     void aspBase::setLocalParticleParameters( ){
+        /*!
+         * Set the parameters for the local particle
+         */
 
-        const floatVector* particleParameters;
-        ERROR_TOOLS_CATCH( particleParameters = getParticleParameters( ) );
+        setLocalParticleParameters( *getParticleParameters( ) );
 
-        _localParticleParameters.second = *particleParameters;
+    }
+
+    void aspBase::setLocalParticleParameters( const floatVector &value ){
+        /*!
+         * Set the parameters for the local particle
+         * 
+         * \param &value: The current parameters for the local particle
+         */
+
+        _localParticleParameters.second = value;
 
         _localParticleParameters.first = true;
 
         addLocalParticleData( &_localParticleParameters );
 
     }
+
 
     const floatVector* aspBase::getLocalParticleParameters( ){
 
@@ -2096,9 +2893,11 @@ namespace asp{
          * Assemble the surface responses of the particles
          */
 
+        const unsigned int *dim = getDimension( );
+
         unsigned int numLocalParticles = *getNumLocalParticles( );
 
-        unsigned int numSurfacePoints = getUnitSpherePoints( )->size( ) / _dimension;
+        unsigned int numSurfacePoints = getUnitSpherePoints( )->size( ) / ( *dim );
 
         _assembledSurfaceAdhesionEnergyDensities.second = std::vector< std::vector< floatVector > >( numLocalParticles, std::vector< floatVector >( numSurfacePoints, floatVector( numLocalParticles ) ) );
 
