@@ -343,9 +343,6 @@ namespace asp{
 
             const std::vector< std::vector< std::vector< mapFloatVector > > >* getAssembledSurfaceOverlapTractions( );
 
-//derp
-
-
             const floatMatrix* getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( );
 
             const floatMatrix* getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( );
@@ -369,6 +366,12 @@ namespace asp{
             const floatMatrix* getdCurrentDistanceVectordNonLocalMicroDeformationBase( );
 
             const floatMatrix* getdCurrentDistanceVectordGradientMicroDeformation( );
+
+//derp
+
+            const floatMatrix* getdLocalCurrentNormaldLocalReferenceNormal( );
+
+            const floatMatrix* getdLocalCurrentNormaldLocalMicroDeformation( );
 
 //endderp
 
@@ -473,8 +476,6 @@ namespace asp{
 
             void setSurfaceOverlapThickness( const mapFloatType &value );
 
-//derp
-
             void setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( const floatMatrix &value );
 
             void setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( const floatMatrix &value );
@@ -498,6 +499,12 @@ namespace asp{
             void setdCurrentDistanceVectordNonLocalMicroDeformationBase( const floatMatrix &value );
 
             void setdCurrentDistanceVectordGradientMicroDeformation( const floatMatrix &value );
+
+//derp
+
+            void setdLocalCurrentNormaldLocalReferenceNormal( const floatMatrix &value );
+
+            void setdLocalCurrentNormaldLocalMicroDeformation( const floatMatrix &value );
 
 //endderp
 
@@ -679,6 +686,10 @@ namespace asp{
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordGradientMicroDeformation;
 
+            dataStorage< floatMatrix > _dLocalCurrentNormaldLocalReferenceNormal;
+
+            dataStorage< floatMatrix > _dLocalCurrentNormaldLocalMicroDeformation;
+
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
             std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
@@ -722,8 +733,6 @@ namespace asp{
 
             virtual void setCurrentDistanceVector( );
 
-//derp
-
             virtual void setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( );
 
             virtual void setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( );
@@ -747,6 +756,12 @@ namespace asp{
             virtual void setdCurrentDistanceVectordNonLocalMicroDeformationBase( );
 
             virtual void setdCurrentDistanceVectordGradientMicroDeformation( );
+
+//derp
+
+            virtual void setdLocalCurrentNormaldLocalReferenceNormal( );
+
+            virtual void setdLocalCurrentNormaldLocalMicroDeformation( );
 
 //endderp
 

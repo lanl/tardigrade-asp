@@ -2180,6 +2180,90 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormal ){
 
 }
 
+BOOST_AUTO_TEST_CASE( test_aspBase_setLocalCurrentNormalGradients ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector N = { 1, 2, 3 };
+    
+            floatVector chi = { 0.39293837, -0.42772133, -0.54629709,
+                                0.10262954,  0.43893794, -0.15378708,
+                                0.9615284 ,  0.36965948, -0.0381362 };
+
+        private:
+
+            void setLocalReferenceNormal( ){
+    
+                asp::aspBase::setLocalReferenceNormal( N );
+    
+                return;
+    
+            }
+    
+            void setLocalMicroDeformation( ){
+    
+                asp::aspBase::setLocalMicroDeformation( chi );
+    
+            }
+
+    };
+
+    aspBaseMock asp1, asp2;
+
+    floatMatrix dndChi( 3, floatVector( 9, 0 ) );
+
+    floatMatrix dndN( 3, floatVector( 3, 0 ) );
+
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < asp1.chi.size( ); i++ ){
+
+        floatVector deltas( asp1.chi.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp1.chi[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.chi += deltas;
+
+        aspm.chi -= deltas;
+
+        for ( unsigned int j = 0; j < 3; j++ ){
+
+            dndChi[ j ][ i ] = ( ( *aspp.getLocalCurrentNormal( ) )[ j ] - ( *aspm.getLocalCurrentNormal( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    for ( unsigned int i = 0; i < asp1.N.size( ); i++ ){
+
+        floatVector deltas( asp1.N.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp1.N[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.N += deltas;
+
+        aspm.N -= deltas;
+
+        for ( unsigned int j = 0; j < 3; j++ ){
+
+            dndN[ j ][ i ] = ( ( *aspp.getLocalCurrentNormal( ) )[ j ] - ( *aspm.getLocalCurrentNormal( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dndChi, *asp1.getdLocalCurrentNormaldLocalMicroDeformation( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dndN, *asp1.getdLocalCurrentNormaldLocalReferenceNormal( ) ) );
+
+}
+
 BOOST_AUTO_TEST_CASE( test_aspBase_getLocalCurrentNormal ){
 
     class aspBaseMock : public asp::aspBase{

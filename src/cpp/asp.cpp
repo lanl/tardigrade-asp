@@ -1523,14 +1523,26 @@ namespace asp{
         const floatVector* localMicroDeformation;
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
-        floatVector localCurrentNormal;
+        floatVector dan, localCurrentNormal;
+
+        floatMatrix ddandChi, ddandN;
 
         ERROR_TOOLS_CATCH( tractionSeparation::computeNansonsRelation( *localMicroDeformation, *localReferenceNormal,
-                                                                       localCurrentNormal ) );
+                                                                       dan, ddandChi, ddandN ) );
 
-        localCurrentNormal /= vectorTools::l2norm( localCurrentNormal );
+        floatType da = vectorTools::l2norm( dan );
+
+        localCurrentNormal = dan / da;
+
+        floatMatrix dndChi = ddandChi / da - vectorTools::dyadic( dan, vectorTools::Tdot( ddandChi, localCurrentNormal ) ) / ( da * da );
+
+        floatMatrix dndN = ddandN / da - vectorTools::dyadic( dan, vectorTools::Tdot( ddandN, localCurrentNormal ) ) / ( da * da );
 
         setLocalCurrentNormal( localCurrentNormal );
+
+        setdLocalCurrentNormaldLocalMicroDeformation( dndChi );
+
+        setdLocalCurrentNormaldLocalReferenceNormal( dndN );
 
         return;
 
@@ -1565,6 +1577,84 @@ namespace asp{
         }
 
         return &_localCurrentNormal.second;
+
+    }
+
+    void aspBase::setdLocalCurrentNormaldLocalReferenceNormal( ){
+        /*!
+         * Set the derivative of the local current normal vector w.r.t. the local reference normal
+         */
+
+        ERROR_TOOLS_CATCH( setLocalCurrentNormal( ) );
+
+    }
+
+    void aspBase::setdLocalCurrentNormaldLocalReferenceNormal( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the local current normal vector w.r.t. the local reference normal
+         * 
+         * \param &value: The gradient of the local current normal w.r.t. the reference current normal
+         */
+
+        _dLocalCurrentNormaldLocalReferenceNormal.second = value;
+
+        _dLocalCurrentNormaldLocalReferenceNormal.first = true;
+
+        addSurfacePointData( &_dLocalCurrentNormaldLocalReferenceNormal );
+
+    }
+
+    const floatMatrix* aspBase::getdLocalCurrentNormaldLocalReferenceNormal( ){
+        /*!
+         * Get the derivative of the local current normal w.r.t. the local reference normal
+         */
+
+        if ( !_dLocalCurrentNormaldLocalReferenceNormal.first ){
+
+            ERROR_TOOLS_CATCH( setdLocalCurrentNormaldLocalReferenceNormal( ) );
+
+        }
+
+        return &_dLocalCurrentNormaldLocalReferenceNormal.second;
+
+    }
+
+    void aspBase::setdLocalCurrentNormaldLocalMicroDeformation( ){
+        /*!
+         * Set the derivative of the local current normal vector w.r.t. the local micro-deformation
+         */
+
+        ERROR_TOOLS_CATCH( setLocalCurrentNormal( ) );
+
+    }
+
+    void aspBase::setdLocalCurrentNormaldLocalMicroDeformation( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the local current normal vector w.r.t. the local micro-deformation
+         * 
+         * \param &value: The gradient of the local current normal w.r.t. the local micro-deformation
+         */
+
+        _dLocalCurrentNormaldLocalMicroDeformation.second = value;
+
+        _dLocalCurrentNormaldLocalMicroDeformation.first = true;
+
+        addSurfacePointData( &_dLocalCurrentNormaldLocalMicroDeformation );
+
+    }
+
+    const floatMatrix* aspBase::getdLocalCurrentNormaldLocalMicroDeformation( ){
+        /*!
+         * Get the derivative of the local current normal w.r.t. the local micro-deformation
+         */
+
+        if ( !_dLocalCurrentNormaldLocalMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdLocalCurrentNormaldLocalMicroDeformation( ) );
+
+        }
+
+        return &_dLocalCurrentNormaldLocalMicroDeformation.second;
 
     }
 
