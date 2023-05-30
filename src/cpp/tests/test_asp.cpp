@@ -1878,6 +1878,10 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
 
     class aspBaseMock : public asp::aspBase{
 
+        floatVector microDeformationBase = { 4,  5,  6,
+                                             7,  8,  9,
+                                            10, 11, 12 };
+
         void setLocalReferenceParticleSpacingVector( ){
 
             floatVector value = { 1, 2, 3 };
@@ -1888,15 +1892,15 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
 
         }
 
+        void setNonLocalMicroDeformationBase( ){
+
+            asp::aspBase::setNonLocalMicroDeformationBase( microDeformationBase );
+
+        }
+
     };
 
     aspBaseMock asp;
-
-    floatVector microDeformation = { 4,  5,  6,
-                                     7,  8,  9,
-                                    10, 11, 12 };
-
-    asp::unit_test::aspBaseTester::set_microDeformation( asp, microDeformation );
 
     floatVector gradientMicroDeformation = { 13, 14, 15, 16, 17, 18, 19, 20, 21,
                                              22, 23, 24, 25, 26, 27, 28, 29, 30,
@@ -1918,11 +1922,208 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformation ){
 
     aspBaseMock aspGet;
 
-    asp::unit_test::aspBaseTester::set_microDeformation( aspGet, microDeformation );
-
     asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspGet, gradientMicroDeformation );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( *aspGet.getNonLocalMicroDeformation( ), answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_setNonLocalMicroDeformationDerivatives ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector microDeformationBase = { 4,  5,  6,
+                                                 7,  8,  9,
+                                                10, 11, 12 };
+    
+            floatVector Xi = { 1, 2, 3 };
+    
+            floatVector D = { 3, 4, 5 };
+    
+            floatVector XiNL = { 6, 7, 8 };
+
+        private:
+
+            void setLocalSurfaceReferenceRelativePositionVector( ) override {
+    
+                asp::aspBase::setLocalSurfaceReferenceRelativePositionVector( Xi );
+    
+                return;
+    
+            }
+    
+            void setReferenceDistanceVector( ) override {
+    
+                asp::aspBase::setReferenceDistanceVector( D );
+    
+                return;
+    
+            }
+    
+            void setNonLocalSurfaceReferenceRelativePositionVector( ) override {
+    
+                asp::aspBase::setNonLocalSurfaceReferenceRelativePositionVector( XiNL );
+    
+                return;
+    
+            }
+    
+            void setNonLocalMicroDeformationBase( ) override{
+    
+                asp::aspBase::setNonLocalMicroDeformationBase( microDeformationBase );
+    
+            }
+
+    };
+
+    aspBaseMock asp;
+
+    floatVector gradientMicroDeformation = { 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                                             22, 23, 24, 25, 26, 27, 28, 29, 30,
+                                             31, 32, 33, 34, 35, 36, 37, 38, 39 };
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp, gradientMicroDeformation );
+
+    floatMatrix dChiNLdChiNLBase( 9, floatVector( 9, 0 ) );
+
+    floatMatrix dChiNLdGradChi( 9, floatVector( 27, 0 ) );
+
+    floatMatrix dChiNLdXi( 9, floatVector( 3, 0 ) );
+
+    floatMatrix dChiNLdD( 9, floatVector( 3, 0 ) );
+
+    floatMatrix dChiNLdXiNL( 9, floatVector( 3, 0 ) );
+
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < asp.microDeformationBase.size( ); i++ ){
+
+        floatVector deltas( asp.microDeformationBase.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp.microDeformationBase[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.microDeformationBase += deltas;
+
+        aspm.microDeformationBase -= deltas;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        for ( unsigned int j = 0; j < 9; j++ ){
+
+            dChiNLdChiNLBase[ j ][ i ] = ( ( *aspp.getNonLocalMicroDeformation( ) )[ j ] - ( *aspm.getNonLocalMicroDeformation( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    for ( unsigned int i = 0; i < gradientMicroDeformation.size( ); i++ ){
+
+        floatVector deltas( gradientMicroDeformation.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( gradientMicroDeformation[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation + deltas );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation - deltas );
+
+        for ( unsigned int j = 0; j < 9; j++ ){
+
+            dChiNLdGradChi[ j ][ i ] = ( ( *aspp.getNonLocalMicroDeformation( ) )[ j ] - ( *aspm.getNonLocalMicroDeformation( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    for ( unsigned int i = 0; i < asp.Xi.size( ); i++ ){
+
+        floatVector deltas( asp.Xi.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp.Xi[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.Xi += deltas;
+
+        aspm.Xi -= deltas;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        for ( unsigned int j = 0; j < 9; j++ ){
+
+            dChiNLdXi[ j ][ i ] = ( ( *aspp.getNonLocalMicroDeformation( ) )[ j ] - ( *aspm.getNonLocalMicroDeformation( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    for ( unsigned int i = 0; i < asp.D.size( ); i++ ){
+
+        floatVector deltas( asp.D.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp.D[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.D += deltas;
+
+        aspm.D -= deltas;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        for ( unsigned int j = 0; j < 9; j++ ){
+
+            dChiNLdD[ j ][ i ] = ( ( *aspp.getNonLocalMicroDeformation( ) )[ j ] - ( *aspm.getNonLocalMicroDeformation( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    for ( unsigned int i = 0; i < asp.XiNL.size( ); i++ ){
+
+        floatVector deltas( asp.XiNL.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp.XiNL[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.XiNL += deltas;
+
+        aspm.XiNL -= deltas;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        for ( unsigned int j = 0; j < 9; j++ ){
+
+            dChiNLdXiNL[ j ][ i ] = ( ( *aspp.getNonLocalMicroDeformation( ) )[ j ] - ( *aspm.getNonLocalMicroDeformation( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dChiNLdChiNLBase, *asp.getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dChiNLdGradChi, *asp.getdNonLocalMicroDeformationdGradientMicroDeformation( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dChiNLdXi, *asp.getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dChiNLdD, *asp.getdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dChiNLdXiNL, *asp.getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ) ) );
 
 }
 

@@ -906,7 +906,7 @@ namespace asp{
 
         }
 
-        return &_dNonLocalMicroDeformationdLocalReferenceRelativePositionVector.second;
+        return &_dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector.second;
 
     }
 
