@@ -634,7 +634,7 @@ namespace asp{
 
     }
 
-    void aspBase::setLocalReferenceParticleSpacing( ){
+    void aspBase::setLocalReferenceParticleSpacingVector( ){
         /*!
          * Set the local particle spacing
          * 
@@ -656,13 +656,13 @@ namespace asp{
                                       + ( *referenceDistanceVector )
                                       - ( *nonLocalSurfaceReferenceRelativePositionVector );
 
-        setLocalReferenceParticleSpacing( localReferenceParticleSpacing );
+        setLocalReferenceParticleSpacingVector( localReferenceParticleSpacing );
 
         return;
 
     }
 
-    void aspBase::setLocalReferenceParticleSpacing( const floatVector &value ){
+    void aspBase::setLocalReferenceParticleSpacingVector( const floatVector &value ){
         /*!
          * Set the local particle spacing
          * 
@@ -679,14 +679,14 @@ namespace asp{
 
     }
 
-    const floatVector* aspBase::getLocalReferenceParticleSpacing( ){
+    const floatVector* aspBase::getLocalReferenceParticleSpacingVector( ){
         /*!
          * Get the local reference particle spacing
          */
 
         if ( !_localReferenceParticleSpacing.first ){
 
-            ERROR_TOOLS_CATCH( setLocalReferenceParticleSpacing( ) );
+            ERROR_TOOLS_CATCH( setLocalReferenceParticleSpacingVector( ) );
 
         }
 
@@ -696,15 +696,25 @@ namespace asp{
 
     void aspBase::setNonLocalMicroDeformation( ){
         /*!
-         * Set the non-local micro deformation
+         * Set the non-local micro deformation given
          * 
-         * \f$ \chi_{iI}^{non-local} = \chi_{iI} + \chi_{iI,J} dX_J\f$
+         * \f$ \chi_{iI}^{\text{NL}} = \chi_{iI}^{\text{NL base}} + \chi_{iI,J} dX_J\f$
+         * 
+         * where \f$ \chi_{iI}^{\text{NL}} \f$ is the non-local micro-deformation, \f$\chi_{iI}^{\text{NL base}}\f$
+         * is the non-local micro-deformation base, \f$\chi_{iI,J}\f$ is the gradient of the micro-deformation w.r.t.
+         * the reference spacial coordinate, and \f$dX_J\f$ is the center-to-center spacing of the two particles defined as
+         * 
+         * \f$dX_I = \Xi_I + D_I - \Xi_I^{\text{NL}} \f$
+         * 
+         * where \f$\Xi_I\f$ is the local relative position vector in the reference configuration,
+         * \f$D_I\f$ is the reference inter-particle spacing, and \f$\Xi_I^{\text{NL}}\f$ is the
+         * non-local relative position vector in the reference configuration
          */
 
         const unsigned int *dim = getDimension( );
 
         const floatVector* localReferenceParticleSpacing;
-        ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacing( ) );
+        ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacingVector( ) );
 
         const floatVector* microDeformationBase;
         ERROR_TOOLS_CATCH( microDeformationBase = getNonLocalMicroDeformationBase( ) );
@@ -733,6 +743,307 @@ namespace asp{
         setNonLocalMicroDeformation( nonLocalMicroDeformation );
 
         return;
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the local relative position
+         * vector in the reference configuration given
+         * 
+         * \f$ \chi_{iI}^{\text{NL}} = \chi_{iI}^{\text{NL base}} + \chi_{iI,J} dX_J\f$
+         * 
+         * where \f$ \chi_{iI}^{\text{NL}} \f$ is the non-local micro-deformation, \f$\chi_{iI}^{\text{NL base}}\f$
+         * is the non-local micro-deformation base, \f$\chi_{iI,J}\f$ is the gradient of the micro-deformation w.r.t.
+         * the reference spacial coordinate, and \f$dX_J\f$ is the center-to-center spacing of the two particles defined as
+         * 
+         * \f$dX_I = \Xi_I + D_I - \Xi_I^{\text{NL}} \f$
+         * 
+         * where \f$\Xi_I\f$ is the local relative position vector in the reference configuration,
+         * \f$D_I\f$ is the reference inter-particle spacing, and \f$\Xi_I^{\text{NL}}\f$ is the
+         * non-local relative position vector in the reference configuration
+         */
+
+        const unsigned int *dim = getDimension( );
+
+        setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( vectorTools::inflate( *getGradientMicroDeformation( ), ( *dim ) * ( *dim ), ( *dim ) ) );
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the local relative position
+         * vector in the reference configuration
+         * 
+         * \param &value: The value of the gradient of the non-local micro-deformation w.r.t. the local reference relative
+         *     position vector
+         */
+
+        _dNonLocalMicroDeformationdLocalReferenceRelativePositionVector.second = value;
+
+        _dNonLocalMicroDeformationdLocalReferenceRelativePositionVector.first = true;
+
+        addInteractionPairData( &_dNonLocalMicroDeformationdLocalReferenceRelativePositionVector );
+
+    }
+
+    const floatMatrix* aspBase::getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ){
+        /*!
+         * Get the gradient of the non-local micro-deformation w.r.t. the local reference relative position vector
+         */
+
+        if ( !_dNonLocalMicroDeformationdLocalReferenceRelativePositionVector.first ){
+
+            ERROR_TOOLS_CATCH( setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) );
+
+        }
+
+        return &_dNonLocalMicroDeformationdLocalReferenceRelativePositionVector.second;
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the local relative position
+         * vector in the reference configuration given
+         * 
+         * \f$ \chi_{iI}^{\text{NL}} = \chi_{iI}^{\text{NL base}} + \chi_{iI,J} dX_J\f$
+         * 
+         * where \f$ \chi_{iI}^{\text{NL}} \f$ is the non-local micro-deformation, \f$\chi_{iI}^{\text{NL base}}\f$
+         * is the non-local micro-deformation base, \f$\chi_{iI,J}\f$ is the gradient of the micro-deformation w.r.t.
+         * the reference spacial coordinate, and \f$dX_J\f$ is the center-to-center spacing of the two particles defined as
+         * 
+         * \f$dX_I = \Xi_I + D_I - \Xi_I^{\text{NL}} \f$
+         * 
+         * where \f$\Xi_I\f$ is the local relative position vector in the reference configuration,
+         * \f$D_I\f$ is the reference inter-particle spacing, and \f$\Xi_I^{\text{NL}}\f$ is the
+         * non-local relative position vector in the reference configuration
+         */
+
+        setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( *getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) );
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the local particle spacing
+         * vector in the reference configuration
+         * 
+         * \param &value: The value of the gradient of the non-local micro-deformation w.r.t. the relative
+         *     spacing vector in the reference configuration
+         */
+
+        _dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector.second = value;
+
+        _dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector.first = true;
+
+        addInteractionPairData( &_dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector );
+
+    }
+
+    const floatMatrix* aspBase::getdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( ){
+        /*!
+         * Get the gradient of the non-local micro-deformation w.r.t. the local reference particle spacing vector
+         */
+
+        if ( !_dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector.first ){
+
+            ERROR_TOOLS_CATCH( setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( ) );
+
+        }
+
+        return &_dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector.second;
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the non-local relative position
+         * vector in the reference configuration given
+         * 
+         * \f$ \chi_{iI}^{\text{NL}} = \chi_{iI}^{\text{NL base}} + \chi_{iI,J} dX_J\f$
+         * 
+         * where \f$ \chi_{iI}^{\text{NL}} \f$ is the non-local micro-deformation, \f$\chi_{iI}^{\text{NL base}}\f$
+         * is the non-local micro-deformation base, \f$\chi_{iI,J}\f$ is the gradient of the micro-deformation w.r.t.
+         * the reference spacial coordinate, and \f$dX_J\f$ is the center-to-center spacing of the two particles defined as
+         * 
+         * \f$dX_I = \Xi_I + D_I - \Xi_I^{\text{NL}} \f$
+         * 
+         * where \f$\Xi_I\f$ is the local relative position vector in the reference configuration,
+         * \f$D_I\f$ is the reference inter-particle spacing, and \f$\Xi_I^{\text{NL}}\f$ is the
+         * non-local relative position vector in the reference configuration
+         */
+
+        setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( -( *getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) ) );
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the non-local relative position
+         * vector in the reference configuration
+         * 
+         * \param &value: The value of the gradient of the non-local micro-deformation w.r.t. the non-local reference relative
+         *     position vector
+         */
+
+        _dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector.second = value;
+
+        _dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector.first = true;
+
+        addInteractionPairData( &_dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector );
+
+    }
+
+    const floatMatrix* aspBase::getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ){
+        /*!
+         * Get the gradient of the non-local micro-deformation w.r.t. the non-local reference relative position vector
+         */
+
+        if ( !_dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector.first ){
+
+            ERROR_TOOLS_CATCH( setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ) );
+
+        }
+
+        return &_dNonLocalMicroDeformationdLocalReferenceRelativePositionVector.second;
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the non-local micro-deformation base given
+         * 
+         * \f$ \chi_{iI}^{\text{NL}} = \chi_{iI}^{\text{NL base}} + \chi_{iI,J} dX_J\f$
+         * 
+         * where \f$ \chi_{iI}^{\text{NL}} \f$ is the non-local micro-deformation, \f$\chi_{iI}^{\text{NL base}}\f$
+         * is the non-local micro-deformation base, \f$\chi_{iI,J}\f$ is the gradient of the micro-deformation w.r.t.
+         * the reference spacial coordinate, and \f$dX_J\f$ is the center-to-center spacing of the two particles defined as
+         * 
+         * \f$dX_I = \Xi_I + D_I - \Xi_I^{\text{NL}} \f$
+         * 
+         * where \f$\Xi_I\f$ is the local relative position vector in the reference configuration,
+         * \f$D_I\f$ is the reference inter-particle spacing, and \f$\Xi_I^{\text{NL}}\f$ is the
+         * non-local relative position vector in the reference configuration
+         */
+
+        setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( vectorTools::eye< floatType >( getNonLocalMicroDeformation( )->size( ) ) );
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the non-local micro-deformation base
+         * 
+         * \param &value: The value of the gradient of the non-local micro-deformation w.r.t. the non-local micro-deformation base
+         *     position vector
+         */
+
+        _dNonLocalMicroDeformationdNonLocalMicroDeformationBase.second = value;
+
+        _dNonLocalMicroDeformationdNonLocalMicroDeformationBase.first = true;
+
+        addInteractionPairData( &_dNonLocalMicroDeformationdNonLocalMicroDeformationBase );
+
+    }
+
+    const floatMatrix* aspBase::getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ){
+        /*!
+         * Get the gradient of the non-local micro-deformation w.r.t. the non-local micro deformation base
+         */
+
+        if ( !_dNonLocalMicroDeformationdNonLocalMicroDeformationBase.first ){
+
+            ERROR_TOOLS_CATCH( setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ) );
+
+        }
+
+        return &_dNonLocalMicroDeformationdNonLocalMicroDeformationBase.second;
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdGradientMicroDeformation( ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the reference coordinate gradient of the micro-deformation
+         * 
+         * \f$ \chi_{iI}^{\text{NL}} = \chi_{iI}^{\text{NL base}} + \chi_{iI,J} dX_J\f$
+         * 
+         * where \f$ \chi_{iI}^{\text{NL}} \f$ is the non-local micro-deformation, \f$\chi_{iI}^{\text{NL base}}\f$
+         * is the non-local micro-deformation base, \f$\chi_{iI,J}\f$ is the gradient of the micro-deformation w.r.t.
+         * the reference spacial coordinate, and \f$dX_J\f$ is the center-to-center spacing of the two particles defined as
+         * 
+         * \f$dX_I = \Xi_I + D_I - \Xi_I^{\text{NL}} \f$
+         * 
+         * where \f$\Xi_I\f$ is the local relative position vector in the reference configuration,
+         * \f$D_I\f$ is the reference inter-particle spacing, and \f$\Xi_I^{\text{NL}}\f$ is the
+         * non-local relative position vector in the reference configuration
+         */
+
+        const unsigned int *dim = getDimension( );
+
+        const floatVector *dX;
+        ERROR_TOOLS_CATCH( dX = getLocalReferenceParticleSpacingVector( ) );
+
+        floatVector eye( ( *dim ) * ( *dim ), 0 );
+        vectorTools::eye( eye );
+
+        floatMatrix value( ( *dim ) * ( *dim ), floatVector( ( *dim ) * ( *dim ) * ( *dim ), 0 ) );
+
+        for ( unsigned int i = 0; i < *dim; i++ ){
+
+            for ( unsigned int I = 0; I < *dim; I++ ){
+
+                for ( unsigned int a = 0; a < *dim; a++ ){
+
+                    for ( unsigned int A = 0; A < *dim; A++ ){
+
+                        for ( unsigned int B = 0; B < *dim; B++ ){
+
+                            value[ ( *dim ) * i + I ][ ( *dim ) * ( *dim ) * a + ( *dim ) * A + B ]
+                                += eye[ ( *dim ) * i + a ] * eye[ ( *dim ) * I + A ] * ( *dX )[ B ];
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        setdNonLocalMicroDeformationdGradientMicroDeformation( value );
+
+    }
+
+    void aspBase::setdNonLocalMicroDeformationdGradientMicroDeformation( const floatMatrix &value ){
+        /*!
+         * Set the derivative of the non-local micro deformation w.r.t. the reference coordinate gradient of the micro-deformation
+         * 
+         * \param &value: The value of the gradient of the non-local micro-deformation w.r.t. the reference coordinate gradient
+         *     of the micro-deformation.
+         */
+
+        _dNonLocalMicroDeformationdGradientMicroDeformation.second = value;
+
+        _dNonLocalMicroDeformationdGradientMicroDeformation.first = true;
+
+        addInteractionPairData( &_dNonLocalMicroDeformationdGradientMicroDeformation );
+
+    }
+
+    const floatMatrix* aspBase::getdNonLocalMicroDeformationdGradientMicroDeformation( ){
+        /*!
+         * Get the gradient of the non-local micro-deformation w.r.t. the reference coordinate gradient of the micro-deformation
+         */
+
+        if ( !_dNonLocalMicroDeformationdGradientMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdNonLocalMicroDeformationdGradientMicroDeformation( ) );
+
+        }
+
+        return &_dNonLocalMicroDeformationdGradientMicroDeformation.second;
 
     }
 
@@ -837,15 +1148,41 @@ namespace asp{
 
         floatVector currentDistanceVector;
 
+        floatMatrix dddXi, dddXiNL, dddD, dddF, dddchi, dddchiNL;
+
         ERROR_TOOLS_CATCH( tractionSeparation::computeCurrentDistanceGeneral( *localSurfaceReferenceRelativePositionVector,
                                                                               *nonLocalSurfaceReferenceRelativePositionVector,
                                                                               *referenceDistanceVector,
                                                                               *localDeformationGradient,
                                                                               *localMicroDeformation,
                                                                               *nonLocalMicroDeformation,
-                                                                              currentDistanceVector ) );
+                                                                              currentDistanceVector,
+                                                                              dddXi, dddXiNL, dddD, dddF, dddchi, dddchiNL ) );
 
         setCurrentDistanceVector( currentDistanceVector );
+
+        // Set first order derivatives
+        dddXi   += vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( ) );
+
+        dddXiNL += vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( ) );
+
+        dddD    += vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( ) );
+
+        floatMatrix dddChiNLBase = vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( ) );
+
+        floatMatrix dddGradChi = vectorTools::dot( dddchiNL, *getdNonLocalMicroDeformationdGradientMicroDeformation( ) );
+
+        setdCurrentDistanceVectordLocalReferenceRelativePositionVector( dddXi );
+
+        setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( dddXiNL );
+
+        setdCurrentDistanceVectordReferenceDistanceVector( dddD );
+
+        setdCurrentDistanceVectordLocalMicroDeformation( dddchi );
+
+        setdCurrentDistanceVectordNonLocalMicroDeformationBase( dddChiNLBase );
+
+        setdCurrentDistanceVectordGradientMicroDeformation( dddGradChi );
 
         return;
 
@@ -1078,7 +1415,7 @@ namespace asp{
 
     }
 
-    void aspBase::setdCurrentDistanceVectordNonLocalMicroDeformation( ){
+    void aspBase::setdCurrentDistanceVectordNonLocalMicroDeformationBase( ){
         /*!
          * set the derivative of the current distance vector w.r.t. the non-local
          * micro-deformation
@@ -1088,7 +1425,7 @@ namespace asp{
 
     }
 
-    void aspBase::setdCurrentDistanceVectordNonLocalMicroDeformation( const floatMatrix &value ){
+    void aspBase::setdCurrentDistanceVectordNonLocalMicroDeformationBase( const floatMatrix &value ){
         /*!
          * set the derivative of the current distance vector w.r.t. the non-local
          * micro-deformation
@@ -1096,26 +1433,26 @@ namespace asp{
          * \param &value: The derivative of the current distance vector w.r.t. the non-local micro-deformation
          */
 
-        _dCurrentDistanceVectordNonLocalMicroDeformation.second = value;
+        _dCurrentDistanceVectordNonLocalMicroDeformationBase.second = value;
 
-        _dCurrentDistanceVectordNonLocalMicroDeformation.first = true;
+        _dCurrentDistanceVectordNonLocalMicroDeformationBase.first = true;
 
-        addInteractionPairData( &_dCurrentDistanceVectordNonLocalMicroDeformation );
+        addInteractionPairData( &_dCurrentDistanceVectordNonLocalMicroDeformationBase );
 
     }
 
-    const floatMatrix *aspBase::getdCurrentDistanceVectordNonLocalMicroDeformation( ){
+    const floatMatrix *aspBase::getdCurrentDistanceVectordNonLocalMicroDeformationBase( ){
         /*!
          * Get the derivative of the current distance vector w.r.t. the non-local micro-deformation.
          */
 
-        if ( !_dCurrentDistanceVectordNonLocalMicroDeformation.first ){
+        if ( !_dCurrentDistanceVectordNonLocalMicroDeformationBase.first ){
 
-            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordNonLocalMicroDeformation( ) )
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordNonLocalMicroDeformationBase( ) )
 
         }
 
-        return &_dCurrentDistanceVectordNonLocalMicroDeformation.second;
+        return &_dCurrentDistanceVectordNonLocalMicroDeformationBase.second;
 
     }
 
@@ -1582,7 +1919,7 @@ namespace asp{
         ERROR_TOOLS_CATCH( localMicroDeformation = getLocalMicroDeformation( ) );
 
         const floatVector *localReferenceParticleSpacing;
-        ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacing( ) );
+        ERROR_TOOLS_CATCH( localReferenceParticleSpacing = getLocalReferenceParticleSpacingVector( ) );
 
         const floatVector *localGradientMicroDeformation;
         ERROR_TOOLS_CATCH( localGradientMicroDeformation = getLocalGradientMicroDeformation( ) );

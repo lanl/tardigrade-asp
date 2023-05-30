@@ -259,7 +259,7 @@ namespace asp{
 
             const floatVector* getPreviousLocalMicroDeformation( );
 
-            const floatVector* getLocalReferenceParticleSpacing( );
+            const floatVector* getLocalReferenceParticleSpacingVector( );
 
             const floatVector* getMicroDeformation( );
 
@@ -343,6 +343,18 @@ namespace asp{
 
             const std::vector< std::vector< std::vector< mapFloatVector > > >* getAssembledSurfaceOverlapTractions( );
 
+//derp
+
+
+            const floatMatrix* getdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( );
+
+            const floatMatrix* getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( );
+
+            const floatMatrix* getdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( );
+
+            const floatMatrix* getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( );
+
+            const floatMatrix* getdNonLocalMicroDeformationdGradientMicroDeformation( );
 
             const floatMatrix* getdCurrentDistanceVectordLocalReferenceRelativePositionVector( );
 
@@ -354,9 +366,11 @@ namespace asp{
 
             const floatMatrix* getdCurrentDistanceVectordLocalMicroDeformation( );
 
-            const floatMatrix* getdCurrentDistanceVectordNonLocalMicroDeformation( );
+            const floatMatrix* getdCurrentDistanceVectordNonLocalMicroDeformationBase( );
 
             const floatMatrix* getdCurrentDistanceVectordGradientMicroDeformation( );
+
+//endderp
 
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
@@ -407,7 +421,7 @@ namespace asp{
 
             void setLocalCurrentNormal( const floatVector &value );
 
-            void setLocalReferenceParticleSpacing( const floatVector &value );
+            void setLocalReferenceParticleSpacingVector( const floatVector &value );
 
             void setCurrentDistanceVector( const floatVector &value );
 
@@ -461,6 +475,16 @@ namespace asp{
 
 //derp
 
+            void setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( const floatMatrix &value );
+
+            void setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( const floatMatrix &value );
+
+            void setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( const floatMatrix &value );
+
+            void setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( const floatMatrix &value );
+
+            void setdNonLocalMicroDeformationdGradientMicroDeformation( const floatMatrix &value );
+
             void setdCurrentDistanceVectordLocalReferenceRelativePositionVector( const floatMatrix &value );
 
             void setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( const floatMatrix &value );
@@ -471,7 +495,7 @@ namespace asp{
 
             void setdCurrentDistanceVectordLocalMicroDeformation( const floatMatrix &value );
 
-            void setdCurrentDistanceVectordNonLocalMicroDeformation( const floatMatrix &value );
+            void setdCurrentDistanceVectordNonLocalMicroDeformationBase( const floatMatrix &value );
 
             void setdCurrentDistanceVectordGradientMicroDeformation( const floatMatrix &value );
 
@@ -631,6 +655,16 @@ namespace asp{
 
             dataStorage< std::vector< std::vector< std::vector< mapFloatVector > > > > _assembledSurfaceOverlapTractions;
 
+            dataStorage< floatMatrix > _dNonLocalMicroDeformationdNonLocalMicroDeformationBase;
+
+            dataStorage< floatMatrix > _dNonLocalMicroDeformationdGradientMicroDeformation;
+
+            dataStorage< floatMatrix > _dNonLocalMicroDeformationdLocalReferenceRelativePositionVector;
+
+            dataStorage< floatMatrix > _dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector;
+
+            dataStorage< floatMatrix > _dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector;
+
             dataStorage< floatMatrix > _dCurrentDistanceVectordLocalReferenceRelativePositionVector;
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalReferenceRelativePositionVector;
@@ -641,7 +675,7 @@ namespace asp{
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordLocalMicroDeformation;
 
-            dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalMicroDeformation;
+            dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalMicroDeformationBase;
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordGradientMicroDeformation;
 
@@ -684,11 +718,21 @@ namespace asp{
 
             virtual void setLocalCurrentNormal( );
 
-            virtual void setLocalReferenceParticleSpacing( );
+            virtual void setLocalReferenceParticleSpacingVector( );
 
             virtual void setCurrentDistanceVector( );
 
 //derp
+
+            virtual void setdNonLocalMicroDeformationdLocalReferenceRelativePositionVector( );
+
+            virtual void setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( );
+
+            virtual void setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( );
+
+            virtual void setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( );
+
+            virtual void setdNonLocalMicroDeformationdGradientMicroDeformation( );
 
             virtual void setdCurrentDistanceVectordLocalReferenceRelativePositionVector( );
 
@@ -700,7 +744,7 @@ namespace asp{
 
             virtual void setdCurrentDistanceVectordLocalMicroDeformation( );
 
-            virtual void setdCurrentDistanceVectordNonLocalMicroDeformation( );
+            virtual void setdCurrentDistanceVectordNonLocalMicroDeformationBase( );
 
             virtual void setdCurrentDistanceVectordGradientMicroDeformation( );
 
