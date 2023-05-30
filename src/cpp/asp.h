@@ -350,7 +350,7 @@ namespace asp{
 
             const floatMatrix* getdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( );
 
-            const floatMatrix* getdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( );
+            const floatMatrix* getdNonLocalMicroDeformationdLocalReferenceDistanceVector( );
 
             const floatMatrix* getdNonLocalMicroDeformationdNonLocalMicroDeformationBase( );
 
@@ -479,7 +479,7 @@ namespace asp{
 
             void setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( const floatMatrix &value );
 
-            void setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( const floatMatrix &value );
+            void setdNonLocalMicroDeformationdLocalReferenceDistanceVector( const floatMatrix &value );
 
             void setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( const floatMatrix &value );
 
@@ -661,7 +661,7 @@ namespace asp{
 
             dataStorage< floatMatrix > _dNonLocalMicroDeformationdLocalReferenceRelativePositionVector;
 
-            dataStorage< floatMatrix > _dNonLocalMicroDeformationdLocalReferenceParticleSpacingVector;
+            dataStorage< floatMatrix > _dNonLocalMicroDeformationdLocalReferenceDistanceVector;
 
             dataStorage< floatMatrix > _dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector;
 
@@ -728,7 +728,7 @@ namespace asp{
 
             virtual void setdNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector( );
 
-            virtual void setdNonLocalMicroDeformationdLocalReferenceParticleSpacingVector( );
+            virtual void setdNonLocalMicroDeformationdLocalReferenceDistanceVector( );
 
             virtual void setdNonLocalMicroDeformationdNonLocalMicroDeformationBase( );
 
