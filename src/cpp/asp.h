@@ -386,6 +386,10 @@ namespace asp{
 
             const floatMatrix* getdLocalCurrentNormaldLocalMicroDeformation( );
 
+            const floatType* getAbsoluteTolerance( ){ return &_absoluteTolerance; }
+
+            const floatType* getRelativeTolerance( ){ return &_relativeTolerance; }
+
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
 
@@ -537,6 +541,10 @@ namespace asp{
             unsigned int _localSurfaceNodeIndex = 0;
 
             unsigned int _numLocalParticles = 1;
+
+            floatType   _absoluteTolerance = 1e-9;
+
+            floatType   _relativeTolerance = 1e-9;
 
             floatType   _radius;
 

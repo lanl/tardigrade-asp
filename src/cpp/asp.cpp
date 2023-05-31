@@ -1947,7 +1947,7 @@ namespace asp{
 
         floatType dsede = 0.5 * vectorTools::l2norm( dn );
 
-        floatVector dseddn = 0.5 * energyDensity * dn / vectorTools::l2norm( dn );
+        floatVector dseddn = 0.5 * energyDensity * dn / ( vectorTools::l2norm( dn ) + *getAbsoluteTolerance( ) );
 
         dSurfaceAdhesionEnergyDensitydLocalDeformationGradient = dsede * dedF + vectorTools::Tdot( ddndF, dseddn );
 
