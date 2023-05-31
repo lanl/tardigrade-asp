@@ -196,6 +196,11 @@ namespace asp{
 
             virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity );
 
+            virtual void computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity,
+                                                              floatVector &dSurfaceAdhesionEnergyDensitydLocalDeformationGradient,
+                                                              floatVector &dSurfaceAdhesionEnergyDensitydLocalMicroDeformation,
+                                                              floatVector &dSurfaceAdhesionEnergyDensitydGradientMicroDeformation );
+
             virtual void computeSurfaceOverlapTraction( mapFloatVector &surfaceOverlapTraction );
 
             virtual void computeSurfaceOverlapEnergyDensity( mapFloatType &surfaceOverlapEnergyDensity );
@@ -222,6 +227,16 @@ namespace asp{
             const floatType* getLocalParticleLogProbabilityRatio( );
 
             const floatType* getSurfaceAdhesionEnergyDensity( );
+
+//derp
+
+            const floatVector* getdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( );
+
+            const floatVector* getdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( );
+
+            const floatVector* getdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( );
+
+//endderp
 
             const floatType* getLocalReferenceRadius( );
 
@@ -367,13 +382,9 @@ namespace asp{
 
             const floatMatrix* getdCurrentDistanceVectordGradientMicroDeformation( );
 
-//derp
-
             const floatMatrix* getdLocalCurrentNormaldLocalReferenceNormal( );
 
             const floatMatrix* getdLocalCurrentNormaldLocalMicroDeformation( );
-
-//endderp
 
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
@@ -446,6 +457,16 @@ namespace asp{
 
             void setSurfaceAdhesionEnergyDensity( const floatType &value );
 
+//derp
+
+            void setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( const floatVector &value );
+
+            void setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( const floatVector &value );
+
+            void setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( const floatVector &value );
+
+//endderp
+
             void setSurfaceOverlapEnergyDensity( const mapFloatType &value );
 
             void setSurfaceAdhesionTraction( const floatVector &value );
@@ -500,13 +521,9 @@ namespace asp{
 
             void setdCurrentDistanceVectordGradientMicroDeformation( const floatMatrix &value );
 
-//derp
-
             void setdLocalCurrentNormaldLocalReferenceNormal( const floatMatrix &value );
 
             void setdLocalCurrentNormaldLocalMicroDeformation( const floatMatrix &value );
-
-//endderp
 
         private:
             // Friend classes
@@ -690,6 +707,12 @@ namespace asp{
 
             dataStorage< floatMatrix > _dLocalCurrentNormaldLocalMicroDeformation;
 
+            dataStorage< floatVector > _dSurfaceAdhesionEnergyDensitydLocalDeformationGradient;
+
+            dataStorage< floatVector > _dSurfaceAdhesionEnergyDensitydLocalMicroDeformation;
+
+            dataStorage< floatVector > _dSurfaceAdhesionEnergyDensitydGradientMicroDeformation;
+
             std::vector< dataBase* > _localParticleData; //! A vector of pointers to quantities required for a local particle
 
             std::vector< dataBase* > _surfacePointData; //! A vector of pointers to quantities required for a local surface point
@@ -757,13 +780,9 @@ namespace asp{
 
             virtual void setdCurrentDistanceVectordGradientMicroDeformation( );
 
-//derp
-
             virtual void setdLocalCurrentNormaldLocalReferenceNormal( );
 
             virtual void setdLocalCurrentNormaldLocalMicroDeformation( );
-
-//endderp
 
             virtual void setSurfaceParameters( );
 
@@ -774,6 +793,16 @@ namespace asp{
             virtual void setLocalParticleEnergy( );
 
             virtual void setSurfaceAdhesionEnergyDensity( );
+
+//derp
+
+            virtual void setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( );
+
+            virtual void setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( );
+
+            virtual void setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( );
+
+//endderp
 
             virtual void setSurfaceOverlapEnergyDensity( );
 

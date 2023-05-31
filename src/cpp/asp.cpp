@@ -1178,6 +1178,8 @@ namespace asp{
 
         setdCurrentDistanceVectordReferenceDistanceVector( dddD );
 
+        setdCurrentDistanceVectordLocalDeformationGradient( dddF );
+
         setdCurrentDistanceVectordLocalMicroDeformation( dddchi );
 
         setdCurrentDistanceVectordNonLocalMicroDeformationBase( dddChiNLBase );
@@ -1883,6 +1885,78 @@ namespace asp{
 
     }
 
+    void aspBase::computeSurfaceAdhesionEnergyDensity( floatType &surfaceAdhesionEnergyDensity,
+                                                       floatVector &dSurfaceAdhesionEnergyDensitydLocalDeformationGradient,
+                                                       floatVector &dSurfaceAdhesionEnergyDensitydLocalMicroDeformation,
+                                                       floatVector &dSurfaceAdhesionEnergyDensitydGradientMicroDeformation ){
+        /*!
+         * Compute the surface adhesion energy density in the current configuration ( energy / da )
+         * \param &surfaceAdhesionEnergyDensity: The surface adhesion energy density i.e., the energy bonding the local and non-local particles together
+         * \param &dSurfaceAdhesionEnergyDensitydLocalDeformationGradient: The gradient of the surface adhesion energy density w.r.t. the
+         *     local deformation gradient
+         * \param &dSurfaceAdhesionEnergyDensitydLocalMicroDeformation: The gradient of the surface adhesion energy density w.r.t. the
+         *     local micro-deformation
+         * \param &dSurfaceAdhesionEnergyDensitydGradientMicroDeformation: The gradient of the surface adhesion energy density w.r.t. the
+         *     gradient of the micro-deformation.
+         */
+
+        const floatVector* currentDistanceVector;
+        ERROR_TOOLS_CATCH( currentDistanceVector = getCurrentDistanceVector( ) );
+
+        const floatVector* localCurrentNormal;
+        ERROR_TOOLS_CATCH( localCurrentNormal = getLocalCurrentNormal( ) );
+
+        const floatVector* surfaceParameters;
+        ERROR_TOOLS_CATCH( surfaceParameters = getSurfaceParameters( ) );
+
+        // Decompose the traction into normal and tangential directions
+        floatVector dn, dt;
+        floatMatrix ddndd, ddndn, ddtdd, ddtdn;
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::decomposeVector( *currentDistanceVector, *localCurrentNormal, dn, dt,
+                                                                             ddndd, ddndn, ddtdd, ddtdn ) );
+
+        floatMatrix ddndF = vectorTools::dot( ddndd, *getdCurrentDistanceVectordLocalDeformationGradient( ) );
+
+        floatMatrix ddndChi = vectorTools::dot( ddndd, *getdCurrentDistanceVectordLocalMicroDeformation( ) )
+                            + vectorTools::dot( ddndn, *getdLocalCurrentNormaldLocalMicroDeformation( ) );
+
+        floatMatrix ddndGradChi = vectorTools::dot( ddndd, *getdCurrentDistanceVectordGradientMicroDeformation( ) );
+
+        floatMatrix ddtdF = vectorTools::dot( ddtdd, *getdCurrentDistanceVectordLocalDeformationGradient( ) );
+
+        floatMatrix ddtdChi = vectorTools::dot( ddtdd, *getdCurrentDistanceVectordLocalMicroDeformation( ) )
+                            + vectorTools::dot( ddtdn, *getdLocalCurrentNormaldLocalMicroDeformation( ) );
+
+        floatMatrix ddtdGradChi = vectorTools::dot( ddtdd, *getdCurrentDistanceVectordGradientMicroDeformation( ) );
+
+        floatType energyDensity;
+        floatVector deddn, deddt;
+        ERROR_TOOLS_CATCH_NODE_POINTER( tractionSeparation::computeLinearTractionEnergy( dn, dt, *surfaceParameters, energyDensity,
+                                                                                         deddn, deddt ) );
+
+        floatVector dedF = vectorTools::Tdot( ddndF, deddn )
+                         + vectorTools::Tdot( ddtdF, deddt );
+
+        floatVector dedChi = vectorTools::Tdot( ddndChi, deddn )
+                           + vectorTools::Tdot( ddtdChi, deddt );
+
+        floatVector dedGradChi = vectorTools::Tdot( ddndGradChi, deddn )
+                               + vectorTools::Tdot( ddtdGradChi, deddt );
+
+        surfaceAdhesionEnergyDensity = 0.5 * energyDensity * vectorTools::l2norm( dn );
+
+        floatType dsede = 0.5 * vectorTools::l2norm( dn );
+
+        floatVector dseddn = 0.5 * energyDensity * dn / vectorTools::l2norm( dn );
+
+        dSurfaceAdhesionEnergyDensitydLocalDeformationGradient = dsede * dedF + vectorTools::Tdot( ddndF, dseddn );
+
+        dSurfaceAdhesionEnergyDensitydLocalMicroDeformation = dsede * dedChi + vectorTools::Tdot( ddndChi, dseddn );
+
+        dSurfaceAdhesionEnergyDensitydGradientMicroDeformation = dsede * dedGradChi + vectorTools::Tdot( ddndGradChi, dseddn );
+
+    }
+
     bool aspBase::pointInBoundingBox( const floatVector &point, const floatMatrix &boundingBox ){
         /*!
          * Determine if the point is inside of the bounding box and return a boolean value
@@ -2191,6 +2265,135 @@ namespace asp{
         addInteractionPairData( &_surfaceAdhesionEnergyDensity );
 
         return;
+
+    }
+
+    void aspBase::setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( ){
+        /*!
+         * Set the value of the gradient of the surface adhesion energy density w.r.t. the local deformation gradient
+         */
+
+        floatType surfaceAdhesionEnergyDensity;
+
+        floatVector dSEdF, dSEdChi, dSEdGradChi;
+
+        ERROR_TOOLS_CATCH( computeSurfaceAdhesionEnergyDensity( surfaceAdhesionEnergyDensity, dSEdF, dSEdChi, dSEdGradChi ) );
+
+        setSurfaceAdhesionEnergyDensity( surfaceAdhesionEnergyDensity );
+
+        setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( dSEdF );
+
+        setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( dSEdChi );
+
+        setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( dSEdGradChi );
+
+    }
+
+    void aspBase::setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( const floatVector &value ){
+        /*!
+         * Set the value of the gradient of the surface adhesion energy density w.r.t. the local deformation gradient
+         * 
+         * \param &value: The value of the gradient of the surface adhesion energy density w.r.t. the local deformation gradient
+         */
+
+        _dSurfaceAdhesionEnergyDensitydLocalDeformationGradient.second = value;
+
+        _dSurfaceAdhesionEnergyDensitydLocalDeformationGradient.first = true;
+
+        addInteractionPairData( &_dSurfaceAdhesionEnergyDensitydLocalDeformationGradient );
+
+    }
+
+    const floatVector* aspBase::getdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( ){
+        /*!
+         * Get the value of the gradient of the surface adhesion energy density w.r.t. the deformation gradient
+         */
+
+        if ( !_dSurfaceAdhesionEnergyDensitydLocalDeformationGradient.first ){
+
+            ERROR_TOOLS_CATCH( setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( ) )
+
+        }
+
+        return &_dSurfaceAdhesionEnergyDensitydLocalDeformationGradient.second;
+
+    }
+
+    void aspBase::setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( ){
+        /*!
+         * Set the value of the gradient of the surface adhesion energy density w.r.t. the local micro-deformation
+         */
+
+        ERROR_TOOLS_CATCH( setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( ) );
+
+    }
+
+    void aspBase::setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( const floatVector &value ){
+        /*!
+         * Set the value of the gradient of the surface adhesion energy density w.r.t. the local micro-deformation
+         * 
+         * \param &value: The value of the gradient of the surface adhesion energy density w.r.t. the local micro-deformation
+         */
+
+        _dSurfaceAdhesionEnergyDensitydLocalMicroDeformation.second = value;
+
+        _dSurfaceAdhesionEnergyDensitydLocalMicroDeformation.first = true;
+
+        addInteractionPairData( &_dSurfaceAdhesionEnergyDensitydLocalMicroDeformation );
+
+    }
+
+    const floatVector* aspBase::getdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( ){
+        /*!
+         * Get the value of the gradient of the surface adhesion energy density w.r.t. the micro-deformation
+         */
+
+        if ( !_dSurfaceAdhesionEnergyDensitydLocalMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( ) )
+
+        }
+
+        return &_dSurfaceAdhesionEnergyDensitydLocalMicroDeformation.second;
+
+    }
+
+    void aspBase::setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( ){
+        /*!
+         * Set the value of the gradient of the surface adhesion energy density w.r.t. the gradient of the micro-deformation
+         */
+
+        ERROR_TOOLS_CATCH( setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( ) );
+
+    }
+
+    void aspBase::setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( const floatVector &value ){
+        /*!
+         * Set the value of the gradient of the surface adhesion energy density w.r.t. the gradient of the micro-deformation
+         * 
+         * \param &value: The value of the gradient of the surface adhesion energy density w.r.t. the gradient of the micro-deformation
+         */
+
+        _dSurfaceAdhesionEnergyDensitydGradientMicroDeformation.second = value;
+
+        _dSurfaceAdhesionEnergyDensitydGradientMicroDeformation.first = true;
+
+        addInteractionPairData( &_dSurfaceAdhesionEnergyDensitydGradientMicroDeformation );
+
+    }
+
+    const floatVector* aspBase::getdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( ){
+        /*!
+         * Get the value of the gradient of the surface adhesion energy density w.r.t. the gradient of the micro-deformation
+         */
+
+        if ( !_dSurfaceAdhesionEnergyDensitydGradientMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( ) )
+
+        }
+
+        return &_dSurfaceAdhesionEnergyDensitydGradientMicroDeformation.second;
 
     }
 

@@ -2489,7 +2489,7 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVectorGradients ){
 
     };
 
-    aspBaseMock asp1, asp2, asp3, asp4, asp5, asp6;
+    aspBaseMock asp1, asp2, asp3, asp4, asp5, asp6, asp7;
 
     floatVector gradientMicroDeformation = { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
                                              1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8,
@@ -2507,11 +2507,15 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVectorGradients ){
 
     asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp6, gradientMicroDeformation );
 
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp7, gradientMicroDeformation );
+
     floatMatrix dddXi( 3, floatVector( 3, 0 ) );
 
     floatMatrix dddD( 3, floatVector( 3, 0 ) );
 
     floatMatrix dddXiNL( 3, floatVector( 3, 0 ) );
+
+    floatMatrix dddF( 3, floatVector( 9, 0 ) );
 
     floatMatrix dddChi( 3, floatVector( 9, 0 ) );
 
@@ -2593,11 +2597,35 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVectorGradients ){
 
     }
 
-    for ( unsigned int i = 0; i < asp4.chi.size( ); i++ ){
+    for ( unsigned int i = 0; i < asp4.F.size( ); i++ ){
 
-        floatVector deltas( asp4.chi.size( ), 0 );
+        floatVector deltas( asp4.F.size( ), 0 );
 
-        deltas[ i ] = eps * std::fabs( asp4.chi[ i ] ) + eps;
+        deltas[ i ] = eps * std::fabs( asp4.F[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.F += deltas;
+
+        aspm.F -= deltas;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        for ( unsigned int j = 0; j < 3; j++ ){
+
+            dddF[ j ][ i ] = ( ( *aspp.getCurrentDistanceVector( ) )[ j ] - ( *aspm.getCurrentDistanceVector( ) )[ j ] ) / ( 2 * deltas[ i ] );
+
+        }
+
+    }
+
+    for ( unsigned int i = 0; i < asp5.chi.size( ); i++ ){
+
+        floatVector deltas( asp5.chi.size( ), 0 );
+
+        deltas[ i ] = eps * std::fabs( asp5.chi[ i ] ) + eps;
 
         aspBaseMock aspp, aspm;
 
@@ -2617,11 +2645,11 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVectorGradients ){
 
     }
 
-    for ( unsigned int i = 0; i < asp5.chiNLBase.size( ); i++ ){
+    for ( unsigned int i = 0; i < asp6.chiNLBase.size( ); i++ ){
 
-        floatVector deltas( asp5.chiNLBase.size( ), 0 );
+        floatVector deltas( asp6.chiNLBase.size( ), 0 );
 
-        deltas[ i ] = eps * std::fabs( asp5.chiNLBase[ i ] ) + eps;
+        deltas[ i ] = eps * std::fabs( asp6.chiNLBase[ i ] ) + eps;
 
         aspBaseMock aspp, aspm;
 
@@ -2667,11 +2695,13 @@ BOOST_AUTO_TEST_CASE( test_aspBase_setCurrentDistanceVectorGradients ){
 
     BOOST_CHECK( vectorTools::fuzzyEquals( dddXiNL, *asp3.getdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( ) ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddChi, *asp4.getdCurrentDistanceVectordLocalMicroDeformation( ) ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddF, *asp4.getdCurrentDistanceVectordLocalDeformationGradient( ) ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddChiNLBase, *asp5.getdCurrentDistanceVectordNonLocalMicroDeformationBase( ) ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddChi, *asp5.getdCurrentDistanceVectordLocalMicroDeformation( ) ) );
 
-    BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChi, *asp5.getdCurrentDistanceVectordGradientMicroDeformation( ) ) );
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddChiNLBase, *asp6.getdCurrentDistanceVectordNonLocalMicroDeformationBase( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dddGradChi, *asp7.getdCurrentDistanceVectordGradientMicroDeformation( ) ) );
 
 }
 
@@ -2755,6 +2785,207 @@ BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity ){
     result = *aspGet.getSurfaceAdhesionEnergyDensity( );
 
     BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+}
+
+BOOST_AUTO_TEST_CASE( test_aspBase_computeSurfaceAdhesionEnergyDensity2 ){
+
+    class aspBaseMock : public asp::aspBase{
+
+        public:
+
+            floatVector Xi = { .1, .2, .3 };
+    
+            floatVector XiNL = { .4, .5, .6 };
+    
+            floatVector D = { .7, .8, .9 };
+    
+            floatVector F = { 1.1, 0.2, 0.3,
+                              0.4, 1.5, 0.6,
+                              0.7, 0.8, 1.9 };
+    
+            floatVector chi = { 1.19, 0.20, 0.21,
+                                0.22, 1.23, 0.24,
+                                0.25, 0.26, 0.27 };
+    
+            floatVector chiNLBase = { 1.28, 0.29, 0.30,
+                                      0.31, 1.32, 0.33,
+                                      0.34, 0.35, 1.36 };
+
+            floatVector localReferenceNormal = { 0.4, .8, -0.2 };
+
+            floatVector surfaceParameters = { 12.3, 45.6 };
+
+        private:
+
+            void setLocalSurfaceReferenceRelativePositionVector( ) override {
+    
+                asp::aspBase::setLocalSurfaceReferenceRelativePositionVector( Xi );
+    
+                return;
+    
+            }
+    
+            void setNonLocalSurfaceReferenceRelativePositionVector( ) override {
+    
+                asp::aspBase::setNonLocalSurfaceReferenceRelativePositionVector( XiNL );
+    
+                return;
+    
+            }
+    
+            void setReferenceDistanceVector( ) override {
+    
+                asp::aspBase::setReferenceDistanceVector( D );
+    
+                return;
+    
+            }
+    
+            void setLocalDeformationGradient( ) override {
+    
+                asp::aspBase::setLocalDeformationGradient( F );
+    
+                return;
+    
+            }
+    
+            void setLocalMicroDeformation( ) override {
+    
+                asp::aspBase::setLocalMicroDeformation( chi );
+    
+                return;
+    
+            }
+    
+            void setNonLocalMicroDeformationBase( ) override {
+    
+                asp::aspBase::setNonLocalMicroDeformationBase( chiNLBase );
+    
+                return;
+    
+            }
+
+            void setSurfaceParameters( ) override {
+
+                asp::aspBase::setSurfaceParameters( surfaceParameters );
+
+            }
+
+            void setLocalReferenceNormal( ) override {
+
+                asp::aspBase::setLocalReferenceNormal( localReferenceNormal );
+
+            }
+
+    };
+    
+    aspBaseMock asp, aspGet, asp1, asp2, asp3;
+
+    floatVector gradientMicroDeformation = { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9,
+                                             1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8,
+                                             1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7 };
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp, gradientMicroDeformation );
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspGet, gradientMicroDeformation );
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp1, gradientMicroDeformation );
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp2, gradientMicroDeformation );
+
+    asp::unit_test::aspBaseTester::set_gradientMicroDeformation( asp3, gradientMicroDeformation );
+
+    floatType answer;
+
+    floatType result;
+
+    asp.computeSurfaceAdhesionEnergyDensity( answer );
+
+    floatVector _dSurfaceAdhesionEnergyDensitydLocalDeformationGradient,
+                _dSurfaceAdhesionEnergyDensitydLocalMicroDeformation,
+                _dSurfaceAdhesionEnergyDensitydGradientMicroDeformation;
+
+    asp.computeSurfaceAdhesionEnergyDensity( result,
+                                             _dSurfaceAdhesionEnergyDensitydLocalDeformationGradient,
+                                             _dSurfaceAdhesionEnergyDensitydLocalMicroDeformation,
+                                             _dSurfaceAdhesionEnergyDensitydGradientMicroDeformation );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, answer ) );
+
+    aspGet.getdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( result, *aspGet.getSurfaceAdhesionEnergyDensity( ) ) );
+
+    floatVector dSurfaceAdhesionEnergyDensitydLocalDeformationGradient( 9, 0 );
+
+    floatVector dSurfaceAdhesionEnergyDensitydLocalMicroDeformation( 9, 0 );
+
+    floatVector dSurfaceAdhesionEnergyDensitydGradientMicroDeformation( 27, 0 );
+    
+    floatType eps = 1e-6;
+
+    for ( unsigned int i = 0; i < asp1.F.size( ); i++ ){
+
+        floatVector delta( asp1.F.size( ), 0 );
+
+        delta[ i ] = eps * std::fabs( asp1.F[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.F += delta;
+
+        aspm.F -= delta;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        dSurfaceAdhesionEnergyDensitydLocalDeformationGradient[ i ] = (  ( *aspp.getSurfaceAdhesionEnergyDensity( ) ) - ( *aspm.getSurfaceAdhesionEnergyDensity( ) ) ) / ( 2 * delta[ i ] );
+
+    }
+
+    for ( unsigned int i = 0; i < asp2.chi.size( ); i++ ){
+
+        floatVector delta( asp2.chi.size( ), 0 );
+
+        delta[ i ] = eps * std::fabs( asp2.chi[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        aspp.chi += delta;
+
+        aspm.chi -= delta;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation );
+
+        dSurfaceAdhesionEnergyDensitydLocalMicroDeformation[ i ] = (  ( *aspp.getSurfaceAdhesionEnergyDensity( ) ) - ( *aspm.getSurfaceAdhesionEnergyDensity( ) ) ) / ( 2 * delta[ i ] );
+
+    }
+
+    for ( unsigned int i = 0; i < gradientMicroDeformation.size( ); i++ ){
+
+        floatVector delta( gradientMicroDeformation.size( ), 0 );
+
+        delta[ i ] = eps * std::fabs( gradientMicroDeformation[ i ] ) + eps;
+
+        aspBaseMock aspp, aspm;
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspp, gradientMicroDeformation + delta );
+
+        asp::unit_test::aspBaseTester::set_gradientMicroDeformation( aspm, gradientMicroDeformation - delta );
+
+        dSurfaceAdhesionEnergyDensitydGradientMicroDeformation[ i ] = (  ( *aspp.getSurfaceAdhesionEnergyDensity( ) ) - ( *aspm.getSurfaceAdhesionEnergyDensity( ) ) ) / ( 2 * delta[ i ] );
+
+    }
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dSurfaceAdhesionEnergyDensitydLocalDeformationGradient, *asp1.getdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dSurfaceAdhesionEnergyDensitydLocalMicroDeformation, *asp2.getdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( ) ) );
+
+    BOOST_CHECK( vectorTools::fuzzyEquals( dSurfaceAdhesionEnergyDensitydGradientMicroDeformation, *asp3.getdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( ) ) );
 
 }
 
