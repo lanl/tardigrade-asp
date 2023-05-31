@@ -35,6 +35,7 @@ Internal Changes
 - Added the gradients of the current distance vector w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
 - Added the gradients of the current normal vector w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
 - Added the gradients of the surface adhesion energy density w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
+- Added the non-zero hessians of the non-local micro-deformation w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
 
 New Features
 ============

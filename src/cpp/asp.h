@@ -228,15 +228,11 @@ namespace asp{
 
             const floatType* getSurfaceAdhesionEnergyDensity( );
 
-//derp
-
             const floatVector* getdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( );
 
             const floatVector* getdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( );
 
             const floatVector* getdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( );
-
-//endderp
 
             const floatType* getLocalReferenceRadius( );
 
@@ -372,7 +368,7 @@ namespace asp{
 
             const floatMatrix* getdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( );
 
-            const floatMatrix* getdCurrentDistanceVectordReferenceDistanceVector( );
+            const floatMatrix* getdCurrentDistanceVectordLocalReferenceDistanceVector( );
 
             const floatMatrix* getdCurrentDistanceVectordLocalDeformationGradient( );
 
@@ -389,6 +385,12 @@ namespace asp{
             const floatType* getAbsoluteTolerance( ){ return &_absoluteTolerance; }
 
             const floatType* getRelativeTolerance( ){ return &_relativeTolerance; }
+
+            const floatMatrix* getd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( );
+
+            const floatMatrix* getd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( );
+
+            const floatMatrix* getd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( );
 
             // Add functions
             void addLocalParticleData( dataBase *data ){ _localParticleData.push_back( data ); }
@@ -461,15 +463,11 @@ namespace asp{
 
             void setSurfaceAdhesionEnergyDensity( const floatType &value );
 
-//derp
-
             void setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( const floatVector &value );
 
             void setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( const floatVector &value );
 
             void setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( const floatVector &value );
-
-//endderp
 
             void setSurfaceOverlapEnergyDensity( const mapFloatType &value );
 
@@ -511,11 +509,17 @@ namespace asp{
 
             void setdNonLocalMicroDeformationdGradientMicroDeformation( const floatMatrix &value );
 
+            void setd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( const floatMatrix &value );
+
+            void setd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( const floatMatrix &value );
+
+            void setd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( const floatMatrix &value );
+
             void setdCurrentDistanceVectordLocalReferenceRelativePositionVector( const floatMatrix &value );
 
             void setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( const floatMatrix &value );
 
-            void setdCurrentDistanceVectordReferenceDistanceVector( const floatMatrix &value );
+            void setdCurrentDistanceVectordLocalReferenceDistanceVector( const floatMatrix &value );
 
             void setdCurrentDistanceVectordLocalDeformationGradient( const floatMatrix &value );
 
@@ -697,11 +701,17 @@ namespace asp{
 
             dataStorage< floatMatrix > _dNonLocalMicroDeformationdNonLocalReferenceRelativePositionVector;
 
+            dataStorage< floatMatrix > _d2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation;
+
+            dataStorage< floatMatrix > _d2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation;
+
+            dataStorage< floatMatrix > _d2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation;
+
             dataStorage< floatMatrix > _dCurrentDistanceVectordLocalReferenceRelativePositionVector;
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordNonLocalReferenceRelativePositionVector;
 
-            dataStorage< floatMatrix > _dCurrentDistanceVectordReferenceDistanceVector;
+            dataStorage< floatMatrix > _dCurrentDistanceVectordLocalReferenceDistanceVector;
 
             dataStorage< floatMatrix > _dCurrentDistanceVectordLocalDeformationGradient;
 
@@ -774,11 +784,17 @@ namespace asp{
 
             virtual void setdNonLocalMicroDeformationdGradientMicroDeformation( );
 
+            virtual void setd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( );
+
+            virtual void setd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( );
+
+            virtual void setd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( );
+
             virtual void setdCurrentDistanceVectordLocalReferenceRelativePositionVector( );
 
             virtual void setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( );
 
-            virtual void setdCurrentDistanceVectordReferenceDistanceVector( );
+            virtual void setdCurrentDistanceVectordLocalReferenceDistanceVector( );
 
             virtual void setdCurrentDistanceVectordLocalDeformationGradient( );
 
@@ -802,15 +818,11 @@ namespace asp{
 
             virtual void setSurfaceAdhesionEnergyDensity( );
 
-//derp
-
             virtual void setdSurfaceAdhesionEnergyDensitydLocalDeformationGradient( );
 
             virtual void setdSurfaceAdhesionEnergyDensitydLocalMicroDeformation( );
 
             virtual void setdSurfaceAdhesionEnergyDensitydGradientMicroDeformation( );
-
-//endderp
 
             virtual void setSurfaceOverlapEnergyDensity( );
 

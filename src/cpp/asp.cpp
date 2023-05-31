@@ -1047,6 +1047,157 @@ namespace asp{
 
     }
 
+    void aspBase::setd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( ){
+        /*!
+         * Set the second derivative of the non-local micro-deformation w.r.t. the local reference relative position vector and the gradient of the micro deformation.
+         */
+
+        const unsigned int* dim = getDimension( );
+
+        floatMatrix value( getNonLocalMicroDeformation( )->size( ), floatVector( getLocalSurfaceReferenceRelativePositionVector( )->size( ) * getGradientMicroDeformation( )->size( ), 0 ) );
+
+        floatVector eye( ( *dim ) * ( *dim ), 0 );
+        vectorTools::eye( eye );
+
+        for ( unsigned int i = 0; i < *dim; i++ ){
+
+            for ( unsigned int I = 0; I < *dim; I++ ){
+
+                for ( unsigned int J = 0; J < *dim; J++ ){
+
+                    for ( unsigned int a = 0; a < *dim; a++ ){
+
+                        for ( unsigned int A = 0; A < *dim; A++ ){
+
+                            for ( unsigned int B = 0; B < *dim; B++ ){
+
+                                value[ ( *dim ) * i + I ][ ( *dim ) * ( *dim ) * ( *dim ) * J + ( *dim ) * ( *dim ) * a + ( *dim ) * A + B ]
+                                    += eye[ ( *dim ) * i + a ] * eye[ ( *dim ) * I + A ] * eye[ ( *dim ) * J + B ];
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        setd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( value );
+
+    }
+
+    void aspBase::setd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( const floatMatrix &value ){
+        /*!
+         * Set the second derivative of the non-local micro-deformation w.r.t. the local reference relative position vector and the gradient of the micro deformation.
+         * 
+         * \param &result: The second derivative of the non-local micro-deformation w.r.t. the local reference relative position vector and the gradient of the micro deformation.
+         */
+
+        _d2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation.second = value;
+
+        _d2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation.first = true;
+
+        addInteractionPairData( &_d2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation );
+
+    }
+
+    const floatMatrix* aspBase::getd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( ){
+        /*!
+         * Get the second derivative of the non-local micro-deformation w.r.t. the reference relative position vector and the gradient of the micro deformation.
+         */
+
+        if ( !_d2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( ) );
+
+        }
+
+        return &_d2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation.second;
+
+    }
+
+    void aspBase::setd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( ){
+        /*!
+         * Set the second derivative of the non-local micro-deformation w.r.t. the non-local reference relative position vector and the gradient of the micro deformation.
+         */
+
+        setd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( -( *getd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( ) ) );
+
+    }
+
+    void aspBase::setd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( const floatMatrix &value ){
+        /*!
+         * Set the second derivative of the non-local micro-deformation w.r.t. the non-local reference relative position vector and the gradient of the micro deformation.
+         * 
+         * \param &value: The second derivative of the non-local micro-deformation w.r.t. the non-local reference relative position vector and the gradient of the micro deformation.
+         */
+
+        _d2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation.second = value;
+
+        _d2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation.first = true;
+
+        addInteractionPairData( &_d2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation );
+
+    }
+
+    const floatMatrix* aspBase::getd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( ){
+        /*!
+         * Get the second derivative of the non-local micro-deformation w.r.t. the non-local reference relative position vector and the gradient of the micro deformation.
+         */
+
+        if ( !_d2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setd2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation( ) );
+
+        }
+
+        return &_d2NonLocalMicroDeformationdNonLocalReferenceRelativePositionVectordGradientMicroDeformation.second;
+
+    }
+
+    void aspBase::setd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( ){
+        /*!
+         * Set the second derivative of the non-local micro-deformation w.r.t. the reference distance vector and the gradient of the micro deformation.
+         */
+
+        setd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( *getd2NonLocalMicroDeformationdLocalReferenceRelativePositionVectordGradientMicroDeformation( ) );
+
+    }
+
+    void aspBase::setd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( const floatMatrix &value ){
+        /*!
+         * Set the second derivative of the non-local micro-deformation w.r.t. the reference distance vector and the gradient of the micro deformation.
+         * 
+         * \param &value: The second derivative of the non-local micro-deformation w.r.t. the reference distance vector and the gradient of the micro deformation.
+         */
+
+        _d2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation.second = value;
+
+        _d2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation.first = true;
+
+        addInteractionPairData( &_d2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation );
+
+    }
+
+    const floatMatrix* aspBase::getd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( ){
+        /*!
+         * Get the second derivative of the non-local micro-deformation w.r.t. the reference distance vector and the gradient of the micro deformation.
+         */
+
+        if ( !_d2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation.first ){
+
+            ERROR_TOOLS_CATCH( setd2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation( ) );
+
+        }
+
+        return &_d2NonLocalMicroDeformationdLocalReferenceDistanceVectordGradientMicroDeformation.second;
+
+    }
+
     void aspBase::setNonLocalMicroDeformation( const floatVector &value ){
         /*!
          * Set the non-local micro deformation
@@ -1176,7 +1327,7 @@ namespace asp{
 
         setdCurrentDistanceVectordNonLocalReferenceRelativePositionVector( dddXiNL );
 
-        setdCurrentDistanceVectordReferenceDistanceVector( dddD );
+        setdCurrentDistanceVectordLocalReferenceDistanceVector( dddD );
 
         setdCurrentDistanceVectordLocalDeformationGradient( dddF );
 
@@ -1292,7 +1443,7 @@ namespace asp{
 
     }
 
-    void aspBase::setdCurrentDistanceVectordReferenceDistanceVector( ){
+    void aspBase::setdCurrentDistanceVectordLocalReferenceDistanceVector( ){
         /*!
          * set the derivative of the current distance vector w.r.t. the reference
          * distance vector
@@ -1302,7 +1453,7 @@ namespace asp{
 
     }
 
-    void aspBase::setdCurrentDistanceVectordReferenceDistanceVector( const floatMatrix &value ){
+    void aspBase::setdCurrentDistanceVectordLocalReferenceDistanceVector( const floatMatrix &value ){
         /*!
          * set the derivative of the current distance vector w.r.t. the reference
          * distance vector
@@ -1310,26 +1461,26 @@ namespace asp{
          * \param &value: The derivative of the current distance vector w.r.t. the reference distance vector
          */
 
-        _dCurrentDistanceVectordReferenceDistanceVector.second = value;
+        _dCurrentDistanceVectordLocalReferenceDistanceVector.second = value;
 
-        _dCurrentDistanceVectordReferenceDistanceVector.first = true;
+        _dCurrentDistanceVectordLocalReferenceDistanceVector.first = true;
 
-        addInteractionPairData( &_dCurrentDistanceVectordReferenceDistanceVector );
+        addInteractionPairData( &_dCurrentDistanceVectordLocalReferenceDistanceVector );
 
     }
 
-    const floatMatrix *aspBase::getdCurrentDistanceVectordReferenceDistanceVector( ){
+    const floatMatrix *aspBase::getdCurrentDistanceVectordLocalReferenceDistanceVector( ){
         /*!
          * Get the derivative of the current distance vector w.r.t. the reference distance vector.
          */
 
-        if ( !_dCurrentDistanceVectordReferenceDistanceVector.first ){
+        if ( !_dCurrentDistanceVectordLocalReferenceDistanceVector.first ){
 
-            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordReferenceDistanceVector( ) )
+            ERROR_TOOLS_CATCH( setdCurrentDistanceVectordLocalReferenceDistanceVector( ) )
 
         }
 
-        return &_dCurrentDistanceVectordReferenceDistanceVector.second;
+        return &_dCurrentDistanceVectordLocalReferenceDistanceVector.second;
 
     }
 
