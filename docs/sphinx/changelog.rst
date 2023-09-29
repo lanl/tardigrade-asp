@@ -29,6 +29,13 @@ Internal Changes
   the reference point for the Taylor series computation of the non-local micro-deformation which will
   allow for random neighboring particles (:merge:`27`). By `Nathan Miller`_.
 - Changed the overlap surface energy to be a surface density rather than a volumetric density (:merge:`31`). By `Nathan Miller`_.
+- Changed the setter functions to use a parameter-less setter for user defined functions, and a value taking setter that can be called by developers. (:merge:`36`). By `Nathan Miller`_.
+- Added getter functions for the gradients of the current distance vector. (:merge:`36`). By `Nathan Miller`_.
+- Added the gradients of the non-local deformation w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
+- Added the gradients of the current distance vector w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
+- Added the gradients of the current normal vector w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
+- Added the gradients of the surface adhesion energy density w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
+- Added the non-zero hessians of the non-local micro-deformation w.r.t. the incoming measures. (:merge:`36`). By `Nathan Miller`_.
 
 New Features
 ============
