@@ -191,11 +191,11 @@ namespace tractionSeparation{
          * \param &dddF: The gradient of d w.r.t. the deformation gradient
          * \param &dddchi: The gradient of d w.r.t. the local micro-deformation tensor
          * \param &dddchiNL: The gradient of d w.r.t. the non-local micro-deformation tensor,
-         * \param &d2ddXi_1dF: The second gradient of d w.r.t. the deformation gradient and the local reference relative position vector
-         * \param &d2ddXi_1dchi: The second gradient of d w.r.t. the local micro-deformation tensor and the local reference relative position vector
-         * \param &d2ddXi_2dF: The second gradient of d w.r.t. the deformation gradient and the non-local reference relative position vector
-         * \param &d2ddXi_2dchiNL: The second gradient of d w.r.t. the non-local micro-deformation tensor and the non-local reference relative position vector
-         * \param &d2ddDdF: The second gradient of d w.r.t. the deformation gradient and the non-local reference distance vector
+         * \param &d2ddFdXi_1: The second gradient of d w.r.t. the deformation gradient and the local reference relative position vector
+         * \param &d2ddchidXi_1: The second gradient of d w.r.t. the local micro-deformation tensor and the local reference relative position vector
+         * \param &d2ddFdXi_2: The second gradient of d w.r.t. the deformation gradient and the non-local reference relative position vector
+         * \param &d2ddchiNLdXi_2: The second gradient of d w.r.t. the non-local micro-deformation tensor and the non-local reference relative position vector
+         * \param &d2ddFdD: The second gradient of d w.r.t. the deformation gradient and the non-local reference distance vector
          */
         floatVector dX = Xi_1 + D - Xi_2;
 
@@ -2439,21 +2439,28 @@ namespace tractionSeparation{
          * \param &d2OverlapdXi_1dR_nl: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local reference radius
          * \param &d2OverlapdXi_1dF: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the deformation gradient
          * \param &d2OverlapdXi_1dChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the micro-deformation tensor
+         * \param &d2OverlapdXi_1dChi_NL_B: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the non-local micro-deformation tensor basis
          * \param &d2OverlapdXi_1dGradChi: The second gradient of the overlap w.r.t. the local reference relative micro-position vector and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapddXddX: The second gradient of the overlap w.r.t. the particle reference center-to-center vector
          * \param &d2OverlapddXdR_nl: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local reference radius
          * \param &d2OverlapddXdF: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the deformation gradient
          * \param &d2OverlapddXdChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the micro-deformation tensor
+         * \param &d2OverlapddXdChi_NL_B: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the non-local micro-deformation tensor basis
          * \param &d2OverlapddXdGradChi: The second gradient of the overlap w.r.t. the particle reference center-to-center vector and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdR_nldR_nl: The second gradient of the overlap w.r.t. the non-local reference radius
          * \param &d2OverlapdR_nldF: The second gradient of the overlap w.r.t. the non-local reference radius and the deformation gradient
          * \param &d2OverlapdR_nldChi: The second gradient of the overlap w.r.t. the non-local reference radius and the micro-deformation tensor
+         * \param &d2OverlapdR_nldChi_NL_B: The second gradient of the overlap w.r.t. the non-local reference radius and the non-local micro-deformation tensor basis
          * \param &d2OverlapdR_nldGradChi: The second gradient of the overlap w.r.t. the non-local reference radius and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdFdF: The second gradient of the overlap w.r.t. the deformation gradient
          * \param &d2OverlapdFdChi: The second gradient of the overlap w.r.t. the deformation gradient and the micro-deformation tensor
+         * \param &d2OverlapdFdChi_NL_B: The second gradient of the overlap w.r.t. the deformation gradient and the non-local micro-deformation tensor basis
          * \param &d2OverlapdFdGradChi: The second gradient of the overlap w.r.t. the deformation gradient and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdChidChi: The second gradient of the overlap w.r.t. the micro-deformation tensor
+         * \param &d2OverlapdChidChi_NL_B: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor basis
          * \param &d2OverlapdChidGradChi: The second gradient of the overlap w.r.t. the micro-deformation tensor and the spatial gradient of the micro-deformation tensor
+         * \param &d2OverlapdChi_NL_BdChi_NL_B: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor basis
+         * \param &d2OverlapdChi_NL_BdGradChi: The second gradient of the overlap w.r.t. the non-local micro-deformation tensor basis and the spatial gradient of the micro-deformation tensor
          * \param &d2OverlapdGradChidGradChi: The second gradient of the overlap w.r.t. the spatial gradient of the micro-deformation tensor
          */
 
@@ -4343,7 +4350,7 @@ namespace tractionSeparation{
          * \param &R_nl: The non-local particle radius in the reference configuration
          * \param &F: The deformation gradient
          * \param &chi: The micro deformation tensor
-         * \param &chi: The non-local micro deformation tensor basis
+         * \param &chi_nl_basis: The non-local micro deformation tensor basis
          * \param &gradChi: The gradient of the micro deformation tensor w.r.t. the reference spatial position
          * \param &overlap: The overlap vector
          * \param &dOverlapdXi_1: The gradient of the overlap w.r.t. the local reference relative micro-position vector
@@ -6954,7 +6961,7 @@ namespace tractionSeparation{
          * \param &d3LdXdXdR_nl: The third gradient of the Lagrangian w.r.t. the unknown vector twice and the non-local radius once
          * \param &d3LdXdchi_nldR_nl: The third gradient of the Lagrangian w.r.t. the unknown vector, the micro-deformation tensor, and the non-local radius
          * \param &d3LdXdxi_tdxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector once and \f$\xi_t\f$ twice
-         * \param &d3LdXdxi_tdxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector,  f$\xi_t\f$, and the reference configuration non-local radius
+         * \param &d3LdXdxi_tdxi_t: The third gradient of the Lagrangian w.r.t. the unknown vector, \f$\xi_t\f$, and the reference configuration non-local radius
          * \param &d3LdXdR_nldR_nl: The third gradient of the Lagrangian w.r.t. the unknown vector once and the non-local reference radius once
          * \param &d4LdXdXdchi_nldchi_nl: The fourth gradient of the Lagrangian w.r.t. the unknown vector twice and the non-local micro deformation tensor twice
          */
