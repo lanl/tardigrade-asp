@@ -1,13 +1,12 @@
 # Project
-add_library (${PROJECT_NAME} SHARED "${PROJECT_NAME}.cpp" "${PROJECT_NAME}.h")
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 11
-                                                 PUBLIC_HEADER ${PROJECT_NAME}.h)
-target_link_libraries(${PROJECT_NAME} error_tools)
+add_library (${PROJECT_NAME} SHARED "${PROJECT_NAME}.cpp" "${PROJECT_NAME}.h" ${PROJECT_SOURCE_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER ${PROJECT_NAME}.h)
+target_link_libraries(${PROJECT_NAME} error_tools stress_tools ${PROJECT_LINK_LIBRARIES})
 target_compile_options(${PROJECT_NAME} PUBLIC)
 
 # Abaqus UMAT interface
 add_library(${UMAT} SHARED "${UMAT}.cpp" "${UMAT}.h")
-set_target_properties(${UMAT} PROPERTIES CXX_STANDARD 11
+set_target_properties(${UMAT} PROPERTIES
                               PUBLIC_HEADER ${UMAT}.h
                               PREFIX ""
                               SUFFIX ".o")
@@ -32,3 +31,5 @@ foreach(package ${PROJECT_NAME} ${UMAT})
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endforeach(package)
+install(FILES ${PROJECT_PRIVATE_HEADERS}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

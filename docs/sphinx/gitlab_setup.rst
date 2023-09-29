@@ -21,7 +21,7 @@ Clone cpp\_stub into a local repository
 
    .. code-block:: bash
 
-      ssh://git@re-git.lanl.gov:10022/aea/stub-repositories/cpp_stub.git
+      ssh://git@re-git.lanl.gov:10022/aea/stub-repositories/asp.git
 
 3. Navigate to your preferred repository directory on your local computer. In a
    terminal, you can follow the example ``sstelmo`` session below
@@ -52,7 +52,7 @@ Clone cpp\_stub into a local repository
       /projects/<moniker>/w13repos
 
       # Clone the stub repository
-      $ git clone ssh://git@re-git.lanl.gov:10022/aea/stub-repositories/cpp_stub.git
+      $ git clone ssh://git@re-git.lanl.gov:10022/aea/stub-repositories/asp.git
 
 5. Rename the local repository directory for your project.
 
@@ -63,15 +63,15 @@ Clone cpp\_stub into a local repository
       /projects/<moniker>/w13repos
 
       # Observe the stub repo directory name
-      $ ls cpp_stub -d
-      cpp_stub
+      $ ls asp -d
+      asp
 
       # Rename the stub repo directory after your project
-      $ mv cpp_stub my_project
+      $ mv asp my_project
 
       # Observe that the stub repo directory no longer exists
-      $ ls cpp_stub -d
-      ls: cannot access 'cpp_stub': No such file or directory
+      $ ls asp -d
+      ls: cannot access 'asp': No such file or directory
 
       # Observe that your project directory exists
       $ ls my_project -d
@@ -115,7 +115,7 @@ Create a new upstream repository
    .. note::
 
       Gitlab offers a feature to create template projects that may make this
-      guide much simpler in the future. Contact the ``cpp_stub`` developers and `AEA
+      guide much simpler in the future. Contact the ``asp`` developers and `AEA
       Gitlab group`_ owners to discuss progress on simplified repository setup using
       templates.
 
@@ -136,12 +136,12 @@ Create a new upstream repository
 
 5. Refresh the Gitlab project webpage and verify that the repository code was pushed
    correctly. You should see a list of source files and this Bitbucket parsed
-   ``README.rst`` displayed. You can also review the "master" and "dev" branch from
+   ``README.rst`` displayed. You can also review the "main" and "dev" branch from
    the left hand side bar "Repository" > "Branches" menu and the Git tags from the
    "Repository" > "Tags" menu.
 
-6. Remove any issue branches from the ``cpp_stub`` project on the "Repository" >
-   "Branches" menu. You should keep only the "master" and "dev" branches.
+6. Remove any issue branches from the ``asp`` project on the "Repository" >
+   "Branches" menu. You should keep only the "main" and "dev" branches.
 
 7. If everything looks correct on Gitlab project, you can clean up your local
    repository.
@@ -150,18 +150,18 @@ Create a new upstream repository
 
       WARNING: the ``-D`` option FORCE deletes branches. Triple check the
       command and use with caution. If you're uncertain about this step, contact the
-      cpp_stub developers for help.
+      asp developers for help.
 
    .. code-block:: bash
 
-      # Remove the cpp_stub remote
+      # Remove the asp remote
       $ git remote remove old-origin
 
-      # Ensure that you're on the master branch
-      $ git checkout master
+      # Ensure that you're on the main branch
+      $ git checkout main
 
-      # Remove ALL cpp_stub branches except master and dev
-      $ git branch | grep -v "master\|dev" | xargs git branch -D
+      # Remove ALL asp branches except main and dev
+      $ git branch | grep -v "main\|dev" | xargs git branch -D
 
 ***********************************
 Update upstream repository settings
@@ -181,19 +181,19 @@ only a small number of settings must be updated.
 2. Click on the "Repository" menu item that appears in the left sidebar
 
 3. From the "Default branch" > "Expand" page, update the default branch from
-   "master" to "dev" and click the blue "Save changes" button.
+   "main" to "dev" and click the blue "Save changes" button.
 
-4. From the "Protected branches" > "Expand" page, protect the "master" and "dev"
+4. From the "Protected branches" > "Expand" page, protect the "main" and "dev"
    branches according to the needs of your project. The recommended settings are:
 
    * "allowed to merge"
 
-     * master: Maintainers
+     * main: Maintainers
      * dev: Developers+Maitainers
 
    * "allowed to push":
 
-     * master: No one 
+     * main: No one 
      * dev: No one
 
 5. From the "Project Information" > "Members" item at the top of the left side
@@ -209,7 +209,7 @@ only a small number of settings must be updated.
 Enable project CI/CD
 ********************
 
-The ``cpp_stub`` project comes pre-configured to perform continuous integration
+The ``asp`` project comes pre-configured to perform continuous integration
 (CI) and continuous deployment (CD) on W-13's compute server ``sstelmo`` with
 testing performed in and deployment to the `W-13 Python Environments`_.
 
@@ -232,7 +232,7 @@ No project configuration is required for CI/CD of Merge-Requests to or deploymen
        git config user.email "${GITLAB_USER_EMAIL}"
        git remote add oauth2-origin https://gitlab-ci-token:${GITLAB_ACCESS_TOKEN}@re-git.lanl.gov/${CI_PROJECT_PATH}.git
        git tag -a ${production_version} -m "production release ${production_version}" || true
-       last_merge_hash=$(git log --pretty=format:"%H" --merges -n 2 | tail -n 1)  # Assume last merge was dev->master. Pick previous
+       last_merge_hash=$(git log --pretty=format:"%H" --merges -n 2 | tail -n 1)  # Assume last merge was dev->main. Pick previous
        git tag -a ${developer_version} -m "developer release ${developer_version}" ${last_merge_hash} || true
        git push oauth2-origin --tags
 
@@ -253,15 +253,15 @@ deploy`` attribute and shell commands indicating the CD job definition, e.g.
      tags:
        - sstelmo-shell-aea
      only:
-       - master
+       - main
        - dev
 
 The ``pages`` job is a special deploy stage job that builds and deploys
 documentation to your project's Gitlab Pages, e.g.
-https://aea.re-pages.lanl.gov/stub-repositories/cpp_stub. This job should be
+https://aea.re-pages.lanl.gov/stub-repositories/asp. This job should be
 retained for building and deploying documentation for your project users.
 
-The ``git`` operations automate micro version bumps during master branch
+The ``git`` operations automate micro version bumps during main branch
 deployment and are not strictly necessary for CI/CD. The ``deploy_build`` job
 performs the CD process and is not required for CI, which is performed by the
 ``test_build`` job.
@@ -334,7 +334,7 @@ convention expected by the CI/CD configuration
 15. Expand the "Protected branches" section of the "Repository" webpage.
 
 16. Add the project access token, ``GITLAB_ACCESS_TOKEN``, to the "Allowed to
-    push" drop down menu of the "master" and "dev" branches.
+    push" drop down menu of the "main" and "dev" branches.
 
 *******************
 Update project name
@@ -359,9 +359,9 @@ Update project name
       $ git branch
         dev
       * feature/project-name-updates
-        master
+        main
 
-2. Search for all instances of ``cpp_stub``. The list of occurrences will look
+2. Search for all instances of ``asp``. The list of occurrences will look
    quite long, but we can search and replace with ``sed`` to avoid manual file
    edits. The session below is an example, the exact output may change but the
    commands should work regardless of project re-organization or evolving features.
@@ -373,23 +373,23 @@ Update project name
       /projects/<moniker>/w13repos/my_project
 
       # Recursive, case-insensitive search and count occurrences
-      $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+      $ grep -ri asp . --exclude-dir={build,.git} | wc -l
       57
 
       # Recursive, case-insensitive search and display
-      $ grep -ri cpp_stub . --exclude-dir={build,.git}
+      $ grep -ri asp . --exclude-dir={build,.git}
       ...
 
       # Clean list of files with project name
-      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      $ grep -ri asp . --exclude-dir={build,.git} -l
       ./CMakeLists.txt
       ./docs/api.rst
       ./docs/devops.rst
       ./README.md
       ./set_vars.sh
-      ./src/cpp/cpp_stub.cpp
-      ./src/cpp/cpp_stub.h
-      ./src/cpp/tests/test_cpp_stub.cpp
+      ./src/cpp/asp.cpp
+      ./src/cpp/asp.h
+      ./src/cpp/tests/test_asp.cpp
 
 3. Search and replace from command line
 
@@ -399,34 +399,34 @@ Update project name
       /projects/<moniker>/w13repos/my_project
 
       # Replace lower case occurrences in place
-      $ sed -i 's/cpp_stub/my_project/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
-      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
-      ./src/cpp/cpp_stub.h
+      $ sed -i 's/asp/my_project/g' $(grep -ri asp . --exclude-dir={build,.git} -l)
+      $ grep -ri asp . --exclude-dir={build,.git} -l
+      ./src/cpp/asp.h
 
       # Replace upper case occurrences in place
-      $ sed -i 's/CPP_STUB/MY_PROJECT/g' $(grep -ri cpp_stub . --exclude-dir={build,.git} -l)
+      $ sed -i 's/ASP/MY_PROJECT/g' $(grep -ri asp . --exclude-dir={build,.git} -l)
 
-4. Verify no more occurrences of project name ``cpp_stub``
+4. Verify no more occurrences of project name ``asp``
 
    .. code-block:: bash
 
       $ pwd
       /projects/<moniker>/w13repos/my_project
-      $ grep -ri cpp_stub . --exclude-dir={build,.git} | wc -l
+      $ grep -ri asp . --exclude-dir={build,.git} | wc -l
       0
-      $ grep -ri cpp_stub . --exclude-dir={build,.git}
+      $ grep -ri asp . --exclude-dir={build,.git}
       # no stdout to terminal because no occurrences found
-      $ grep -ri cpp_stub . --exclude-dir={build,.git} -l
+      $ grep -ri asp . --exclude-dir={build,.git} -l
       # no stdout to terminal because no files found
 
-5. Search and replace camelCase project name occurrences, e.g. ``cppStub``.
+5. Search and replace camelCase project name occurrences, e.g. ``asp``.
 
    .. code-block:: bash
 
-      $ grep -r cppStub . --exclude-dir={build,.git}
+      $ grep -r asp . --exclude-dir={build,.git}
       ...
-      $ sed -i 's/cppStub/myProject/g' $(grep -r cppStub . --exclude-dir={build,.git} -l)
-      $ grep -r cppStub . --exclude-dir={build,.git} -l
+      $ sed -i 's/asp/myProject/g' $(grep -r asp . --exclude-dir={build,.git} -l)
+      $ grep -r asp . --exclude-dir={build,.git} -l
       # no stdout to terminal because no files found
 
 6. Find files containing the project in their file name
@@ -435,10 +435,10 @@ Update project name
 
       $ pwd
       /projects/<moniker>/w13repos/my_project
-      $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*"
-      ./src/cpp/cpp_stub.cpp
-      ./src/cpp/cpp_stub.h
-      ./src/cpp/tests/test_cpp_stub.cpp
+      $ find . -type d \( -name .git -o -name build \) -prune -false -o -name "*asp*"
+      ./src/cpp/asp.cpp
+      ./src/cpp/asp.h
+      ./src/cpp/tests/test_asp.cpp
 
 7. Rename files after current project
 
@@ -451,7 +451,7 @@ Update project name
 
    .. code-block:: bash
 
-      $ rename cpp_stub myproject $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*cpp_stub*")
+      $ rename asp myproject $(find . -type d \( -name .git -o -name build \) -prune -false -o -name "*asp*")
 
 8. Commit and push your changes to your "remote" or "fork" repository
 
@@ -460,7 +460,7 @@ Update project name
       $ pwd
       /projects/<moniker>/w13repos/my_project
       # Add tracked files and message
-      $ git commit -a -m "FEAT: replace cpp_stub with my_project throughout repository"
+      $ git commit -a -m "FEAT: replace asp with my_project throughout repository"
       $ git push origin feature/project-name-updates
 
 You can also perform some cleanup in your documentation directory to remove this
@@ -476,12 +476,12 @@ deployment of the ``dev`` branch.
 
 .. note::
 
-   For Merge-Request and CI/CD of the ``master`` branch, see the previous CI/CD
+   For Merge-Request and CI/CD of the ``main`` branch, see the previous CI/CD
    configuration section in this setup guide.
 
 For continuing development, W-13 workflows recommend that you should keep the
-upstream repository production branches, ``dev`` and ``master``, clean from
-development work and *NEVER* develop directly on the ``dev`` and ``master``
+upstream repository production branches, ``dev`` and ``main``, clean from
+development work and *NEVER* develop directly on the ``dev`` and ``main``
 branches of your local repository. Limit development work to ``feature/thing``
 type branches on your local repo and frequently commit changes and push from the
 local feature branch back to the upstream repository.

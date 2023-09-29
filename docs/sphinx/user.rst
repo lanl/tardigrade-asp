@@ -24,22 +24,22 @@ Abaqus options after setting the system environment variable ``LD_LIBRARY_PATH``
 .. code:: bash
 
    $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:path/to/conda/environment/lib64
-   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib64/cpp_stub_umat.o
+   $ abaqus -job <my_input_file> -user path/to/conda/environment/lib64/asp_umat.o
 
 Where the appropriate path can be found with
 
 .. code:: bash
 
-   $ find path/to/conda/environment -name "libcpp_stub.so"
+   $ find path/to/conda/environment -name "libasp.so"
 
 For instance, with the W-13 "aea-release" environment on ``sstelmo``
 
 .. code:: bash
 
-   $ find /projects/python/aea-release -name "libcpp_stub.so"
-   /projects/python/aea-release/lib64/libcpp_stub.so
-   $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/projects/python/aea-release/lib64
-   $ abaqus -job <my_input_file> -user /projects/python/aea-release/lib64/cpp_stub_umat.o
+   $ find /projects/aea_compute/aea-release -name "libasp.so"
+   /projects/aea_compute/aea-release/lib64/libasp.so
+   $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/projects/aea_compute/aea-release/lib64
+   $ abaqus -job <my_input_file> -user /projects/aea_compute/aea-release/lib64/asp_umat.o
 
 As a convenience, the following code may be used to determine the correct, active Conda environment at Abaqus execution.
 The following bash code is provided as an example for end users and not supported by this project. End users who wish to
@@ -52,7 +52,7 @@ learn more about bash scripting are directed to the online Bash documentation.
    # Export the conda environment library path
    $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${conda_env_path}/lib64
    # Execute Abaqus with current Conda environment's installation of this project
-   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib64/cpp_stub_umat.o
+   $ abaqus -job <my_input_file> -user ${conda_env_path}/lib64/asp_umat.o
 
 ***************************
 Use after build from source
@@ -62,7 +62,7 @@ The template UMAT can be used after build with the following Abaqus options
 
 .. code:: bash
 
-   $ abaqus -job <my_input_file> -user relative/path/to/cpp_stub/build/src/cpp/cpp_stub_umat.o
+   $ abaqus -job <my_input_file> -user relative/path/to/asp/build/src/cpp/asp_umat.o
 
 It is strongly recommended that anyone building from source make use of the CMake ``--install`` options in a local Conda
 environment. It is also possible to install to more traditional system paths, but this may require significantly more
@@ -72,14 +72,14 @@ Unless the template repository and all upstream c++ libraries are built and inst
 recommended that the subroutines are left in the project build directory. However, it is possible to copy the shared
 library files to any other directory provided the upstream projects ``{error,vector,stress,solver,constitutive}_tools``
 are present in the build directory, e.g.
-``cpp_stub/build/_deps/{error,vector,stress,solver,constitutive}_tools-build/``.
+``asp/build/_deps/{error,vector,stress,solver,constitutive}_tools-build/``.
 
 .. code:: bash
 
    $ pwd
    /path/to/my/abaqus/job
-   $ cp /path/to/cpp_stub/build/src/cpp/{cpp_stub_umat.o,libcpp_stub.so} .
-   $ abaqus -job <my_input_file> -user cpp_stub_umat.o
+   $ cp /path/to/asp/build/src/cpp/{asp_umat.o,libasp.so} .
+   $ abaqus -job <my_input_file> -user asp_umat.o
 
 ******************************
 Input File Material Definition
@@ -91,22 +91,22 @@ Input File Material Definition
    "incorrect" lengths to check the thrown exceptions. If your real constitutive model actually using a length of one
    for either vector, the integration test expectation must be updated.
 
-cpp_stub requires 2 material constants and 2 state variables. The c++ cpp_stub interface, material constants, and state
+asp requires 2 material constants and 2 state variables. The c++ asp interface, material constants, and state
 variables are described in the :ref:`sphinx_api`. The fixed expectations for the abaqus interface are defined in the
-"Variables" section of the :ref:`sphinx_api` for :ref:`cpp_stub_source`. A complete discussion about the constants and their
-meaning is not included here. Instead users are directed to calibrated material parameters found in cpp_stub entries in the
+"Variables" section of the :ref:`sphinx_api` for :ref:`asp_source`. A complete discussion about the constants and their
+meaning is not included here. Instead users are directed to calibrated material parameters found in asp entries in the
 `Granta/MIMS`_ `Material Database`_ :cite:`MIMS`. Material parameter calibration sets should be availble for download
 with the correct Abaqus input file formatting from MIMS.
 
-The cpp_stub project contains abaqus integration tests for the cpp_stub abaqus interface. These tests perform actual abaqus
-simulations using the same dummy parameters used for unit and integration testing of the cpp_stub c++ code. The cpp_stub
-Abaqus input files used for integration testing can be found in the cpp_stub source code repository with the following bash
+The asp project contains abaqus integration tests for the asp abaqus interface. These tests perform actual abaqus
+simulations using the same dummy parameters used for unit and integration testing of the asp c++ code. The asp
+Abaqus input files used for integration testing can be found in the asp source code repository with the following bash
 command
 
 .. code:: bash
 
    $ pwd
-   /path/to/my/cpp_stub
+   /path/to/my/asp
    $ find . -path ./build -prune -false -o -name "*.inp"
    ./src/abaqus/single_element_c3d8.inp
 
@@ -115,7 +115,7 @@ The material definition from an integration test input file is included below fo
 .. warning::
 
    The material constants used in this example material definition are *NOT* calibrated for any real material data.
-   For calibrated material parameters, see the cpp_stub entry for materials found in the `Granta/MIMS`_ `Material
+   For calibrated material parameters, see the asp entry for materials found in the `Granta/MIMS`_ `Material
    Database`_ :cite:`MIMS`.
 
 .. literalinclude:: ../../src/abaqus/single_element_c3d8.inp

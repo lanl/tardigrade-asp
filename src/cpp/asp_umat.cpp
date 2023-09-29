@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * \file cpp_stub_umat.cpp
+  * \file asp_umat.cpp
   ******************************************************************************
   * The Abaqus UMAT c++ interface template
   ******************************************************************************
   */
 
-#include<cpp_stub_umat.h>
+#include<asp_umat.h>
 
 extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDDE,       double &SSE,          double &SPD,
                        double &SCD,          double &RPL,          double *DDSDDT,       double *DRPLDE,       double &DRPLDT,
@@ -48,7 +48,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
      * \param &NDI: Number of direct stress components at this integration point.
      * \param &NSHR: Number of engineering shear stress components at this integration point.
      * \param &NTENS: Size of the stress and strain component array. NTENS = NDI + NSHR
-     * \param &NSTATEV: Number of state variables for this material, CMNAME.
+     * \param &NSTATV: Number of state variables for this material, CMNAME.
      * \param *PROPS: Material model constants defined as part of the *MATERIAL keyword in the input file.
      * \param &NPROPS: Number of user defined material constants.
      * \param *COORDS: Coordinates of the current Gauss point.
@@ -67,7 +67,7 @@ extern "C" void umat_( double *STRESS,       double *STATEV,       double *DDSDD
 
      //Add switching logic to handle more than one UMAT.
      //Call the appropriate UMAT interface
-     cppStub::abaqusInterface( STRESS, STATEV, DDSDDE,    SSE,    SPD,
+     asp::abaqusInterface( STRESS, STATEV, DDSDDE,    SSE,    SPD,
                                   SCD,    RPL, DDSDDT, DRPLDE, DRPLDT,
                                 STRAN, DSTRAN,   TIME,  DTIME,   TEMP,
                                 DTEMP, PREDEF,  DPRED, CMNAME,    NDI,

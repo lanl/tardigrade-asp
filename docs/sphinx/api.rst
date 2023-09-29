@@ -11,28 +11,28 @@
 .. toctree::
     :maxdepth: 2
 
-.. _cpp_stub_source:
+.. _asp_source:
 
-cpp_stub.cpp
+asp.cpp
 ============
 
-.. doxygenfile:: cpp_stub.cpp
+.. doxygenfile:: asp.cpp
 
-cpp_stub.h
+asp.h
 ==========
 
-.. doxygenfile:: cpp_stub.h
+.. doxygenfile:: asp.h
 
 ****************
 Abaqus interface
 ****************
 
-cpp_stub_umat.cpp
+asp_umat.cpp
 =================
 
-.. doxygenfile:: cpp_stub_umat.cpp
+.. doxygenfile:: asp_umat.cpp
 
-cpp_stub_umat.h
+asp_umat.h
 ===============
 
-.. doxygenfile:: cpp_stub_umat.h
+.. doxygenfile:: asp_umat.h
