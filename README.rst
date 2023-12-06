@@ -14,32 +14,15 @@
 .. _Material Models: https://re-git.lanl.gov/aea/material-models
 .. _UNIX group: https://ddw-confluence.lanl.gov/pages/viewpage.action?pageId=150929410
 
-###################
-C++ Stub repository
-###################
+##############
+Tardigrade ASP
+##############
 
 *******************
 Project Description
 *******************
 
-A stub repository for C++ development projects in W-13.
-
-This repository will contain the necessary setup files to integrate C++ doc
-strings, `CMake`_, `Doxygen`_, `Sphinx`_, and `Breathe`_ for a complete build
-system with integrated documentation. It will also include the necessary hooks
-to commonly used C++ libraries for constitutive modeling. This stub repository
-also includes template hooks for integrating C++ code as Abaqus subroutines.
-
-    **NOTE**
-
-    You can use this repo as a stub for fortran projects as well! A step-by-step
-    may never happen because c++ is the future of W-13 subroutines.  For now, refer
-    to the following references:
-   
-    * `CMake for Fortran example CMakeLists.txt <https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/languages/fortran/ForFortranExample>`_
-    * `CMake documentation starting point <https://cmake.org/cmake/help/v3.14/module/CheckFortranSourceRuns.html>`_
-    * `Stack Overflow thread <https://stackoverflow.com/questions/12705562/using-cmake-with-fortran>`_
-    * `Doxygen comments for Fortran <https://www.doxygen.nl/manual/docblocks.html#fortranblocks>`_
+A C++ project to develop microstructurally motivated micromorphic material models
 
 Information
 ===========
@@ -54,18 +37,7 @@ Information
 Developers
 ==========
 
-* Kyle Brindley: kbrindley@lanl.gov
 * Nathan Miller: nathanm@lanl.gov
-
-********************************************
-Setting up a new project from this stub repo
-********************************************
-
-    **NOTE**
-
-    The repository setup has moved out of the README and into the HTML
-    documentation. You can find the Gitlab project setup guide here:
-    https://aea.re-pages.lanl.gov/material-models/asp/main/gitlab_setup.html
 
 ************
 Gitlab CI/CD
